@@ -1,0 +1,72 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Reference Include="0Harmony, Version=2.4.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\..\..\..\..\AppData\Roaming\Thunderstore Mod Manager\DataFolder\RiskOfRain2\profiles\Titanfall2Mod\BepInEx\core\0Harmony.dll</HintPath>
+      </Reference>
+      <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\Assembly-CSharp-Public.dll</HintPath>
+      </Reference>
+      <Reference Include="BepInEx, Version=5.4.9.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\..\..\..\..\AppData\Roaming\Thunderstore Mod Manager\DataFolder\RiskOfRain2\profiles\Titanfall2Mod\BepInEx\core\BepInEx.dll</HintPath>
+      </Reference>
+      <Reference Include="ExtraSkillSlots, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\..\..\..\..\AppData\Roaming\Thunderstore Mod Manager\DataFolder\RiskOfRain2\profiles\Titanfall2Mod\BepInEx\plugins\KingEnderBrine-ExtraSkillSlots\ExtraSkillSlots\ExtraSkillSlots.dll</HintPath>
+      </Reference>
+      <Reference Include="HGCSharpUtils, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\HGCSharpUtils.dll</HintPath>
+      </Reference>
+      <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e">
+        <HintPath>..\..\..\..\..\..\AppData\Roaming\Thunderstore Mod Manager\DataFolder\RiskOfRain2\profiles\Titanfall2Mod\BepInEx\core\Mono.Cecil.dll</HintPath>
+      </Reference>
+      <Reference Include="MonoMod.Utils, Version=21.1.11.1, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\..\..\..\..\AppData\Roaming\Thunderstore Mod Manager\DataFolder\RiskOfRain2\profiles\Titanfall2Mod\BepInEx\core\MonoMod.Utils.dll</HintPath>
+      </Reference>
+      <Reference Include="R2API, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\R2API.dll</HintPath>
+      </Reference>
+      <Reference Include="Unity.TextMeshPro, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\Unity.TextMeshPro.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\UnityEngine.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\UnityEngine.AnimationModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\UnityEngine.AssetBundleModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.Networking, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\UnityEngine.Networking.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\UnityEngine.PhysicsModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\DropItems\Libs\UnityEngine.UI.dll</HintPath>
+      </Reference>
+      <Reference Include="Wwise, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\Wwise.dll</HintPath>
+      </Reference>
+      <Reference Include="Zio, Version=0.7.3.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\Libs\Zio.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\FullPrefabSkins\FullPrefabSkins.csproj" />
+    </ItemGroup>
+  
+    <Target Name="AfterBuild">
+      <Exec Command="&#xD;&#xA;      robocopy $(TargetDir) $(ProjectDir)\NetworkWeaver $(TargetFileName) &gt; $(TargetDir)Robocopy&#xD;&#xA;      cd $(ProjectDir)\NetworkWeaver&#xD;&#xA;      Unity.UNetWeaver.exe &quot;..\libs\UnityEngine.CoreModule.dll&quot; &quot;..\libs\UnityEngine.Networking.dll&quot; &quot;Patched/&quot;  $(TargetFileName) &quot;$(ProjectDir)\libs&quot;&#xD;&#xA;      IF EXIST $(TargetFileName).prepatch (&#xD;&#xA;      DEL /F $(TargetFileName).prepatch&#xD;&#xA;      )&#xD;&#xA;      ren $(TargetFileName) $(TargetFileName).prepatch&#xD;&#xA;      cd Patched&#xD;&#xA;      robocopy . $(ProjectDir)  $(TargetFileName) &gt; $(TargetDir)Robocopy&#xD;&#xA;      del  $(TargetFileName)&#xD;&#xA;      del $(TargetDir)Robocopy" />
+    </Target>
+
+</Project>

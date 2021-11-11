@@ -1,0 +1,10 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Titanfall2Mod" type="RunUnityExe" factoryName="Unity Executable">
+    <option name="EXE_PATH" value="G:/Steam/steamapps/common/Risk of Rain 2/Risk of Rain 2.exe" />
+    <option name="PROGRAM_PARAMETERS" value="--doorstop-enable true --doorstop-target &quot;$USER_HOME$/AppData/Roaming/Thunderstore Mod Manager/DataFolder/RiskOfRain2/profiles/Titanfall2Mod/BepInEx/core/BepInEx.Preloader.dll&quot;" />
+    <option name="WORKING_DIRECTORY" value="G:/Steam/steamapps/common/Risk of Rain 2" />
+    <option name="PASS_PARENT_ENVS" value="1" />
+    <option name="USE_EXTERNAL_CONSOLE" value="0" />
+    <method v="2" />
+  </configuration>
+</component>

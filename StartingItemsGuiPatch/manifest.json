@@ -1,0 +1,4 @@
+{"manifestVersion":1,"name":"Bubbet_StartingItemsGuiPatch","authorName":"Bubbet","website_url":"https://github.com/Bubbet","websiteUrl":"https://github.com/Bubbet","displayName":"StartingItemsGuiPatch","description":"Allows for access to the starting items gui in a lobby, get items over time instead of all at once via command orbs(configurable, default on), also enables all earning modes to be active at once(configurable)","gameVersion":"","networkMode":"","packageType":"","installMode":"","loaders":[],"dependencies":[
+    "bbepis-BepInExPack-5.4.9",
+    "Phedg1Studios-StartingItemsGUI-1.2.4"
+],"incompatibilities":[],"optionalDependencies":[],"version_number":"1.4.0","versionNumber":{"major":1,"minor":4,"patch":0},"enabled":true,"icon":"icon.png"}

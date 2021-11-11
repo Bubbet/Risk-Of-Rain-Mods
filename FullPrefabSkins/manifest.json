@@ -1,0 +1,12 @@
+﻿{
+	"name": "FullPrefabSkins",
+	"authorName":"Bubbet",
+	"website_url":"https://github.com/Bubbet",
+	"displayName":"Full Prefab Skins",
+
+	"version_number": "0.3.1",
+	"description": "Allows for full replacement of skin mdl prefabs. Allowing for different skeletons in your skins among other things.",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.9"
+	]
+}
