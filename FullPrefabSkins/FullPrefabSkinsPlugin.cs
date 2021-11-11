@@ -3,7 +3,7 @@ using HarmonyLib;
 
 namespace FullPrefabSkins
 {
-    [BepInPlugin("bubbet.plugins.fullprefabskins", "Full Prefab Skins", "0.3.2")]
+    [BepInPlugin("bubbet.plugins.fullprefabskins", "Full Prefab Skins", "0.3.3")]
     public class FullPrefabSkinsPlugin : BaseUnityPlugin
     {
         public void Awake()

@@ -41,9 +41,12 @@ namespace FullPrefabSkins
             Debug.Log("[FullPrefabSkins] Applying Display Skin");
             var skinDef = skin;
             onDisplaySkinApplyBefore?.Invoke(ref skinDef, modelObject);
-            var newObj = Object.Instantiate(skinDef.rootObject, modelObject.transform, true);
+            var newObj = Object.Instantiate(skinDef.rootObject, modelObject.transform.parent, true);
+            newObj.transform.position = modelObject.transform.position;
+            newObj.transform.rotation = modelObject.transform.rotation;
+            newObj.transform.localScale = modelObject.transform.localScale;
             onDisplaySkinApplyAfter?.Invoke(modelObject, newObj);
-            Object.DestroyImmediate(modelObject.transform.GetChild(0).gameObject);
+            Object.DestroyImmediate(modelObject.gameObject);
         }
         public static void ApplySkin(this SkinDef skin, CharacterBody body, ModelLocator modelLocator)
         {
