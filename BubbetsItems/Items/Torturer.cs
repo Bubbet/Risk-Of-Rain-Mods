@@ -21,6 +21,7 @@ namespace BubbetsItems.Items
         protected override void MakeConfigs(ConfigFile configFile)
         {
             defaultScalingFunction = "[d] * ([a] * 0.025 + 0.025)";
+            defaultScalingDesc = "[a] = amount, [d] = damage";
             base.MakeConfigs(configFile);
         }
 

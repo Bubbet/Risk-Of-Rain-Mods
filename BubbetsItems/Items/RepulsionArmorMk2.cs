@@ -26,8 +26,8 @@ namespace BubbetsItems.Items
             _reductionOnTrue = configFile.Bind("General", "Reduction On True", true,  "Makes the item behave more like mk1 and give a flat reduction in damage taken if set to true.");
             _instance = this;
             var name = GetType().Name;
-            _reductionScalingConfig = configFile.Bind("Balancing Functions", name + " Reduction", "[d] - (20 + [p] * (4 + [a]))", "Scaling function for item. [a] = amount, [p] = plate amount, [d] = damage");
-            _armorScalingConfig = configFile.Bind("Balancing Functions", name + " Armor", "20 + [p] * (4 + [a])", "Scaling function for item. [a] = amount, [p] = plate amount");
+            _reductionScalingConfig = configFile.Bind("Balancing Functions", name + " Reduction", "[d] - (20 + [p] * (4 + [a]))", "Scaling function for item. ;[a] = amount, [p] = plate amount, [d] = damage");
+            _armorScalingConfig = configFile.Bind("Balancing Functions", name + " Armor", "20 + [p] * (4 + [a])", "Scaling function for item. ;[a] = amount, [p] = plate amount");
             UpdateScalingFunction();
         }
 
@@ -81,11 +81,13 @@ namespace BubbetsItems.Items
             var plate = inventory?.GetItemCount(RoR2Content.Items.ArmorPlate) ?? 0;
             if (_reductionOnTrue.Value)
             {
+                var scale = "\n\n" + _reductionScalingConfig.Value + "\n" + _reductionScalingConfig.Description.Description.Split(';')[1];
                 if (amount == 0)
-                    return Language.GetStringFormatted("BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION", _reductionScalingConfig.Value, -ScalingFunction(1, plate, 0));
-                return Language.GetStringFormatted("BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION", _reductionScalingConfig.Value, -ScalingFunction(amount, plate));
+                    return Language.GetStringFormatted("BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION", scale, -ScalingFunction(1, plate, 0));
+                return Language.GetStringFormatted("BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION", scale, -ScalingFunction(amount, plate));
             }
-            return Language.GetStringFormatted("BUB_REPULSION_ARMOR_MK2_DESC_ARMOR", _armorScalingConfig.Value, ScalingFunction(amount, plate));
+            var scale2 = "\n\n" + _armorScalingConfig.Value + "\n" + _armorScalingConfig.Description.Description.Split(';')[1];
+            return Language.GetStringFormatted("BUB_REPULSION_ARMOR_MK2_DESC_ARMOR", scale2, ScalingFunction(amount, plate));
         }
 
         public override float ScalingFunction(int itemCount)

@@ -206,10 +206,15 @@
 	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=169f58ba_002Db5e6_002D4b58_002D9634_002D25818df80472_0023NemesisEnforcerStarStormConfig/@EntryIndexedValue">True</s:Boolean>
 	
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=2ca01e47_002D22dc_002D4c03_002D9141_002D6b79c02ddc75_0023DamageHistory/@EntryIndexedValue">True</s:Boolean>
+	
 	
 	
 	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=34565a66_002D90b5_002D4955_002Daa22_002Dd9291e5820f2_0023ModItemsChest/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=3f961112_002Df45e_002D49c5_002Db771_002D28077047915e_0023PickupDiscoveryFix/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=46fe5c63_002D7dad_002D45a9_002D99a1_002Dd93e463ec670_0023StartingItemsGuiPatch/@EntryIndexedValue">True</s:Boolean>
+	
 	
 	
 	

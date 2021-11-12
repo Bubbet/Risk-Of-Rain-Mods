@@ -113,7 +113,9 @@ namespace BubbetsItems.Equipments
         public void ToggleReversing()
         {
             reversing = !reversing;
+            AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
             if (!reversing) return;
+            AkSoundEngine.PostEvent("BrokenClock_Start", Body.gameObject);
             _previousKeyframe = MakeKeyframe();
             _currentTargetKeyframe = dropoutStack.Pop();
         }
@@ -186,6 +188,7 @@ namespace BubbetsItems.Equipments
             if (!any || !Body)
             {
                 reversing = false;
+                AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
                 //characterMotor.velocity = _lastVelocity;
                 return;
             }

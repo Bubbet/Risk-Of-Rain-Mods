@@ -1,5 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Permissions;
 using Aetherium;
@@ -11,7 +14,6 @@ using RoR2.ContentManagement;
 using UnityEngine;
 using Path = System.IO.Path;
 
-
 #pragma warning disable CS0618 // Type or member is obsolete
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 #pragma warning restore CS0618 // Type or member is obsolete
@@ -19,7 +21,7 @@ using Path = System.IO.Path;
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.1.1")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.2.0")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     [BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
@@ -41,6 +43,28 @@ namespace BubbetsItems
             InLobbyConfigCompat.Init();
             harm.PatchAll();
             //PickupTooltipFormat.Init(harm);
+        }
+
+        private static uint _bankID;
+        [SystemInitializer]
+        public static void LoadSoundBank()
+        {
+            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Stream stream = File.Open(Path.Combine(path, "BubbetsItems.bnk"), FileMode.Open);
+            var array = new byte[stream.Length];
+            stream.Read(array, 0, array.Length);
+            
+            var mem = Marshal.AllocHGlobal(array.Length);
+            Marshal.Copy(array, 0, mem, array.Length);
+            var result = AkSoundEngine.LoadBank(mem, (uint) array.Length, out _bankID);
+            if (result != AKRESULT.AK_Success)
+                Debug.LogError("[Bubbets Items] SoundBank Load Failed: " + result);
+        }
+
+        [SystemInitializer(typeof(Language))]
+        public static void ExtraTokens()
+        {
+            Language.english.SetStringByToken("BUB_HOLD_TOOLTIP", "Hold Capslock for more.");
         }
 
         public static class Conf

@@ -18,7 +18,7 @@ namespace BubbetsItems
             Enabled = configFile.Bind("Disable Items", name, true, "Should this item be enabled.");
             
             if (defaultScalingFunction == null) return;
-            scaleConfig = configFile.Bind("Balancing Functions", name, defaultScalingFunction, "Scaling function for item. [a] = amount");
+            scaleConfig = configFile.Bind("Balancing Functions", name, defaultScalingFunction, "Scaling function for item. ;" + (!string.IsNullOrEmpty(defaultScalingDesc) ? defaultScalingDesc: "[a] = amount"));
             scalingFunction = new Expression(scaleConfig.Value).ToLambda<ExpressionContext, float>();
         }
 
@@ -30,6 +30,7 @@ namespace BubbetsItems
         public string defaultScalingFunction;
         public Func<ExpressionContext, float> scalingFunction;
         public ConfigEntry<string> scaleConfig;
+        protected string defaultScalingDesc;
 
         public virtual float ScalingFunction(int itemCount)
         {
@@ -47,7 +48,7 @@ namespace BubbetsItems
             if (scalingFunction != null)
             {
                 var amount = inventory?.GetItemCount(ItemDef) ?? 0;
-                return Language.GetStringFormatted(ItemDef.descriptionToken, scaleConfig.Value,
+                return Language.GetStringFormatted(ItemDef.descriptionToken,  "\n\n" + scaleConfig.Value + "\n" + scaleConfig.Description.Description.Split(';')[1],
                     amount > 0 ? ScalingFunction(amount) : ScalingFunction(1));
             }
 

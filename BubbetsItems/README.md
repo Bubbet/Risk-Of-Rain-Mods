@@ -21,6 +21,11 @@ Broken Clock
 - Rewinds time, rolling back health, shield, barrier, position and velocity.
 - Will later also rewind look position and potentially but unlikely skill usages.
 
+Wildlife Camera
+- Equipment
+- Take a photo of a enemy storing them in your camera.
+- Deploy that stored enemy as your friend.
+
 1.0.0 - Initial Release
 - First 4 items + bandolier as an orb instead of pickup.
 
@@ -37,3 +42,8 @@ Broken Clock
 
 1.1.2
 - Updated escape plans automatic tooltip value to reflect your health.
+
+1.2.0 Wildlife Camera Update
+- Added the wildlife camera, a equipment.
+- Added sounds to broken clock and wildlife camera.
+- Changed the tooltips to be a bit more descriptive for items.

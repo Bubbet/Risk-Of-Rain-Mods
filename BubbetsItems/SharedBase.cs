@@ -52,9 +52,9 @@ namespace BubbetsItems
 
             if (!serializableContentPack) return;
             serializableContentPack.itemDefs = serializableContentPack.itemDefs
-                .Where(x => Instances.Any(y => x.name == y.GetType().Name)).ToArray();
+                .Where(x => Instances.FirstOrDefault(y => x.name == y.GetType().Name)?.Enabled.Value ?? true).ToArray();
             serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs
-                .Where(x => Instances.Any(y => x.name == y.GetType().Name)).ToArray();
+                .Where(x => Instances.FirstOrDefault(y => x.name == y.GetType().Name)?.Enabled.Value ?? true).ToArray();
         }
 
         public static void AddContentPack(ContentPack contentPack)

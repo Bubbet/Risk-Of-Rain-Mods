@@ -19,6 +19,7 @@ namespace BubbetsItems.Items
         {
             //if (ItemEnabled.Value) RepulsionArmorPlateMk2Plugin.Conf.RequiresR2Api = true;
             defaultScalingFunction = "-Log(1 - (1 - [h])) * (0.65 + 0.1 * [a])";
+            defaultScalingDesc = "[a] = amount, [h] = health";
             base.MakeConfigs(configFile);
             Granularity = configFile.Bind("Balancing Functions", GetType().Name + " Granularity", 25f, "Value to multiply the scaling function by before its rounded, and then value to divide the buff count by.");
             _instance = this;
@@ -36,9 +37,18 @@ namespace BubbetsItems.Items
             modConfigEntry.SectionFields["Scaling Functions"] = list;
         }
 
-        public override string GetFormattedDescription(Inventory inventory = null)
+        public override string GetFormattedDescription(Inventory inventory = null) // TODO Fill this
         {
-            return inventory ? Language.GetStringFormatted(ItemDef.descriptionToken, scaleConfig.Value, ScalingFunction(inventory.GetItemCount(ItemDef), inventory.GetComponent<CharacterMaster>()?.GetBody()?.GetComponent<HealthComponent>()?.combinedHealthFraction ?? 1f / 500f)) : base.GetFormattedDescription(inventory);
+            if (inventory)
+            {
+                var scale = "\n\n" + scaleConfig.Value + "\n" + scaleConfig.Description.Description.Split(';')[1];
+                return Language.GetStringFormatted(ItemDef.descriptionToken, scale,
+                    ScalingFunction(inventory.GetItemCount(ItemDef),
+                        inventory.GetComponent<CharacterMaster>()?.GetBody()?.GetComponent<HealthComponent>()
+                            ?.combinedHealthFraction ?? 1f / 500f));
+            }
+            else
+                return base.GetFormattedDescription(inventory);
         }
 
         public float ScalingFunction(int itemCount, float health)
