@@ -18,7 +18,7 @@ namespace FullPrefabSkins
             Debug.Log(modelObject);
             Debug.Log(skinModel);
             var display = modelObject.name.Contains("Display") && modelObject.transform.GetChild(0).GetComponent<ModelSkinDummy>();
-            if (modelObject.GetComponent<ModelSkinDummy>() || skinModel.GetComponent<ModelSkinDummy>() || display)
+            if (__instance is FullPrefabSkinDef || modelObject.GetComponent<ModelSkinDummy>() || skinModel.GetComponent<ModelSkinDummy>() || display)
             {
                 var characterBody = modelObject.GetComponent<CharacterModel>().body;
                 if (characterBody == null || display)
@@ -41,12 +41,33 @@ namespace FullPrefabSkins
             Debug.Log("[FullPrefabSkins] Applying Display Skin");
             var skinDef = skin;
             onDisplaySkinApplyBefore?.Invoke(ref skinDef, modelObject);
-            var newObj = Object.Instantiate(skinDef.rootObject, modelObject.transform.parent, true);
-            newObj.transform.position = modelObject.transform.position;
-            newObj.transform.rotation = modelObject.transform.rotation;
-            newObj.transform.localScale = modelObject.transform.localScale;
-            onDisplaySkinApplyAfter?.Invoke(modelObject, newObj);
-            Object.DestroyImmediate(modelObject.gameObject);
+            var parent = modelObject.transform.parent;
+            // ReSharper disable once Unity.NoNullCoalescing
+            var newObj = Object.Instantiate((skinDef as FullPrefabSkinDef)?.displayPrefab ??  SurvivorCatalog.FindSurvivorDefFromBody(BodyCatalog.GetBodyPrefab(skin.FindBodyForSkinDef()))?.displayPrefab);
+            
+            onDisplaySkinApplyDuring?.Invoke(modelObject, newObj);
+            for (var i = 0; i < parent.childCount; i++)
+            {
+                var child = parent.GetChild(i);
+                Object.Destroy(child.gameObject);
+            }
+
+            for (var i = 0; i < newObj.transform.childCount; i++)
+            {
+                var child = newObj.transform.GetChild(i);
+                var transform = child.transform;
+                var pos = transform.localPosition;
+                var rot = transform.localRotation;
+                var sca = transform.localScale;
+                child.parent = parent;
+                child.localPosition = pos;
+                child.localRotation = rot;
+                child.localScale = sca;
+
+            }
+
+            onDisplaySkinApplyAfter?.Invoke(modelObject);
+            Object.Destroy(newObj);
         }
         public static void ApplySkin(this SkinDef skin, CharacterBody body, ModelLocator modelLocator)
         {
@@ -150,7 +171,8 @@ namespace FullPrefabSkins
         public delegate void ActionRef<T, T1>(ref T arg1, T1 arg2);
         public static ActionRef<SkinDef, CharacterBody, ModelLocator> onSkinSwap;
         public static ActionRef<SkinDef, GameObject> onDisplaySkinApplyBefore;
-        public static Action<GameObject, GameObject> onDisplaySkinApplyAfter;
+        public static Action<GameObject, GameObject> onDisplaySkinApplyDuring;
+        public static Action<GameObject> onDisplaySkinApplyAfter;
 
 
         public static void FillRenderInfos(this CharacterModel model)
@@ -162,6 +184,18 @@ namespace FullPrefabSkins
                 defaultShadowCastingMode = ShadowCastingMode.Off,
                 ignoreOverlays = false
             }).ToArray();
+        }
+
+        public static BodyIndex FindBodyForSkinDef(this SkinDef skin)
+        {
+            var i = 0;
+            foreach (var body in SkinCatalog.skinsByBody)
+            {
+                if (body.Contains(skin))
+                    return (BodyIndex) i;
+                i++;
+            }
+            return BodyIndex.None;
         }
     }
 }
