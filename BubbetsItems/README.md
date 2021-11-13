@@ -61,3 +61,6 @@ Wildlife Camera
 
 1.2.3
 - Fixed wildlifecamera firing in the wrong scope, causing it to not work. Was on client authoritive, is now on server.
+
+1.2.4
+- Changed WildLifeCamera set equipment to different method so ArtificerExtended does not throw nre.
