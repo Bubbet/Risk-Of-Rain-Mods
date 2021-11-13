@@ -6,6 +6,7 @@ using InLobbyConfig;
 using InLobbyConfig.Fields;
 using RoR2;
 using UnityEngine;
+using UnityEngine.Networking;
 using Object = UnityEngine.Object;
 
 namespace BubbetsItems.Equipments
@@ -153,7 +154,7 @@ Luckily they seem friendly enough");
                 if (Util.CharacterRaycast(Body.gameObject, GetAimRay(), out info, 50f,
                     LayerIndex.world.mask | LayerIndex.entityPrecise.mask, QueryTriggerInteraction.Ignore))
                 {
-                    if (Body.hasEffectiveAuthority)
+                    if (NetworkServer.active)
                     {
                         var summon = new MasterSummon
                         {

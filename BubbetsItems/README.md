@@ -47,3 +47,17 @@ Wildlife Camera
 - Added the wildlife camera, a equipment.
 - Added sounds to broken clock and wildlife camera.
 - Changed the tooltips to be a bit more descriptive for items.
+
+1.2.1
+- Fixed equipmentbase only firing performequipment on server, it now fires for everyone
+- Added support for indicators to the equipmentbase
+- Added an indicator to wildlife camera
+- Broken Clock now has a much longer cooldown by default and refills a stock when turning on rewind
+- Sounds fixed for both broken clock and wildlife camera (problem came from performequipment)
+- Broken clock stops its looping sound upon character death.
+
+1.2.2
+- Re-Added NCalc.Dll to the zip because somehow that got removed.
+
+1.2.3
+- Fixed wildlifecamera firing in the wrong scope, causing it to not work. Was on client authoritive, is now on server.
