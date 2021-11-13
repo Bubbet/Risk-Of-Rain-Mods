@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
 using HarmonyLib;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using RoR2;
+using UnityEngine;
+using UnityEngine.Networking;
 
 namespace BubbetsItems
 {
@@ -19,6 +23,7 @@ namespace BubbetsItems
         public virtual bool PerformEquipment(EquipmentSlot equipmentSlot) { return false; }
         public virtual void OnUnEquip(Inventory inventory, EquipmentState newEquipmentState) {}
         public virtual void OnEquip(Inventory inventory, EquipmentState? oldEquipmentState) {}
+        public virtual bool UpdateTargets(EquipmentSlot equipmentSlot) { return false; }
         protected virtual void PostEquipmentDef() {}
         
         public EquipmentDef EquipmentDef;
@@ -26,8 +31,26 @@ namespace BubbetsItems
         private static IEnumerable<EquipmentBase> _equipments;
         public static IEnumerable<EquipmentBase> Equipments => _equipments ?? (_equipments = Instances.OfType<EquipmentBase>());
 
+        [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.RpcOnClientEquipmentActivationRecieved))]
+        public static void PerformEquipmentActionRpc(EquipmentSlot __instance) // third
+        {
+            if (NetworkServer.active) return;
+            if (__instance.characterBody.hasEffectiveAuthority) return;
+            var boo = false;
+            PerformEquipmentAction(__instance, EquipmentCatalog.GetEquipmentDef(__instance.equipmentIndex), ref boo);
+        }
+        
+        [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.CallCmdExecuteIfReady))]
+        public static void PerformEquipmentActionClient(EquipmentSlot __instance) // first
+        {
+            if (!__instance.characterBody.hasEffectiveAuthority) return;
+            if (__instance.equipmentIndex == EquipmentIndex.None || __instance.stock <= 0) return;
+            var boo = false;
+            PerformEquipmentAction(__instance, EquipmentCatalog.GetEquipmentDef(__instance.equipmentIndex), ref boo);
+        }
+        
         [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.PerformEquipmentAction))]
-        public static bool PerformEquipmentAction(EquipmentSlot __instance, EquipmentDef equipmentDef, ref bool __result)
+        public static bool PerformEquipmentAction(EquipmentSlot __instance, EquipmentDef equipmentDef, ref bool __result) // second
         {
             var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef == equipmentDef);
             if (equipment == null) return true;
@@ -44,26 +67,44 @@ namespace BubbetsItems
             return false;
         }
 
+        [HarmonyILManipulator, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.UpdateTargets))]
+        public static void UpdateTargetsIL(ILContext il)
+        {
+            var c = new ILCursor(il);
+            var activeFlag = -1;
+            c.GotoNext( MoveType.After,
+                x => x.MatchLdarg(0),
+                x => x.MatchLdfld<EquipmentSlot>("targetIndicator"),
+                x => x.MatchLdloc(out activeFlag)
+            );
+            c.Index--;
+            c.Emit(OpCodes.Ldarg_0);
+            c.EmitDelegate<Func<EquipmentSlot, bool>>(UpdateTargetsHook);
+            c.Emit(OpCodes.Ldloc, activeFlag);
+            c.Emit(OpCodes.Or);
+            c.Emit(OpCodes.Stloc, activeFlag);
+        }
+        public static bool UpdateTargetsHook(EquipmentSlot __instance)
+        {
+            var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef.equipmentIndex == __instance.equipmentIndex);
+            if (equipment == null) return false;
+            
+            try
+            {
+                return equipment.UpdateTargets(__instance);
+            }
+            catch (Exception e)
+            {
+                equipment.Logger.LogError(e);
+            }
+
+            return false;
+        }
+
         public override string GetFormattedDescription(Inventory inventory = null)
         {
             return Language.GetString(EquipmentDef.descriptionToken);
         }
-
-        /*
-        [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.UpdateInventory))]
-        public static void OnEquipmentSwap(EquipmentSlot __instance)
-        {
-            var inventory = __instance.characterBody.inventory;
-            if (!inventory) return;
-            
-            var oldEquipmentIndex = __instance.equipmentIndex;
-            var newEquipmentIndex = inventory.GetEquipmentIndex();
-            if (newEquipmentIndex == oldEquipmentIndex) return;
-            
-            Equipments.FirstOrDefault(x => x.EquipmentDef.equipmentIndex == oldEquipmentIndex)?.OnUnequip(__instance, newEquipmentIndex);
-            Equipments.FirstOrDefault(x => x.EquipmentDef.equipmentIndex == newEquipmentIndex)?.OnEquip(__instance, oldEquipmentIndex);
-        }
-        */
 
         [HarmonyPrefix, HarmonyPatch(typeof(Inventory), nameof(Inventory.SetEquipmentInternal))]
         public static void OnEquipmentSwap(Inventory __instance, EquipmentState equipmentState, uint slot)

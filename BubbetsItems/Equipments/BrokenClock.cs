@@ -52,7 +52,7 @@ namespace BubbetsItems.Equipments
         protected override void MakeConfigs(ConfigFile configFile)
         {
             base.MakeConfigs(configFile);
-            cooldown = configFile.Bind("General", "Broken Clock Cooldown", 5f, "Broken Clock equipment cooldown.");
+            cooldown = configFile.Bind("General", "Broken Clock Cooldown", 60f, "Broken Clock equipment cooldown.");
             duration = configFile.Bind("General", "Broken Clock Buffer Duration", 10f, "Duration of time to store in the broken clock.");
             interval = configFile.Bind("General", "Broken Clock Keyframe Interval", 0.25f, "How often to capture a keyframe and store it. Also determines the size of the stack in conjunction with the duration. duration/interval = size size takes memory so try to keep it small enough.");
         }
@@ -116,6 +116,8 @@ namespace BubbetsItems.Equipments
             AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
             if (!reversing) return;
             AkSoundEngine.PostEvent("BrokenClock_Start", Body.gameObject);
+            if (!Body.hasEffectiveAuthority) return;
+            AddOneStock();
             _previousKeyframe = MakeKeyframe();
             _currentTargetKeyframe = dropoutStack.Pop();
         }
@@ -123,22 +125,37 @@ namespace BubbetsItems.Equipments
         public void Awake()
         {
             _master = GetComponent<CharacterMaster>();
+            _master.onBodyDeath.AddListener(OnDeath);
+        }
+
+        public void OnDeath()
+        {
+            AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
+            reversing = false;
         }
 
         public void FixedUpdate()
         {
+            if (!Body) return;
+            if (!Body.hasEffectiveAuthority) return;
             if (reversing)
             {
                 DoReverseBehaviour();
             }
             else
             {
-                if (!Body) return;
                 _keyframeStopwatch += Time.fixedDeltaTime;
                 if (_keyframeStopwatch < keyframeInterval) return;
                 _keyframeStopwatch -= keyframeInterval;
                 dropoutStack.Push(MakeKeyframe());
             }
+        }
+        
+        private void AddOneStock()
+        {
+            var slot = Body.inventory.activeEquipmentSlot;
+            var equipmentState = Body.inventory.GetEquipment(slot);
+            Body.inventory.SetEquipment(new EquipmentState(equipmentState.equipmentIndex, equipmentState.chargeFinishTime, (byte) (equipmentState.charges + 1)), slot);
         }
 
         private BrokenClockKeyframe MakeKeyframe()
@@ -165,7 +182,7 @@ namespace BubbetsItems.Equipments
             HealthComponent.barrier = keyframe.Barrier;
             HealthComponent.shield = keyframe.Shield;
 
-            CharacterMotor.Motor.MoveCharacter(keyframe.Position);
+            CharacterMotor.Motor.MoveCharacter(keyframe.Position); // This does not work as we are in the server scope right now and server cannot move client authoritive player.
             CharacterMotor.velocity = keyframe.Velocity;
             //characterMotor.velocity = Vector3.zero;
             //_lastVelocity = keyframe.Velocity;

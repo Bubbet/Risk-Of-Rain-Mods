@@ -13,11 +13,19 @@ namespace BubbetsItems.Equipments
     public class WildLifeCamera : EquipmentBase
     {
         private ConfigEntry<float> _cooldown;
+        private ConfigEntry<bool> _filterOutBosses;
+        private GameObject indicator;
 
         public override bool PerformEquipment(EquipmentSlot equipmentSlot)
-        {
+        { 
             equipmentSlot.inventory.gameObject.GetComponent<WildLifeCameraBehaviour>().Perform();
             return true;
+        }
+
+        public override void OnEquip(Inventory inventory, EquipmentState? oldEquipmentState)
+        {
+            base.OnEquip(inventory, oldEquipmentState);
+            inventory.gameObject.AddComponent<WildLifeCameraBehaviour>();
         }
 
         public override void OnUnEquip(Inventory inventory, EquipmentState newEquipmentState)
@@ -26,12 +34,24 @@ namespace BubbetsItems.Equipments
             Object.Destroy(inventory.gameObject.GetComponent<WildLifeCameraBehaviour>());
         }
 
-        public override void OnEquip(Inventory inventory, EquipmentState? oldEquipmentState)
+        public override bool UpdateTargets(EquipmentSlot equipmentSlot)
         {
-            base.OnEquip(inventory, oldEquipmentState);
-            inventory.gameObject.AddComponent<WildLifeCameraBehaviour>();
+            base.UpdateTargets(equipmentSlot);
+            
+            if (equipmentSlot.stock <= 0) return false;
+            var behaviour = equipmentSlot.inventory.GetComponent<WildLifeCameraBehaviour>();
+            if (!behaviour || behaviour.target) return false;
+            
+            equipmentSlot.ConfigureTargetFinderForEnemies();
+            equipmentSlot.currentTarget = new EquipmentSlot.UserTargetInfo(equipmentSlot.targetFinder.GetResults().FirstOrDefault(x => _filterOutBosses.Value && !x.healthComponent.body.isBoss || !_filterOutBosses.Value));
+
+            if (!equipmentSlot.currentTarget.transformToIndicateAt) return false;
+            
+            equipmentSlot.targetIndicator.visualizerPrefab = indicator;
+            //equipmentSlot.targetIndicator.targetTransform = equipmentSlot.currentTarget.transformToIndicateAt;
+            return true;
         }
-        
+
         protected override void MakeTokens()
         {
             base.MakeTokens();
@@ -50,6 +70,8 @@ Luckily they seem friendly enough");
         {
             base.MakeConfigs(configFile);
             _cooldown = configFile.Bind("General", "Wildlife Camera Cooldown", 25f, "Cooldown for wildlife camera equipment.");
+            _filterOutBosses = configFile.Bind("General", "Wildlife Camera Can Do Bosses", false, "Can the camera capture bosses.");
+            indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("CameraIndicator");
         }
 
         public override void MakeInLobbyConfig(object modConfigEntryObj)
@@ -63,6 +85,8 @@ Luckily they seem friendly enough");
                 _cooldown.Value = newValue;
                 EquipmentDef.cooldown = newValue;
             });
+            
+            list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(_filterOutBosses));
             list.Add(cool);
             modConfigEntry.SectionFields["General"] = list;
         }
@@ -101,19 +125,11 @@ Luckily they seem friendly enough");
     {
         private CharacterMaster _master;
         private CharacterBody _body;
-        private BullseyeSearch search;
-        private GameObject target;
+        public GameObject target;
         private CharacterBody Body => _body ? _body : _body = _master.GetBody();
         public void Awake()
         {
             _master = GetComponent<CharacterMaster>();
-            search = new BullseyeSearch
-            {
-                teamMaskFilter = TeamMask.all,
-                maxDistanceFilter = 50f,
-                maxAngleFilter = 90f,
-                sortMode = BullseyeSearch.SortMode.DistanceAndAngle
-            };
         }
 
         public void Perform()
@@ -126,10 +142,8 @@ Luckily they seem friendly enough");
                     target = MasterCatalog.GetMasterPrefab(targ.healthComponent.body.master.masterIndex);
                     if (target)
                     {
-                        AkSoundEngine.PostEvent("WildlifeCamera_TakePicture", Body.gameObject);
-                        var slot = Body.inventory.activeEquipmentSlot;
-                        var equipmentState = Body.inventory.GetEquipment(slot);
-                        Body.inventory.SetEquipment(new EquipmentState(equipmentState.equipmentIndex, equipmentState.chargeFinishTime, (byte) (equipmentState.charges + 1)), slot);
+                        AkSoundEngine.PostEvent("WildlifeCamera_TakePicture", Body.gameObject); // Sound does not play for clients, does play for body owner
+                        AddOneStock();
                     }
                 }
             }
@@ -139,52 +153,45 @@ Luckily they seem friendly enough");
                 if (Util.CharacterRaycast(Body.gameObject, GetAimRay(), out info, 50f,
                     LayerIndex.world.mask | LayerIndex.entityPrecise.mask, QueryTriggerInteraction.Ignore))
                 {
-                    /*
-                    var friend = Instantiate(target);
-                    var master = friend.GetComponent<CharacterMaster>();
-                    master.teamIndex = _master.teamIndex;
-                    //master.Respawn(info.point, Quaternion.identity);
-                    master.SpawnBody(info.point, Quaternion.identity);
-                    Debug.Log("spawning dude");
-                    //friend.transform.position = info.point;
-                    //var body = friend.GetComponent<CharacterBody>();
-                    //body.teamComponent.teamIndex = Body.teamComponent.teamIndex;
-                    target = null;
-                    */
-
-                    var summon = new MasterSummon
+                    if (Body.hasEffectiveAuthority)
                     {
-                        masterPrefab = target,
-                        position = info.point,
-                        rotation = Quaternion.identity,
-                        //inventoryToCopy = Body.inventory,
-                        useAmbientLevel = true,
-                        teamIndexOverride = TeamIndex.Player,
-                        summonerBodyObject = Body.gameObject,
-                        inventorySetupCallback = this
-                    };
-                    summon.Perform();
+                        var summon = new MasterSummon
+                        {
+                            masterPrefab = target,
+                            position = info.point,
+                            rotation = Quaternion.identity,
+                            //inventoryToCopy = Body.inventory,
+                            useAmbientLevel = true,
+                            teamIndexOverride = TeamIndex.Player,
+                            summonerBodyObject = Body.gameObject,
+                            inventorySetupCallback = this
+                        };
+                        summon.Perform();
+                    }
+
                     AkSoundEngine.PostEvent("WildlifeCamera_Success", Body.gameObject);
                     target = null;
+                }
+                else
+                {
+                    AddOneStock();
                 }
             }
         }
 
-        public HurtBox GetTarget()
+        private void AddOneStock()
         {
-            var ray = GetAimRay();
-            if (Body.teamComponent)
-            {
-                search.teamMaskFilter.RemoveTeam(Body.teamComponent.teamIndex);
-            }
-            search.searchOrigin = ray.origin;
-            search.searchDirection = ray.direction;
-            search.RefreshCandidates();
-            search.FilterOutGameObject(Body.gameObject);
-            return search.GetResults().FirstOrDefault();
+            var slot = Body.inventory.activeEquipmentSlot;
+            var equipmentState = Body.inventory.GetEquipment(slot);
+            Body.inventory.SetEquipment(new EquipmentState(equipmentState.equipmentIndex, equipmentState.chargeFinishTime, (byte) (equipmentState.charges + 1)), slot);
         }
-        
-        protected Ray GetAimRay()
+
+        private HurtBox GetTarget()
+        {
+            return Body.equipmentSlot.currentTarget.hurtBox;
+        }
+
+        private Ray GetAimRay()
         {
             var bank = Body.inputBank;
             return bank ? new Ray(bank.aimOrigin, bank.aimDirection) : new Ray(Body.transform.position, Body.transform.forward);
