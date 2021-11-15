@@ -15,12 +15,11 @@ namespace BubbetsItems.Equipments
     {
         private ConfigEntry<float> _cooldown;
         private ConfigEntry<bool> _filterOutBosses;
-        private GameObject indicator;
+        private GameObject _indicator;
 
         public override bool PerformEquipment(EquipmentSlot equipmentSlot)
         { 
-            equipmentSlot.inventory.gameObject.GetComponent<WildLifeCameraBehaviour>().Perform();
-            return true;
+            return equipmentSlot.inventory.gameObject.GetComponent<WildLifeCameraBehaviour>().Perform();
         }
 
         public override void OnEquip(Inventory inventory, EquipmentState? oldEquipmentState)
@@ -44,12 +43,11 @@ namespace BubbetsItems.Equipments
             if (!behaviour || behaviour.target) return false;
             
             equipmentSlot.ConfigureTargetFinderForEnemies();
-            equipmentSlot.currentTarget = new EquipmentSlot.UserTargetInfo(equipmentSlot.targetFinder.GetResults().FirstOrDefault(x => _filterOutBosses.Value && !x.healthComponent.body.isBoss || !_filterOutBosses.Value));
+            equipmentSlot.currentTarget = new EquipmentSlot.UserTargetInfo(equipmentSlot.targetFinder.GetResults().FirstOrDefault(x => x.healthComponent && (_filterOutBosses.Value && !x.healthComponent.body.isBoss || !_filterOutBosses.Value)));
 
             if (!equipmentSlot.currentTarget.transformToIndicateAt) return false;
             
-            equipmentSlot.targetIndicator.visualizerPrefab = indicator;
-            //equipmentSlot.targetIndicator.targetTransform = equipmentSlot.currentTarget.transformToIndicateAt;
+            equipmentSlot.targetIndicator.visualizerPrefab = _indicator;
             return true;
         }
 
@@ -72,7 +70,7 @@ Luckily they seem friendly enough");
             base.MakeConfigs(configFile);
             _cooldown = configFile.Bind("General", "Wildlife Camera Cooldown", 25f, "Cooldown for wildlife camera equipment.");
             _filterOutBosses = configFile.Bind("General", "Wildlife Camera Can Do Bosses", false, "Can the camera capture bosses.");
-            indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("CameraIndicator");
+            _indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("CameraIndicator");
         }
 
         public override void MakeInLobbyConfig(object modConfigEntryObj)
@@ -133,7 +131,7 @@ Luckily they seem friendly enough");
             _master = GetComponent<CharacterMaster>();
         }
 
-        public void Perform()
+        public bool Perform()
         {
             if (!target)
             {
@@ -145,6 +143,7 @@ Luckily they seem friendly enough");
                     {
                         AkSoundEngine.PostEvent("WildlifeCamera_TakePicture", Body.gameObject); // Sound does not play for clients, does play for body owner
                         AddOneStock();
+                        return true;
                     }
                 }
             }
@@ -172,12 +171,10 @@ Luckily they seem friendly enough");
 
                     AkSoundEngine.PostEvent("WildlifeCamera_Success", Body.gameObject);
                     target = null;
-                }
-                else
-                {
-                    AddOneStock();
+                    return true;
                 }
             }
+            return false;
         }
 
         private void AddOneStock()

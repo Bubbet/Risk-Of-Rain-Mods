@@ -64,3 +64,7 @@ Wildlife Camera
 
 1.2.4
 - Changed WildLifeCamera set equipment to different method so ArtificerExtended does not throw nre.
+
+1.2.5
+- Added hurtbox requirement to the camera as its needed to get reference to the master anyways.
+- Changed camera to refund a stock if you miss the capture, making it actually work with gesture.
