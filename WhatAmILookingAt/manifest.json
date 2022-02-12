@@ -1,0 +1,12 @@
+﻿{
+	"name": "WhatAmILookingAt",
+	"authorName":"Bubbet",
+	"website_url":"https://github.com/Bubbet",
+	"displayName":"What Am I Looking At",
+
+	"version_number": "1.1.0",
+	"description": "Figure out what content came from where.",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.9"
+	]
+}
