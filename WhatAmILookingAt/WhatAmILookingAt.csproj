@@ -16,7 +16,7 @@
             <HintPath>..\..\Libs\BepInEx.dll</HintPath>
         </Reference>
         <Reference Include="BetterAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\Libs\BetterAPI-nstrip.dll</HintPath>
+          <HintPath>..\..\Libs\BetterAPI.dll</HintPath>
         </Reference>
         <Reference Include="HGCSharpUtils, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
           <HintPath>..\..\Libs\HGCSharpUtils.dll</HintPath>

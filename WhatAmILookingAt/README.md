@@ -15,3 +15,7 @@
 1.1.0 - BetterAPI Support
 - Added support for BetterAPI Items
 - Added support for BetterUI's buffInfos
+
+1.1.1
+- Support for BetterAPI 2.0
+- Made that support actually optional

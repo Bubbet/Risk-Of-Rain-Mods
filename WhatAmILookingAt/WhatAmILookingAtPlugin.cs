@@ -15,7 +15,7 @@ using RoR2;
 namespace WhatAmILookingAt
 {
 	// needs to be prefixed with aaaa so it loads before all the mods that require r2api
-	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.1.0")]
+	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.1.1")]
 	[BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterAPI", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
@@ -26,6 +26,7 @@ namespace WhatAmILookingAt
 		//public static Dictionary<string, ContentPack> ContentPacksForward => HarmonyPatches.contentPacks;
 		public static HarmonyPatches test = new HarmonyPatches();
 		public static bool BetterUIEnabled;
+		public static bool BetterAPIEnabled;
 
 		public void Awake()
 		{
@@ -34,6 +35,9 @@ namespace WhatAmILookingAt
 			var harm = new Harmony(Info.Metadata.GUID);
 			new PatchClassProcessor(harm, typeof(HarmonyPatches)).Patch();
 			//harm.PatchAll();
+			
+			BetterAPIEnabled = Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterAPI");
+			BetterUIEnabled = Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterUI");
 
 			if (Chainloader.PluginInfos.ContainsKey("com.bepis.r2api")) // Dynamically patch r2api methods instead of via attributes
 			{
@@ -42,14 +46,13 @@ namespace WhatAmILookingAt
 				processor.Patch();
 			}
 			
-			if (Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterAPI")) // Dynamically patch betterapi methods instead of via attributes
+			/*
+			if (BetterAPIEnabled) // Dynamically patch betterapi methods instead of via attributes
 			{
 				Log.LogInfo("Patching BetterAPI");
 				var processor = new PatchClassProcessor(harm, typeof(BetterAPICompat), false);
 				processor.Patch();
-			}
-
-			BetterUIEnabled = Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterUI");
+			}*/
 
 			//var methodInfo = typeof(ContentManager).GetMethod(nameof(ContentManager.LoadContentPacks))?.ReturnType.GetMethod(nameof(IEnumerator.MoveNext));
 

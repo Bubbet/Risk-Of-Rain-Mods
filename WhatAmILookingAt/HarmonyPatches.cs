@@ -6,7 +6,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
-using BepInEx.Bootstrap;
 using BetterAPI;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -17,7 +16,6 @@ using RoR2.ContentManagement;
 using RoR2.Skills;
 using RoR2.UI;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace WhatAmILookingAt
 {
@@ -109,20 +107,25 @@ namespace WhatAmILookingAt
 						goto default;
 					break;
 				}
+				/*
 				case "BetterAPI":
 				{
-					if (BetterAPICompat.BetterAPIMap.ContainsKey(ite))
+					if (ContentPacks.FindAssembly()) //(BetterAPICompat.BetterAPIMap.ContainsKey(ite))
 						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", BetterAPICompat.BetterAPIMap[ite].Name); // TODO currently this is just contentpack identifier, i need to get to bepinplugin
 					else
 						goto default;
 					break;
-				}
+				}*/
 				case "RoR2.BaseContent":
 					str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_VANILLA", "DLC 0");
 					break;
 				default:
 				{
-					if (ContentPackToBepinPluginMap.ContainsKey(identifier))
+					if (WhatAmILookingAtPlugin.BetterAPIEnabled && BetterAPICompat.GetPluginFromAssembly(identifier, out var plugin))
+					{
+						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", plugin!.Name);
+					}
+					else if (ContentPackToBepinPluginMap.ContainsKey(identifier))
 					{
 						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", ContentPackToBepinPluginMap[identifier].Name);
 					}
@@ -225,24 +228,26 @@ namespace WhatAmILookingAt
 	{
 		public static readonly Dictionary<object, BepInPlugin> R2Map = new Dictionary<object, BepInPlugin>();
 
+		private static void AddObject<T>(int offset, T obj)
+		{
+			if (obj == null) return;
+			var assembly = new StackFrame(offset + 1).GetMethod().DeclaringType?.Assembly;
+			if (!HarmonyPatches.GetPluginFromAssembly(assembly, out var plugin)) return;
+			R2Map.Add(obj, plugin!);
+		}
+
 		[HarmonyPrefix, HarmonyPatch(typeof(ItemAPI), nameof(ItemAPI.Add), typeof(CustomItem))]
 		public static void ItemPost(CustomItem? item)
 		{
 			if (item == null) return;
-			var assembly = new StackTrace().GetFrame(3).GetMethod().DeclaringType?.Assembly;
-			if (!HarmonyPatches.GetPluginFromAssembly(assembly, out var plugin)) return;
-			if (item.ItemDef != null)
-				R2Map.Add(item.ItemDef, plugin!);
+			AddObject(3, item.ItemDef);
 		}
 		
 		[HarmonyPrefix, HarmonyPatch(typeof(ItemAPI), nameof(ItemAPI.Add), typeof(CustomEquipment))]
 		public static void ItemPost(CustomEquipment? item)
 		{
 			if (item == null) return;
-			var assembly = new StackTrace().GetFrame(3).GetMethod().DeclaringType?.Assembly;
-			if (!HarmonyPatches.GetPluginFromAssembly(assembly, out var plugin)) return;
-			if (item.EquipmentDef != null)
-				R2Map.Add(item.EquipmentDef, plugin!);
+			AddObject(3, item.EquipmentDef);
 		}
 
 		[HarmonyPrefix, HarmonyPatch(typeof(LoadoutAPI), nameof(LoadoutAPI.AddSkillDef))]
@@ -250,26 +255,19 @@ namespace WhatAmILookingAt
 		{
 			// TODO might need to do AddSkill too
 			if (s == null) return;
-			var assembly = new StackTrace().GetFrame(2).GetMethod().DeclaringType?.Assembly;
-			if (!HarmonyPatches.GetPluginFromAssembly(assembly, out var plugin)) return;
-			R2Map.Add(s, plugin!);
+			AddObject(2, s);
 		}
 		
 		[HarmonyPostfix, HarmonyPatch(typeof(UnlockableAPI), nameof(UnlockableAPI.AddUnlockable), typeof(Type), typeof(Type), typeof(UnlockableDef))]
 		public static void UnlockablePost(Type unlockableType, Type serverTrackerType, UnlockableDef unlockableDef, UnlockableDef __result)
 		{
-			var assembly = new StackTrace().GetFrame(4).GetMethod().DeclaringType?.Assembly;
-			if (!HarmonyPatches.GetPluginFromAssembly(assembly, out var plugin)) return;
-			R2Map.Add(__result, plugin!);
+			AddObject(4, __result);
 		}
 		
 		[HarmonyPrefix, HarmonyPatch(typeof(ArtifactAPI), nameof(ArtifactAPI.Add), typeof(ArtifactDef))]
 		public static void ArtifactPost(ArtifactDef? artifactDef)
 		{
-			if (artifactDef == null) return;
-			var assembly = new StackTrace().GetFrame(2).GetMethod().DeclaringType?.Assembly;
-			if (!HarmonyPatches.GetPluginFromAssembly(assembly, out var plugin)) return;
-			R2Map.Add(artifactDef, plugin!);
+			AddObject(2, artifactDef);
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(ArtifactAPI), nameof(ArtifactAPI.Add), typeof(string), typeof(string), typeof(string), typeof(GameObject), typeof(Sprite), typeof(Sprite), typeof(UnlockableDef))]
@@ -290,9 +288,7 @@ namespace WhatAmILookingAt
 		public static void BuffPost(CustomBuff? buff)
 		{
 			if (buff == null) return;
-			var assembly = new StackTrace().GetFrame(2).GetMethod().DeclaringType?.Assembly;
-			if (!HarmonyPatches.GetPluginFromAssembly(assembly, out var plugin)) return;
-			R2Map.Add(buff.BuffDef!, plugin!);
+			AddObject(2, buff.BuffDef);
 		}
 	}
 
@@ -321,10 +317,10 @@ namespace WhatAmILookingAt
 			});
 		}
 
-		public static readonly Assembly BetterAPIAssembly = typeof(BetterAPIPlugin).Assembly;
+		//public static readonly Assembly BetterAPIAssembly = typeof(BetterAPIPlugin).Assembly;
 		public static readonly Assembly WailaAssembly = typeof(WhatAmILookingAtPlugin).Assembly;
 		
-		[HarmonyPostfix, HarmonyPatch(typeof(Items), nameof(Items.Add), typeof(ItemDef), typeof(Items.CharacterItemDisplayRule[]), typeof(string))]
+		/*[HarmonyPostfix, HarmonyPatch(typeof(Items), nameof(Items.Add), typeof(ItemDef), typeof(Items.CharacterItemDisplayRule[]), typeof(string))]
 		public static void ItemPost(ItemDef itemDef, string? contentPackIdentifier)
 		{
 			var trace = new StackTrace();
@@ -345,6 +341,19 @@ namespace WhatAmILookingAt
 			}
 			else
 				WhatAmILookingAtPlugin.Log.LogWarning("BetterAPI failed to find plugin for item: " + itemDef);
+		}
+		//*/
+		public static bool GetPluginFromAssembly(string identifier, out BepInPlugin? o)
+		{
+			var assembly = ContentPacks.FindAssembly(identifier);
+			if (HarmonyPatches.GetPluginFromAssembly(assembly, out var plugin))
+			{
+				o = plugin;
+				return true;
+			}
+
+			o = null;
+			return false;
 		}
 	}
 }
