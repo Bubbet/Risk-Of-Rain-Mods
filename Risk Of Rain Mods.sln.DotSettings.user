@@ -62,9 +62,11 @@
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CDropItems_005CLibs_005CUnity_002ETextMeshPro_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005C0Harmony_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CAetherium_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CAssembly_002DCSharp_002Dnstrip_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CAssembly_002DCSharp_002DPublic_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CAssembly_002DCSharp_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CBepInEx_002Exml/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CBetterAPI_002Dnstrip_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CBetterAPI_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CBetterUI_002Dnstrip_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CHGCSharpUtils_002Edll/@EntryIndexedValue">True</s:Boolean>
@@ -80,6 +82,7 @@
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CUnityEngine_002ECoreModule_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CUnityEngine_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CUnityEngine_002ENetworking_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CUnityEngine_002ENetworking_002Erefstub_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CUnityEngine_002EPhysicsModule_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CUnity_002ETextMeshPro_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005CDev_005CProgramming_005CC_0023_005CLibs_005CWwise_002Edll/@EntryIndexedValue">True</s:Boolean>
@@ -193,27 +196,45 @@
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005CSteam_005Csteamapps_005Ccommon_005CRisk_0020of_0020Rain_00202_005CRisk_0020of_0020Rain_00202_005FData_005CManaged_005CWwise_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=G_003A_005CSteam_005Csteamapps_005Ccommon_005CRisk_0020of_0020Rain_00202_005CRisk_0020of_0020Rain_00202_005FData_005CManaged_005CZio_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
-  &lt;Assembly Path="C:\Users\Bubbet\Desktop\Dev\Programming\C#\Libs\R2API.dll" /&gt;&#xD;
-  &lt;Assembly Path="I:\Steam\steamapps\common\Risk of Rain 2\Risk of Rain 2_Data\Managed\Assembly-CSharp.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Bubbet\.nuget\packages\ncalc2\2.1.0\lib\netstandard2.0\NCalc2.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Bubbet\.nuget\packages\coreclr-ncalc\2.2.92\lib\netstandard2.0\NCalc.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/BuildTool/MsBuildSolutionLoadingNodeCount/@EntryValue">4</s:Int64>
 	
 	<s:Boolean x:Key="/Default/Environment/Hierarchy/Build/SolutionBuilderNext/PassVisualStudioParameters/@EntryValue">True</s:Boolean>
-	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=0c634537_002Dfd12_002D4787_002Da472_002D335055fc21a1_0023KookehsDropItemPatch/@EntryIndexedValue">True</s:Boolean>
-	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=169f58ba_002Db5e6_002D4b58_002D9634_002D25818df80472_0023NemesisEnforcerStarStormConfig/@EntryIndexedValue">True</s:Boolean>
 	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=2ca01e47_002D22dc_002D4c03_002D9141_002D6b79c02ddc75_0023DamageHistory/@EntryIndexedValue">True</s:Boolean>
-	
-	
-	
-	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=34565a66_002D90b5_002D4955_002Daa22_002Dd9291e5820f2_0023ModItemsChest/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=3f961112_002Df45e_002D49c5_002Db771_002D28077047915e_0023PickupDiscoveryFix/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=46fe5c63_002D7dad_002D45a9_002D99a1_002Dd93e463ec670_0023StartingItemsGuiPatch/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=c8c0549e_002D0dd4_002D47ff_002Db103_002Df347f30d70e0_0023FullPrefabSkins/@EntryIndexedValue">True</s:Boolean>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	

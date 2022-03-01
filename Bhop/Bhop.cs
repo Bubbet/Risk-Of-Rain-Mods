@@ -148,7 +148,8 @@ namespace Bhop
         {
             if (!disableAirControlUntilCollision && !self.Motor.GroundingStatus.IsStableOnGround)
             {
-                int count = body.inventory.GetItemCount(Assets.BhopFeatherDef);
+                // ReSharper disable once Unity.NoNullPropagation
+                int count = body.inventory?.GetItemCount(Assets.BhopFeatherDef) ?? 0;
                 if (count <= 0) return velocityFromMoveTowards;
                         
                 var newTarget = target; 
