@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -69,44 +70,51 @@ namespace Titanfall2Mod
         [SystemInitializer]
         public static void LoadSoundBank()
         {
-            if (SoundBankName == "")
+            try
             {
-                Debug.LogFormat("Titanfall2Mod: SoundBank name is blank. Skipping loading SoundBank.");
-                return;
+                if (SoundBankName == "")
+                {
+                    Debug.LogFormat("Titanfall2Mod: SoundBank name is blank. Skipping loading SoundBank.");
+                    return;
+                }
+
+
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                Stream stream = File.Open(Path.Combine(path, SoundBankName + ".bnk"), FileMode.Open);
+                var array = new byte[stream.Length];
+                stream.Read(array, 0, array.Length);
+
+                //R2API.SoundAPI.SoundBanks.Add(array);
+
+
+                Titanfall2ModPlugin.logger.LogInfo("length of sndbnk: " + array.Length);
+                var mem = Marshal.AllocHGlobal(array.Length);
+                Marshal.Copy(array, 0, mem, array.Length);
+                var result = AkSoundEngine.LoadBank(mem, (uint) array.Length, out bankID);
+                if (result != AKRESULT.AK_Success)
+                    Titanfall2ModPlugin.logger.LogError("SoundBank Load Failed: " + result);
+                //*/
+
+                //AkSoundEngine.AddBasePath(path);
+                //AkBankManager.LoadBank(SoundBankName, false, false);
+
+                /*
+                foreach (var manifestResourceName in Assembly.GetExecutingAssembly().GetManifestResourceNames())
+                {
+                    Debug.Log("names: "+ manifestResourceName);
+                }
+                using (var manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("Titanfall2Mod.TitanFall2ModSounds.bnk"))//"TitanFall2Mod." + SoundBankName + ".bnk"))
+                {
+                    var array = new byte[manifestResourceStream2.Length];
+                    manifestResourceStream2.Read(array, 0, array.Length);
+                    R2API.SoundAPI.SoundBanks.Add(array);
+                }
+                //*/
             }
-
-            
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Stream stream = File.Open(Path.Combine(path, SoundBankName + ".bnk"), FileMode.Open);
-            var array = new byte[stream.Length];
-            stream.Read(array, 0, array.Length);
-
-            //R2API.SoundAPI.SoundBanks.Add(array);
-            
-            
-            Titanfall2ModPlugin.logger.LogInfo("length of sndbnk: " + array.Length);
-            var mem = Marshal.AllocHGlobal(array.Length);
-            Marshal.Copy(array, 0, mem, array.Length);
-            var result = AkSoundEngine.LoadBank(mem, (uint) array.Length, out bankID);
-            if (result != AKRESULT.AK_Success)
-                Titanfall2ModPlugin.logger.LogError("SoundBank Load Failed: " + result);
-            //*/
-
-            //AkSoundEngine.AddBasePath(path);
-            //AkBankManager.LoadBank(SoundBankName, false, false);
-
-            /*
-            foreach (var manifestResourceName in Assembly.GetExecutingAssembly().GetManifestResourceNames())
+            catch (Exception e)
             {
-                Debug.Log("names: "+ manifestResourceName);
+                Titanfall2ModPlugin.logger.LogError(e);
             }
-            using (var manifestResourceStream2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("Titanfall2Mod.TitanFall2ModSounds.bnk"))//"TitanFall2Mod." + SoundBankName + ".bnk"))
-            {
-                var array = new byte[manifestResourceStream2.Length];
-                manifestResourceStream2.Read(array, 0, array.Length);
-                R2API.SoundAPI.SoundBanks.Add(array);
-            }
-            //*/
         }
 
         // Gathers all GameObjects with VFXAttributes attached and creates an EffectDef for each one.

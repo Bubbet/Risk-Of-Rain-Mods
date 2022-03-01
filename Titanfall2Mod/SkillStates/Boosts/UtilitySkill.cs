@@ -28,9 +28,9 @@ namespace Titanfall2Mod.SkillStates
 
         public void CallTitan()
         {
-            //if (!NetworkServer.active) return;
+            if (!NetworkServer.active) return;
             //if (!isAuthority) return;
-            
+
             var aimRay = GetAimRay();
             if (!Physics.Raycast(aimRay.origin, aimRay.direction, out var hit)) return;
             _pilotMaster.OnTitanCall();
@@ -55,7 +55,9 @@ namespace Titanfall2Mod.SkillStates
             var master = test.Perform();
 
             GameObject gameObject = Object.Instantiate(Resources.Load<GameObject>("prefabs/networkedobjects/survivorpod"), hit.point, Quaternion.identity); //Assets.mainContentPack.networkedObjectPrefabs[2], hit.point, Quaternion.identity);
-            gameObject.GetComponent<VehicleSeat>().AssignPassenger(master.GetBodyObject());
+            var seat = gameObject.GetComponent<VehicleSeat>();
+            seat.hidePassenger = false; // this doesnt work for clients because they have their own instance of survivor pod that has not had this done to them
+            seat.AssignPassenger(master.GetBodyObject());
             NetworkServer.Spawn(gameObject);
         }
 

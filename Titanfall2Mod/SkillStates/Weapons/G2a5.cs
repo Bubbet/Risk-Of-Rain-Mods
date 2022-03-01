@@ -51,6 +51,7 @@ namespace Titanfall2Mod.SkillStates.Weapons
             skillDef.baseMaxStock = 14;
             skillDef.resetCooldownTimerOnUse = true;
             skillDef.baseRechargeInterval = 2.64f;
+            skillDef.activationStateMachineName = "Weapon";
             ((GunSkillDef) skillDef).fireInterval = Config.FireRateMult.Value / 5.5f;
         }
     }

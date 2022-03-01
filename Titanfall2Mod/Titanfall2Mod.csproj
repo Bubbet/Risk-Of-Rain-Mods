@@ -9,7 +9,7 @@
         <HintPath>..\..\..\..\..\..\AppData\Roaming\Thunderstore Mod Manager\DataFolder\RiskOfRain2\profiles\Titanfall2Mod\BepInEx\core\0Harmony.dll</HintPath>
       </Reference>
       <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Libs\Assembly-CSharp-Public.dll</HintPath>
+        <HintPath>..\..\Libs\Assembly-CSharp-nstrip.dll</HintPath>
       </Reference>
       <Reference Include="BepInEx, Version=5.4.9.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\..\..\..\..\..\AppData\Roaming\Thunderstore Mod Manager\DataFolder\RiskOfRain2\profiles\Titanfall2Mod\BepInEx\core\BepInEx.dll</HintPath>

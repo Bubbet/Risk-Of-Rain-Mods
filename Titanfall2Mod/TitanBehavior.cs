@@ -126,6 +126,8 @@ namespace Titanfall2Mod
 
         private void CheckPilotEnterAllowed(CharacterBody b, ref Interactability? i)
         {
+            i = Interactability.Available; // todo part of titanmasternre
+            return;
             if (_seatCooldown < 0 && b.gameObject == pilotBehavior.gameObject)
             {
                 i = Interactability.Available;

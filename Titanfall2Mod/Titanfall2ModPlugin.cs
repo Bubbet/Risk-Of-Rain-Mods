@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using BepInEx;
 using BepInEx.Logging;
+using EntityStates.Engi.EngiWeapon;
 using HarmonyLib;
 using RoR2;
 using RoR2.UI;

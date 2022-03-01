@@ -48,8 +48,7 @@ namespace Titanfall2Mod
 
         private void MasterOnBodyStart(CharacterBody obj)
         {
-            obj.GetComponent<NetworkIdentity>().AssignClientAuthority(pilotMaster.master
-                .playerCharacterMasterController.networkUser.connectionToClient);
+            //obj.GetComponent<NetworkIdentity>().AssignClientAuthority(pilotMaster.master.playerCharacterMasterController.networkUser.connectionToClient); // Todo throws nre as client
         }
 
         public void SetOwner(PilotMaster pilotMasterIn)
