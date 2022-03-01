@@ -38,26 +38,26 @@ namespace BubbetsItems.Items
             var modConfigEntry = (ModConfigEntry) modConfigEntryObj;
             var list = modConfigEntry.SectionFields["Scaling Functions"].ToList();
             var reduction = new StringConfigField(_reductionScalingConfig.Definition.Key, () => _reductionScalingConfig.Value, newValue => {
-                    try
-                    {
-                        _reductionScalingConfig.Value = newValue;
-                        UpdateScalingFunction();
-                    } catch (EvaluationException) { }
+                try
+                {
+                    _reductionScalingConfig.Value = newValue;
+                    UpdateScalingFunction();
+                } catch (EvaluationException) { }
             });
             
             var armor = new StringConfigField(_armorScalingConfig.Definition.Key, () => _armorScalingConfig.Value, newValue => {
-                    try
-                    {
-                        _armorScalingConfig.Value = newValue;
-                        UpdateScalingFunction();
-                    } catch (EvaluationException) { } 
+                try
+                {
+                    _armorScalingConfig.Value = newValue;
+                    UpdateScalingFunction();
+                } catch (EvaluationException) { } 
             });
             var toggle = new BooleanConfigField(_reductionOnTrue.Definition.Key, () => _reductionOnTrue.Value, newValue => {
-                    try
-                    {
-                        _reductionOnTrue.Value = newValue;
-                        UpdateScalingFunction();
-                    } catch (EvaluationException) { }
+                try
+                {
+                    _reductionOnTrue.Value = newValue;
+                    UpdateScalingFunction();
+                } catch (EvaluationException) { }
             });
             list.Add(reduction);
             list.Add(armor);
@@ -164,7 +164,7 @@ The cost of purchase and production associated with Mk2 is considerably higher t
         public static void TakeDamageHook(ILContext il)
         {
             if (!_instance.Enabled.Value) return;
-	        if (!_reductionOnTrue.Value) return;
+            if (!_reductionOnTrue.Value) return;
             var c = new ILCursor(il);
             ILLabel jumpInstruction = null;
             int damageNum = -1;

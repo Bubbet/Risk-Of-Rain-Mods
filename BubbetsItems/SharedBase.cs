@@ -73,7 +73,14 @@ namespace BubbetsItems
         {
             foreach (var item in Instances)
             {
-                item.MakeTokens();
+                try
+                {
+                    item.MakeTokens();
+                }
+                catch (Exception e)
+                {
+                    item.Logger.LogError(e);
+                }
             }
         }
 

@@ -58,28 +58,37 @@ namespace BubbetsItems
         [SystemInitializer(typeof(ItemCatalog))]
         public static void AssignAllItemDefs()
         {
-            var items = Instances.OfType<ItemBase>().ToList();
-            foreach (var pack in ContentPacks)
+            try
             {
-                foreach (var itemDef in pack.itemDefs)
+                var items = Instances.OfType<ItemBase>().ToList();
+                foreach (var pack in ContentPacks)
                 {
-                    foreach (var item in items.Where(item => itemDef.name == item.GetType().Name))
+                    foreach (var itemDef in pack.itemDefs)
                     {
-                        item.ItemDef = itemDef;
+                        foreach (var item in items.Where(item => itemDef.name == item.GetType().Name))
+                        {
+                            item.ItemDef = itemDef;
+                        }
+                    }
+                }
+
+                foreach (var x in items)
+                {
+                    try
+                    {
+                        PickupIndexes.Add(PickupCatalog.FindPickupIndex(x.ItemDef.itemIndex), x);
+                    }
+                    catch (NullReferenceException e)
+                    {
+                        x.Logger.LogError("Item " + x.GetType().Name +
+                                          " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
+                                          e);
                     }
                 }
             }
-
-            foreach (var x in items)
+            catch (Exception e)
             {
-                try
-                {
-                    PickupIndexes.Add(PickupCatalog.FindPickupIndex(x.ItemDef.itemIndex), x);
-                }
-                catch (NullReferenceException e)
-                {
-                    x.Logger.LogError("Item " + x.GetType().Name + " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" + e);
-                }
+                BubbetsItemsPlugin.Log.LogError(e);
             }
         }
         

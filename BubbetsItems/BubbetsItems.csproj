@@ -12,7 +12,7 @@
         <HintPath>..\..\Libs\Aetherium.dll</HintPath>
       </Reference>
       <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\Libs\Assembly-CSharp-Public.dll</HintPath>
+        <HintPath>..\..\Libs\Assembly-CSharp-nstrip.dll</HintPath>
       </Reference>
       <Reference Include="BepInEx, Version=5.4.9.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\..\DropItems\Libs\BepInEx.dll</HintPath>

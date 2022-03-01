@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -8,6 +9,7 @@ using System.Security.Permissions;
 using Aetherium;
 using BepInEx;
 using BepInEx.Configuration;
+using BepInEx.Logging;
 using HarmonyLib;
 using RoR2;
 using RoR2.ContentManagement;
@@ -33,9 +35,13 @@ namespace BubbetsItems
         public static ContentPack ContentPack;
         public static AssetBundle AssetBundle;
         public List<SharedBase> forwardTest => SharedBase.Instances;
+        public static BubbetsItemsPlugin instance;
+        public static ManualLogSource Log;
 
         public void Awake()
         {
+            instance = this;
+            Log = Logger;
             RoR2Application.isModded = true;
             Conf.Init(Config);
             var harm = new Harmony(Info.Metadata.GUID);
@@ -46,24 +52,33 @@ namespace BubbetsItems
         }
 
         private static uint _bankID;
+
         [SystemInitializer]
         public static void LoadSoundBank()
         {
-            var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            Stream stream = File.Open(Path.Combine(path, "BubbetsItems.bnk"), FileMode.Open);
-            var array = new byte[stream.Length];
-            stream.Read(array, 0, array.Length);
-            
-            var mem = Marshal.AllocHGlobal(array.Length);
-            Marshal.Copy(array, 0, mem, array.Length);
-            var result = AkSoundEngine.LoadBank(mem, (uint) array.Length, out _bankID);
-            if (result != AKRESULT.AK_Success)
-                Debug.LogError("[Bubbets Items] SoundBank Load Failed: " + result);
+            try
+            {
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                Stream stream = File.Open(Path.Combine(path, "BubbetsItems.bnk"), FileMode.Open);
+                var array = new byte[stream.Length];
+                stream.Read(array, 0, array.Length);
+
+                var mem = Marshal.AllocHGlobal(array.Length);
+                Marshal.Copy(array, 0, mem, array.Length);
+                var result = AkSoundEngine.LoadBank(mem, (uint) array.Length, out _bankID);
+                if (result != AKRESULT.AK_Success)
+                    Debug.LogError("[Bubbets Items] SoundBank Load Failed: " + result);
+            }
+            catch (Exception e)
+            {
+                Log.LogError(e);
+            }
         }
 
         [SystemInitializer(typeof(Language))]
         public static void ExtraTokens()
         {
+            Log.LogError("itemsExtra");
             Language.english.SetStringByToken("BUB_HOLD_TOOLTIP", "Hold Capslock for more.");
         }
 
@@ -103,6 +118,7 @@ namespace BubbetsItems
 
             public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
             {
+                //ContentPack.identifier = identifier;
                 args.ReportProgress(1f);
                 yield break;
             }
@@ -110,6 +126,7 @@ namespace BubbetsItems
             public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
             {
                 ContentPack.Copy(contentPack, args.output);
+                //Log.LogError(ContentPack.identifier);
                 args.ReportProgress(1f);
                 yield break;
             }

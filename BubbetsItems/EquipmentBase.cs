@@ -148,29 +148,39 @@ namespace BubbetsItems
         [SystemInitializer(typeof(EquipmentCatalog))]
         public static void AssignAllEquipmentDefs()
         {
-            var equipments = Instances.OfType<EquipmentBase>().ToList();
-            foreach (var pack in ContentPacks)
+            try
             {
-                foreach (var equipmentDef in pack.equipmentDefs)
+                var equipments = Instances.OfType<EquipmentBase>().ToList();
+                foreach (var pack in ContentPacks)
                 {
-                    foreach (var equipment in equipments.Where(shared => equipmentDef.name == shared.GetType().Name))
+                    foreach (var equipmentDef in pack.equipmentDefs)
                     {
-                        equipment.EquipmentDef = equipmentDef;
-                        equipment.PostEquipmentDef();
+                        foreach (var equipment in equipments.Where(shared => equipmentDef.name == shared.GetType().Name)
+                        )
+                        {
+                            equipment.EquipmentDef = equipmentDef;
+                            equipment.PostEquipmentDef();
+                        }
+                    }
+                }
+
+                foreach (var x in equipments)
+                {
+                    try
+                    {
+                        PickupIndexes.Add(PickupCatalog.FindPickupIndex(x.EquipmentDef.equipmentIndex), x);
+                    }
+                    catch (NullReferenceException e)
+                    {
+                        x.Logger.LogError("Equipment " + x.GetType().Name +
+                                          " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
+                                          e);
                     }
                 }
             }
-
-            foreach (var x in equipments)
+            catch (Exception e)
             {
-                try
-                {
-                    PickupIndexes.Add(PickupCatalog.FindPickupIndex(x.EquipmentDef.equipmentIndex), x);
-                }
-                catch (NullReferenceException e)
-                {
-                    x.Logger.LogError("Equipment " + x.GetType().Name + " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" + e);
-                }
+                BubbetsItemsPlugin.Log.LogError(e);
             }
         }
     }
