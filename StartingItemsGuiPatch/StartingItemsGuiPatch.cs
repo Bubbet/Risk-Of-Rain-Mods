@@ -161,9 +161,14 @@ namespace StartingItemsGuiPatch
             GameObject go = Instantiate(_commandCubePrefab, createPickupInfo.position, createPickupInfo.rotation);
             go.GetComponent<PickupIndexNetworker>().NetworkpickupIndex = pickupIndex;
 
-            go.AddComponent<CommandNameChangeBehaviour>();
+            //go.AddComponent<CommandNameChangeBehaviour>(); // Todo this is not working on clients because command prefab is network object, clients look up their own copy and it does not have this component
+            var displayname = go.GetComponent<GenericDisplayNameProvider>();
+            Debug.Log("displayname" + displayname);
+            displayname.SetDisplayToken(displayname.GetDisplayName() + " (" + Language.GetString(pickupDef.nameToken) + ")");
 
-            go.GetComponent<PickupPickerController>().SetOptionsServer(new[]{
+            var pc = go.GetComponent<PickupPickerController>();
+            //pc.contextString = "StartingItems";
+            pc.SetOptionsServer(new[]{
                 new PickupPickerController.Option
                 {
                     available = true,

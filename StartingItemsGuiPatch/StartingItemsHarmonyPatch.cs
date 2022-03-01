@@ -25,6 +25,12 @@ namespace StartingItemsGuiPatch
         [HarmonyILManipulator, HarmonyPatch(typeof(DataEarntConsumable), "UpdateUserPointsBoss")]
         static void CUpdateUserPointsBoss(ILContext il) => BossDel(il);
 
+        [HarmonyPrefix, HarmonyPatch(typeof(GameManager), nameof(GameManager.ReceiveItem))]
+        public static bool FixKeyNotFound(ItemPurchased givenItem)
+        {
+            return GameManager.items.ContainsKey(givenItem._connectionID);
+        }
+
         private static void BossDel(ILContext il)
         {
             if (!StartingItemsGuiPatch.AllModes.Value) return;
