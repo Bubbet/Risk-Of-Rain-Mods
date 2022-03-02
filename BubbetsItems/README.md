@@ -68,3 +68,11 @@ Wildlife Camera
 1.2.5
 - Added hurtbox requirement to the camera as its needed to get reference to the master anyways.
 - Changed camera to refund a stock if you miss the capture, making it actually work with gesture.
+
+1.3.0 - CUM2 update
+- updated to support SOTV update
+- temporarily dropped support for atherium and inlobbyconfig
+
+1.3.1
+- fixed items/equipment not listening to config file in respect to being disabled
+- fixed tokens not being initialized

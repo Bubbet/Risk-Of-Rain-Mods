@@ -2,8 +2,8 @@
 using System.Linq;
 using BepInEx.Configuration;
 using HarmonyLib;
-using InLobbyConfig;
-using InLobbyConfig.Fields;
+//using InLobbyConfig;
+//using InLobbyConfig.Fields;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -11,7 +11,7 @@ using Object = UnityEngine.Object;
 
 namespace BubbetsItems.Equipments
 {
-    public class WildLifeCamera : EquipmentBase
+    public class WildlifeCamera : EquipmentBase
     {
         private ConfigEntry<float> _cooldown;
         private ConfigEntry<bool> _filterOutBosses;
@@ -73,6 +73,7 @@ Luckily they seem friendly enough");
             _indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("CameraIndicator");
         }
 
+        /*
         public override void MakeInLobbyConfig(object modConfigEntryObj)
         {
             base.MakeInLobbyConfig(modConfigEntryObj);
@@ -88,7 +89,7 @@ Luckily they seem friendly enough");
             list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(_filterOutBosses));
             list.Add(cool);
             modConfigEntry.SectionFields["General"] = list;
-        }
+        }*/
 
         protected override void PostEquipmentDef()
         {

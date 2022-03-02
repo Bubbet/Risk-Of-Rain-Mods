@@ -21,6 +21,11 @@ namespace BubbetsItems
             scaleConfig = configFile.Bind("Balancing Functions", name, defaultScalingFunction, "Scaling function for item. ;" + (!string.IsNullOrEmpty(defaultScalingDesc) ? defaultScalingDesc: "[a] = amount"));
             scalingFunction = new Expression(scaleConfig.Value).ToLambda<ExpressionContext, float>();
         }
+        
+        public void CheatForItem()
+        {
+            PlayerCharacterMasterController.instances[0].master.inventory.GiveItem(ItemDef.itemIndex);
+        }
 
         public ItemDef ItemDef;
 
@@ -55,19 +60,23 @@ namespace BubbetsItems
             return Language.GetString(ItemDef.descriptionToken);
         }
         
-        [SystemInitializer(typeof(ItemCatalog))]
+        [SystemInitializer(typeof(ItemCatalog), typeof(PickupCatalog))]
         public static void AssignAllItemDefs()
         {
             try
             {
-                var items = Instances.OfType<ItemBase>().ToList();
+                var items = Instances.OfType<ItemBase>().Where(x => x.Enabled.Value).ToArray();
                 foreach (var pack in ContentPacks)
                 {
-                    foreach (var itemDef in pack.itemDefs)
+                    foreach (var itemBase in items)
                     {
-                        foreach (var item in items.Where(item => itemDef.name == item.GetType().Name))
+                        var name = itemBase.GetType().Name;
+                        foreach (var itemDef in pack.itemDefs)
+                            if (MatchName(itemDef.name, name))
+                                itemBase.ItemDef = itemDef;
+                        if (itemBase.ItemDef == null)
                         {
-                            item.ItemDef = itemDef;
+                            itemBase.Logger.LogWarning($"Could not find ItemDef for item {itemBase}, class/itemdef name are probably mismatched. This will throw an exception later.");
                         }
                     }
                 }

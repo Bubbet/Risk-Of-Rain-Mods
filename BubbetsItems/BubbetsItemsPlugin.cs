@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Permissions;
-using Aetherium;
+//using Aetherium; TODO readd support
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -23,9 +23,9 @@ using Path = System.IO.Path;
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.2.5")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.3.1")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
-    [BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
+    //[BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
     public class BubbetsItemsPlugin : BaseUnityPlugin
@@ -46,8 +46,9 @@ namespace BubbetsItems
             Conf.Init(Config);
             var harm = new Harmony(Info.Metadata.GUID);
             LoadContentPack(harm);
-            InLobbyConfigCompat.Init();
+            //InLobbyConfigCompat.Init(); TODO
             harm.PatchAll();
+            RoR2Application.onLoad += SharedBase.MakeAllTokens;
             //PickupTooltipFormat.Init(harm);
         }
 
@@ -59,13 +60,17 @@ namespace BubbetsItems
             try
             {
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                /*
                 Stream stream = File.Open(Path.Combine(path, "BubbetsItems.bnk"), FileMode.Open);
                 var array = new byte[stream.Length];
                 stream.Read(array, 0, array.Length);
 
                 var mem = Marshal.AllocHGlobal(array.Length);
                 Marshal.Copy(array, 0, mem, array.Length);
-                var result = AkSoundEngine.LoadBank(mem, (uint) array.Length, out _bankID);
+                var result = AkSoundEngine.LoadBank(mem, (uint) array.Length, out _bankID);*/
+                AkSoundEngine.AddBasePath(path);
+                var result = AkSoundEngine.LoadBank("BubbetsItems.bnk", out _bankID);
+                //var result = AkSoundEngine.LoadBank("BubbetsItems.bnk", out _bankID);
                 if (result != AKRESULT.AK_Success)
                     Debug.LogError("[Bubbets Items] SoundBank Load Failed: " + result);
             }
@@ -97,7 +102,7 @@ namespace BubbetsItems
         {
             var path = Path.GetDirectoryName(Info.Location);
             AssetBundle = AssetBundle.LoadFromFile(Path.Combine(path, AssetBundleName));
-            var serialContent = AssetBundle.LoadAsset<SerializableContentPack>("MainContentPack");
+            var serialContent = AssetBundle.LoadAsset<BubsItemsContentPackProvider>("MainContentPack");
             
             SharedBase.Initialize(Logger, Config, serialContent, harmony, "BUB_");
             ContentPack = serialContent.CreateContentPack();
@@ -134,6 +139,7 @@ namespace BubbetsItems
             public IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
             {
                 args.ReportProgress(1f);
+                Log.LogInfo("Contentpack finished");
                 yield break;
             }
 

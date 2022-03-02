@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using Aetherium;
+//using Aetherium;
 using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
@@ -10,11 +10,11 @@ using UnityEngine.Networking;
 namespace BubbetsItems.Items
 {
     [HarmonyPatch]
-    public class AbundantHourglass : ItemBase
+    public class Hourglass : ItemBase
     {
         private MethodInfo _aetheriumOrig;
-        private static AbundantHourglass _instance;
-        private static bool AetheriumEnabled => Chainloader.PluginInfos.ContainsKey(AetheriumPlugin.ModGuid);
+        private static Hourglass _instance;
+        //private static bool AetheriumEnabled => Chainloader.PluginInfos.ContainsKey(AetheriumPlugin.ModGuid);
 
         protected override void MakeConfigs(ConfigFile configFile)
         {
@@ -23,13 +23,14 @@ namespace BubbetsItems.Items
             _instance = this;
         }
 
+        /*
         protected override void MakeBehaviours()
         {
             base.MakeBehaviours();
             if (!AetheriumEnabled) return;
             PatchAetherium();
         }
-
+        
         private void PatchAetherium() // This needs to be its own function because for some reason typeof() was being called at the start of the function and it was throwing file not found exception
         {
             _aetheriumOrig = typeof(AetheriumPlugin).Assembly.GetType("Aetherium.Utils.ItemHelpers").GetMethod("RefreshTimedBuffs", new[] {typeof(CharacterBody), typeof(BuffDef), typeof(float), typeof(float)});
@@ -41,7 +42,7 @@ namespace BubbetsItems.Items
             base.DestroyBehaviours();
             if (!AetheriumEnabled) return;
             Harmony.Unpatch(_aetheriumOrig, HarmonyPatchType.Prefix);
-        }
+        }*/
 
         protected override void MakeTokens()
         {

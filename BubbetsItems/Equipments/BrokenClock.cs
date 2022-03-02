@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
-using InLobbyConfig;
-using InLobbyConfig.Fields;
+//using InLobbyConfig;
+//using InLobbyConfig.Fields;
 using RoR2;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -15,6 +16,8 @@ namespace BubbetsItems.Equipments
         private ConfigEntry<float> cooldown;
         public static ConfigEntry<float> duration;
         public static ConfigEntry<float> interval;
+
+        public static FieldInfo velocity = typeof(CharacterMotor).GetField("velocity");
 
         protected override void MakeTokens()
         {
@@ -63,6 +66,7 @@ namespace BubbetsItems.Equipments
             EquipmentDef.cooldown = cooldown.Value;
         }
 
+        /*
         public override void MakeInLobbyConfig(object modConfigEntryObj)
         {
             base.MakeInLobbyConfig(modConfigEntryObj);
@@ -86,7 +90,7 @@ namespace BubbetsItems.Equipments
             list.Add(dura);
             list.Add(inte);
             modConfigEntry.SectionFields["General"] = list;
-        }
+        }*/
     }
 
     public class BrokenClockBehaviour : MonoBehaviour
@@ -106,7 +110,7 @@ namespace BubbetsItems.Equipments
         private HealthComponent HealthComponent => _healthComponent ? _healthComponent : _healthComponent = Body?.GetComponent<HealthComponent>();
 
         private CharacterMotor _characterMotor;
-        private CharacterMotor CharacterMotor => _characterMotor ? _characterMotor : _characterMotor = Body?.GetComponent<CharacterMotor>();
+        private CharacterMotor CharacterMotor => _characterMotor ? _characterMotor : (_characterMotor = Body?.GetComponent<CharacterMotor>());
 
         public DropoutStack<BrokenClockKeyframe> dropoutStack = new DropoutStack<BrokenClockKeyframe>(Mathf.RoundToInt(stackDuration/keyframeInterval));
         
@@ -165,7 +169,8 @@ namespace BubbetsItems.Equipments
             keyframe.Barrier = HealthComponent.barrier;
             keyframe.Shield = HealthComponent.shield;
             keyframe.Position = CharacterMotor.transform.position;
-            keyframe.Velocity = CharacterMotor.velocity;
+            keyframe.Velocity = (CharacterMotor as IPhysMotor).velocity;
+            
             //keyframe.LookDir = body.inputBank.aimDirection; // TODO replace with CameraRigController.desiredCameraState.rotation;
 
             /*
@@ -183,7 +188,9 @@ namespace BubbetsItems.Equipments
             HealthComponent.shield = keyframe.Shield;
 
             CharacterMotor.Motor.MoveCharacter(keyframe.Position); // This does not work as we are in the server scope right now and server cannot move client authoritive player.
-            CharacterMotor.velocity = keyframe.Velocity;
+            //CharacterMotor.velocity = keyframe.Velocity; thanks i hate it
+            BrokenClock.velocity.SetValue(CharacterMotor, keyframe.Velocity);
+            
             //characterMotor.velocity = Vector3.zero;
             //_lastVelocity = keyframe.Velocity;
 

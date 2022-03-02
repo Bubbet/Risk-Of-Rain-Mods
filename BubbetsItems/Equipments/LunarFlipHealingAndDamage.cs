@@ -1,4 +1,5 @@
 ﻿using System;
+using BepInEx.Configuration;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -8,8 +9,14 @@ using Object = UnityEngine.Object;
 
 namespace BubbetsItems.Equipments
 {
-    public class LunarFlipHealthAndDamage : EquipmentBase
+    public class LunarFlipHealingAndDamage : EquipmentBase
     {
+        protected override void MakeConfigs(ConfigFile configFile)
+        {
+            base.MakeConfigs(configFile);
+            Enabled.Value = false;
+        }
+
         public override bool PerformEquipment(EquipmentSlot equipmentSlot)
         {
             return equipmentSlot.inventory.gameObject.GetComponent<LunarFlipHealthAndDamageBehaviour>().Enable();

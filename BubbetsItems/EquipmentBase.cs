@@ -25,6 +25,11 @@ namespace BubbetsItems
         public virtual void OnEquip(Inventory inventory, EquipmentState? oldEquipmentState) {}
         public virtual bool UpdateTargets(EquipmentSlot equipmentSlot) { return false; }
         protected virtual void PostEquipmentDef() {}
+
+        public void CheatForItem()
+        {
+            PlayerCharacterMasterController.instances[0].master.inventory.SetEquipmentIndex(EquipmentDef.equipmentIndex);
+        }
         
         public EquipmentDef EquipmentDef;
         
@@ -140,26 +145,33 @@ namespace BubbetsItems
             }
         }
 
+        /*
         public void RenderPickup()
         {
             PickupRenderer.PickupRenderer.RenderPickupIcon(new ConCommandArgs {userArgs = new List<string> {EquipmentDef.name}});
-        }
+        }*/
 
-        [SystemInitializer(typeof(EquipmentCatalog))]
+        [SystemInitializer(typeof(EquipmentCatalog), typeof(PickupCatalog))]
         public static void AssignAllEquipmentDefs()
         {
             try
             {
-                var equipments = Instances.OfType<EquipmentBase>().ToList();
+                var equipments = Instances.OfType<EquipmentBase>().Where(x => x.Enabled.Value).ToArray();
                 foreach (var pack in ContentPacks)
                 {
-                    foreach (var equipmentDef in pack.equipmentDefs)
+                    foreach (var equipmentBase in equipments)
                     {
-                        foreach (var equipment in equipments.Where(shared => equipmentDef.name == shared.GetType().Name)
-                        )
+                        var name = equipmentBase.GetType().Name;
+                        foreach (var equipmentDef in pack.equipmentDefs)
+                            if (MatchName(equipmentDef.name, name))
+                            {
+                                equipmentBase.EquipmentDef = equipmentDef;
+                                equipmentBase.PostEquipmentDef();
+                            }
+
+                        if (equipmentBase.EquipmentDef == null)
                         {
-                            equipment.EquipmentDef = equipmentDef;
-                            equipment.PostEquipmentDef();
+                            equipmentBase.Logger.LogWarning($"Could not find EquipmentDef for item {equipmentBase}, class/equipmentdef name are probably mismatched. This will throw an exception later.");
                         }
                     }
                 }

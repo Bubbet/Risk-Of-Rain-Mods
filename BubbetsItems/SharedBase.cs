@@ -7,6 +7,7 @@ using BepInEx.Logging;
 using HarmonyLib;
 using RoR2;
 using RoR2.ContentManagement;
+using UnityEngine;
 
 namespace BubbetsItems
 {
@@ -52,9 +53,14 @@ namespace BubbetsItems
 
             if (!serializableContentPack) return;
             serializableContentPack.itemDefs = serializableContentPack.itemDefs
-                .Where(x => Instances.FirstOrDefault(y => x.name == y.GetType().Name)?.Enabled.Value ?? true).ToArray();
+                .Where(x => Instances.FirstOrDefault(y => MatchName(x.name, y.GetType().Name))?.Enabled.Value ?? false).ToArray();
             serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs
-                .Where(x => Instances.FirstOrDefault(y => x.name == y.GetType().Name)?.Enabled.Value ?? true).ToArray();
+                .Where(x => Instances.FirstOrDefault(y => MatchName(x.name, y.GetType().Name))?.Enabled.Value ?? false).ToArray();
+        }
+
+        protected static bool MatchName(string scriptableObject, string sharedBase)
+        {
+            return scriptableObject.EndsWith(sharedBase);
         }
 
         public static void AddContentPack(ContentPack contentPack)
@@ -68,13 +74,14 @@ namespace BubbetsItems
             DestroyBehaviours();
         }
         
-        [SystemInitializer(typeof(Language))]
+        //[SystemInitializer(typeof(Language), typeof(ItemCatalog), typeof(EquipmentCatalog))]
         public static void MakeAllTokens()
         {
             foreach (var item in Instances)
             {
                 try
                 {
+                    item.Logger.LogMessage($"Making tokens for {item}.");
                     item.MakeTokens();
                 }
                 catch (Exception e)

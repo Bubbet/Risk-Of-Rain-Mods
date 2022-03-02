@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using System.Reflection;
+using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
@@ -18,8 +19,8 @@ namespace BubbetsItems
             var c = new ILCursor(il);
             c.GotoNext(
                 x => x.MatchLdstr("Prefabs/NetworkedObjects/AmmoPack"),
-                x => x.MatchCall<Resources>("Load"),
-                x => x.MatchLdloc(out _)
+                x => x.OpCode == OpCodes.Call// && (x.Operand as MethodInfo)?.Name == "Load",
+                //x => x.MatchLdloc(out _)
             );
             var start = c.Index;
             c.GotoNext(MoveType.After,

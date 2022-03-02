@@ -2,8 +2,8 @@
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
-using InLobbyConfig;
-using InLobbyConfig.Fields;
+//using InLobbyConfig;
+//using InLobbyConfig.Fields;
 using RoR2;
 using UnityEngine;
 
@@ -28,6 +28,7 @@ namespace BubbetsItems.Items
                 ItemEnabled.Value = false;*/
         }
 
+        /*
         public override void MakeInLobbyConfig(object modConfigEntryObj)
         {
             base.MakeInLobbyConfig(modConfigEntryObj);
@@ -35,7 +36,7 @@ namespace BubbetsItems.Items
             var list = modConfigEntry.SectionFields["Scaling Functions"].ToList();
             list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Granularity));
             modConfigEntry.SectionFields["Scaling Functions"] = list;
-        }
+        }*/
 
         public override string GetFormattedDescription(Inventory inventory = null) // TODO Fill this
         {
@@ -100,7 +101,13 @@ namespace BubbetsItems.Items
             HealthComponent.onCharacterHealServer -= HealServer;
         }
 
+        /*
         private void HealServer(HealthComponent healthComponent, float arg2)
+        {
+            SetBuff(healthComponent.body);
+        }*/
+        
+        private void HealServer(HealthComponent healthComponent, float arg2, ProcChainMask arg3)
         {
             SetBuff(healthComponent.body);
         }
