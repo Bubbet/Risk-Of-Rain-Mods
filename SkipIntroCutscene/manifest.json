@@ -1,0 +1,12 @@
+﻿{
+	"name": "SkipIntro",
+	"authorName":"Bubbet",
+	"website_url":"https://github.com/Bubbet",
+	"displayName":"Skip Intro",
+
+	"version_number": "1.0.0",
+	"description": "Skip intro, but for DLC1+",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.9"
+	]
+}
