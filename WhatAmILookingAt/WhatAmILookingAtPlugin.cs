@@ -10,12 +10,11 @@ using RoR2;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 #pragma warning restore CS0618 // Type or member is obsolete
 [module: UnverifiableCode]
-//[assembly: HG.Reflection.SearchableAttribute.OptIn]
 
 namespace WhatAmILookingAt
 {
 	// needs to be prefixed with aaaa so it loads before all the mods that require r2api
-	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.1.1")]
+	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.2.0")]
 	[BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterAPI", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
@@ -30,7 +29,7 @@ namespace WhatAmILookingAt
 
 		public void Awake()
 		{
-			instance = this;
+			Instance = this;
 			Log = Logger;
 			var harm = new Harmony(Info.Metadata.GUID);
 			new PatchClassProcessor(harm, typeof(HarmonyPatches)).Patch();
@@ -67,9 +66,9 @@ namespace WhatAmILookingAt
 			harm.Patch(methodInfo, null, null, null, null, where);
 			*/
 		}
-		
 
-		//[SystemInitializer(typeof(Language))] fuck you then i'll use a hook
+
+		//[SystemInitializer(typeof(Language))] fuck you then i'll subscribe to onload
 		public static void ExtraTokens()
 		{
 			// BUB_WAILA_TOOLTIP_MOD

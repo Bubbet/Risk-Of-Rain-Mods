@@ -138,55 +138,13 @@ namespace WhatAmILookingAt
 				}
 			}
 
-			if (str != null)
-				__result += "\n\n" + str;
-		}
-		
-		private static string? FindIdentifier<T>(T item)
-		{
-			foreach (var pack in ContentManager.allLoadedContentPacks)//contentPacks.Values)
-			{
-				foreach (var assetCollection in pack.src.assetCollections)//pack.assetCollections)
-				{
-					var typ = assetCollection.GetType().GenericTypeArguments[0];
-					if (!typ.IsInstanceOfType(item)) continue;
-					if (assetCollection is NamedAssetCollection<T> coll && coll.Contains(item))
-						return pack.identifier;
-				}
+				if (str != null)
+					__result += "\n\n" + str;
 			}
-
-			WhatAmILookingAtPlugin.Log.LogWarning("Failed to find pack for " + item);
-			return null;
-		}
-
-		private static string? GetIdentifier<T>(T item)
-		{
-			if (!IdentifierMap.ContainsKey(item!))
-				IdentifierMap.Add(item, FindIdentifier(item));
-			return IdentifierMap[item];
-		}
-		
-		/*
-		private static BepInPlugin? GetPlugin<T>(T item)
-		{
-			if (item == null) return null;
-			var identifier = GetIdentifier(item!);
-			switch (identifier)
+			catch (Exception e)
 			{
-				case null:
-					return null;
-				case "R2API" when r2Map.ContainsKey(item):
-					return r2Map[item];
-				default:
-					return contentPackToBepinPluginMap.ContainsKey(identifier) ? contentPackToBepinPluginMap[identifier] : null;
+				WhatAmILookingAtPlugin.Log!.LogError(e);
 			}
-		}*/
-
-
-		[HarmonyPostfix, HarmonyPatch(typeof(Language), nameof(Language.Init))]
-		public static void FuckYouSystemInitializersNotWorking()
-		{
-			WhatAmILookingAtPlugin.ExtraTokens();
 		}
 
 		[HarmonyPostfix, HarmonyPatch(typeof(ContentManager.ContentPackLoader), MethodType.Constructor, typeof(List<IContentPackProvider>))]
@@ -199,7 +157,7 @@ namespace WhatAmILookingAt
 					if (!ContentPackToBepinPluginMap.ContainsKey(provider.identifier))
 						ContentPackToBepinPluginMap.Add(provider.identifier, plugin);
 					else
-						WhatAmILookingAtPlugin.Log.LogWarning("Key already exists for " + provider.identifier);
+						WhatAmILookingAtPlugin.Log!.LogWarning("Key already exists for " + provider.identifier);
 				}
 			}
 		}

@@ -19,3 +19,7 @@
 1.1.1
 - Support for BetterAPI 2.0
 - Made that support actually optional
+
+1.2.0
+- Support for DLC 1
+- Probably support for r2api when that comes too

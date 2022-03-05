@@ -6,43 +6,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Reference Include="0Harmony, Version=2.4.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\Libs\0Harmony.dll</HintPath>
-        </Reference>
-        <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\..\Libs\Assembly-CSharp.dll</HintPath>
-        </Reference>
-        <Reference Include="BepInEx, Version=5.4.9.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\..\Libs\BepInEx.dll</HintPath>
-        </Reference>
-        <Reference Include="BetterAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\Libs\BetterAPI.dll</HintPath>
-        </Reference>
-        <Reference Include="HGCSharpUtils, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\Libs\HGCSharpUtils.dll</HintPath>
-        </Reference>
-        <Reference Include="R2API, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
-          <HintPath>..\..\Libs\R2API.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\..\Libs\UnityEngine.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\..\Libs\UnityEngine.AssetBundleModule.dll</HintPath>
-        </Reference>
-        <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\..\Libs\UnityEngine.CoreModule.dll</HintPath>
-        </Reference>
-        <Reference Include="Mono.Cecil, Version=0.10.4.0, Culture=neutral, PublicKeyToken=50cebf1cceb9d05e">
-            <HintPath>..\..\Libs\Mono.Cecil.dll</HintPath>
-        </Reference>
-        <Reference Include="MonoMod.Utils, Version=21.1.11.1, Culture=neutral, PublicKeyToken=null">
-            <HintPath>..\..\Libs\MonoMod.Utils.dll</HintPath>
-        </Reference>
+        <PackageReference Include="RiskOfRain2" Version="1.0.6" />
+        <PackageReference Include="BepInEx.Core" Version="5.4.19" />
+        <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
+        <PackageReference Include="RoR2-BetterAPI" Version="2.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.NETCore.Portable.Compatibility" Version="1.0.1" />
+      <Reference Include="R2API, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\..\..\..\yes\Dev\Programming\C#\R2API\R2API\bin\Debug\netstandard2.0\R2API.dll</HintPath>
+      </Reference>
     </ItemGroup>
 
 </Project>
