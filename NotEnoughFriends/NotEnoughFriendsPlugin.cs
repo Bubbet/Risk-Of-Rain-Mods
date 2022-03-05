@@ -14,7 +14,7 @@ using Console = RoR2.Console;
 
 namespace NotEnoughFriends
 {
-	[BepInPlugin("bubbet.notenoughfriends", "Not Enough Friends", "1.0.1")]
+	[BepInPlugin("bubbet.notenoughfriends", "Not Enough Friends", "1.0.2")]
 	public class NotEnoughFriendsPlugin : BaseUnityPlugin
 	{
 		public static ConfigEntry<int> LobbySize;
