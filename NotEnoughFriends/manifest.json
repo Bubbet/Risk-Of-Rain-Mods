@@ -4,7 +4,7 @@
 	"website_url":"https://github.com/Bubbet",
 	"displayName":"Not Enough Friends",
 
-	"version_number": "1.0.1",
+	"version_number": "1.0.2",
 	"description": "Make lobbies bigger, but for DLC1+",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.9"

@@ -14,7 +14,7 @@ using Console = RoR2.Console;
 
 namespace NotEnoughFriends
 {
-	[BepInPlugin("bubbet.notenoughfriends", "Not Enough Friends", "1.0.1")]
+	[BepInPlugin("bubbet.notenoughfriends", "Not Enough Friends", "1.0.2")]
 	public class NotEnoughFriendsPlugin : BaseUnityPlugin
 	{
 		public static ConfigEntry<int> LobbySize;
@@ -36,7 +36,8 @@ namespace NotEnoughFriends
 		{
 			if (_enabled) return;
 			_enabled = true;
-			LobbySize = Config.Bind("General", "Lobby Size", 16, "Sets the max size of game lobbies.");
+			if (LobbySize == null)
+				LobbySize = Config.Bind("General", "Lobby Size", 16, "Sets the max size of game lobbies.");
 			LobbySize.SettingChanged += LobbySizeOnSettingChanged;
 			RoR2Application.onLoad += OnGameLoad;
 			patchProcessor.Patch();
@@ -46,7 +47,6 @@ namespace NotEnoughFriends
 		{
 			_enabled = false;
 			LobbySize.SettingChanged -= LobbySizeOnSettingChanged;
-			LobbySize = null;
 			RoR2Application.onLoad -= OnGameLoad;
 			SetSize();
 			harmony.UnpatchSelf();
