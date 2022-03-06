@@ -36,32 +36,59 @@ namespace BubbetsItems
         [HarmonyPrefix, HarmonyPatch(typeof(TooltipProvider), "get_bodyText")]
         public static bool FixToken(TooltipProvider __instance, ref string __result)
         {
-            //if (!string.IsNullOrEmpty(__instance.overrideBodyText)) return true;
-
-            var item = ItemBase.Items.FirstOrDefault(x => __instance.bodyToken == x.ItemDef.descriptionToken);
-            var equipment = EquipmentBase.Equipments.FirstOrDefault(x => __instance.bodyToken == x.EquipmentDef.descriptionToken);
-            var titleEquipment = EquipmentBase.Equipments.FirstOrDefault(x => __instance.titleToken == x.EquipmentDef.nameToken);
-            
-            var inventoryDisplay = __instance.transform.parent.GetComponent<ItemInventoryDisplay>();
-            
-            // ReSharper disable twice Unity.NoNullPropagation
-            if (item != null)
+            try
             {
-                __result = item.GetFormattedDescription(inventoryDisplay?.inventory);
-                return false;
+                //if (!string.IsNullOrEmpty(__instance.overrideBodyText)) return true;
+
+                var item = ItemBase.Items.FirstOrDefault(x =>
+                {
+                    if (x.ItemDef == null) // This is a really bad way of doing this
+                        BubbetsItemsPlugin.Log.LogWarning($"ItemDef is null for {x} in tooltipProvider, this will throw errors.");
+                    return __instance.bodyToken == x.ItemDef.descriptionToken;
+                });
+                var equipment = EquipmentBase.Equipments.FirstOrDefault(x =>
+                {
+                    if (x.EquipmentDef == null)
+                        BubbetsItemsPlugin.Log.LogWarning($"EquipmentDef is null for {x} in tooltipProvider, this will throw errors.");
+                    return __instance.bodyToken == x.EquipmentDef.descriptionToken;
+                });
+                var titleEquipment = EquipmentBase.Equipments.FirstOrDefault(x =>
+                {
+                    if (x.EquipmentDef == null)
+                        BubbetsItemsPlugin.Log.LogWarning($"EquipmentDef is null for {x} in tooltipProvider, this will throw errors.");
+                    return __instance.titleToken == x.EquipmentDef.nameToken;
+                });
+
+                var inventoryDisplay = __instance.transform.parent.GetComponent<ItemInventoryDisplay>();
+
+                // ReSharper disable twice Unity.NoNullPropagation
+                if (item != null)
+                {
+                    __result = item.GetFormattedDescription(inventoryDisplay?.inventory);
+                    return false;
+                }
+
+                if (equipment != null)
+                {
+                    __result = equipment.GetFormattedDescription(inventoryDisplay?.inventory);
+                    return false;
+                }
+
+                if (titleEquipment != null
+                ) // This is only a half measure for betterui if the advanced tooltips for equipment is turned off this will fuck up and i dont care
+                {
+                    // TODO this also doesnt work very well without betterui, infact it probably throws an exception
+                    __result = titleEquipment.GetFormattedDescription(inventoryDisplay?.inventory) +
+                               __instance.overrideBodyText.Substring(Language
+                                   .GetString(titleEquipment.EquipmentDef.descriptionToken).Length);
+                    return false;
+                }
             }
-            if (equipment != null)
+            catch (Exception e)
             {
-                __result = equipment.GetFormattedDescription(inventoryDisplay?.inventory);
-                return false;
+                BubbetsItemsPlugin.Log.LogError(e);
             }
 
-            if (titleEquipment != null) // This is only a half measure for betterui if the advanced tooltips for equipment is turned off this will fuck up and i dont care
-            { // TODO this also doesnt work very well without betterui, infact it probably throws an exception
-                __result = titleEquipment.GetFormattedDescription(inventoryDisplay?.inventory) + __instance.overrideBodyText.Substring(Language.GetString(titleEquipment.EquipmentDef.descriptionToken).Length);
-                return false;
-            }
-            
             return true;
         }
 
