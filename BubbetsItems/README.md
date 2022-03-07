@@ -1,7 +1,6 @@
 Void Scrap
 - Void Item
 - Converts broken/consumed items into usable white scrap. Stuff like broken watches.
-- Counted as regular scrap, so there is a chance to lose it when printing, not entirely sure how or if i want to fix that.
 
 Repulsion Armor Mk2
 - Red Item
