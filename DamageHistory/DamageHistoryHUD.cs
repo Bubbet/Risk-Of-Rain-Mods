@@ -35,7 +35,10 @@ namespace DamageHistory
             rectTransform.eulerAngles = new Vector3(0, 6, 0);
             rectTransform.pivot = new Vector2(1, 0.5f);
 
+            /*
             var image = uiContainer.AddComponent<Image>();
+
+            var component = _hud.GetComponentInChildren<HudObjectiveTargetSetter>().transform.parent.GetComponent<Image>();
             var component = _hud.objectivePanelController.objectiveTrackerContainer.parent.GetComponent<Image>();
             image.sprite = component.sprite;
             image.color = component.color;
@@ -48,6 +51,7 @@ namespace DamageHistory
             Texture icon = Resources.Load<Texture>("Textures/BodyIcons/texUnidentifiedKillerIcon");
             rawImage.texture = icon;
             gameObject.transform.parent = uiContainer.transform;
+            */
             
             GameObject gameObject2 = new GameObject("DisplayText");
             RectTransform rectTransform2 = gameObject2.AddComponent<RectTransform>();

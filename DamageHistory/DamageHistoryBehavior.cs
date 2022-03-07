@@ -22,13 +22,14 @@ namespace DamageHistory
             //GlobalEventManager.onServerDamageDealt += report => report.damageInfo.inflictor;
             //GlobalEventManager.onCharacterDeathGlobal += CharacterDeath;
         }
+
         public void OnDestroy()
         {
             //HarmonyPatches.onCharacterHealWithRegen -= OnHeal;
             GlobalEventManager.onClientDamageNotified -= ClientDamaged;
             //GlobalEventManager.onCharacterDeathGlobal -= CharacterDeath;
         }
-        
+
         public void FixedUpdate()
         {
             var newHealth = healthComponent.health;
@@ -37,13 +38,15 @@ namespace DamageHistory
             {
                 OnHeal(diff);
             }
+
             if (newHealth >= healthComponent.fullHealth)
             {
                 history.Clear();
             }
+
             oldHealth = newHealth;
         }
-        
+
         private void ClientDamaged(DamageDealtMessage obj)
         {
             if (obj.victim != gameObject) return;
@@ -65,10 +68,10 @@ namespace DamageHistory
                     return;
                 }
             }
-            
+
             history.Add(new DamageLog(name, damage, icon, damage < 10));
         }
-        
+
         private void CharacterDeath(DamageReport obj)
         {
             if (obj.victimBody.gameObject != gameObject) return;
@@ -78,9 +81,11 @@ namespace DamageHistory
                 var comp = obj.attacker.GetComponent<CharacterBody>();
                 if (comp) icon = comp.portraitIcon;
             }
+
             history.Add(new DamageLog(GetName(obj.attacker), obj.damageDealt, icon));
             OnDeathStart();
         }
+
         private void OnHeal(HealthComponent hc, float amount, bool nonRegen)
         {
             if (hc.gameObject != gameObject) return;
@@ -91,7 +96,7 @@ namespace DamageHistory
         {
             if (history.Count == 0) return;
             var log = history[0];
-            ref var iamount = ref log.Damage;            
+            ref var iamount = ref log.Damage;
             iamount -= amount;
             if (iamount <= 0)
             {
@@ -133,14 +138,17 @@ namespace DamageHistory
             {
                 sb.AppendLine(healthComponent.body.GetUserName());
             }
+
             sb.AppendLine("Damage History: " + history.Sum(x => x.Damage));
             foreach (DamageLog log in history)
             {
                 if (verboose)
-                    sb.Append("T-" + Mathf.Abs(log.Time - Time.time) + " - ").Append("Attacker: " + log.Who).AppendLine(" - Amount: " + log.Damage);
+                    sb.Append("T-" + Mathf.Abs(log.Time - Time.time) + " - ").Append("Attacker: " + log.Who)
+                        .AppendLine(" - Amount: " + log.Damage);
                 else
                     sb.Append(log.Who).AppendLine(" - " + (int) log.Damage);
             }
+
             if (flip) history.Reverse();
             else history.Clear();
             return sb;
@@ -152,8 +160,9 @@ namespace DamageHistory
             DamageHistoryPlugin.Log.LogInfo(sb);
         }
     }
-    
-    public struct DamageLog
+
+    public struct
+        DamageLog // TODO gut this whole thing to store logs by gameobject(attacker) so i can do a tablelookup when adding new damage; set the time to most recent damage; track the amount of hits per attacker;
     {
         public float Time;
         public string Who;
