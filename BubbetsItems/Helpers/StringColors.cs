@@ -11,6 +11,7 @@ namespace BubbetsItems.Helpers
             [StyleEnum.Utility] = "<style=cIsUtility>",
             [StyleEnum.Stack] = "<style=cStack>",
             [StyleEnum.Health] = "<style=cIsHealth>",
+            [StyleEnum.Void] = "<style=cIsVoid>",
             [StyleEnum.Mono] = "<style=cMono>",
             [StyleEnum.Red] = "<color=#FF0000>",
             [StyleEnum.Orange] = "<color=#FF7C00>",
@@ -23,7 +24,8 @@ namespace BubbetsItems.Helpers
             [StyleEnum.White] = "<color=#FFFFFF>",
             [StyleEnum.Black] = "<color=#000000>",
         };
-        public static bool IsStyle(StyleEnum style) => (int) style <= 5;
+
+        public static bool IsStyle(StyleEnum style) => styleStrings[style].StartsWith("<style="); //(int) style <= 6;
 
         public const string CloseStyle = "</style>";
         public const string CloseColor = "</color>";
@@ -47,6 +49,7 @@ namespace BubbetsItems.Helpers
         Utility,
         Stack,
         Health,
+        Void,
         Mono,
         Red,
         Orange,

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Permissions;
 //using Aetherium; TODO readd support
@@ -23,7 +21,7 @@ using Path = System.IO.Path;
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.3.1")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.4.0")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     //[BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
@@ -46,9 +44,9 @@ namespace BubbetsItems
             Conf.Init(Config);
             var harm = new Harmony(Info.Metadata.GUID);
             LoadContentPack(harm);
-            //InLobbyConfigCompat.Init(); TODO
+            InLobbyConfigCompat.Init();
             harm.PatchAll();
-            RoR2Application.onLoad += SharedBase.MakeAllTokens;
+
             //PickupTooltipFormat.Init(harm);
         }
 
@@ -80,10 +78,9 @@ namespace BubbetsItems
             }
         }
 
-        [SystemInitializer(typeof(Language))]
+        [SystemInitializer]
         public static void ExtraTokens()
         {
-            Log.LogError("itemsExtra");
             Language.english.SetStringByToken("BUB_HOLD_TOOLTIP", "Hold Capslock for more.");
         }
 

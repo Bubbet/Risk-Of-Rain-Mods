@@ -2,8 +2,8 @@
 using System.Linq;
 using BepInEx.Configuration;
 using HarmonyLib;
-//using InLobbyConfig;
-//using InLobbyConfig.Fields;
+using InLobbyConfig;
+using InLobbyConfig.Fields;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -43,7 +43,7 @@ namespace BubbetsItems.Equipments
             if (!behaviour || behaviour.target) return false;
             
             equipmentSlot.ConfigureTargetFinderForEnemies();
-            equipmentSlot.currentTarget = new EquipmentSlot.UserTargetInfo(equipmentSlot.targetFinder.GetResults().FirstOrDefault(x => x.healthComponent && (_filterOutBosses.Value && !x.healthComponent.body.isBoss || !_filterOutBosses.Value)));
+            equipmentSlot.currentTarget = new EquipmentSlot.UserTargetInfo(equipmentSlot.targetFinder.GetResults().FirstOrDefault(x => x.healthComponent && (!_filterOutBosses.Value && !x.healthComponent.body.isBoss || _filterOutBosses.Value)));
 
             if (!equipmentSlot.currentTarget.transformToIndicateAt) return false;
             
@@ -73,7 +73,7 @@ Luckily they seem friendly enough");
             _indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("CameraIndicator");
         }
 
-        /*
+        
         public override void MakeInLobbyConfig(object modConfigEntryObj)
         {
             base.MakeInLobbyConfig(modConfigEntryObj);
@@ -89,7 +89,7 @@ Luckily they seem friendly enough");
             list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(_filterOutBosses));
             list.Add(cool);
             modConfigEntry.SectionFields["General"] = list;
-        }*/
+        }
 
         protected override void PostEquipmentDef()
         {

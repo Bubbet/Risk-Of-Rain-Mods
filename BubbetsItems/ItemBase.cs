@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
+using HarmonyLib;
 using NCalc;
 using RoR2;
+using RoR2.ContentManagement;
+using RoR2.ExpansionManagement;
+using RoR2.Items;
 using UnityEngine;
 
 namespace BubbetsItems
 {
-    public class ItemBase : SharedBase
+    [HarmonyPatch]
+    public abstract class ItemBase : SharedBase
     {
         //protected virtual void MakeTokens(){} // Description is supposed to have % and + per item, pickup is a brief message about what the item does
         
@@ -20,11 +25,6 @@ namespace BubbetsItems
             if (defaultScalingFunction == null) return;
             scaleConfig = configFile.Bind("Balancing Functions", name, defaultScalingFunction, "Scaling function for item. ;" + (!string.IsNullOrEmpty(defaultScalingDesc) ? defaultScalingDesc: "[a] = amount"));
             scalingFunction = new Expression(scaleConfig.Value).ToLambda<ExpressionContext, float>();
-        }
-        
-        public void CheatForItem()
-        {
-            PlayerCharacterMasterController.instances[0].master.inventory.GiveItem(ItemDef.itemIndex);
         }
 
         public ItemDef ItemDef;
@@ -59,9 +59,23 @@ namespace BubbetsItems
 
             return Language.GetString(ItemDef.descriptionToken);
         }
-        
+
+        protected override void FillDefs(SerializableContentPack serializableContentPack)
+        {
+            base.FillDefs(serializableContentPack);
+            var name = GetType().Name;
+            foreach (var itemDef in serializableContentPack.itemDefs)
+            {
+                if (MatchName(itemDef.name, name)) ItemDef = itemDef;
+            }
+            if (ItemDef == null)
+            {
+                Logger.LogWarning($"Could not find ItemDef for item {this} in serializableContentPack, class/itemdef name are probably mismatched. This will throw an exception later.");
+            }
+        }
+
         [SystemInitializer(typeof(ItemCatalog), typeof(PickupCatalog))]
-        public static void AssignAllItemDefs()
+        public static void GetPickupIndexes()
         {
             try
             {
@@ -70,6 +84,7 @@ namespace BubbetsItems
                 {
                     foreach (var itemBase in items)
                     {
+                        if (itemBase.ItemDef != null) continue;
                         var name = itemBase.GetType().Name;
                         foreach (var itemDef in pack.itemDefs)
                             if (MatchName(itemDef.name, name))
@@ -80,12 +95,14 @@ namespace BubbetsItems
                         }
                     }
                 }
-
+                
                 foreach (var x in items)
                 {
                     try
                     {
-                        PickupIndexes.Add(PickupCatalog.FindPickupIndex(x.ItemDef.itemIndex), x);
+                        var pickup = PickupCatalog.FindPickupIndex(x.ItemDef.itemIndex);
+                        x.PickupIndex = pickup;
+                        PickupIndexes.Add(pickup, x);
                     }
                     catch (NullReferenceException e)
                     {
@@ -101,6 +118,35 @@ namespace BubbetsItems
             }
         }
         
+        
+        [SystemInitializer(typeof(ExpansionCatalog))]
+        public static void FillRequiredExpansions()
+        {
+            foreach (var itemBase in Items)
+            {
+                try
+                {
+                    if (itemBase.RequiresSOTV)
+                        itemBase.ItemDef.requiredExpansion =
+                            ExpansionCatalog.expansionDefs.FirstOrDefault(x => x.nameToken == "DLC1_NAME");
+                }
+                catch (Exception e)
+                {
+                    itemBase.Logger.LogError(e);
+                }
+            }
+        }
+        
+        [HarmonyPrefix, HarmonyPatch(typeof(ContagiousItemManager), nameof(ContagiousItemManager.Init))]
+        public static void FillVoidItems()
+        {
+            foreach (var itemBase in Items)
+            {
+                itemBase.FillVoidConversions();
+            }
+        }
+
+        protected virtual void FillVoidConversions(){}
 
         public class ExpressionContext
         {

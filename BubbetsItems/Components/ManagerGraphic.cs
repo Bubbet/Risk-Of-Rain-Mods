@@ -22,10 +22,11 @@ namespace BubbetsItems
 
 		public List<Vector2> lineStrip = new List<Vector2>();
 
+		
 		/// <summary>
 		/// Virtual function to create the UI mesh.
 		/// </summary>
-		protected override void OnPopulateMesh(UnityEngine.UI.VertexHelper vh)
+		public override void OnPopulateMesh(UnityEngine.UI.VertexHelper vh)
 		{
 			if (lineStrip.Count == 0) return;
 			//if(!built) parent.BuildGraph();

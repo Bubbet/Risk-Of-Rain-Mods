@@ -3,8 +3,8 @@ using System.Linq;
 using System.Reflection;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
-//using InLobbyConfig;
-//using InLobbyConfig.Fields;
+using InLobbyConfig;
+using InLobbyConfig.Fields;
 using RoR2;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -66,7 +66,7 @@ namespace BubbetsItems.Equipments
             EquipmentDef.cooldown = cooldown.Value;
         }
 
-        /*
+        
         public override void MakeInLobbyConfig(object modConfigEntryObj)
         {
             base.MakeInLobbyConfig(modConfigEntryObj);
@@ -90,7 +90,7 @@ namespace BubbetsItems.Equipments
             list.Add(dura);
             list.Add(inte);
             modConfigEntry.SectionFields["General"] = list;
-        }*/
+        }
     }
 
     public class BrokenClockBehaviour : MonoBehaviour

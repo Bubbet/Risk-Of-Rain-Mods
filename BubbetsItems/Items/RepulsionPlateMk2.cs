@@ -2,8 +2,8 @@
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
-//using InLobbyConfig;
-//using InLobbyConfig.Fields;
+using InLobbyConfig;
+using InLobbyConfig.Fields;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -31,7 +31,7 @@ namespace BubbetsItems.Items
             UpdateScalingFunction();
         }
 
-        /*
+        
         public override void MakeInLobbyConfig(object modConfigEntryObj)
         {
             base.MakeInLobbyConfig(modConfigEntryObj);
@@ -63,7 +63,7 @@ namespace BubbetsItems.Items
             list.Add(armor);
             list.Add(toggle);
             modConfigEntry.SectionFields["Scaling Functions"] = list;
-        }*/
+        }
 
         public void UpdateScalingFunction()
         {

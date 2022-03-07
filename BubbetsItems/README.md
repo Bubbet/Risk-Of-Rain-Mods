@@ -1,3 +1,8 @@
+Void Scrap
+- Void Item
+- Converts broken/consumed items into usable white scrap. Stuff like broken watches.
+- Counted as regular scrap, so there is a chance to lose it when printing, not entirely sure how or if i want to fix that.
+
 Repulsion Armor Mk2
 - Red Item
 - Has two modes, configurable via config.
@@ -76,3 +81,8 @@ Wildlife Camera
 1.3.1
 - fixed items/equipment not listening to config file in respect to being disabled
 - fixed tokens not being initialized
+
+1.4.0 - Void Scrap Update
+- Added new item Void Scrap
+- Readded inlobbyconfig support
+- Fixed the invert on wildlifecameras can do bosses config
