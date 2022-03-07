@@ -86,3 +86,8 @@ Wildlife Camera
 - Added new item Void Scrap
 - Readded inlobbyconfig support
 - Fixed the invert on wildlifecameras can do bosses config
+
+1.4.1
+- Fixed void scrap not counting as tier1 scrap, but instead counting as voidtier1 and not doing anything.
+- Made it impossible to scrap your last.
+- Made it priority scrap.
