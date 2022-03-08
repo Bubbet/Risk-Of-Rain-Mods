@@ -1,0 +1,12 @@
+﻿{
+	"name": "FixTeleportMomentum",
+	"authorName":"Bubbet",
+	"website_url":"https://github.com/Bubbet",
+	"displayName":"Fix Teleport Momentum",
+
+	"version_number": "1.0.0",
+	"description": "Fixes the momentum bug with teleporting back from out of bounds, also tries to fix snipers consecutive shots in multiplayer.",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.1902"
+	]
+}
