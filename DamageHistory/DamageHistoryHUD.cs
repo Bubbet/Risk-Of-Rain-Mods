@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using RoR2;
 using RoR2.UI;
 using UnityEngine;
@@ -77,8 +80,49 @@ namespace DamageHistory
 
         public void Update()
         {
-            if (_hud.targetBodyObject == null) return; 
-            _textMesh.SetText(_hud.targetBodyObject.GetComponent<DamageHistoryBehavior>()?.BuildString().ToString() ?? "");
+            // ReSharper disable twice Unity.PerformanceCriticalCodeNullComparison cry about it
+            if (_hud.targetBodyObject == null) return;
+            var historyBehavior = _hud.targetBodyObject.GetComponent<DamageHistoryBehavior>();
+            if (historyBehavior != null)
+                _textMesh.SetText(BuildString(historyBehavior.history, who: historyBehavior.healthComponent.body.GetUserName()).ToString());
+        }
+        
+        public static StringBuilder BuildString(Dictionary<object, DamageLog> history, bool flip = true, bool verbose = false,
+            string who = "")
+        {
+            var sb = new StringBuilder(); // TODO  this whole function is a bit fucked
+            sb.AppendLine();
+            if (verbose)
+            {
+                //healthComponent.body.GetUserName()
+                sb.AppendLine(who);
+            }
+
+            var entries = history.Values.ToList();
+            if (entries.Count > 1)
+            {
+                if (flip)
+                {
+                    entries.Sort((log, damageLog) => Math.Sign(damageLog.when - log.when));
+                }
+                else
+                {
+                    entries.Sort((log, damageLog) => Math.Sign(log.when - damageLog.when));
+                }
+            }
+
+            sb.AppendLine("Damage History: " + entries.Sum(x => x.amount));
+            foreach (var log in entries)
+            {
+                if (verbose)
+                    sb.Append($"T-{Mathf.Abs(log.when - Time.time) : 0.00} - Attacker: " + log.whoPretty)
+                        .AppendLine($" - Amount: {log.amount : 0.00}");
+                else
+                    sb.Append(log.whoPretty).AppendLine(" - " + (int) log.amount);
+            }
+
+            if (!flip) history.Clear();
+            return sb;
         }
     }
 }
