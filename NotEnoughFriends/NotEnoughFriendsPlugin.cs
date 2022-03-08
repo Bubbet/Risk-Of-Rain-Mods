@@ -58,6 +58,7 @@ namespace NotEnoughFriends
 			RoR2Application.maxPlayers = maxPlayers ?? MaxDefault.players;
 			RoR2Application.hardMaxPlayers = hardMaxPlayers ?? MaxDefault.hardPlayers;
 			RoR2Application.maxLocalPlayers = maxLocalPlayers ?? MaxDefault.localPlayers;
+			if (Console.instance == null) return;
 			Console.instance.SubmitCmd(null, "sv_maxplayers " + maxPlayers);
 			Console.instance.SubmitCmd(null, "steam_lobby_max_members " + maxPlayers);
 		}
