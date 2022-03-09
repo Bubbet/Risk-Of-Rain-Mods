@@ -59,15 +59,16 @@ namespace DamageHistory
             if (obj.damageType.HasFlag(DamageType.OutOfBounds)) attacker = "Out Of Bounds";
             attacker ??= obj.attacker;
             attacker ??= "Unknown";
+            var dmg = obj.damage;
             if (history.TryGetValue(attacker, out var value))
             {
-                value.amount += obj.damage;
+                value.amount += dmg;
                 value.hitCount++;
                 value.when = Time.time;
             }
             else
             {
-                history.Add(attacker, new DamageLog(attacker, obj.damage));
+                history.Add(attacker, new DamageLog(attacker, dmg));
             }
             
         }

@@ -83,8 +83,11 @@ namespace DamageHistory
             // ReSharper disable twice Unity.PerformanceCriticalCodeNullComparison cry about it
             if (_hud.targetBodyObject == null) return;
             var historyBehavior = _hud.targetBodyObject.GetComponent<DamageHistoryBehavior>();
-            if (historyBehavior != null)
+            var visible = !DamageHistoryPlugin.mustHoldTab.Value || DamageHistoryPlugin.mustHoldTab.Value && Input.GetKeyDown(KeyCode.Tab);
+            if (historyBehavior != null && visible)
                 _textMesh.SetText(BuildString(historyBehavior.history, who: historyBehavior.healthComponent.body.GetUserName()).ToString());
+            else
+                _textMesh.SetText("");
         }
         
         public static StringBuilder BuildString(Dictionary<object, DamageLog> history, bool flip = true, bool verbose = false,

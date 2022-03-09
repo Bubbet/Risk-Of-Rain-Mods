@@ -58,8 +58,15 @@ namespace DamageHistory
 		private static void FillBoxWithPlayerInfo(RunReport.PlayerInfo playerInfo)
 		{
 			var body = playerInfo.master?.GetBody();
-			var behavior = body.GetComponent<DamageHistoryBehavior>();
-			if (behavior is not null) _textMesh.SetText(DamageHistoryHUD.BuildString(behavior.history, who: body.GetUserName(), verbose: true));
+			if (body != null) {
+				var behavior = body.GetComponent<DamageHistoryBehavior>();
+				if (behavior is not null) _textMesh.SetText(DamageHistoryHUD.BuildString(behavior.history, who: body.GetUserName(), verbose: true));
+			}
+			else
+			{
+				_textMesh.SetText("");
+				DamageHistoryPlugin.Log.LogWarning($"Body not found for player {playerInfo.name}. (Probably cleaned up)");
+			}
 		}
 	}
 }

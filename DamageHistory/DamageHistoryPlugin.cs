@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using HG.Reflection;
@@ -9,16 +10,17 @@ using RoR2.UI;
 //[assembly: SearchableAttribute.OptInAttribute]
 namespace DamageHistory
 {
-    [BepInPlugin("bubbet.damagehistory", "Damage History", "1.1.0")]
+    [BepInPlugin("bubbet.damagehistory", "Damage History", "1.2.0")]
     public class DamageHistoryPlugin : BaseUnityPlugin
     {
         public static List<HUD> HUDs = new List<HUD>();
         public static ManualLogSource Log;
+        public static ConfigEntry<bool> mustHoldTab;
 
         public void Awake()
         {
             Log = Logger;
-            RoR2Application.isModded = true;
+            mustHoldTab = Config.Bind("General", "Must Hold Tab", false, "Require holding tab to see damage history.");
             new Harmony(Info.Metadata.GUID).PatchAll();
             HUD.shouldHudDisplay += CreateHud;
             CharacterBody.onBodyStartGlobal += BodyStart;

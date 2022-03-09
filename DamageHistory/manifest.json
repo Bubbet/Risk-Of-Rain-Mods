@@ -4,7 +4,7 @@
 	"website_url":"https://github.com/Bubbet",
 	"displayName":"Damage History",
 
-	"version_number": "1.1.0",
+	"version_number": "1.2.0",
 	"description": "Track every bit of damage leading to your death.",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.1902"
