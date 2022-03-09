@@ -94,3 +94,7 @@ Wildlife Camera
 1.4.2
 - Fixed bug caused by update to BepinExPack causing system initializers to not work aka tokens and sounds not loading
 - Higher resolution voidscrap icon
+
+1.4.3
+- fixed voidscrap icon
+- fixed voidscraps cost/afford delegates so it works with alchemical cauldrons now

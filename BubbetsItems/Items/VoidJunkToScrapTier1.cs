@@ -34,42 +34,70 @@ namespace BubbetsItems.Items
 				var oldCan = def.isAffordable;
 				def.isAffordable = (typeDef, context) =>
 				{
+					if (oldCan(typeDef, context)) return true;
 					try
 					{
-						return typeDef.itemTier == ItemTier.Tier1
-							? oldCan(typeDef, context) || context.cost <= context.activator
-								.GetComponent<CharacterBody>()
-								.inventory.GetItemCount(instance.ItemDef) - 1
-							: oldCan(typeDef, context);
+						if (typeDef.itemTier != ItemTier.Tier1) return false;
+						var inv = context.activator.GetComponent<CharacterBody>().inventory;
+						var voidAmount = Math.Max(0, inv.GetItemCount(instance.ItemDef) - 1);
+						return inv.GetTotalItemCountOfTier(ItemTier.Tier1) + voidAmount >= context.cost;
 					}
 					catch (Exception e)
 					{
 						BubbetsItemsPlugin.Log.LogError(e);
-						return oldCan(typeDef, context);
+						return false;
 					}
 				};
 				var oldCost = def.payCost;
 				def.payCost = (typeDef, context) =>
 				{
+					if (typeDef.itemTier != ItemTier.Tier1)
+					{
+						oldCost(typeDef, context);
+						return;
+					}
+
 					try
 					{
 						var inv = context.activatorBody.inventory;
-						if (typeDef.itemTier == ItemTier.Tier1 && context.cost == 1 &&
-						    (inv != null ? inv.GetItemCount(instance.ItemDef) : 0) > 1)
+
+						var highestPriority = new WeightedSelection<ItemIndex>();
+						var higherPriority = new WeightedSelection<ItemIndex>();
+						var highPriority = new WeightedSelection<ItemIndex>();
+						var normalPriority = new WeightedSelection<ItemIndex>();
+						
+						var voidAmount = Math.Max(0, inv.GetItemCount(instance.ItemDef) - 1);
+						if (voidAmount > 0)
+							highestPriority.AddChoice(instance.ItemDef.itemIndex, voidAmount);
+						
+						foreach (var itemIndex in ItemCatalog.tier1ItemList)
 						{
-							inv!.RemoveItem(instance.ItemDef);
-							context.results.itemsTaken = new List<ItemIndex> {instance.ItemDef.itemIndex};
-							MultiShopCardUtils.OnNonMoneyPurchase(context);
+							if (itemIndex == context.avoidedItemIndex) continue;
+							var count = inv.GetItemCount(itemIndex);
+							if (count > 0)
+							{
+								var itemDef = ItemCatalog.GetItemDef(itemIndex);
+								(itemDef.ContainsTag(ItemTag.PriorityScrap) ? higherPriority : itemDef.ContainsTag(ItemTag.Scrap) ? highPriority : normalPriority).AddChoice(itemIndex, count);
+							}
 						}
-						else
-						{
-							oldCost(typeDef, context);
-						}
+
+						var itemsToTake = new List<ItemIndex>();
+
+						TakeFromWeightedSelection(highestPriority, ref context, ref itemsToTake);
+						TakeFromWeightedSelection(higherPriority, ref context, ref itemsToTake);
+						TakeFromWeightedSelection(highPriority, ref context, ref itemsToTake);
+						TakeFromWeightedSelection(normalPriority, ref context, ref itemsToTake);
+
+						for (var i = itemsToTake.Count; i < context.cost; i++)
+							itemsToTake.Add(context.avoidedItemIndex);
+
+						context.results.itemsTaken = itemsToTake;
+						foreach (var itemIndex in itemsToTake) inv.RemoveItem(itemIndex);
+						MultiShopCardUtils.OnNonMoneyPurchase(context);
 					}
 					catch (Exception e)
 					{
 						BubbetsItemsPlugin.Log.LogError(e);
-						oldCost(typeDef, context);
 					}
 				};
 			}
@@ -78,8 +106,29 @@ namespace BubbetsItems.Items
 				BubbetsItemsPlugin.Log.LogError(e);
 			}
 		}
-		
-		
+
+		private static void TakeFromWeightedSelection(WeightedSelection<ItemIndex> weightedSelection, ref CostTypeDef.PayCostContext context, ref List<ItemIndex> itemsToTake)
+		{
+			while (weightedSelection.Count > 0 && itemsToTake.Count < context.cost)
+			{
+				var choiceIndex = weightedSelection.EvaluateToChoiceIndex(context.rng.nextNormalizedFloat);
+				var choice = weightedSelection.GetChoice(choiceIndex);
+				var value = choice.value;
+				var num = (int)choice.weight;
+				num--;
+				if (num <= 0)
+				{
+					weightedSelection.RemoveChoice(choiceIndex);
+				}
+				else
+				{
+					weightedSelection.ModifyChoiceWeight(choiceIndex, num);
+				}
+				itemsToTake.Add(value);
+			}
+		}
+
+
 		protected override void FillVoidConversions()
 		{
 			ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(new []{new ItemDef.Pair
