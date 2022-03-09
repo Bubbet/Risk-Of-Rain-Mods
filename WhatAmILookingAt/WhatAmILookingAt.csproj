@@ -13,8 +13,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Reference Include="InLobbyConfig">
+        <HintPath>..\Libs\InLobbyConfig.dll</HintPath>
+      </Reference>
       <Reference Include="R2API, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\..\..\..\yes\Dev\Programming\C#\R2API\R2API\bin\Debug\netstandard2.0\R2API.dll</HintPath>
+        <HintPath>..\Libs\R2API.dll</HintPath>
       </Reference>
     </ItemGroup>
 
