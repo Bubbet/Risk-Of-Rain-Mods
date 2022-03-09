@@ -9,7 +9,7 @@ using RoR2.UI;
 //[assembly: SearchableAttribute.OptInAttribute]
 namespace DamageHistory
 {
-    [BepInPlugin("bubbet.damagehistory", "Damage History", "1.0.0")]
+    [BepInPlugin("bubbet.damagehistory", "Damage History", "1.1.0")]
     public class DamageHistoryPlugin : BaseUnityPlugin
     {
         public static List<HUD> HUDs = new List<HUD>();

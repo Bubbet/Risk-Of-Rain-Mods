@@ -62,6 +62,7 @@ namespace DamageHistory
             if (history.TryGetValue(attacker, out var value))
             {
                 value.amount += obj.damage;
+                value.hitCount++;
                 value.when = Time.time;
             }
             else
@@ -77,7 +78,7 @@ namespace DamageHistory
             {
                 if (history.Count == 0) return;
                 var sorted = history.Values.ToList();
-                if (history.Count > 1) sorted.Sort((o, o1) => Math.Sign(o1.when - o.when));
+                if (history.Count > 1) sorted.Sort((o, o1) => Math.Sign(o.when - o1.when));
                 sorted[0].amount -= amount;
                 if (sorted[0].amount <= 0)
                 {
@@ -98,6 +99,7 @@ namespace DamageHistory
     {
         public float when;
         public float amount;
+        public int hitCount;
         public object who; // same as key in dict
         public string whoPretty;
 
@@ -106,6 +108,7 @@ namespace DamageHistory
             amount = damage;
             when = Time.time;
             who = what;
+            hitCount = 1;
             whoPretty = TryForPrettyName(who);
         }
 

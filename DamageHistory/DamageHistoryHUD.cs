@@ -116,9 +116,9 @@ namespace DamageHistory
             {
                 if (verbose)
                     sb.Append($"T-{Mathf.Abs(log.when - Time.time) : 0.00} - Attacker: " + log.whoPretty)
-                        .AppendLine($" - Amount: {log.amount : 0.00}");
+                        .AppendLine($" - Amount: {log.amount : 0.00}" + (log.hitCount > 1 ? $"/{log.hitCount}"  : ""));
                 else
-                    sb.Append(log.whoPretty).AppendLine(" - " + (int) log.amount);
+                    sb.Append(log.whoPretty).AppendLine(" - " + (int) log.amount + (log.hitCount > 1 ? $"/{log.hitCount}"  : ""));
             }
 
             if (!flip) history.Clear();
