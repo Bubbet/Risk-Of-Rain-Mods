@@ -13,15 +13,16 @@ using RoR2;
 using RoR2.ContentManagement;
 using UnityEngine;
 using Path = System.IO.Path;
+using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 #pragma warning restore CS0618 // Type or member is obsolete
 [module: UnverifiableCode]
-[assembly: HG.Reflection.SearchableAttribute.OptIn]
+[assembly: SearchableAttribute.OptIn]
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.4.1")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.4.2")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     //[BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
@@ -46,6 +47,8 @@ namespace BubbetsItems
             LoadContentPack(harm);
             InLobbyConfigCompat.Init();
             harm.PatchAll();
+            //Fucking bepinex pack constantly changing and now loading too late for searchableAttributes scan.
+            SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
 
             //PickupTooltipFormat.Init(harm);
         }

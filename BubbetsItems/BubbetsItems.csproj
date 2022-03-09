@@ -14,9 +14,9 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="InLobbyConfig, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\Libs\InLobbyConfig.dll</HintPath>
-      </Reference>
+		<Reference Include="InLobbyConfig">
+			<HintPath>..\Libs\InLobbyConfig.dll</HintPath>
+		</Reference>
     </ItemGroup>
 
 </Project>

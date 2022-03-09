@@ -90,3 +90,7 @@ Wildlife Camera
 - Fixed void scrap not counting as tier1 scrap, but instead counting as voidtier1 and not doing anything.
 - Made it impossible to scrap your last.
 - Made it priority scrap.
+
+1.4.2
+- Fixed bug caused by update to BepinExPack causing system initializers to not work aka tokens and sounds not loading
+- Higher resolution voidscrap icon

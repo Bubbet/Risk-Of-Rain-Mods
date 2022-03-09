@@ -4,7 +4,7 @@
 	"website_url":"https://github.com/Bubbet",
 	"displayName":"Bubbets Items",
 
-	"version_number": "1.4.1",
+	"version_number": "1.4.2",
 	"description": "Yes, another item mod.",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.1902"
