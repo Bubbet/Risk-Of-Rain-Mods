@@ -26,8 +26,8 @@ namespace PickupDiscoveryFix
         //private static UserProfile.SaveFieldAttribute attributeInstance;
         delegate void fieldDele(FieldInfo field);
         private static FieldInfo fieldInstance;
-
-        [HarmonyPatch(typeof(UserProfile.SaveFieldAttribute), nameof(UserProfile.SaveFieldAttribute.SetupPickupsSet)), HarmonyILManipulator]
+        
+        [HarmonyPatch(typeof(SaveFieldAttribute), nameof(SaveFieldAttribute.SetupPickupsSet)), HarmonyILManipulator]
         public static void SetupPickupsPatch(ILContext il)
         {
             var c = new ILCursor(il);
@@ -57,21 +57,21 @@ namespace PickupDiscoveryFix
             //PickupDiscoveryFixPlugin.Log.LogInfo(il);
         }
 
-        [HarmonyILManipulator, HarmonyPatch(typeof(UserProfile), "LoadUserProfileFromDisk")]
+        [HarmonyILManipulator, HarmonyPatch(typeof(SaveSystemSteam), nameof(SaveSystemSteam.LoadUserProfileFromDisk))]
         public static void LoadFromDiskHook(ILContext il)
         {
             var c = new ILCursor(il);
+            /*
             c.GotoNext(
                 x => x.MatchLdloc(out _),
                 x => x.MatchCall<XDocument>("Load"),
                 x => true, //x.OpCode == OpCodes.Call && x.Operand.GetType().Name == "FromXml",
                 x => x.MatchStloc(out _)
-            );
-            c.Emit(OpCodes.Ldarg_1);
-            c.EmitDelegate<SetCurrentDele>(path => _currentFile = path.GetNameWithoutExtension());
+            );*/
+            c.Emit(OpCodes.Ldarg_2);
+            c.EmitDelegate<Action<UPath>>(path => _currentFile = path.GetNameWithoutExtension());
+            //Debug.Log(il);
         }
-
-        delegate void SetCurrentDele(UPath path);
         public static bool GetFtn(this Instruction x, out MethodReference ftn)
         {
             var isfunc = x.OpCode == OpCodes.Ldftn;
@@ -83,7 +83,7 @@ namespace PickupDiscoveryFix
         }
 
         private static MethodReference Getterdele;
-        public static string GetterMeth(UserProfile.SaveFieldAttribute attribute, UserProfile profile)
+        public static string GetterMeth(SaveFieldAttribute attribute, UserProfile profile)
         {
             var old = (string) Getterdele.ResolveReflection().Invoke(attribute, new object[] {profile}); // Call old method
             if (profile.fileName == null) return old;
@@ -97,6 +97,7 @@ namespace PickupDiscoveryFix
             var newList = DiscoveredPickups[profile.fileName];
             var combined = oldList.Union(newList).Distinct();
             var ret = string.Join(" ", combined);
+            //Debug.Log(ret);
             //TODO save ret to disk using profile.fileName
             
             RoR2Application.cloudStorage.CreateDirectory("/PickupDiscoveryFix");
@@ -110,7 +111,7 @@ namespace PickupDiscoveryFix
 
         private static MethodReference Setterdele;
 
-        public static string SetterMeth(UserProfile.SaveFieldAttribute attribute, UserProfile profile, string value) // FromXml aka reading the file
+        public static string SetterMeth(SaveFieldAttribute attribute, UserProfile profile, string value) // FromXml aka reading the file
         {
             //TODO load disk and fill mineIn
             var stream = RoR2Application.cloudStorage.OpenFile("/PickupDiscoveryFix/" + _currentFile, FileMode.Open, FileAccess.Read);
@@ -128,8 +129,10 @@ namespace PickupDiscoveryFix
                 stream.Close();
                 mineIn = Encoding.UTF8.GetString(byt.ToArray()).Split(' ');
             }
+            //Debug.LogWarning("mine " + string.Join(" ", mineIn));
 
             var xmlIn = value.Split(' ');
+            //Debug.LogWarning("xml " + value);
             var ou = xmlIn.Union(mineIn).Distinct().ToArray(); // TODO combine with loaded file from disk
             DiscoveredPickups[_currentFile] = ou;
             return (string) Setterdele.ResolveReflection().Invoke(attribute, new object[] {profile, string.Join(" ", ou)});

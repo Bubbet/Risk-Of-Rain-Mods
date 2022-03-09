@@ -9,7 +9,7 @@ using Zio;
 [assembly: HG.Reflection.SearchableAttribute.OptIn]
 namespace PickupDiscoveryFix
 {
-    [BepInPlugin("com.bubbet.pickupdiscoveryfix", "Pickup Discovery Fix", "0.1.0")]
+    [BepInPlugin("com.bubbet.pickupdiscoveryfix", "Pickup Discovery Fix", "0.2.0")]
     public class PickupDiscoveryFixPlugin : BaseUnityPlugin
     {
         internal static ManualLogSource Log;

@@ -1,0 +1,12 @@
+﻿{
+	"name": "PickupDiscoveryPatch",
+	"authorName":"Bubbet",
+	"website_url":"https://github.com/Bubbet",
+	"displayName":"Pickup Discovery Patch",
+
+	"version_number": "0.2.0",
+	"description": "Stores the pickups you discover in the steam cloud, and seperate from your profile so when you play vanilla and then come back to modded you will still have your pickups discovered.",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.1902"
+	]
+}
