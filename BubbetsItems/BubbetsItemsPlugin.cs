@@ -22,7 +22,7 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 [assembly: SearchableAttribute.OptIn]
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.4.3")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.4.4")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     //[BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
@@ -46,7 +46,15 @@ namespace BubbetsItems
             var harm = new Harmony(Info.Metadata.GUID);
             LoadContentPack(harm);
             InLobbyConfigCompat.Init();
-            harm.PatchAll();
+            
+            new PatchClassProcessor(harm, typeof(HarmonyPatches)).Patch();
+            new PatchClassProcessor(harm, typeof(PickupTooltipFormat)).Patch();
+            new PatchClassProcessor(harm, typeof(LogBookPageScalingGraph)).Patch();
+            
+            new PatchClassProcessor(harm, typeof(SharedBase)).Patch();
+            new PatchClassProcessor(harm, typeof(EquipmentBase)).Patch();
+            new PatchClassProcessor(harm, typeof(ItemBase)).Patch();
+            
             //Fucking bepinex pack constantly changing and now loading too late for searchableAttributes scan.
             SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
 

@@ -98,3 +98,6 @@ Wildlife Camera
 1.4.3
 - fixed voidscrap icon
 - fixed voidscraps cost/afford delegates so it works with alchemical cauldrons now
+
+1.4.4
+- fixed disabled items hooks still running often ending up with an nre when trying to reference itemdef that isnt set

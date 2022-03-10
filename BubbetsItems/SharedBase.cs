@@ -30,10 +30,12 @@ namespace BubbetsItems
 
         protected ManualLogSource? Logger;
         protected Harmony? Harmony;
+        protected PatchClassProcessor? patchProcessor;
         protected static readonly List<ContentPack> ContentPacks = new List<ContentPack>();
         private string? _tokenPrefix;
         
         private static ExpansionDef? _sotvExpansion;
+
         public static ExpansionDef? SotvExpansion
         {
             get
@@ -65,13 +67,19 @@ namespace BubbetsItems
                 {
                     continue;
                 }
+
                 if (harmony != null)
+                {
                     shared!.Harmony = harmony;
+                    shared.patchProcessor = new PatchClassProcessor(harmony, shared.GetType());
+                }
+
                 shared!.Logger = manualLogSource;
                 shared.MakeConfigs(configFile);
                 shared._tokenPrefix = tokenPrefix;
                 if (!shared.Enabled.Value) continue;
                 shared.MakeBehaviours();
+                shared.patchProcessor.Patch();
                 localInstances.Add(shared);
             }
             Instances.AddRange(localInstances);
