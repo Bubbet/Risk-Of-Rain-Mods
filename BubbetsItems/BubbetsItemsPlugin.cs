@@ -56,7 +56,8 @@ namespace BubbetsItems
             new PatchClassProcessor(harm, typeof(ItemBase)).Patch();
             
             //Fucking bepinex pack constantly changing and now loading too late for searchableAttributes scan.
-            SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
+            //it changed again and no longer needs this
+            //SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
 
             //PickupTooltipFormat.Init(harm);
         }
