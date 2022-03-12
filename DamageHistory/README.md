@@ -10,3 +10,7 @@ holy fuck i hate making ui
 1.2.0
 - add config for must hold tab
 - fixed endscreen after beating the game throwing a billion nres
+
+1.2.1
+- fixed endscreen not showing damage history at all
+

@@ -2,14 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using JetBrains.Annotations;
 using RoR2;
 using UnityEngine;
 
 namespace DamageHistory
 {
-    public class DamageHistoryBehavior : MonoBehaviour
+    public class DamageHistoryBehavior : MonoBehaviour, ILifeBehavior
     {
         /// <summary>
         /// Key is genrally a gameobject, but can be a string for unknown and fall damage
@@ -17,9 +15,12 @@ namespace DamageHistory
         public readonly Dictionary<object, DamageLog> history = new Dictionary<object, DamageLog>();
         private float oldHealth;
         public HealthComponent healthComponent;
-
+        public static readonly List<DamageHistoryBehavior> Instances = new ();
+        public static readonly Dictionary<CharacterMaster, Dictionary<object, DamageLog>> StaticHistory = new();
+        
         public void Awake()
         {
+            Instances.Add(this);
             healthComponent = GetComponent<HealthComponent>();
             //HarmonyPatches.onCharacterHealWithRegen += OnHeal;
             GlobalEventManager.onClientDamageNotified += ClientDamaged;
@@ -30,6 +31,7 @@ namespace DamageHistory
         public void OnDestroy()
         {
             //HarmonyPatches.onCharacterHealWithRegen -= OnHeal;
+            Instances.Remove(this);
             GlobalEventManager.onClientDamageNotified -= ClientDamaged;
             //GlobalEventManager.onCharacterDeathGlobal -= CharacterDeath;
         }
@@ -94,7 +96,15 @@ namespace DamageHistory
                 break;
             }
         }
+
+        public void OnDeathStart()
+        {
+            var what = healthComponent.body.master;
+            if (!StaticHistory.ContainsKey(what))
+                StaticHistory.Add(what, history);
+        }
     }
+
     // TODO gut this whole thing to store logs by gameobject(attacker) so i can do a tablelookup when adding new damage; set the time to most recent damage; track the amount of hits per attacker;
     public class DamageLog
     {

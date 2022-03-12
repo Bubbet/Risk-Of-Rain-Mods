@@ -57,10 +57,9 @@ namespace DamageHistory
 		[HarmonyPostfix, HarmonyPatch(typeof(GameEndReportPanelController), nameof(GameEndReportPanelController.SetPlayerInfo))]
 		private static void FillBoxWithPlayerInfo(RunReport.PlayerInfo playerInfo)
 		{
-			var body = playerInfo.master?.GetBody();
+			var body = playerInfo.master;
 			if (body != null) {
-				var behavior = body.GetComponent<DamageHistoryBehavior>();
-				if (behavior is not null) _textMesh.SetText(DamageHistoryHUD.BuildString(behavior.history, who: body.GetUserName(), verbose: true));
+				_textMesh.SetText(DamageHistoryHUD.BuildString(DamageHistoryBehavior.StaticHistory[body], who: playerInfo.name, verbose: true));
 			}
 			else
 			{
