@@ -217,7 +217,7 @@ namespace BubbetsItems
         {
             foreach (var equipmentBase in Equipments)
             {
-                if (equipmentBase.RequiresSOTV)
+                if (equipmentBase.RequiresSotv)
                     equipmentBase.EquipmentDef.requiredExpansion = SotvExpansion;
             }
         }

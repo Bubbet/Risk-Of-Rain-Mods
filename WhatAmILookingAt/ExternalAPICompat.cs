@@ -27,7 +27,8 @@ namespace WhatAmILookingAt
 		public static bool GetPluginFromR2API(string identifier, out BepInPlugin? o)
 		{
 			if (!IdentifierToR2AssemblyMap.ContainsKey(identifier))
-				IdentifierToR2AssemblyMap.Add(identifier, R2APIContentManager.ManagedContentPacks.FirstOrDefault(x => x.Identifier == identifier).TiedAssembly);
+				IdentifierToR2AssemblyMap.Add(identifier, 
+					R2APIContentManager.ManagedContentPacks.FirstOrDefault(x => x.Identifier == identifier).TiedAssembly);
 			var assembly = IdentifierToR2AssemblyMap[identifier];
 			//var assembly = R2APIContentManager.GetAssemblyFromContentPack(pack);
 			if (WhatAmILookingAtPlugin.GetPluginFromAssembly(assembly, out var plugin))

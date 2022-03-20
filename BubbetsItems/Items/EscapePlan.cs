@@ -4,6 +4,7 @@ using BubbetsItems.Helpers;
 using HarmonyLib;
 using InLobbyConfig;
 using InLobbyConfig.Fields;
+using JetBrains.Annotations;
 using RoR2;
 using UnityEngine;
 
@@ -21,7 +22,7 @@ namespace BubbetsItems.Items
             defaultScalingFunction = "-Log(1 - (1 - [h])) * (0.65 + 0.1 * [a])";
             defaultScalingDesc = "[a] = amount, [h] = health";
             base.MakeConfigs(configFile);
-            Granularity = configFile.Bind("Balancing Functions", GetType().Name + " Granularity", 25f, "Value to multiply the scaling function by before its rounded, and then value to divide the buff count by.");
+            Granularity = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, GetType().Name + " Granularity", 25f, "Value to multiply the scaling function by before its rounded, and then value to divide the buff count by.");
             _instance = this;
             /*
             if (!Chainloader.PluginInfos.ContainsKey(R2API.R2API.PluginGUID))
@@ -37,18 +38,16 @@ namespace BubbetsItems.Items
             modConfigEntry.SectionFields["Scaling Functions"] = list;
         }
 
-        public override string GetFormattedDescription(Inventory inventory = null) // TODO Fill this
+        public override string GetFormattedDescription([CanBeNull] Inventory inventory) // TODO Fill this
         {
-            if (inventory)
-            {
-                var scale = "\n\n" + scaleConfig.Value + "\n" + scaleConfig.Description.Description.Split(';')[1];
-                return Language.GetStringFormatted(ItemDef.descriptionToken, scale,
-                    ScalingFunction(inventory.GetItemCount(ItemDef),
-                        inventory.GetComponent<CharacterMaster>()?.GetBody()?.GetComponent<HealthComponent>()
-                            ?.combinedHealthFraction ?? 1f / 500f));
-            }
-            else
-                return base.GetFormattedDescription(inventory);
+            if (!inventory) return base.GetFormattedDescription(inventory);
+            
+            var scale = "\n\n" + scaleConfig.Value + "\n" + scaleConfig.Description.Description.Split(';')[1];
+            return Language.GetStringFormatted(ItemDef.descriptionToken, scale,
+                ScalingFunction(inventory.GetItemCount(ItemDef),
+                    inventory.GetComponent<CharacterMaster>()?.GetBody()?.GetComponent<HealthComponent>()
+                        ?.combinedHealthFraction ?? 1f / 500f));
+
         }
 
         public float ScalingFunction(int itemCount, float health)
@@ -158,7 +157,7 @@ namespace BubbetsItems.Items
         protected override void MakeTokens()
         {
             AddToken("ESCAPE_PLAN_NAME", "Escape Plan");
-            AddToken("ESCAPE_PLAN_DESC", $"Get {"{1:P} extra move speed".Style(StyleEnum.Utility)}. Increases the closer to {"death".Style(StyleEnum.Health)} you are.\n{{0}}"); //"Get 75% (+10% per item) movement speed (at 0% hp scaling logarithmically) the lower your health is.");
+            AddToken("ESCAPE_PLAN_DESC", "Get " + "{1:P} extra move speed".Style(StyleEnum.Utility) + ". Increases the closer to " + "death".Style(StyleEnum.Health) + " you are.\n{0}"); //"Get 75% (+10% per item) movement speed (at 0% hp scaling logarithmically) the lower your health is.");
             AddToken("ESCAPE_PLAN_PICKUP", "Get movement speed the lower your health is.");
             AddToken("ESCAPE_PLAN_LORE", "Escape Plan");
             base.MakeTokens();

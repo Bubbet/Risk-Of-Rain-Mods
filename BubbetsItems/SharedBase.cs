@@ -30,7 +30,7 @@ namespace BubbetsItems
 
         protected ManualLogSource? Logger;
         protected Harmony? Harmony;
-        protected PatchClassProcessor? patchProcessor;
+        protected PatchClassProcessor? PatchProcessor;
         protected static readonly List<ContentPack> ContentPacks = new List<ContentPack>();
         private string? _tokenPrefix;
         
@@ -45,7 +45,7 @@ namespace BubbetsItems
                 return _sotvExpansion;
             }
         }
-        public virtual bool RequiresSOTV { get; protected set; } = false;
+        public virtual bool RequiresSotv => false;
         
         public virtual string GetFormattedDescription(Inventory? inventory)
         {
@@ -71,24 +71,24 @@ namespace BubbetsItems
                 if (harmony != null)
                 {
                     shared!.Harmony = harmony;
-                    shared.patchProcessor = new PatchClassProcessor(harmony, shared.GetType());
+                    shared.PatchProcessor = new PatchClassProcessor(harmony, shared.GetType());
                 }
 
                 shared!.Logger = manualLogSource;
                 shared.MakeConfigs(configFile);
                 shared._tokenPrefix = tokenPrefix;
-                if (!shared.Enabled.Value) continue;
+                if (!shared.Enabled?.Value ?? false) continue;
                 shared.MakeBehaviours();
-                shared.patchProcessor.Patch();
+                shared.PatchProcessor?.Patch();
                 localInstances.Add(shared);
             }
             Instances.AddRange(localInstances);
 
             if (!serializableContentPack) return;
             serializableContentPack!.itemDefs = serializableContentPack.itemDefs
-                .Where(x => Instances.FirstOrDefault(y => MatchName(x.name, y.GetType().Name))?.Enabled.Value ?? false).ToArray();
+                .Where(x => Instances.FirstOrDefault(y => MatchName(x.name, y.GetType().Name))?.Enabled?.Value ?? false).ToArray();
             serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs
-                .Where(x => Instances.FirstOrDefault(y => MatchName(x.name, y.GetType().Name))?.Enabled.Value ?? false).ToArray();
+                .Where(x => Instances.FirstOrDefault(y => MatchName(x.name, y.GetType().Name))?.Enabled?.Value ?? false).ToArray();
             foreach (var instance in localInstances) instance.FillDefs(serializableContentPack);
         }
 
@@ -124,12 +124,12 @@ namespace BubbetsItems
             {
                 try
                 {
-                    item.Logger.LogMessage($"Making tokens for {item}.");
+                    item.Logger?.LogMessage($"Making tokens for {item}.");
                     item.MakeTokens();
                 }
                 catch (Exception e)
                 {
-                    item.Logger.LogError(e);
+                    item.Logger?.LogError(e);
                 }
             }
         }
@@ -139,9 +139,10 @@ namespace BubbetsItems
             Language.english.SetStringByToken(_tokenPrefix + key, value);
         }
         
+        /* other languages get unloaded on language change, and these keys would be discarded
         protected void AddToken(string language, string key, string value)
         {
             Language.languagesByName[language].SetStringByToken(_tokenPrefix + key, value);
-        }
+        }*/
     }
 }

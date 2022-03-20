@@ -12,10 +12,10 @@ namespace BubbetsItems
     [HarmonyPatch]
     public static class HarmonyPatches
     {
-	    [HarmonyILManipulator, HarmonyPatch(typeof(GlobalEventManager), nameof(GlobalEventManager.OnCharacterDeath))]
+        [HarmonyILManipulator, HarmonyPatch(typeof(GlobalEventManager), nameof(GlobalEventManager.OnCharacterDeath))]
         private static void AmmoPickupPatch(ILContext il)
         {
-	        if (!BubbetsItemsPlugin.Conf.AmmoPickupAsOrbEnabled.Value) return;
+            if (!BubbetsItemsPlugin.Conf.AmmoPickupAsOrbEnabled.Value) return;
             var c = new ILCursor(il);
             c.GotoNext(
                 x => x.MatchLdstr("Prefabs/NetworkedObjects/AmmoPack"),

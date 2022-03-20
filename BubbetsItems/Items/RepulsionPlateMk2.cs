@@ -23,11 +23,11 @@ namespace BubbetsItems.Items
         protected override void MakeConfigs(ConfigFile configFile)
         {
             base.MakeConfigs(configFile);
-            _reductionOnTrue = configFile.Bind("General", "Reduction On True", true,  "Makes the item behave more like mk1 and give a flat reduction in damage taken if set to true.");
+            _reductionOnTrue = configFile.Bind(ConfigCategoriesEnum.General, "Reduction On True", true,  "Makes the item behave more like mk1 and give a flat reduction in damage taken if set to true.");
             _instance = this;
             var name = GetType().Name;
-            _reductionScalingConfig = configFile.Bind("Balancing Functions", name + " Reduction", "[d] - (20 + [p] * (4 + [a]))", "Scaling function for item. ;[a] = amount, [p] = plate amount, [d] = damage");
-            _armorScalingConfig = configFile.Bind("Balancing Functions", name + " Armor", "20 + [p] * (4 + [a])", "Scaling function for item. ;[a] = amount, [p] = plate amount");
+            _reductionScalingConfig = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, name + " Reduction", "[d] - (20 + [p] * (4 + [a]))", "Scaling function for item. ;[a] = amount, [p] = plate amount, [d] = damage");
+            _armorScalingConfig = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, name + " Armor", "20 + [p] * (4 + [a])", "Scaling function for item. ;[a] = amount, [p] = plate amount");
             UpdateScalingFunction();
         }
 

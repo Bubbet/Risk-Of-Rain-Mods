@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
 using HarmonyLib;
+using JetBrains.Annotations;
 using NCalc;
 using RoR2;
 using RoR2.ContentManagement;
@@ -23,7 +24,7 @@ namespace BubbetsItems
             Enabled = configFile.Bind("Disable Items", name, true, "Should this item be enabled.");
             
             if (defaultScalingFunction == null) return;
-            scaleConfig = configFile.Bind("Balancing Functions", name, defaultScalingFunction, "Scaling function for item. ;" + (!string.IsNullOrEmpty(defaultScalingDesc) ? defaultScalingDesc: "[a] = amount"));
+            scaleConfig = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, name, defaultScalingFunction, "Scaling function for item. ;" + (!string.IsNullOrEmpty(defaultScalingDesc) ? defaultScalingDesc: "[a] = amount"));
             scalingFunction = new Expression(scaleConfig.Value).ToLambda<ExpressionContext, float>();
         }
 
@@ -47,7 +48,7 @@ namespace BubbetsItems
             return ScalingFunction(itemCount);
         }
 
-        public override string GetFormattedDescription(Inventory inventory = null)
+        public override string GetFormattedDescription([CanBeNull] Inventory inventory)
         {
             // ReSharper disable once Unity.NoNullPropagation
             if (scalingFunction != null)
@@ -70,7 +71,7 @@ namespace BubbetsItems
             }
             if (ItemDef == null)
             {
-                Logger.LogWarning($"Could not find ItemDef for item {this} in serializableContentPack, class/itemdef name are probably mismatched. This will throw an exception later.");
+                Logger?.LogWarning($"Could not find ItemDef for item {this} in serializableContentPack, class/itemdef name are probably mismatched. This will throw an exception later.");
             }
         }
 
@@ -79,7 +80,7 @@ namespace BubbetsItems
         {
             try
             {
-                var items = Instances.OfType<ItemBase>().Where(x => x.Enabled.Value).ToArray();
+                var items = Instances.OfType<ItemBase>().Where(x => x.Enabled?.Value ?? false).ToArray();
                 foreach (var pack in ContentPacks)
                 {
                     foreach (var itemBase in items)
@@ -91,7 +92,7 @@ namespace BubbetsItems
                                 itemBase.ItemDef = itemDef;
                         if (itemBase.ItemDef == null)
                         {
-                            itemBase.Logger.LogWarning($"Could not find ItemDef for item {itemBase}, class/itemdef name are probably mismatched. This will throw an exception later.");
+                            itemBase.Logger?.LogWarning($"Could not find ItemDef for item {itemBase}, class/itemdef name are probably mismatched. This will throw an exception later.");
                         }
                     }
                 }
@@ -106,9 +107,9 @@ namespace BubbetsItems
                     }
                     catch (NullReferenceException e)
                     {
-                        x.Logger.LogError("Item " + x.GetType().Name +
-                                          " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
-                                          e);
+                        x.Logger?.LogError("Item " + x.GetType().Name +
+                                           " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
+                                           e);
                     }
                 }
             }
@@ -126,13 +127,13 @@ namespace BubbetsItems
             {
                 try
                 {
-                    if (itemBase.RequiresSOTV)
+                    if (itemBase.RequiresSotv)
                         itemBase.ItemDef.requiredExpansion =
                             ExpansionCatalog.expansionDefs.FirstOrDefault(x => x.nameToken == "DLC1_NAME");
                 }
                 catch (Exception e)
                 {
-                    itemBase.Logger.LogError(e);
+                    itemBase.Logger?.LogError(e);
                 }
             }
         }
@@ -140,13 +141,17 @@ namespace BubbetsItems
         [HarmonyPrefix, HarmonyPatch(typeof(ContagiousItemManager), nameof(ContagiousItemManager.Init))]
         public static void FillVoidItems()
         {
+            var pairs = new List<ItemDef.Pair>();
             foreach (var itemBase in Items)
             {
-                itemBase.FillVoidConversions();
+                itemBase.FillVoidConversions(pairs);
             }
+
+            ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog
+                .itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(pairs.ToArray());
         }
 
-        protected virtual void FillVoidConversions(){}
+        protected virtual void FillVoidConversions(List<ItemDef.Pair> pairs) {}
 
         public class ExpressionContext
         {

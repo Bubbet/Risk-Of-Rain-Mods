@@ -12,8 +12,8 @@ namespace BubbetsItems.Items
 {
 	public class VoidJunkToScrapTier1 : ItemBase
 	{
-		private static VoidJunkToScrapTier1 instance;
-		public override bool RequiresSOTV { get; protected set; } = true;
+		private static VoidJunkToScrapTier1? _instance;
+		public override bool RequiresSotv => true;
 
 		protected override void MakeTokens()
 		{
@@ -22,7 +22,11 @@ namespace BubbetsItems.Items
 			AddToken("VOIDJUNKTOSCRAPTIER1_PICKUP", $"{"Corrupts all broken items".Style(StyleEnum.Void)} into scrap.");
 			AddToken("VOIDJUNKTOSCRAPTIER1_DESC", $"{"Corrupts all broken items".Style(StyleEnum.Void)} and converts them into usable {"White scrap".Style(StyleEnum.White)}.");
 			AddToken("VOIDJUNKTOSCRAPTIER1_LORE", "");
-			instance = this;
+		}
+
+		public VoidJunkToScrapTier1()
+		{
+			_instance = this;
 		}
 
 		[HarmonyPostfix, HarmonyPatch(typeof(CostTypeCatalog), nameof(CostTypeCatalog.Init))]
@@ -39,7 +43,7 @@ namespace BubbetsItems.Items
 					{
 						if (typeDef.itemTier != ItemTier.Tier1) return false;
 						var inv = context.activator.GetComponent<CharacterBody>().inventory;
-						var voidAmount = Math.Max(0, inv.GetItemCount(instance.ItemDef) - 1);
+						var voidAmount = Math.Max(0, inv.GetItemCount(_instance.ItemDef) - 1);
 						return inv.GetTotalItemCountOfTier(ItemTier.Tier1) + voidAmount >= context.cost;
 					}
 					catch (Exception e)
@@ -66,9 +70,9 @@ namespace BubbetsItems.Items
 						var highPriority = new WeightedSelection<ItemIndex>();
 						var normalPriority = new WeightedSelection<ItemIndex>();
 						
-						var voidAmount = Math.Max(0, inv.GetItemCount(instance.ItemDef) - 1);
+						var voidAmount = Math.Max(0, inv.GetItemCount(_instance.ItemDef) - 1);
 						if (voidAmount > 0)
-							highestPriority.AddChoice(instance.ItemDef.itemIndex, voidAmount);
+							highestPriority.AddChoice(_instance.ItemDef.itemIndex, voidAmount);
 						
 						foreach (var itemIndex in ItemCatalog.tier1ItemList)
 						{
@@ -129,28 +133,27 @@ namespace BubbetsItems.Items
 		}
 
 
-		protected override void FillVoidConversions()
+		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
-			ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(new []{new ItemDef.Pair
-				{
-					itemDef1 = DLC1Content.Items.FragileDamageBonusConsumed, 
-					itemDef2 = ItemDef
-				},
-				new ItemDef.Pair
-				{
-					itemDef1 = DLC1Content.Items.HealingPotionConsumed,
-					itemDef2 = ItemDef
-				},
-				new ItemDef.Pair
-				{
-					itemDef1 = DLC1Content.Items.ExtraLifeVoidConsumed,
-					itemDef2 = ItemDef
-				},
-				new ItemDef.Pair
-				{
-					itemDef1 = RoR2Content.Items.ExtraLifeConsumed,
-					itemDef2 = ItemDef
-				}
+			pairs.Add(new ItemDef.Pair
+			{
+				itemDef1 = DLC1Content.Items.FragileDamageBonusConsumed,
+				itemDef2 = ItemDef
+			});
+			pairs.Add(new ItemDef.Pair
+			{
+				itemDef1 = DLC1Content.Items.HealingPotionConsumed,
+				itemDef2 = ItemDef
+			});
+			pairs.Add(new ItemDef.Pair
+			{
+				itemDef1 = DLC1Content.Items.ExtraLifeVoidConsumed,
+				itemDef2 = ItemDef
+			});
+			pairs.Add(new ItemDef.Pair
+			{
+				itemDef1 = RoR2Content.Items.ExtraLifeConsumed,
+				itemDef2 = ItemDef
 			});
 		}
 	}

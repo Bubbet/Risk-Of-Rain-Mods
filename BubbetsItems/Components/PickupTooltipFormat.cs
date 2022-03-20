@@ -107,7 +107,7 @@ namespace BubbetsItems
             c.EmitDelegate<Func<ItemDef, string>>(def =>
             {
                 var item = ItemBase.Items.FirstOrDefault(x => x.ItemDef == def);
-                return item != null ? item.GetFormattedDescription() : Language.GetString(def.descriptionToken);
+                return item != null ? item.GetFormattedDescription(null) : Language.GetString(def.descriptionToken);
             });
             
             c.GotoNext( MoveType.After,
@@ -129,7 +129,7 @@ namespace BubbetsItems
         public static void NotifItemPostfix(GenericNotification __instance, ItemDef itemDef)
         {
             var item = ItemBase.Items.FirstOrDefault(x => x.ItemDef == itemDef);
-            __instance.descriptionText.token = item != null ? item.GetFormattedDescription() : Language.GetString(itemDef.descriptionToken);
+            __instance.descriptionText.token = item != null ? item.GetFormattedDescription(null) : Language.GetString(itemDef.descriptionToken);
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(GenericNotification), nameof(GenericNotification.SetEquipment))]

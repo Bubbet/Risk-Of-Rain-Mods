@@ -68,8 +68,8 @@ Luckily they seem friendly enough");
         protected override void MakeConfigs(ConfigFile configFile)
         {
             base.MakeConfigs(configFile);
-            _cooldown = configFile.Bind("General", "Wildlife Camera Cooldown", 25f, "Cooldown for wildlife camera equipment.");
-            _filterOutBosses = configFile.Bind("General", "Wildlife Camera Can Do Bosses", false, "Can the camera capture bosses.");
+            _cooldown = configFile.Bind(ConfigCategoriesEnum.General, "Wildlife Camera Cooldown", 25f, "Cooldown for wildlife camera equipment.");
+            _filterOutBosses = configFile.Bind(ConfigCategoriesEnum.General, "Wildlife Camera Can Do Bosses", false, "Can the camera capture bosses.");
             _indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("CameraIndicator");
         }
 
