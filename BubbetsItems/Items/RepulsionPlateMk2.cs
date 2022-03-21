@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
@@ -11,6 +12,7 @@ using NCalc;
 using RoR2;
 using UnityEngine;
 
+//TODO this whole file has been fucked
 namespace BubbetsItems.Items
 {
     public class RepulsionPlateMk2 : ItemBase
@@ -20,28 +22,26 @@ namespace BubbetsItems.Items
         private static ConfigEntry<string> _reductionScalingConfig;
         private static ConfigEntry<string> _armorScalingConfig;
 
-        protected override void MakeConfigs(ConfigFile configFile)
+        protected override void MakeConfigs()
         {
-            base.MakeConfigs(configFile);
+            base.MakeConfigs();
             _reductionOnTrue = configFile.Bind(ConfigCategoriesEnum.General, "Reduction On True", true,  "Makes the item behave more like mk1 and give a flat reduction in damage taken if set to true.");
             _instance = this;
             var name = GetType().Name;
             _reductionScalingConfig = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, name + " Reduction", "[d] - (20 + [p] * (4 + [a]))", "Scaling function for item. ;[a] = amount, [p] = plate amount, [d] = damage");
             _armorScalingConfig = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, name + " Armor", "20 + [p] * (4 + [a])", "Scaling function for item. ;[a] = amount, [p] = plate amount");
-            UpdateScalingFunction();
+            //UpdateScalingFunction();
         }
 
         
-        public override void MakeInLobbyConfig(object modConfigEntryObj)
+        public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
-            base.MakeInLobbyConfig(modConfigEntryObj);
-            var modConfigEntry = (ModConfigEntry) modConfigEntryObj;
-            var list = modConfigEntry.SectionFields["Scaling Functions"].ToList();
+            base.MakeInLobbyConfig(scalingFunctions);
             var reduction = new StringConfigField(_reductionScalingConfig.Definition.Key, () => _reductionScalingConfig.Value, newValue => {
                 try
                 {
                     _reductionScalingConfig.Value = newValue;
-                    UpdateScalingFunction();
+                    //UpdateScalingFunction();
                 } catch (EvaluationException) { }
             });
             
@@ -49,22 +49,23 @@ namespace BubbetsItems.Items
                 try
                 {
                     _armorScalingConfig.Value = newValue;
-                    UpdateScalingFunction();
+                    //UpdateScalingFunction();
                 } catch (EvaluationException) { } 
             });
             var toggle = new BooleanConfigField(_reductionOnTrue.Definition.Key, () => _reductionOnTrue.Value, newValue => {
                 try
                 {
                     _reductionOnTrue.Value = newValue;
-                    UpdateScalingFunction();
+                    //UpdateScalingFunction();
                 } catch (EvaluationException) { }
             });
+            var list = scalingFunctions[ConfigCategoriesEnum.BalancingFunctions];
             list.Add(reduction);
             list.Add(armor);
             list.Add(toggle);
-            modConfigEntry.SectionFields["Scaling Functions"] = list;
         }
 
+        /*
         public void UpdateScalingFunction()
         {
             scalingFunction = _reductionOnTrue.Value ? new Expression(_reductionScalingConfig.Value).ToLambda<ExpressionContext, float>() : new Expression(_armorScalingConfig.Value).ToLambda<ExpressionContext, float>();
@@ -73,8 +74,9 @@ namespace BubbetsItems.Items
         public override float GraphScalingFunction(int itemCount)
         {
             return _reductionOnTrue.Value ? -ScalingFunction(itemCount,1) : ScalingFunction(itemCount);
-        }
-
+        }*/
+        
+        
         public override string GetFormattedDescription(Inventory inventory = null)
         {
             var amount = inventory?.GetItemCount(ItemDef) ?? 0;
@@ -90,19 +92,9 @@ namespace BubbetsItems.Items
             return Language.GetStringFormatted("BUB_REPULSION_ARMOR_MK2_DESC_ARMOR", scale2, ScalingFunction(amount, plate));
         }
 
-        public override float ScalingFunction(int itemCount)
+        private int ScalingFunction(int p0, int plate, float? i = null)
         {
-            return ScalingFunction(itemCount, 0, 0);
-        }
-        
-        public float ScalingFunction(int itemCount, int plateAmount) // Armor based // 20 + [p] * (4 + [a])
-        {
-            return ScalingFunction(itemCount, plateAmount, 0);
-        }
-        
-        public float ScalingFunction(int itemCount, int plateAmount, float damage) // Damage based //Max(1f, [d] - (20 + [p] * (4 + [a])))
-        {
-            return scalingFunction(new ExpressionContext{a = itemCount, p = plateAmount, d = damage});
+            return 1;
         }
 
         protected override void MakeTokens()
@@ -112,8 +104,8 @@ namespace BubbetsItems.Items
             //AddToken("REPULSION_ARMOR_MK2_DESC", "Placeholder, swapped out with config value at runtime."); //pickup);
 
             AddToken("REPULSION_ARMOR_MK2_DESC_REDUCTION",
-                $"Reduce all {"incoming damage".Style(StyleEnum.Damage)} by {"{1}".Style(StyleEnum.Damage)}. Cannot be reduced below {"1".Style(StyleEnum.Damage)}. Scales with the amount of {"Mk1 plates".Style(StyleEnum.Utility)} you have.\n{{0}}"); //"Reduce all <style=cIsDamage>incoming damage</style> by <style=cIsDamage>{1}</style>. Cannot be reduced below 1. Scales with the amount of Mk1 plates your have.\n{0}");//"Reduce all <style=cIsDamage>incoming damage</style> by <style=cIsDamage>20</style> and by <style=cIsDamage>5<style=cStack> (+1 per stack of Mk2)</style></style> for every Mk1 plate. Cannot be reduced below <style=cIsDamage>1</style>.");
-            AddToken("REPULSION_ARMOR_MK2_DESC_ARMOR", $"Grant {"{1}".Style(StyleEnum.Heal)} armor. Scales with the amount of {"Mk1 plates".Style(StyleEnum.Utility)} you have.\n{{0}}");//"Grant <style=cIsDamage>{1}</style> armor. Scales with the amount of Mk1 plates your have.\n{0}");//"Grant <style=cIsDamage>20</style> armor plus an additional <style=cIsDamage>5<style=cStack> (+1 per stack of Mk2)</style></style> for every Mk1 plate.");
+                $"Reduce all {"incoming damage".Style(StyleEnum.Damage)} by {"{0}".Style(StyleEnum.Damage)}. Cannot be reduced below {"1".Style(StyleEnum.Damage)}. Scales with the amount of {"Mk1 plates".Style(StyleEnum.Utility)} you have."); //"Reduce all <style=cIsDamage>incoming damage</style> by <style=cIsDamage>{1}</style>. Cannot be reduced below 1. Scales with the amount of Mk1 plates your have.");//"Reduce all <style=cIsDamage>incoming damage</style> by <style=cIsDamage>20</style> and by <style=cIsDamage>5<style=cStack> (+1 per stack of Mk2)</style></style> for every Mk1 plate. Cannot be reduced below <style=cIsDamage>1</style>.");
+            AddToken("REPULSION_ARMOR_MK2_DESC_ARMOR", $"Grant {"{0}".Style(StyleEnum.Heal)} armor. Scales with the amount of {"Mk1 plates".Style(StyleEnum.Utility)} you have.");//"Grant <style=cIsDamage>{1}</style> armor. Scales with the amount of Mk1 plates your have.");//"Grant <style=cIsDamage>20</style> armor plus an additional <style=cIsDamage>5<style=cStack> (+1 per stack of Mk2)</style></style> for every Mk1 plate.");
             // <style=cIsDamage>incoming damage</style> by <style=cIsDamage>5<style=cStack> (+5 per stack)</style></style>
             AddToken("REPULSION_ARMOR_MK2_PICKUP", "Reduce incoming damage for each mk1 plate.");
             AddToken("REPULSION_ARMOR_MK2_LORE", @"Order: Experimental Repulsion Armour Augments - Mk. 2

@@ -11,7 +11,7 @@ namespace BubbetsItems
 
 	public static class ConfigCategories
 	{
-		private static string[] _categories = {
+		public static readonly string[] Categories = {
 			"General",
 			"Balancing Functions",
 			"Disable Mod Parts"
@@ -19,7 +19,7 @@ namespace BubbetsItems
 
 		public static ConfigEntry<T> Bind<T>(this ConfigFile file, ConfigCategoriesEnum which, string key, T defaultValue, string description)
 		{
-			return file.Bind(_categories[(int) which], key, defaultValue, description);
+			return file.Bind(Categories[(int) which], key, defaultValue, description);
 		}
 	}
 }

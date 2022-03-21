@@ -41,24 +41,26 @@ namespace BubbetsItems
         }
 
         public bool built;
+        /* TODO remake this
         public void FixedUpdate()
         {
             if (!built && Math.Abs(RectTransform.rect.width - 100) > 0.01f)
                 BuildGraph();
-        }
+        }*/
 
         //private Func<int, float> test = i => Mathf.Log(i)*3f + 1.15f;
         public void BuildGraph()
         {
             built = true;
-            if (Item.scalingFunction == null) return;
+            //if (Item.scalingFunction == null) return;
             FillWidthAndHeight();
             var points = new List<float>();
+            /*
             for (var i = 0; i < 50; i++)
             {
                 points.Add(Item.GraphScalingFunction(i+1));
                 //points.Add(test(i+1));
-            }
+            }*/
             var max = Mathf.Ceil(points.Max());
             for (var i = 0; i < 50; i++)
             {
@@ -119,12 +121,12 @@ namespace BubbetsItems
             LineRenderer.SetPositions(positions.ToArray());
         }*/
 
-        [HarmonyPostfix, HarmonyPatch(typeof(PageBuilder), nameof(PageBuilder.AddSimplePickup))]
+        //[HarmonyPostfix, HarmonyPatch(typeof(PageBuilder), nameof(PageBuilder.AddSimplePickup))] TODO
         public static void AddGraph(PageBuilder __instance, PickupIndex pickupIndex)
         {
             if (!SharedBase.PickupIndexes.ContainsKey(pickupIndex)) return;
             var item = SharedBase.PickupIndexes[pickupIndex] as ItemBase;
-            if (item?.scalingFunction == null) return;
+            //if (item?.scalingFunction == null) return;
             __instance.AddSimpleTextPanel("Scaling Function:");
             var obj = __instance.managedObjects[__instance.managedObjects.Count - 1];
             var graph = Instantiate(BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("LogBookGraph"), obj.transform);

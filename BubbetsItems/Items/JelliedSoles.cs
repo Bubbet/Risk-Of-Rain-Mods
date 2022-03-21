@@ -13,11 +13,10 @@ namespace BubbetsItems.Items
 	{
 		private static JelliedSoles _instance;
 
-		protected override void MakeConfigs(ConfigFile configFile)
+		protected override void MakeConfigs()
 		{
-			defaultScalingDesc = "[a] = item count";
-			defaultScalingFunction = "[a] * 0.15";
-			base.MakeConfigs(configFile);
+			base.MakeConfigs();
+			AddScalingFunction("[a] * 0.15", "Reduction");
 		}
 
 		public JelliedSoles()
@@ -43,7 +42,9 @@ namespace BubbetsItems.Items
 		
 		private static DamageInfo UpdateDamage(HealthComponent component, DamageInfo info)
 		{
-			info.damage *= Mathf.Max(0f, 1f - _instance.ScalingFunction(component.body.inventory.GetItemCount(_instance.ItemDef)));
+			var count = component.body.inventory.GetItemCount(_instance.ItemDef);
+			if (count <= 0) return info;
+			info.damage *= Mathf.Max(0f, 1f - _instance.scalingInfos[0].ScalingFunction(count));
 			return info;
 		}
 
@@ -51,7 +52,7 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("JELLIEDSOLES_NAME", "Jellied Soles");
-			AddToken("JELLIEDSOLES_DESC", "Reduce " + "fall damage".Style(StyleEnum.Utility) + " by " + "{1:P0}".Style(StyleEnum.Utility) + ". \n{0}");
+			AddToken("JELLIEDSOLES_DESC", "Reduce " + "fall damage".Style(StyleEnum.Utility) + " by " + "{0:P0}".Style(StyleEnum.Utility) + ".");
 			AddToken("JELLIEDSOLES_PICKUP", "Reduce fall damage.");
 			AddToken("JELLIEDSOLES_LORE", "");
 		}

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using BepInEx.Configuration;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.ExpansionManagement;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace BubbetsItems
@@ -16,7 +14,7 @@ namespace BubbetsItems
     [HarmonyPatch]
     public abstract class EquipmentBase : SharedBase
     {
-        protected override void MakeConfigs(ConfigFile configFile)
+        protected override void MakeConfigs()
         {
             var name = GetType().Name;
             Enabled = configFile.Bind("Disable Equipments", name, true, "Should this equipment be enabled.");
@@ -31,7 +29,7 @@ namespace BubbetsItems
         public EquipmentDef EquipmentDef;
         
         private static IEnumerable<EquipmentBase> _equipments;
-        public static IEnumerable<EquipmentBase> Equipments => _equipments ?? (_equipments = Instances.OfType<EquipmentBase>());
+        public static IEnumerable<EquipmentBase> Equipments => _equipments ??= Instances.OfType<EquipmentBase>();
 
         [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.RpcOnClientEquipmentActivationRecieved))]
         public static void PerformEquipmentActionRpc(EquipmentSlot __instance) // third
@@ -63,7 +61,7 @@ namespace BubbetsItems
             }
             catch (Exception e)
             {
-                equipment.Logger.LogError(e);
+                equipment.Logger?.LogError(e);
             }
 
             return false;
@@ -97,7 +95,7 @@ namespace BubbetsItems
             }
             catch (Exception e)
             {
-                equipment.Logger.LogError(e);
+                equipment.Logger?.LogError(e);
             }
 
             return false;
@@ -112,7 +110,7 @@ namespace BubbetsItems
         public static void OnEquipmentSwap(Inventory __instance, EquipmentState equipmentState, uint slot)
         {
             EquipmentState? oldState = null;
-            if (__instance.equipmentStateSlots.Length > (long) ((ulong) slot))
+            if (__instance.equipmentStateSlots.Length > slot)
                 oldState = __instance.equipmentStateSlots[(int) slot];
             if (oldState.Equals(equipmentState)) return;
             if (oldState?.equipmentIndex == equipmentState.equipmentIndex) return;

@@ -16,37 +16,18 @@ namespace BubbetsItems.Items
 	public class ZealotryEmbrace : ItemBase
 	{
 		private static ZealotryEmbrace _instance;
-		private static ConfigEntry<float> damageBuff;
 		public override bool RequiresSotv => true;
 
-		protected override void MakeConfigs(ConfigFile configFile)
+		protected override void MakeConfigs()
 		{
-			defaultScalingFunction = "[a]";
-			defaultScalingDesc = "[a] = item amount";
-			base.MakeConfigs(configFile);
-			damageBuff = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, "Zealotry Embrace Damage Buff", 0.25f, "The bonus damage to Zealotry Embrace when under the number of debuffs");
+			base.MakeConfigs();
+			AddScalingFunction("0.25", "Damage Increase");
+			AddScalingFunction("[a]", "Ally Amount");
 		}
 
 		public ZealotryEmbrace()
 		{
 			_instance = this;
-		}
-
-		
-		public override void MakeInLobbyConfig(object modConfigEntryObj)
-		{
-			base.MakeInLobbyConfig(modConfigEntryObj);
-			var modConfigEntry = (ModConfigEntry) modConfigEntryObj;
-			var list = modConfigEntry.SectionFields["Scaling Functions"].ToList();
-			list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(damageBuff));
-			modConfigEntry.SectionFields["Scaling Functions"] = list;
-		}
-		
-		public override string GetFormattedDescription(Inventory inventory)
-		{
-			var amount = inventory?.GetItemCount(ItemDef) ?? 0;
-			return Language.GetStringFormatted(ItemDef.descriptionToken,  "\n\n" + scaleConfig.Value + "\n" + scaleConfig.Description.Description.Split(';')[1],
-				amount > 0 ? ScalingFunction(amount) : ScalingFunction(1), damageBuff.Value);
 		}
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
@@ -85,8 +66,8 @@ namespace BubbetsItems.Items
 				if (dotController)
 					debuffCount += dotController.dotStackList.Count;
 				
-				if (debuffCount < _instance.ScalingFunction(count))
-					amount *= 1f + damageBuff.Value;
+				if (debuffCount < _instance.scalingInfos[1].ScalingFunction(count))
+					amount *= 1f + _instance.scalingInfos[0].ScalingFunction(count);
 				
 				return amount;
 			});
@@ -99,7 +80,7 @@ namespace BubbetsItems.Items
 
 			AddToken("ZEALOTRYEMBRACE_NAME", "Zealotry Embrace");
 			AddToken("ZEALOTRYEMBRACE_PICKUP", $"Deal more damage to enemies with little debuffs on them. {"Consumes Death's Mark".Style(StyleEnum.Void)}.");
-			AddToken("ZEALOTRYEMBRACE_DESC", "Deal {2:P0} more damage on enemies with less than {1} debuff on them. " + "Consumes Death's Mark".Style(StyleEnum.Void) + ". \n{0}");
+			AddToken("ZEALOTRYEMBRACE_DESC", "Deal {0:P0} more damage on enemies with less than {1} debuff on them. " + "Consumes Death's Mark".Style(StyleEnum.Void) + ".");
 			AddToken("ZEALOTRYEMBRACE_LORE", "");
 		}
 	}

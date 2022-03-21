@@ -52,9 +52,9 @@ namespace BubbetsItems.Equipments
             inventory.gameObject.AddComponent<BrokenClockBehaviour>();
         }
 
-        protected override void MakeConfigs(ConfigFile configFile)
+        protected override void MakeConfigs()
         {
-            base.MakeConfigs(configFile);
+            base.MakeConfigs();
             cooldown = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Cooldown", 60f, "Broken Clock equipment cooldown.");
             duration = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Buffer Duration", 10f, "Duration of time to store in the broken clock.");
             interval = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Keyframe Interval", 0.25f, "How often to capture a keyframe and store it. Also determines the size of the stack in conjunction with the duration. duration/interval = size size takes memory so try to keep it small enough.");
@@ -67,12 +67,11 @@ namespace BubbetsItems.Equipments
         }
 
         
-        public override void MakeInLobbyConfig(object modConfigEntryObj)
+        public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
-            base.MakeInLobbyConfig(modConfigEntryObj);
-            var modConfigEntry = (ModConfigEntry) modConfigEntryObj;
+            base.MakeInLobbyConfig(scalingFunctions);
 
-            var list = modConfigEntry.SectionFields.ContainsKey("General") ? modConfigEntry.SectionFields["General"].ToList() : new List<IConfigField>();
+            var general = scalingFunctions[ConfigCategoriesEnum.General];
             
             var cool = new FloatConfigField(cooldown.Definition.Key, () => cooldown.Value, newValue => {
                 cooldown.Value = newValue;
@@ -86,10 +85,9 @@ namespace BubbetsItems.Equipments
                 interval.Value = newValue;
                 BrokenClockBehaviour.keyframeInterval = newValue;
             });
-            list.Add(cool);
-            list.Add(dura);
-            list.Add(inte);
-            modConfigEntry.SectionFields["General"] = list;
+            general.Add(cool);
+            general.Add(dura);
+            general.Add(inte);
         }
     }
 

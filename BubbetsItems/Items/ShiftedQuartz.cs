@@ -20,7 +20,6 @@ namespace BubbetsItems.Items
 	public class ShiftedQuartz : ItemBase
 	{
 		public static ShiftedQuartz instance;
-		public static ConfigEntry<float> radius;
 		public override bool RequiresSotv => true;
 
 		public ShiftedQuartz()
@@ -28,30 +27,26 @@ namespace BubbetsItems.Items
 			instance = this;
 		}
 
-		protected override void MakeConfigs(ConfigFile configFile)
+		protected override void MakeConfigs()
 		{
-			defaultScalingFunction = "[a] * 0.2";
-			defaultScalingDesc = "[a] = item amount";
-			base.MakeConfigs(configFile);
-			radius = configFile.Bind(ConfigCategoriesEnum.General, "Shifted Quartz Radius", 20f, "Radius before shifted quartz works.");
+			base.MakeConfigs();
+			AddScalingFunction("20", "Distance");
+			AddScalingFunction("[a] * 0.2", "Damage");
 		}
 
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
 			AddToken("SHIFTEDQUARTZ_NAME", "Shifted Quartz");
-			AddToken("SHIFTEDQUARTZ_DESC", "{1:P0} extra damage".Style(StyleEnum.Damage) + " when enemies are not within " + "20m".Style(StyleEnum.Damage) + " of you." + "Corrupts all Focus Crystal".Style(StyleEnum.Void) + ". \n{0}");
+			AddToken("SHIFTEDQUARTZ_DESC", "{1:P0} extra damage".Style(StyleEnum.Damage) + " when enemies are not within " + "{0}m".Style(StyleEnum.Damage) + " of you." + "Corrupts all Focus Crystal".Style(StyleEnum.Void) + ".");
 			AddToken("SHIFTEDQUARTZ_PICKUP", "Extra damage when enemies are far away." + "Corrupts all Focus Crystal".Style(StyleEnum.Void) + ".");
 			AddToken("SHIFTEDQUARTZ_LORE", "");
 		}
 
-		public override void MakeInLobbyConfig(object modConfigEntryObj)
+		public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
 		{
-			base.MakeInLobbyConfig(modConfigEntryObj);
-			var modConfigEntry = (ModConfigEntry) modConfigEntryObj;
-			var list = modConfigEntry.SectionFields["Scaling Functions"].ToList();
-			list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(radius));
-			modConfigEntry.SectionFields["Scaling Functions"] = list;
+			base.MakeInLobbyConfig(scalingFunctions);
+			//list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(scalingInfos[0].)); TODO
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.TakeDamage))]
@@ -75,7 +70,7 @@ namespace BubbetsItems.Items
 				if (count <= 0) return amount;
 				var inside = body.GetComponent<ShiftedQuartzBehavior>().inside; // TODO this might not exist in scope and may throw errors in multiplayer
 				if (!inside)
-					amount *= 1f + instance.ScalingFunction(count); // 1f + count * 0.2f
+					amount *= 1f + instance.scalingInfos[1].ScalingFunction(count); // 1f + count * 0.2f
 				return amount;
 			});
 			c.Emit(OpCodes.Stloc, num2);

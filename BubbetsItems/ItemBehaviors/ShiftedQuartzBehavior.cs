@@ -27,7 +27,7 @@ namespace BubbetsItems.ItemBehaviors
 			}
 			search = new BullseyeSearch
 			{
-				maxDistanceFilter = ShiftedQuartz.radius.Value,
+				maxDistanceFilter = ShiftedQuartz.instance.scalingInfos[0].ScalingFunction(stack),
 				teamMaskFilter = allButNeutral,
 				viewer = body
 			};
@@ -48,6 +48,7 @@ namespace BubbetsItems.ItemBehaviors
 
 		private void FixedUpdate()
 		{
+			search.maxDistanceFilter = ShiftedQuartz.instance.scalingInfos[0].ScalingFunction(stack);
 			inside = Search();
 			var inRadius = inside ? 1f : 0f;
 			renderer.material.SetFloat("_ColorMix", inRadius);
@@ -66,7 +67,8 @@ namespace BubbetsItems.ItemBehaviors
 				{
 					var original = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("FarDamageBonusIndicator");
 					nearbyDamageBonusIndicator = Instantiate(original, body.corePosition, Quaternion.identity);
-					nearbyDamageBonusIndicator.transform.localScale *= ShiftedQuartz.radius.Value / 20f;
+					var radius = 26f * (search.maxDistanceFilter / 20f);
+					nearbyDamageBonusIndicator.transform.localScale = new Vector3(radius, radius, radius);
 					nearbyDamageBonusIndicator.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(gameObject);
 					renderer = nearbyDamageBonusIndicator.GetComponentInChildren<Renderer>();
 					return;

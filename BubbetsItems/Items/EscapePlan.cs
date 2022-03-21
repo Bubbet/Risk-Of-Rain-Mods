@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
@@ -16,12 +17,11 @@ namespace BubbetsItems.Items
         private static EscapePlan _instance;
         public static ConfigEntry<float> Granularity;
 
-        protected override void MakeConfigs(ConfigFile configFile)
+        protected override void MakeConfigs()
         {
             //if (ItemEnabled.Value) RepulsionArmorPlateMk2Plugin.Conf.RequiresR2Api = true;
-            defaultScalingFunction = "-Log(1 - (1 - [h])) * (0.65 + 0.1 * [a])";
-            defaultScalingDesc = "[a] = amount, [h] = health";
-            base.MakeConfigs(configFile);
+            base.MakeConfigs();
+            AddScalingFunction("-Log(1 - (1 - [h])) * (0.65 + 0.1 * [a])", "Movement Speed", new ExpressionContext{h = 1f/500f}, "[a] = amount, [h] = health");
             Granularity = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, GetType().Name + " Granularity", 25f, "Value to multiply the scaling function by before its rounded, and then value to divide the buff count by.");
             _instance = this;
             /*
@@ -29,15 +29,13 @@ namespace BubbetsItems.Items
                 ItemEnabled.Value = false;*/
         }
         
-        public override void MakeInLobbyConfig(object modConfigEntryObj)
+        public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
-            base.MakeInLobbyConfig(modConfigEntryObj);
-            var modConfigEntry = (ModConfigEntry) modConfigEntryObj;
-            var list = modConfigEntry.SectionFields["Scaling Functions"].ToList();
-            list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Granularity));
-            modConfigEntry.SectionFields["Scaling Functions"] = list;
+            base.MakeInLobbyConfig(scalingFunctions);
+            scalingFunctions[ConfigCategoriesEnum.BalancingFunctions].Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Granularity));
         }
 
+        /* TODO
         public override string GetFormattedDescription([CanBeNull] Inventory inventory) // TODO Fill this
         {
             if (!inventory) return base.GetFormattedDescription(inventory);
@@ -48,17 +46,7 @@ namespace BubbetsItems.Items
                     inventory.GetComponent<CharacterMaster>()?.GetBody()?.GetComponent<HealthComponent>()
                         ?.combinedHealthFraction ?? 1f / 500f));
 
-        }
-
-        public float ScalingFunction(int itemCount, float health)
-        {
-            return scalingFunction(new ExpressionContext{ a = itemCount, h = health });
-        }
-
-        public override float ScalingFunction(int itemCount)
-        {
-            return ScalingFunction(itemCount, 1/500f);
-        }
+        }*/
         
         /*
         protected override void MakeBehaviours()
@@ -80,10 +68,6 @@ namespace BubbetsItems.Items
             var amount = sender.inventory.GetItemCount(ItemDef);
             args.moveSpeedMultAdd += 0.25f + 0.025f * amount * (1 - sender.healthComponent.combinedHealthFraction);
         }*/
-        public override float GraphScalingFunction(int itemCount)
-        {
-            return ScalingFunction(itemCount, 1/500f);
-        }
 
         protected override void MakeBehaviours()
         {
@@ -126,7 +110,9 @@ namespace BubbetsItems.Items
             var buffI = Mathf.RoundToInt(buff * 25);*/
             
             //_instance.Logger.LogInfo(buffI + " : " + buff);
-            body.SetBuffCount(BubbetsItemsPlugin.ContentPack.buffDefs[0].buffIndex, Mathf.RoundToInt(_instance.ScalingFunction(amt, body.healthComponent.combinedHealthFraction) * Granularity.Value));
+            var info = _instance.scalingInfos[0];
+            info.WorkingContext.h = body.healthComponent.combinedHealthFraction;
+            body.SetBuffCount(BubbetsItemsPlugin.ContentPack.buffDefs[0].buffIndex, Mathf.RoundToInt(info.ScalingFunction(amt) * Granularity.Value ));
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
@@ -157,7 +143,7 @@ namespace BubbetsItems.Items
         protected override void MakeTokens()
         {
             AddToken("ESCAPE_PLAN_NAME", "Escape Plan");
-            AddToken("ESCAPE_PLAN_DESC", "Get " + "{1:P} extra move speed".Style(StyleEnum.Utility) + ". Increases the closer to " + "death".Style(StyleEnum.Health) + " you are.\n{0}"); //"Get 75% (+10% per item) movement speed (at 0% hp scaling logarithmically) the lower your health is.");
+            AddToken("ESCAPE_PLAN_DESC", "Get " + "{0:P} extra move speed".Style(StyleEnum.Utility) + ". Increases the closer to " + "death".Style(StyleEnum.Health) + " you are."); //"Get 75% (+10% per item) movement speed (at 0% hp scaling logarithmically) the lower your health is.");
             AddToken("ESCAPE_PLAN_PICKUP", "Get movement speed the lower your health is.");
             AddToken("ESCAPE_PLAN_LORE", "Escape Plan");
             base.MakeTokens();

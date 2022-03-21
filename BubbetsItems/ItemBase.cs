@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
 using HarmonyLib;
+using InLobbyConfig.Fields;
 using JetBrains.Annotations;
 using NCalc;
 using RoR2;
@@ -11,6 +12,8 @@ using RoR2.ExpansionManagement;
 using RoR2.Items;
 using UnityEngine;
 
+#nullable enable
+
 namespace BubbetsItems
 {
     [HarmonyPatch]
@@ -18,47 +21,43 @@ namespace BubbetsItems
     {
         //protected virtual void MakeTokens(){} // Description is supposed to have % and + per item, pickup is a brief message about what the item does
         
-        protected override void MakeConfigs(ConfigFile configFile)
+        protected override void MakeConfigs()
         {
             var name = GetType().Name;
             Enabled = configFile.Bind("Disable Items", name, true, "Should this item be enabled.");
-            
-            if (defaultScalingFunction == null) return;
-            scaleConfig = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, name, defaultScalingFunction, "Scaling function for item. ;" + (!string.IsNullOrEmpty(defaultScalingDesc) ? defaultScalingDesc: "[a] = amount"));
-            scalingFunction = new Expression(scaleConfig.Value).ToLambda<ExpressionContext, float>();
         }
 
         public ItemDef ItemDef;
 
         private static IEnumerable<ItemBase> _items;
-        public static IEnumerable<ItemBase> Items => _items ?? (_items = Instances.OfType<ItemBase>());
+        public static IEnumerable<ItemBase> Items => _items ??= Instances.OfType<ItemBase>();
 
-        public string defaultScalingFunction;
-        public Func<ExpressionContext, float> scalingFunction;
-        public ConfigEntry<string> scaleConfig;
-        protected string defaultScalingDesc;
-
-        public virtual float ScalingFunction(int itemCount)
+        public List<ScalingInfo> scalingInfos = new();
+        
+        protected void AddScalingFunction(string defaultValue, string name, ExpressionContext? defaultContext = null, string? desc = null)
         {
-            return scalingFunction(new ExpressionContext{ a = itemCount });
-        }
-
-        public virtual float GraphScalingFunction(int itemCount)
-        {
-            return ScalingFunction(itemCount);
+            scalingInfos.Add(new ScalingInfo(configFile, defaultValue, name, defaultContext, desc));
         }
 
         public override string GetFormattedDescription([CanBeNull] Inventory inventory)
         {
-            // ReSharper disable once Unity.NoNullPropagation
-            if (scalingFunction != null)
-            {
-                var amount = inventory?.GetItemCount(ItemDef) ?? 0;
-                return Language.GetStringFormatted(ItemDef.descriptionToken,  "\n\n" + scaleConfig.Value + "\n" + scaleConfig.Description.Description.Split(';')[1],
-                    amount > 0 ? ScalingFunction(amount) : ScalingFunction(1));
-            }
+            // ReSharper disable twice Unity.NoNullPropagation
 
-            return Language.GetString(ItemDef.descriptionToken);
+            if (scalingInfos.Count <= 0) return Language.GetString(ItemDef.descriptionToken);
+            
+            var formatArgs = scalingInfos.Select(info => info.ScalingFunction()).Cast<object>().ToArray();
+            var ret = Language.GetStringFormatted(ItemDef.descriptionToken, formatArgs);
+            ret += "\n\n" + string.Join("\n", scalingInfos.Select(info => info.ToString()));
+            return ret;
+        }
+
+        public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
+        {
+            base.MakeInLobbyConfig(scalingFunctions);
+            foreach (var info in scalingInfos)
+            {
+                info.MakeInLobbyConfig(scalingFunctions[ConfigCategoriesEnum.BalancingFunctions]);
+            }
         }
 
         protected override void FillDefs(SerializableContentPack serializableContentPack)
@@ -152,6 +151,59 @@ namespace BubbetsItems
         }
 
         protected virtual void FillVoidConversions(List<ItemDef.Pair> pairs) {}
+
+
+        public class ScalingInfo
+        {
+            private readonly string _description;
+            private readonly ConfigEntry<string> _configEntry;
+            private Func<ExpressionContext, float> _function;
+            private string _oldValue;
+            private readonly string _name;
+            private readonly ExpressionContext _defaultContext;
+            public readonly ExpressionContext WorkingContext;
+
+            public ScalingInfo(ConfigFile configFile, string defaultValue, string name, ExpressionContext? defaultContext, string? desc)
+            {
+                _description = desc ?? "[a] = item count";
+                _name = name;
+                _defaultContext = defaultContext ?? new ExpressionContext();
+                _defaultContext.a = 1f;
+                WorkingContext = new ExpressionContext();
+                
+                _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, name, defaultValue, "Scaling function for item. ;" + _description);
+                _oldValue = _configEntry.Value;
+                _function = new Expression(_oldValue).ToLambda<ExpressionContext, float>();
+                _configEntry.SettingChanged += EntryChanged;
+            }
+
+            public float ScalingFunction(ExpressionContext? context = null)
+            {
+                return _function(context ?? _defaultContext);
+            }
+            public float ScalingFunction(int itemCount)
+            {
+                WorkingContext.a = itemCount;
+                return ScalingFunction(WorkingContext);
+            }
+
+            public override string ToString()
+            {
+                return _oldValue + "\n(" + _name + ": " + _description + ")";
+            }
+
+            public void MakeInLobbyConfig(List<object> modConfigEntryObj)
+            {
+                modConfigEntryObj.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(_configEntry));
+            }
+
+            private void EntryChanged(object sender, EventArgs e)
+            {
+                if (_configEntry.Value == _oldValue) return;
+                _function = new Expression(_configEntry.Value).ToLambda<ExpressionContext, float>();
+                _oldValue = _configEntry.Value;
+            }
+        }
 
         public class ExpressionContext
         {

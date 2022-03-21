@@ -15,13 +15,13 @@ namespace BubbetsItems
 {
     public abstract class SharedBase
     {
-        protected virtual void MakeConfigs(ConfigFile configFile) {}
+        protected virtual void MakeConfigs() {}
         protected virtual void MakeTokens(){}
         protected virtual void MakeBehaviours(){} 
         protected virtual void DestroyBehaviours(){}
 
         //public virtual void MakeInLobbyConfig(ModConfigEntry modConfigEntry){}
-        public virtual void MakeInLobbyConfig(object modConfigEntry){}
+        public virtual void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> dict){} // Has to be list of object because this class cannot have reference to inlobbyconfig, incase its not loaded
 
         public ConfigEntry<bool>? Enabled;
         public static readonly List<SharedBase> Instances = new List<SharedBase>();
@@ -35,6 +35,7 @@ namespace BubbetsItems
         private string? _tokenPrefix;
         
         private static ExpansionDef? _sotvExpansion;
+        protected ConfigFile configFile;
 
         public static ExpansionDef? SotvExpansion
         {
@@ -75,7 +76,8 @@ namespace BubbetsItems
                 }
 
                 shared!.Logger = manualLogSource;
-                shared.MakeConfigs(configFile);
+                shared.configFile = configFile;
+                shared.MakeConfigs();
                 shared._tokenPrefix = tokenPrefix;
                 if (!shared.Enabled?.Value ?? false) continue;
                 shared.MakeBehaviours();

@@ -65,30 +65,26 @@ Luckily they seem friendly enough");
             AddToken("SEPIA_ELITE_NAME", "Captured {0}");
         }
 
-        protected override void MakeConfigs(ConfigFile configFile)
+        protected override void MakeConfigs()
         {
-            base.MakeConfigs(configFile);
+            base.MakeConfigs();
             _cooldown = configFile.Bind(ConfigCategoriesEnum.General, "Wildlife Camera Cooldown", 25f, "Cooldown for wildlife camera equipment.");
             _filterOutBosses = configFile.Bind(ConfigCategoriesEnum.General, "Wildlife Camera Can Do Bosses", false, "Can the camera capture bosses.");
             _indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("CameraIndicator");
         }
 
         
-        public override void MakeInLobbyConfig(object modConfigEntryObj)
+        public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
-            base.MakeInLobbyConfig(modConfigEntryObj);
-            var modConfigEntry = (ModConfigEntry) modConfigEntryObj;
-
-            var list = modConfigEntry.SectionFields.ContainsKey("General") ? modConfigEntry.SectionFields["General"].ToList() : new List<IConfigField>();
-            
+            base.MakeInLobbyConfig(scalingFunctions);
             var cool = new FloatConfigField(_cooldown.Definition.Key, () => _cooldown.Value, newValue => {
                 _cooldown.Value = newValue;
                 EquipmentDef.cooldown = newValue;
             });
-            
-            list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(_filterOutBosses));
-            list.Add(cool);
-            modConfigEntry.SectionFields["General"] = list;
+
+            var general = scalingFunctions[ConfigCategoriesEnum.General];
+            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(_filterOutBosses));
+            general.Add(cool);
         }
 
         protected override void PostEquipmentDef()

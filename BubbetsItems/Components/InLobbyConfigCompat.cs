@@ -18,28 +18,24 @@ namespace BubbetsItems
 
         public static void ModIsEnabledInit()
         {
-            var configEntrys = new List<IConfigField>();
-            foreach (var itemBase in SharedBase.Instances.OfType<ItemBase>().Where(itemBase => itemBase.defaultScalingFunction != null))
-            {
-                configEntrys.Add(new StringConfigField(itemBase.scaleConfig.Definition.Key, //itemBase.GetType().ToString(), 
-                    () => itemBase.scaleConfig.Value, 
-                    newValue =>
-                    {
-                        try
-                        {
-                            itemBase.scalingFunction = new Expression(newValue).ToLambda<ItemBase.ExpressionContext, float>();
-                            itemBase.scaleConfig.Value = newValue;
-                        } catch (EvaluationException) {}
-                    }));
-                //configEntrys.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(itemBase.scaleConfig));
-            }
+            var dict = new Dictionary<ConfigCategoriesEnum, List<object>>();
 
-            var configEntry = new ModConfigEntry();
-            configEntry.DisplayName = "Bubbet's Items";
-            configEntry.SectionFields.Add("Scaling Functions", configEntrys);
+            var i = 0;
+            foreach (var _ in ConfigCategories.Categories)
+            {
+                dict.Add((ConfigCategoriesEnum) i, new List<object>());
+                i++;
+            }
+            
+            var configEntry = new ModConfigEntry {DisplayName = "Bubbet's Items"};
             foreach (var sharedBase in SharedBase.Instances)
             {
-                sharedBase.MakeInLobbyConfig(configEntry);
+                sharedBase.MakeInLobbyConfig(dict);
+            }
+
+            foreach (var pair in dict)
+            {
+                configEntry.SectionFields.Add(ConfigCategories.Categories[(int) pair.Key], pair.Value.Cast<IConfigField>());
             }
             ModConfigCatalog.Add(configEntry);
         }

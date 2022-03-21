@@ -16,10 +16,10 @@ namespace BubbetsItems.Items
         private static Hourglass _instance;
         //private static bool AetheriumEnabled => Chainloader.PluginInfos.ContainsKey(AetheriumPlugin.ModGuid);
 
-        protected override void MakeConfigs(ConfigFile configFile)
+        protected override void MakeConfigs()
         {
-            defaultScalingFunction = "[a] * 0.1 + 1.15";
-            base.MakeConfigs(configFile);
+            base.MakeConfigs();
+            AddScalingFunction("[a] * 0.1 + 1.15", "Buff Duration");
             _instance = this;
         }
 
@@ -48,7 +48,7 @@ namespace BubbetsItems.Items
         {
             AddToken("TIMED_BUFF_DURATION_ITEM_NAME", "Abundant Hourglass");
             AddToken("TIMED_BUFF_DURATION_ITEM_PICKUP", "Increases the duration of timed buffs.");
-            AddToken("TIMED_BUFF_DURATION_ITEM_DESC", $"Multiplies the {"duration".Style(StyleEnum.Utility)} of timed buffs by {"{1}".Style(StyleEnum.Utility)}\n{{0}}");// {scaleConfig.Value} (1: {ScalingFunction(1)}, 2: {ScalingFunction(2)}, 3: {ScalingFunction(3)})");
+            AddToken("TIMED_BUFF_DURATION_ITEM_DESC", $"Multiplies the {"duration".Style(StyleEnum.Utility)} of timed buffs by {"{0}".Style(StyleEnum.Utility)}");// {scaleConfig.Value} (1: {ScalingFunction(1)}, 2: {ScalingFunction(2)}, 3: {ScalingFunction(3)})");
             AddToken("TIMED_BUFF_DURATION_ITEM_LORE", "BUB_TIMED_BUFF_DURATION_ITEM_LORE");
             base.MakeTokens();
         }
@@ -77,7 +77,7 @@ namespace BubbetsItems.Items
             if (amount <= 0) return duration;
             //scalingFunc.Parameters["a"] = amount;
             //var cont = new ExpressionC();
-            duration *= _instance.ScalingFunction(amount);
+            duration *= _instance.scalingInfos[0].ScalingFunction(amount);
             //duration *= amount * 0.10f + 1.15f;
             //_instance.Logger.LogError(duration);
             return duration;
