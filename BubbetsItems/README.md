@@ -130,3 +130,7 @@ and to SOM#0001 for doing most of the icons.
 - reworked scaling configs to support multiple per item
 - added config for disabling the scaling configs in the tooltip
 - disabled graph in logbook for now
+
+1.5.1
+- fixed shifted quartz indicator being way too big
+- changed zealotry's default debuff count

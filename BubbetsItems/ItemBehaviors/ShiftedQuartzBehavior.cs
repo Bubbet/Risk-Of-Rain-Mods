@@ -67,8 +67,8 @@ namespace BubbetsItems.ItemBehaviors
 				{
 					var original = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("FarDamageBonusIndicator");
 					nearbyDamageBonusIndicator = Instantiate(original, body.corePosition, Quaternion.identity);
-					var radius = 26f * (search.maxDistanceFilter / 20f);
-					nearbyDamageBonusIndicator.transform.localScale = new Vector3(radius, radius, radius);
+					var radius = search.maxDistanceFilter / 20f;
+					nearbyDamageBonusIndicator.transform.localScale *= radius;
 					nearbyDamageBonusIndicator.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(gameObject);
 					renderer = nearbyDamageBonusIndicator.GetComponentInChildren<Renderer>();
 					return;

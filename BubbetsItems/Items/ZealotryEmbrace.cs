@@ -22,7 +22,7 @@ namespace BubbetsItems.Items
 		{
 			base.MakeConfigs();
 			AddScalingFunction("0.25", "Damage Increase");
-			AddScalingFunction("[a]", "Ally Amount");
+			AddScalingFunction("2 + [a]", "Debuff Amount");
 		}
 
 		public ZealotryEmbrace()
@@ -79,8 +79,8 @@ namespace BubbetsItems.Items
 			base.MakeTokens();
 
 			AddToken("ZEALOTRYEMBRACE_NAME", "Zealotry Embrace");
-			AddToken("ZEALOTRYEMBRACE_PICKUP", $"Deal more damage to enemies with little debuffs on them. {"\nConsumes Death's Mark".Style(StyleEnum.Void)}.");
-			AddToken("ZEALOTRYEMBRACE_DESC", "Deal {0:P0} more damage on enemies with less than {1} debuff on them. " + "\nConsumes Death's Mark".Style(StyleEnum.Void) + ".");
+			AddToken("ZEALOTRYEMBRACE_PICKUP", $"Deal more damage to enemies with little debuffs on them. {" Consumes Death Mark's".Style(StyleEnum.Void)}.");
+			AddToken("ZEALOTRYEMBRACE_DESC", "Deal {0:0%} more damage on enemies with less than {1} debuff on them. " + " Consumes Death Mark's".Style(StyleEnum.Void) + ".");
 			AddToken("ZEALOTRYEMBRACE_LORE", "");
 		}
 	}
