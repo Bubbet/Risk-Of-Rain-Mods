@@ -4,8 +4,8 @@
 	"website_url":"https://github.com/Bubbet",
 	"displayName":"Bubbets Items",
 
-	"version_number": "1.4.4",
-	"description": "Yes, another item mod.",
+	"version_number": "1.5.0",
+	"description": "Yes, another item mod.\nCurrently has 4 void items, 2 equipment, and 5 regular items.",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.1902"
 	]

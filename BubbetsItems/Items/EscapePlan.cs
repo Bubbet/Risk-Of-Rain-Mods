@@ -16,6 +16,10 @@ namespace BubbetsItems.Items
     {
         private static EscapePlan _instance;
         public static ConfigEntry<float> Granularity;
+        
+        
+        private static BuffDef _buffDef;
+        private static BuffDef BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefEscapePlan");
 
         protected override void MakeConfigs()
         {
@@ -112,13 +116,13 @@ namespace BubbetsItems.Items
             //_instance.Logger.LogInfo(buffI + " : " + buff);
             var info = _instance.scalingInfos[0];
             info.WorkingContext.h = body.healthComponent.combinedHealthFraction;
-            body.SetBuffCount(BubbetsItemsPlugin.ContentPack.buffDefs[0].buffIndex, Mathf.RoundToInt(info.ScalingFunction(amt) * Granularity.Value ));
+            body.SetBuffCount(BuffDef.buffIndex, Mathf.RoundToInt(info.ScalingFunction(amt) * Granularity.Value ));
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
         private static void RecalcStats(CharacterBody __instance)
         {
-            var amt = __instance.GetBuffCount(BubbetsItemsPlugin.ContentPack.buffDefs[0]); // TODO replace this with some automatic system
+            var amt = __instance.GetBuffCount(BuffDef);
             if (amt > 0)
             {
                 __instance.moveSpeed *= 1f + amt / Granularity.Value;

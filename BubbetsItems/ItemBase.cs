@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using BepInEx.Configuration;
 using HarmonyLib;
@@ -36,7 +37,7 @@ namespace BubbetsItems
         
         protected void AddScalingFunction(string defaultValue, string name, ExpressionContext? defaultContext = null, string? desc = null)
         {
-            scalingInfos.Add(new ScalingInfo(configFile, defaultValue, name, defaultContext, desc));
+            scalingInfos.Add(new ScalingInfo(configFile, defaultValue, name, new StackFrame(1).GetMethod().DeclaringType, defaultContext, desc));
         }
 
         public override string GetFormattedDescription([CanBeNull] Inventory inventory)
@@ -47,7 +48,8 @@ namespace BubbetsItems
             
             var formatArgs = scalingInfos.Select(info => info.ScalingFunction()).Cast<object>().ToArray();
             var ret = Language.GetStringFormatted(ItemDef.descriptionToken, formatArgs);
-            ret += "\n\n" + string.Join("\n", scalingInfos.Select(info => info.ToString()));
+            if (expandedTooltips.Value)
+                ret += "\n\n" + string.Join("\n", scalingInfos.Select(info => info.ToString()));
             return ret;
         }
 
@@ -163,7 +165,7 @@ namespace BubbetsItems
             private readonly ExpressionContext _defaultContext;
             public readonly ExpressionContext WorkingContext;
 
-            public ScalingInfo(ConfigFile configFile, string defaultValue, string name, ExpressionContext? defaultContext, string? desc)
+            public ScalingInfo(ConfigFile configFile, string defaultValue, string name, Type callingType, ExpressionContext? defaultContext, string? desc)
             {
                 _description = desc ?? "[a] = item count";
                 _name = name;
@@ -171,7 +173,7 @@ namespace BubbetsItems
                 _defaultContext.a = 1f;
                 WorkingContext = new ExpressionContext();
                 
-                _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, name, defaultValue, "Scaling function for item. ;" + _description);
+                _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, callingType.Name + "_" + name, defaultValue, "Scaling function for item. ;" + _description);
                 _oldValue = _configEntry.Value;
                 _function = new Expression(_oldValue).ToLambda<ExpressionContext, float>();
                 _configEntry.SettingChanged += EntryChanged;

@@ -1,5 +1,21 @@
+Jellied Soles 
+- White Item 
+- Reduces fall damage.
+
+Recursion Bullets 
+- Void Tier 1 Item
+- Increase attack speed for hitting bosses.
+
+Shifted Quartz 
+- Void Tier 1 Item
+- Damage bonus for having no enemies near you.
+
+Zealotry Embrace 
+- Void Tier 2 Item
+- Damage bonus on hitting enemies without debuffs on them.
+
 Void Scrap
-- Void Item
+- Void Tier 1 Item
 - Converts broken/consumed items into usable white scrap. Stuff like broken watches.
 
 Repulsion Armor Mk2
@@ -29,6 +45,9 @@ Wildlife Camera
 - Equipment
 - Take a photo of a enemy storing them in your camera.
 - Deploy that stored enemy as your friend.
+
+Special thanks to GEMO#0176 for making models for most of the items
+and to SOM#0001 for doing most of the icons.
 
 1.0.0 - Initial Release
 - First 4 items + bandolier as an orb instead of pickup.
@@ -101,3 +120,13 @@ Wildlife Camera
 
 1.4.4
 - fixed disabled items hooks still running often ending up with an nre when trying to reference itemdef that isnt set
+
+1.5.0 - GEMO update
+- 4 new items all modeled by GEMO#0176
+- Jellied Soles - White Item - Reduces fall damage.
+- Recursion Bullets - Void Tier 1 - Increase attack speed for hitting bosses.
+- Shifted Quartz - Void Tier 1 - Damage bonus for having no enemies near you.
+- Zealotry Embrace - Void Tier 2 - Damage bonus on hitting enemies without debuffs on them.  
+- reworked scaling configs to support multiple per item
+- added config for disabling the scaling configs in the tooltip
+- disabled graph in logbook for now

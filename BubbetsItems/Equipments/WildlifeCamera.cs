@@ -16,6 +16,9 @@ namespace BubbetsItems.Equipments
         private ConfigEntry<float> _cooldown;
         private ConfigEntry<bool> _filterOutBosses;
         private GameObject _indicator;
+        
+        private static BuffDef _buffDef;
+        private static BuffDef BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefSepia");
 
         public override bool PerformEquipment(EquipmentSlot equipmentSlot)
         { 
@@ -97,7 +100,7 @@ Luckily they seem friendly enough");
         public static void UpdateOverlays(CharacterModel __instance)
         {
             // ReSharper disable once Unity.NoNullPropagation
-            var isSepia = __instance.body?.HasBuff(BubbetsItemsPlugin.ContentPack.buffDefs[1]) ?? false;
+            var isSepia = __instance.body?.HasBuff(BuffDef) ?? false;
             AddOverlay(__instance, BubbetsItemsPlugin.AssetBundle.LoadAsset<Material>("SepiaMaterial"), isSepia);
         }
 

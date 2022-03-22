@@ -70,17 +70,8 @@ namespace BubbetsItems
             try
             {
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                /*
-                Stream stream = File.Open(Path.Combine(path, "BubbetsItems.bnk"), FileMode.Open);
-                var array = new byte[stream.Length];
-                stream.Read(array, 0, array.Length);
-
-                var mem = Marshal.AllocHGlobal(array.Length);
-                Marshal.Copy(array, 0, mem, array.Length);
-                var result = AkSoundEngine.LoadBank(mem, (uint) array.Length, out _bankID);*/
                 AkSoundEngine.AddBasePath(path);
                 var result = AkSoundEngine.LoadBank("BubbetsItems.bnk", out _bankID);
-                //var result = AkSoundEngine.LoadBank("BubbetsItems.bnk", out _bankID);
                 if (result != AKRESULT.AK_Success)
                     Debug.LogError("[Bubbets Items] SoundBank Load Failed: " + result);
             }

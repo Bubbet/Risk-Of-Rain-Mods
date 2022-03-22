@@ -57,7 +57,6 @@ namespace BubbetsItems.Items
         [HarmonyPrefix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.AddTimedBuff), typeof(BuffDef), typeof(float))]
         public static void TimedBuffHook(CharacterBody __instance, BuffDef buffDef, ref float duration)
         {
-            if (!_instance.Enabled.Value) return;
             if (!NetworkServer.active) return;
             duration = DoDurationPatch(__instance, buffDef, duration);
         }

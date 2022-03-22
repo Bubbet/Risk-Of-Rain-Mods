@@ -36,6 +36,7 @@ namespace BubbetsItems
         
         private static ExpansionDef? _sotvExpansion;
         protected ConfigFile configFile;
+        protected ConfigEntry<bool> expandedTooltips;
 
         public static ExpansionDef? SotvExpansion
         {
@@ -56,6 +57,7 @@ namespace BubbetsItems
         public static void Initialize(ManualLogSource manualLogSource, ConfigFile configFile, SerializableContentPack? serializableContentPack = null, Harmony? harmony = null, string tokenPrefix = "")
         {
             var localInstances = new List<SharedBase>();
+            var expandedTooltips = configFile.Bind(ConfigCategoriesEnum.General, "Expanded Tooltips", true, "Enables the scaling function in the tooltip.");
             foreach (var type in Assembly.GetCallingAssembly().GetTypes())
             {
                 if (!typeof(SharedBase).IsAssignableFrom(type)) continue; // || typeof(SharedBase) == type || typeof(ItemBase) == type || typeof(EquipmentBase) == type) continue;
@@ -77,6 +79,7 @@ namespace BubbetsItems
 
                 shared!.Logger = manualLogSource;
                 shared.configFile = configFile;
+                shared.expandedTooltips = expandedTooltips;
                 shared.MakeConfigs();
                 shared._tokenPrefix = tokenPrefix;
                 if (!shared.Enabled?.Value ?? false) continue;
