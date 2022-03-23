@@ -129,7 +129,7 @@ namespace BubbetsItems
         public static void NotifItemPostfix(GenericNotification __instance, ItemDef itemDef)
         {
             var item = ItemBase.Items.FirstOrDefault(x => x.ItemDef == itemDef);
-            if (item != null)
+            if (item != null && item.descInPickup.Value)
                 __instance.descriptionText.token = item.GetFormattedDescription(null);
         }
         
@@ -137,7 +137,7 @@ namespace BubbetsItems
         public static void NotifEquipmentPostfix(GenericNotification __instance, EquipmentDef equipmentDef)
         {
             var equipment = EquipmentBase.Equipments.FirstOrDefault(x => x.EquipmentDef == equipmentDef);
-            if (equipment != null)
+            if (equipment != null && equipment.descInPickup.Value)
                 __instance.descriptionText.token = equipment.GetFormattedDescription();
         }
 

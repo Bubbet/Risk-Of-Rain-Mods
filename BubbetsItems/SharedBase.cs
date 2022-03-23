@@ -37,6 +37,7 @@ namespace BubbetsItems
         private static ExpansionDef? _sotvExpansion;
         protected ConfigFile configFile;
         protected ConfigEntry<bool> expandedTooltips;
+        public ConfigEntry<bool> descInPickup;
 
         public static ExpansionDef? SotvExpansion
         {
@@ -58,6 +59,7 @@ namespace BubbetsItems
         {
             var localInstances = new List<SharedBase>();
             var expandedTooltips = configFile.Bind(ConfigCategoriesEnum.General, "Expanded Tooltips", true, "Enables the scaling function in the tooltip.");
+            var descInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Description In Pickup", true, "Used the description in the pickup for my items.");
             foreach (var type in Assembly.GetCallingAssembly().GetTypes())
             {
                 if (!typeof(SharedBase).IsAssignableFrom(type)) continue; // || typeof(SharedBase) == type || typeof(ItemBase) == type || typeof(EquipmentBase) == type) continue;
@@ -80,6 +82,7 @@ namespace BubbetsItems
                 shared!.Logger = manualLogSource;
                 shared.configFile = configFile;
                 shared.expandedTooltips = expandedTooltips;
+                shared.descInPickup = descInPickup;
                 shared.MakeConfigs();
                 shared._tokenPrefix = tokenPrefix;
                 if (!shared.Enabled?.Value ?? false) continue;
