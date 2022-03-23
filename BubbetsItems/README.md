@@ -34,7 +34,8 @@ Patience is key~
 # Changelog
 * v1.5.2 Mod Changes :
   * Adjusted all item descriptions
-  * 
+  * Fixed Fuel Array Description
+  * Fixed broken clock not firing the cooldown when running the timer to empty
 
 * v1.5.1 Mod Changes :
   * Fixed Shifted Quartz indicator being way too large.

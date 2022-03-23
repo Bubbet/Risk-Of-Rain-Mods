@@ -40,14 +40,14 @@ namespace BubbetsItems
             scalingInfos.Add(new ScalingInfo(configFile, defaultValue, name, new StackFrame(1).GetMethod().DeclaringType, defaultContext, desc));
         }
 
-        public override string GetFormattedDescription([CanBeNull] Inventory inventory)
+        public override string GetFormattedDescription([CanBeNull] Inventory inventory, string? token = null)
         {
             // ReSharper disable twice Unity.NoNullPropagation
 
             if (scalingInfos.Count <= 0) return Language.GetString(ItemDef.descriptionToken);
             
             var formatArgs = scalingInfos.Select(info => info.ScalingFunction()).Cast<object>().ToArray();
-            var ret = Language.GetStringFormatted(ItemDef.descriptionToken, formatArgs);
+            var ret = Language.GetStringFormatted(token ?? ItemDef.descriptionToken, formatArgs);
             if (expandedTooltips.Value)
                 ret += "\n\n" + string.Join("\n", scalingInfos.Select(info => info.ToString()));
             return ret;

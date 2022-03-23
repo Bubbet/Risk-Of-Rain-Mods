@@ -70,13 +70,18 @@ namespace BubbetsItems.Items
         }*/
         
         
-        public override string GetFormattedDescription(Inventory inventory = null)
+        public override string GetFormattedDescription(Inventory? inventory, string? token = null)
         {
-            ItemDef.descriptionToken = _reductionOnTrue.Value ? "BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION" :  "BUB_REPULSION_ARMOR_MK2_DESC_ARMOR";
+            //ItemDef.descriptionToken = _reductionOnTrue.Value ? "BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION" :  "BUB_REPULSION_ARMOR_MK2_DESC_ARMOR"; Cannot do this, it breaks the token matching from the tooltip patch
             var context = scalingInfos[0].WorkingContext;
             context.p = inventory?.GetItemCount(RoR2Content.Items.ArmorPlate) ?? 0;
-            context.d = 1f;
-            return base.GetFormattedDescription(inventory);
+            context.d = 0f;
+
+            var tokenChoice = _reductionOnTrue.Value
+                ? "BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION"
+                : "BUB_REPULSION_ARMOR_MK2_DESC_ARMOR";
+            
+            return base.GetFormattedDescription(inventory, tokenChoice);
         }
 
         protected override void MakeTokens()
@@ -85,7 +90,8 @@ namespace BubbetsItems.Items
             AddToken("REPULSION_ARMOR_MK2_NAME", "Repulsion Armor Plate Mk2");
             //AddToken("REPULSION_ARMOR_MK2_DESC", "Placeholder, swapped out with config value at runtime."); //pickup);
 
-            AddToken("REPULSION_ARMOR_MK2_DESC_REDUCTION", "Reduce all " + "incoming damage ".Style(StyleEnum.Damage) + "by " + "{0}".Style(StyleEnum.Damage) + ". Cannot be reduced below " + "1".Style(StyleEnum.Damage) + ". Scales with how much " + "Repulsion Armor Plates ".Style(StyleEnum.Utility) + "you have.");
+            // this mess #,###;#,###;0 is responsible for throwing away the negative sign when in the tooltip from the scaling function
+            AddToken("REPULSION_ARMOR_MK2_DESC_REDUCTION", "Reduce all " + "incoming damage ".Style(StyleEnum.Damage) + "by " + "{0:#,###;#,###;0}".Style(StyleEnum.Damage) + ". Cannot be reduced below " + "1".Style(StyleEnum.Damage) + ". Scales with how much " + "Repulsion Armor Plates ".Style(StyleEnum.Utility) + "you have.");
             AddToken("REPULSION_ARMOR_MK2_DESC_ARMOR", "Increase armor ".Style(StyleEnum.Heal) + "by " + "{0} ".Style(StyleEnum.Heal) + ". Scales with how much " + "Repulsion Armor Plates ".Style(StyleEnum.Utility) + "you have.");
 
             // <style=cIsDamage>incoming damage</style> by <style=cIsDamage>5<style=cStack> (+5 per stack)</style></style>

@@ -18,6 +18,12 @@ namespace BubbetsItems.Equipments
         public static ConfigEntry<float> interval;
 
         public static FieldInfo velocity = typeof(CharacterMotor).GetField("velocity");
+        public static BrokenClock instance;
+
+        public BrokenClock()
+        {
+            instance = this;
+        }
 
         protected override void MakeTokens()
         {
@@ -28,7 +34,7 @@ namespace BubbetsItems.Equipments
             AddToken("BROKEN_CLOCK_LORE", "Broken clock lore.");
         }
 
-        public override string GetFormattedDescription(Inventory inventory = null)
+        public override string GetFormattedDescription(Inventory inventory = null, string? token = null)
         {
             return Language.GetStringFormatted(EquipmentDef.descriptionToken, duration.Value);
         }
@@ -211,6 +217,13 @@ namespace BubbetsItems.Equipments
             {
                 reversing = false;
                 AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
+                byte i = 0;
+                foreach (var equipmentState in Body.inventory.equipmentStateSlots)
+                {
+                    if (equipmentState.equipmentDef == BrokenClock.instance.EquipmentDef)
+                        Body.inventory.DeductEquipmentCharges(i, 1);
+                    i++;
+                }
                 //characterMotor.velocity = _lastVelocity;
                 return;
             }

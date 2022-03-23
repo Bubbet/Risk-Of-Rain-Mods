@@ -49,7 +49,7 @@ namespace BubbetsItems
         }
         public virtual bool RequiresSotv => false;
         
-        public virtual string GetFormattedDescription(Inventory? inventory)
+        public virtual string GetFormattedDescription(Inventory? inventory, string? token = null)
         {
             return "Not Implemented";
         }

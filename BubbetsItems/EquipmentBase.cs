@@ -101,9 +101,9 @@ namespace BubbetsItems
             return false;
         }
 
-        public override string GetFormattedDescription(Inventory inventory = null)
+        public override string GetFormattedDescription(Inventory inventory = null, string? token = null)
         {
-            return Language.GetString(EquipmentDef.descriptionToken);
+            return Language.GetString(token ?? EquipmentDef.descriptionToken);
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(Inventory), nameof(Inventory.SetEquipmentInternal))]
