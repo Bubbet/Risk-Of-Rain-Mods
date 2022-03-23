@@ -147,8 +147,8 @@ namespace BubbetsItems.Items
         protected override void MakeTokens()
         {
             AddToken("ESCAPE_PLAN_NAME", "Escape Plan");
-            AddToken("ESCAPE_PLAN_DESC", "Get " + "{0:P} extra move speed".Style(StyleEnum.Utility) + ". Increases the closer to " + "death".Style(StyleEnum.Health) + " you are."); //"Get 75% (+10% per item) movement speed (at 0% hp scaling logarithmically) the lower your health is.");
-            AddToken("ESCAPE_PLAN_PICKUP", "Get movement speed the lower your health is.");
+            AddToken("ESCAPE_PLAN_PICKUP", "Increases " + "movement speed ".Style(StyleEnum.Utility) + "the closer you are to death.");
+            AddToken("ESCAPE_PLAN_DESC", "Move up to " + "{0:0%} faster".Style(StyleEnum.Utility) + ". Increases the closer you are to " + "death".Style(StyleEnum.Death) + ".");
             AddToken("ESCAPE_PLAN_LORE", "Escape Plan");
             base.MakeTokens();
         } 

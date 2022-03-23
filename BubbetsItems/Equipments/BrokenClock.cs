@@ -23,8 +23,8 @@ namespace BubbetsItems.Equipments
         {
             base.MakeTokens();
             AddToken("BROKEN_CLOCK_NAME", "Broken Clock");
-            AddToken("BROKEN_CLOCK_DESC", "Reverses time for {0} seconds.");
-            AddToken("BROKEN_CLOCK_PICKUP", "Reverses time for {0} seconds.");
+            AddToken("BROKEN_CLOCK_PICKUP", "Turn back the clock " + "{0} seconds ".Style(StyleEnum.Utility) + "for yourself.");
+            AddToken("BROKEN_CLOCK_DESC", "Turn back the clock " + "{0} seconds ".Style(StyleEnum.Utility) + "to revert " + "health ".Style(StyleEnum.Heal) + "and " + "velocity".Style(StyleEnum.Utility) + ".");
             AddToken("BROKEN_CLOCK_LORE", "Broken clock lore.");
         }
 

@@ -47,8 +47,8 @@ namespace BubbetsItems.Items
         protected override void MakeTokens()
         {
             AddToken("TIMED_BUFF_DURATION_ITEM_NAME", "Abundant Hourglass");
-            AddToken("TIMED_BUFF_DURATION_ITEM_PICKUP", "Increases the duration of timed buffs.");
-            AddToken("TIMED_BUFF_DURATION_ITEM_DESC", $"Multiplies the {"duration".Style(StyleEnum.Utility)} of timed buffs by {"{0}".Style(StyleEnum.Utility)}");// {scaleConfig.Value} (1: {ScalingFunction(1)}, 2: {ScalingFunction(2)}, 3: {ScalingFunction(3)})");
+            AddToken("TIMED_BUFF_DURATION_ITEM_PICKUP", "Duration of " + "buffs ".Style(StyleEnum.Damage) + "are increased.");
+            AddToken("TIMED_BUFF_DURATION_ITEM_DESC", "Duration of " + "buffs ".Style(StyleEnum.Damage) + "are multiplied by " + "{0}".Style(StyleEnum.Utility) + ".");
             AddToken("TIMED_BUFF_DURATION_ITEM_LORE", "BUB_TIMED_BUFF_DURATION_ITEM_LORE");
             base.MakeTokens();
         }

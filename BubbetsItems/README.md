@@ -1,136 +1,123 @@
-Jellied Soles 
-- White Item 
-- Reduces fall damage.
+# Bubbet's Items
+Yet another item mod that adds all sorts of unique items, including Void Tiers. There are highly configurable item stackings in the configs too. This mod is still being worked on and will of course add more and more items. You must have `SOTV` expansion in order to access the Void tier items.
 
-Recursion Bullets 
-- Void Tier 1 Item
-- Increase attack speed for hitting bosses.
+# Items Added
 
-Shifted Quartz 
-- Void Tier 1 Item
-- Damage bonus for having no enemies near you.
+Items | Function | Type
+---|---:|---
+Jellied Soles | Reduces fall damage | `Common` |
+---|---|---|
+Torturer | Heal from inflicted damage over time | `Uncommon` |
+Abundant Hourglass | Duration of buffs are increased | `Uncommon` |
+Escape Plan | Increases movement speed the closer you are to death | `Uncommon` |
+---|---|---|
+Repulsion Armor Mk2 | Two modes in config, gives extra reduction or armor per Repulsion Plate | `Legendary` |
+---|---|---|
+Void Scrap | Prioritized when used with Common 3D Printers. Corrupts all Broken items | `Void Common` |
+Shifted Quartz | Deal bonus damage if there aren't nearby enemies. Corrupts all Focus Crystals | `Void Common` |
+Recursion Bullets | Attacking bosses increases attack speed. Corrupts all Armor-Piercing Rounds | `Void Common` |
+Zealotry Embrace | Deal more damage to enemies with barely any debuffs inflicted. Corrupts all Death Marks | `Void Uncommon` |
+---|---|---|
+Broken Clock | Turn back the clock 10 seconds for yourself | `Equipment` |
+Wildlife Camera | Take a photo of an enemy, and spawn them as an ally later | `Equipment` |
 
-Zealotry Embrace 
-- Void Tier 2 Item
-- Damage bonus on hitting enemies without debuffs on them.
+# Other
+If you have suggestions or questions, feel free to message `Bubbet#2639` or `GEMO#0176` on Discord.
 
-Void Scrap
-- Void Tier 1 Item
-- Converts broken/consumed items into usable white scrap. Stuff like broken watches.
+Mod is still being continuously worked on!
+Patience is key~
 
-Repulsion Armor Mk2
-- Red Item
-- Has two modes, configurable via config.
-- Primary mode acts similar to mk1 armor plate but gives extra reduction per mk1 plate.
-- Secondary mode gives armor, and armor per mk1.
+- Special Thanks to..
+  - `GEMO#0176` for making all the newer item models
+  - `SOM#0001` for doing most of the icons
 
-Escape Plan
-- Green Item
-- The lower your health the faster you move.
+# Changelog
+* v1.5.2 Mod Changes :
+  * Adjusted all item descriptions
+  * 
 
-Torturer
-- Green Item
-- Heal for damage you deal via damage over time.
+* v1.5.1 Mod Changes :
+  * Fixed Shifted Quartz indicator being way too large.
+  * Changed zealotry's default debuff count to 3.
 
-Abundant Hourglass
-- Green Item
-- Increases the duration of timed buffs.
+* v1.5.0 Mod Changes, GEMO Update _(I'm honored!)_ :
+  * 4 new items all modeled by `GEMO#0176`.
+  * Jellied Soles, White Item - Reduces fall damage.
+  * Recursion Bullets, Void Tier 1 - Increase attack speed for hitting bosses.
+  * Shifted Quartz, Void Tier 1 - Damage bonus for having no enemies near you.
+  * Zealotry Embrace, Void Tier 2 - Damage bonus on hitting enemies without debuffs on them.  
+  * Reworked scaling configs to support multiple per item.
+  * Added config for disabling the scaling configs in the tooltip,
+  * Disabled Graph in logbook for now,
 
-Broken Clock
-- Equipment
-- Rewinds time, rolling back health, shield, barrier, position and velocity.
-- Will later also rewind look position and potentially but unlikely skill usages.
+* v1.4.4 Mod Changes :
+  * Fixed disabled items hooks still running often ending up with an NRE when trying to reference `itemdef` that isn't set.
 
-Wildlife Camera
-- Equipment
-- Take a photo of a enemy storing them in your camera.
-- Deploy that stored enemy as your friend.
+* v1.4.3 Mod Changes :
+  * Fixed Void Scrap icon
+  * Fixed Void Scraps cost/afford delegates so it works with alchemical cauldrons now.
 
-Special thanks to GEMO#0176 for making models for most of the items
-and to SOM#0001 for doing most of the icons.
+* v1.4.2 Mod Changes :
+  * Fixed bug caused by update to BepinExPack causing system initializers to not work, tokens and sounds not loading.
+  * Higher resolution Void Scrap icon.
 
-1.0.0 - Initial Release
-- First 4 items + bandolier as an orb instead of pickup.
+* v1.4.1 Mod Changes :
+  * Fixed Void Scrap not counting as Tier1 scrap, but instead counting as VoidTier1 and not doing anything.
+  * Made it priority scrap.
 
-1.1.0 - Broken Clock Update
-- Added new equipment: Broken clock. Rewinds time upon use.
-- Made every item have a fully configurable scaling function in the config.
-- Added support for in lobby config.
-- Added a scaling graph for the items to the logbook, is a bit jank with some items.
-- Tooltips dynamically update to display the scaling functions values, and what value it is currently at given your inventory.
+* v1.4.0, Mod Changes, Void Scrap Update :
+  * Added new item, Void Scrap
+  * Re-added InLobbyConfig support
+  * Fixed the invert on WildLife Cameras can do bosses config.
 
-1.1.1
-- Made in lobby config actually optional.
-- Fixed escape plan hardly working.
+* v1.3.1 Mod Changes :
+  * Fixed items/equipment not listening to config file in respect to being disabled.
+  * Fixed tokens not being initialized.
 
-1.1.2
-- Updated escape plans automatic tooltip value to reflect your health.
+* v1.3.0 Mod Changes, CUM2 Update :
+  * Updated to support `SOTV` update.
+  * temporarily dropped support for Atherium and InLobbyConfig
 
-1.2.0 Wildlife Camera Update
-- Added the wildlife camera, a equipment.
-- Added sounds to broken clock and wildlife camera.
-- Changed the tooltips to be a bit more descriptive for items.
+* v1.2.5 Mod Changes :
+  * Added hurtbox requirement to the camera as its needed to get reference to the master anyways.
+  * Changed camera to refund a stock if you miss the capture, making it actually work with gesture.
 
-1.2.1
-- Fixed equipmentbase only firing performequipment on server, it now fires for everyone
-- Added support for indicators to the equipmentbase
-- Added an indicator to wildlife camera
-- Broken Clock now has a much longer cooldown by default and refills a stock when turning on rewind
-- Sounds fixed for both broken clock and wildlife camera (problem came from performequipment)
-- Broken clock stops its looping sound upon character death.
+* v1.2.4 Mod Changes :
+  * Changed WildLife Camera set equipment to different method so ArtificerExtended does not throw NRE.
 
-1.2.2
-- Re-Added NCalc.Dll to the zip because somehow that got removed.
+* v1.2.3 Mod Changes :
+  * Fixed WildLife Camera firing in the wrong scope, causing it to not work. Was on client authoritive, it's now on server.
 
-1.2.3
-- Fixed wildlifecamera firing in the wrong scope, causing it to not work. Was on client authoritive, is now on server.
+* v1.2.2 Mod Changes :
+  * Re-added `NCalc.Dll` to the zip because somehow that got removed.
 
-1.2.4
-- Changed WildLifeCamera set equipment to different method so ArtificerExtended does not throw nre.
+* v1.2.1 Mod Changes :
+  * Fixed `equipmentbase` only firing `performequipment` on server, it now fires for everyone.
+  * Added support for indicators to the `equipmentbase`
+  * Added an indicator to Wildlife Camera.
+  * Broken Clock now has a much longer cooldown by default and refills a stock when turning on rewind.
+  * Sounds fixed for both Broken Clock and Wildlife Camera _`(Problem came from performequipment)`_
+  * Broken Clock stops its looping sound upon character death.
 
-1.2.5
-- Added hurtbox requirement to the camera as its needed to get reference to the master anyways.
-- Changed camera to refund a stock if you miss the capture, making it actually work with gesture.
+* v1.2.0 Mod Changes, Wildlife Camera Update :
+  * Added the Wildlife Camera, an equipment to spawn an ally from an enemy.
+  * Added sounds to current Equipment.
+  * Changed the tooltips to be a bit more descriptive for items.
 
-1.3.0 - CUM2 update
-- updated to support SOTV update
-- temporarily dropped support for atherium and inlobbyconfig
+* v1.1.2 Mod Changes :
+  * Updated Escape Plan's automatic tooltip value to reflect your health.
 
-1.3.1
-- fixed items/equipment not listening to config file in respect to being disabled
-- fixed tokens not being initialized
+* v1.1.1 Mod Changes :
+  * Made InlobbyConfig actually optional.
+  * Fixed Escape Plan hardly working.
 
-1.4.0 - Void Scrap Update
-- Added new item Void Scrap
-- Readded inlobbyconfig support
-- Fixed the invert on wildlifecameras can do bosses config
+* v1.1.0 Mod Changes :
+  * New Equipment: Broken Clock, rewinds yourself on use.
+  * Each item has fully configurable scaling.
+  * Support for in lobby config.
+  * Scaling graph for items in the logbook, sometimes janky.
+  * Tooltips dynamically update to display configuration changes, and stacking values.
 
-1.4.1
-- Fixed void scrap not counting as tier1 scrap, but instead counting as voidtier1 and not doing anything.
-- Made it impossible to scrap your last.
-- Made it priority scrap.
-
-1.4.2
-- Fixed bug caused by update to BepinExPack causing system initializers to not work aka tokens and sounds not loading
-- Higher resolution voidscrap icon
-
-1.4.3
-- fixed voidscrap icon
-- fixed voidscraps cost/afford delegates so it works with alchemical cauldrons now
-
-1.4.4
-- fixed disabled items hooks still running often ending up with an nre when trying to reference itemdef that isnt set
-
-1.5.0 - GEMO update
-- 4 new items all modeled by GEMO#0176
-- Jellied Soles - White Item - Reduces fall damage.
-- Recursion Bullets - Void Tier 1 - Increase attack speed for hitting bosses.
-- Shifted Quartz - Void Tier 1 - Damage bonus for having no enemies near you.
-- Zealotry Embrace - Void Tier 2 - Damage bonus on hitting enemies without debuffs on them.  
-- reworked scaling configs to support multiple per item
-- added config for disabling the scaling configs in the tooltip
-- disabled graph in logbook for now
-
-1.5.1
-- fixed shifted quartz indicator being way too big
-- changed zealotry's default debuff count
+* v1.0.0 Mod Changes :
+  * Mod release
+  * First 4 Items + Bandolier as an orb instead of pickup.

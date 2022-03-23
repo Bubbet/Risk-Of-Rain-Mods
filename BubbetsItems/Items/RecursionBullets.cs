@@ -29,9 +29,9 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("RECURSIONBULLETS_NAME", "Recursion Bullets");
-			AddToken("RECURSIONBULLETS_DESC", "Attacking a boss increases " + "attack speed by {0:P0}".Style(StyleEnum.Utility) + ". Maximum cap of " + "{1:P0} attack speed.".Style(StyleEnum.Utility) + "\nCorrupts all Armor-Piercing Rounds".Style(StyleEnum.Void));
-			AddToken("RECURSIONBULLETS_PICKUP", "Attacking bosses increases attack speed. \n" + "Corrupts Armor-Piercing Rounds.".Style(StyleEnum.Void));
-			AddToken("RECURSIONBULLETS_LORE", "");
+			AddToken("RECURSIONBULLETS_PICKUP", "Attacking bosses increases attack speed." + " Corrupts all Armor-Piercing Rounds".Style(StyleEnum.Void) + ".");
+			AddToken("RECURSIONBULLETS_DESC", "Attacking bosses increases " + "attack speed ".Style(StyleEnum.Damage) + "by " + "{0:0%}".Style(StyleEnum.Damage) + ". Maximum cap of " + "{1:0%} attack speed".Style(StyleEnum.Damage) + ". " + "Corrupts all Armor-Piercing Rounds".Style(StyleEnum.Void));
+			AddToken("RECURSIONBULLETS_LORE", "\"I just shot these unusual bullets that I found buried near an abandoned testing site, and they appeared back in my magazine. I stumbled across something I shouldn't have... This stuff gives off a strange aura whenever I use it. They don't get damaged either... Maybe I should've left them where I found them. For now, I'll keep them locked up in the warehouse.\"");
 		}
 
 		protected override void MakeConfigs()
