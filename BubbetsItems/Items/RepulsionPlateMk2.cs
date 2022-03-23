@@ -85,11 +85,12 @@ namespace BubbetsItems.Items
             AddToken("REPULSION_ARMOR_MK2_NAME", "Repulsion Armor Plate Mk2");
             //AddToken("REPULSION_ARMOR_MK2_DESC", "Placeholder, swapped out with config value at runtime."); //pickup);
 
-            AddToken("REPULSION_ARMOR_MK2_DESC_REDUCTION",
-                $"Reduce all {"incoming damage".Style(StyleEnum.Damage)} by {"{0}".Style(StyleEnum.Damage)}. Cannot be reduced below {"1".Style(StyleEnum.Damage)}. Scales with the amount of {"Mk1 plates".Style(StyleEnum.Utility)} you have."); //"Reduce all <style=cIsDamage>incoming damage</style> by <style=cIsDamage>{1}</style>. Cannot be reduced below 1. Scales with the amount of Mk1 plates your have.");//"Reduce all <style=cIsDamage>incoming damage</style> by <style=cIsDamage>20</style> and by <style=cIsDamage>5<style=cStack> (+1 per stack of Mk2)</style></style> for every Mk1 plate. Cannot be reduced below <style=cIsDamage>1</style>.");
+            AddToken("REPULSION_ARMOR_MK2_DESC_REDUCTION", "Reduce all " + "incoming damage ".Style(StyleEnum.Damage) + "by " + "{0}".Style(StyleEnum.Damage) + ". Cannot be reduced below " + "1".Style(StyleEnum.Damage) + ". Scales with how much " + "Repulsion Armor Plates ".Style(StyleEnum.Utility) + "you have.");
             AddToken("REPULSION_ARMOR_MK2_DESC_ARMOR", $"Grant {"{0}".Style(StyleEnum.Heal)} armor. Scales with the amount of {"Mk1 plates".Style(StyleEnum.Utility)} you have.");//"Grant <style=cIsDamage>{1}</style> armor. Scales with the amount of Mk1 plates your have.");//"Grant <style=cIsDamage>20</style> armor plus an additional <style=cIsDamage>5<style=cStack> (+1 per stack of Mk2)</style></style> for every Mk1 plate.");
+            AddToken("REPULSION_ARMOR_MK2_DESC_ARMOR", "Increase armor ".Style(StyleEnum.Heal) + "by " + "{0} ".Style(StyleEnum.Heal) + ". Scales with how much " + "Repulsion Armor Plates ".Style(StyleEnum.Utility) + "you have.");
+
             // <style=cIsDamage>incoming damage</style> by <style=cIsDamage>5<style=cStack> (+5 per stack)</style></style>
-            AddToken("REPULSION_ARMOR_MK2_PICKUP", "Reduce incoming damage for each mk1 plate.");
+            AddToken("REPULSION_ARMOR_MK2_PICKUP", "Receive damage reduction from all attacks depending on each" + "Repulsion Plate".Style(StyleEnum.Utility + ".");
             AddToken("REPULSION_ARMOR_MK2_LORE", @"Order: Experimental Repulsion Armour Augments - Mk. 2
 Tracking number: 07 **
 Estimated Delivery: 10/23/2058

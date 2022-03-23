@@ -38,8 +38,8 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("SHIFTEDQUARTZ_NAME", "Shifted Quartz");
-			AddToken("SHIFTEDQUARTZ_DESC", "{1:0%} extra damage".Style(StyleEnum.Damage) + " when enemies are not within " + "{0}m".Style(StyleEnum.Damage) + " of you." + " Corrupts all Focus Crystal".Style(StyleEnum.Void) + ".");
-			AddToken("SHIFTEDQUARTZ_PICKUP", "Extra damage when enemies are far away." + " Corrupts all Focus Crystal".Style(StyleEnum.Void) + ".");
+			AddToken("SHIFTEDQUARTZ_PICKUP", "Deal bonus damage if there aren't nearby enemies. " + "Corrupts all Focus Crystals".Style(StyleEnum.Void) + ".");
+			AddToken("SHIFTEDQUARTZ_DESC", "Increase damage dealt by " + "{1:0%} ".Style(StyleEnum.Damage) + "when there are no enemies within " + "{0}m ".Style(StyleEnum.Damage) + "of you. " + "Corrupts all Focus Crystals".Style(StyleEnum.Void) + ".");
 			AddToken("SHIFTEDQUARTZ_LORE", "");
 		}
 

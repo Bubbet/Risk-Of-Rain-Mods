@@ -19,8 +19,8 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("VOIDJUNKTOSCRAPTIER1_NAME", "Void Scrap");
-			AddToken("VOIDJUNKTOSCRAPTIER1_PICKUP", $"{"Corrupts all broken items".Style(StyleEnum.Void)} into scrap.");
-			AddToken("VOIDJUNKTOSCRAPTIER1_DESC", $"{"Corrupts all broken items".Style(StyleEnum.Void)} and converts them into usable {"White scrap".Style(StyleEnum.White)}.");
+			AddToken("VOIDJUNKTOSCRAPTIER1_PICKUP", "Prioritized when used with " + "Common ".Style(StyleEnum.White) + "3D Printers. " + "Corrupts all Broken items".Style(StyleEnum.Void) + ".");
+			AddToken("VOIDJUNKTOSCRAPTIER1_DESC", "Does nothing. " + "Prioritized when used with " + "Common ".Style(StyleEnum.White) + "3D Printers. " + "Corrupts all Broken items".Style(StyleEnum.Void) + ".");
 			AddToken("VOIDJUNKTOSCRAPTIER1_LORE", "");
 		}
 
