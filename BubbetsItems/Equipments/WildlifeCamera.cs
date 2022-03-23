@@ -58,7 +58,7 @@ namespace BubbetsItems.Equipments
         {
             base.MakeTokens();
             AddToken("WILDLIFE_CAMERA_NAME", "Wildlife Camera");
-            AddToken("WILDLIFE_CAMERA_PICKUP", "Take a photo of an enemy, and spawn them as an ally later."");
+            AddToken("WILDLIFE_CAMERA_PICKUP", "Take a photo of an enemy, and spawn them as an ally later.");
             AddToken("WILDLIFE_CAMERA_DESC", "Take a photo of an enemy, and spawn them as an ally using it again.");
             AddToken("WILDLIFE_CAMERA_LORE", @"A device once used by an elder scrybe to convert woodland creatures into playing cards. 
 After some modifications the creatures are no longer bound to a flat card, instead bending and contorting to a living being of paper and ink... 

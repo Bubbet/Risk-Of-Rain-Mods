@@ -53,7 +53,7 @@ namespace BubbetsItems.Items
 			base.MakeTokens();
 			AddToken("JELLIEDSOLES_NAME", "Jellied Soles");
 			AddToken("JELLIEDSOLES_PICKUP", "Reduces " + "fall damage.".Style(StyleEnum.Utility));
-			AddToken("JELLIEDSOLES_DESC", "Reduces " + "fall damage ".Style(StyleEnum.Utility) + "by " + "{0:P0}".Style(StyleEnum.Utility) + ".");
+			AddToken("JELLIEDSOLES_DESC", "Reduces " + "fall damage ".Style(StyleEnum.Utility) + "by " + "{0:0%}".Style(StyleEnum.Utility) + ".");
 			AddToken("JELLIEDSOLES_LORE", "");
 		}
 	}
