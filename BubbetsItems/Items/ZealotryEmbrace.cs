@@ -44,7 +44,7 @@ namespace BubbetsItems.Items
 		public static void IlTakeDamage(ILContext il)
 		{
 			var c = new ILCursor(il);
-			c.GotoNext(MoveType.After, x => x.OpCode == OpCodes.Ldsfld && (x.Operand as FieldReference)?.Name == nameof(RoR2Content.Items.NearbyDamageBonus),
+			c.GotoNext(MoveType.Before, x => x.OpCode == OpCodes.Ldsfld && (x.Operand as FieldReference)?.Name == nameof(RoR2Content.Items.NearbyDamageBonus),
 				x => x.MatchCallOrCallvirt(out _),
 				x => x.MatchStloc(out _));
 			var where = c.Index;
