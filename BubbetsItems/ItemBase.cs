@@ -75,6 +75,16 @@ namespace BubbetsItems
                 Logger?.LogWarning($"Could not find ItemDef for item {this} in serializableContentPack, class/itemdef name are probably mismatched. This will throw an exception later.");
             }
         }
+        
+        public override void AddDisplayRules(VanillaCharacterIDRS which, ItemDisplayRule[] displayRules)
+        {
+            var asset = IDRHelper.GetRuleSet(which);
+            asset.keyAssetRuleGroups = asset.keyAssetRuleGroups.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
+            {
+                displayRuleGroup = new DisplayRuleGroup {rules = displayRules},
+                keyAsset = ItemDef
+            }).ToArray();
+        }
 
         protected override void FillDefsFromContentPack()
         {
@@ -108,7 +118,7 @@ namespace BubbetsItems
             }
         }
 
-        public override void FillRequiredExpansions()
+        protected override void FillRequiredExpansions()
         {
             if (RequiresSotv)
                 ItemDef.requiredExpansion = SotvExpansion;

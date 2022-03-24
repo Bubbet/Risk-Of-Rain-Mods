@@ -113,7 +113,6 @@ namespace BubbetsItems
                 instance.FillPickupIndex();
             }
         }
-        protected virtual void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack) {}
 
         protected static bool MatchName(string scriptableObject, string sharedBase)
         {
@@ -146,7 +145,18 @@ namespace BubbetsItems
                 instance.FillRequiredExpansions();
             }
         }
-        
+
+        [SystemInitializer(typeof(BodyCatalog))]
+        public static void FillIDRS()
+        {
+            foreach (var instance in Instances)
+            {
+                instance.FillItemDisplayRules();
+            }
+        }
+
+        protected virtual void FillItemDisplayRules(){}
+
         [SystemInitializer( typeof(ItemCatalog), typeof(EquipmentCatalog))]
         public static void MakeAllTokens()
         {
@@ -174,8 +184,10 @@ namespace BubbetsItems
         {
             Language.languagesByName[language].SetStringByToken(_tokenPrefix + key, value);
         }*/
-        public abstract void FillRequiredExpansions();
+        protected virtual void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack) {}
         protected abstract void FillDefsFromContentPack();
         protected abstract void FillPickupIndex();
+        protected abstract void FillRequiredExpansions();
+        public abstract void AddDisplayRules(VanillaCharacterIDRS which, ItemDisplayRule[] displayRules);
     }
 }

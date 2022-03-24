@@ -139,6 +139,15 @@ namespace BubbetsItems
                 newEquip?.Logger.LogError(e);
             }
         }
+        
+        public override void AddDisplayRules(VanillaCharacterIDRS which, ItemDisplayRule[] displayRules)
+        {
+            IDRHelper.GetRuleSet(which).keyAssetRuleGroups.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
+            {
+                displayRuleGroup = new DisplayRuleGroup {rules = displayRules},
+                keyAsset = EquipmentDef
+            });
+        }
 
         /*
         public void RenderPickup()
@@ -192,7 +201,7 @@ namespace BubbetsItems
             }
         }
 
-        public override void FillRequiredExpansions()
+        protected override void FillRequiredExpansions()
         {
             if (RequiresSotv)
                 EquipmentDef.requiredExpansion = SotvExpansion;

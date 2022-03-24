@@ -32,6 +32,9 @@ Patience is key~
   - `SOM#0001` for doing most of the icons
 
 # Changelog
+* v1.5.4 Mod Changes :
+  * Re-enabled description in tooltip for my items. Did way too many things last patch and forgot it disabled from when i was debugging
+  
 * v1.5.3 Mod Changes :
   * Lowered the volume of the camera shutter from wildlife camera by 7(DB?)
   * Fixed tooltips with newer versions of BetterUI

@@ -33,7 +33,7 @@ namespace BubbetsItems
             harmony.Patch(bae, null, null, null, null, new HarmonyMethod(typeof(PickupTooltipFormat).GetMethod("FixBetterUIsGarbage")));
         }*/
 
-        //[HarmonyPrefix, HarmonyPatch(typeof(TooltipProvider), "get_bodyText")]
+        [HarmonyPrefix, HarmonyPatch(typeof(TooltipProvider), "get_bodyText")]
         public static bool FixToken(TooltipProvider __instance, ref string __result)
         {
             try
