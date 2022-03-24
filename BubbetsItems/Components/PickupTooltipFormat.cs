@@ -33,7 +33,7 @@ namespace BubbetsItems
             harmony.Patch(bae, null, null, null, null, new HarmonyMethod(typeof(PickupTooltipFormat).GetMethod("FixBetterUIsGarbage")));
         }*/
 
-        [HarmonyPrefix, HarmonyPatch(typeof(TooltipProvider), "get_bodyText")]
+        //[HarmonyPrefix, HarmonyPatch(typeof(TooltipProvider), "get_bodyText")]
         public static bool FixToken(TooltipProvider __instance, ref string __result)
         {
             try
@@ -44,13 +44,13 @@ namespace BubbetsItems
                 {
                     if (x.ItemDef == null) // This is a really bad way of doing this
                         BubbetsItemsPlugin.Log.LogWarning($"ItemDef is null for {x} in tooltipProvider, this will throw errors.");
-                    return __instance.bodyToken == x.ItemDef.descriptionToken;
+                    return __instance.bodyToken == x.ItemDef.descriptionToken || __instance.bodyToken == x.ItemDef.pickupToken;
                 });
                 var equipment = EquipmentBase.Equipments.FirstOrDefault(x =>
                 {
                     if (x.EquipmentDef == null)
                         BubbetsItemsPlugin.Log.LogWarning($"EquipmentDef is null for {x} in tooltipProvider, this will throw errors.");
-                    return __instance.bodyToken == x.EquipmentDef.descriptionToken;
+                    return __instance.bodyToken == x.EquipmentDef.descriptionToken || __instance.bodyToken == x.EquipmentDef.pickupToken;
                 });
                 var titleEquipment = EquipmentBase.Equipments.FirstOrDefault(x =>
                 {

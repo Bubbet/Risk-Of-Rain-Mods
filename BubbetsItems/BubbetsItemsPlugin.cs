@@ -22,7 +22,7 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 [assembly: SearchableAttribute.OptIn]
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.5.2")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.5.3")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     //[BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
@@ -51,9 +51,9 @@ namespace BubbetsItems
             new PatchClassProcessor(harm, typeof(PickupTooltipFormat)).Patch();
             new PatchClassProcessor(harm, typeof(LogBookPageScalingGraph)).Patch();
             
-            new PatchClassProcessor(harm, typeof(SharedBase)).Patch();
+            // Do not use SystemInitializers in PatchClassProcessors, because patch triggers the static constructor of SearchableAttribute breaking mods that load after
             new PatchClassProcessor(harm, typeof(EquipmentBase)).Patch();
-            new PatchClassProcessor(harm, typeof(ItemBase)).Patch();
+            new PatchClassProcessor(harm, typeof(ItemBase)).Patch(); // Only used for filling void items.
             
             //Fucking bepinex pack constantly changing and now loading too late for searchableAttributes scan.
             //it changed again and no longer needs this

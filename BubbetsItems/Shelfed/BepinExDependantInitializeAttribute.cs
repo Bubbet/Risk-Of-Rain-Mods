@@ -6,7 +6,7 @@ using BepInEx.Bootstrap;
 using HG.Reflection;
 using UnityEngine;
 
-[assembly: SearchableAttribute.OptInAttribute]
+
 namespace BubbetsItems
 {
     /*

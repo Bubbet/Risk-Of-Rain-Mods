@@ -146,78 +146,56 @@ namespace BubbetsItems
             PickupRenderer.PickupRenderer.RenderPickupIcon(new ConCommandArgs {userArgs = new List<string> {EquipmentDef.name}});
         }*/
 
-        protected override void FillDefs(SerializableContentPack serializableContentPack)
+        protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
         {
-            base.FillDefs(serializableContentPack);
+            base.FillDefsFromSerializableCP(serializableContentPack);
             var name = GetType().Name;
-            foreach (var itemDef in serializableContentPack.equipmentDefs)
+            foreach (var equipmentDef in serializableContentPack.equipmentDefs)
             {
-                if (MatchName(itemDef.name, name))
-                    EquipmentDef = itemDef;
+                if (MatchName(equipmentDef.name, name)) EquipmentDef = equipmentDef;
             }
             if (EquipmentDef == null)
             {
-                Logger.LogWarning($"Could not find EquipmentDef for item {this} in serializableContentPack, class/equipmentdef name are probably mismatched. This will throw an exception later.");
+                Logger?.LogWarning($"Could not find EquipmentDef for item {this} in serializableContentPack, class/equipmentdef name are probably mismatched. This will throw an exception later.");
             }
         }
 
-        
-        [SystemInitializer(typeof(EquipmentCatalog), typeof(PickupCatalog))]
-        public static void AssignAllEquipmentDefs()
+        protected override void FillDefsFromContentPack()
+        {
+            foreach (var pack in ContentPacks)
+            {
+                if (EquipmentDef != null) continue;
+                var name = GetType().Name;
+                foreach (var equipmentDef in pack.equipmentDefs)
+                    if (MatchName(equipmentDef.name, name))
+                        EquipmentDef = equipmentDef;
+            }
+            
+            if (EquipmentDef == null) 
+                Logger?.LogWarning(
+                    $"Could not find EquipmentDef for item {this}, class/equipmentdef name are probably mismatched. This will throw an exception later.");
+        }
+
+        protected override void FillPickupIndex()
         {
             try
             {
-                var equipments = Instances.OfType<EquipmentBase>().Where(x => x.Enabled.Value).ToArray();
-                foreach (var pack in ContentPacks)
-                {
-                    foreach (var equipmentBase in equipments)
-                    {
-                        if (equipmentBase.EquipmentDef != null) continue;
-                        var name = equipmentBase.GetType().Name;
-                        foreach (var equipmentDef in pack.equipmentDefs)
-                            if (MatchName(equipmentDef.name, name))
-                            {
-                                equipmentBase.EquipmentDef = equipmentDef;
-                                equipmentBase.PostEquipmentDef();
-                            }
-
-                        if (equipmentBase.EquipmentDef == null)
-                        {
-                            equipmentBase.Logger.LogWarning($"Could not find EquipmentDef for item {equipmentBase}, class/equipmentdef name are probably mismatched. This will throw an exception later.");
-                        }
-                    }
-                }
-
-                foreach (var x in equipments)
-                {
-                    try
-                    {
-                        var pickup = PickupCatalog.FindPickupIndex(x.EquipmentDef.equipmentIndex);
-                        x.PickupIndex = pickup;
-                        PickupIndexes.Add(pickup, x);
-                    }
-                    catch (NullReferenceException e)
-                    {
-                        x.Logger.LogError("Equipment " + x.GetType().Name +
-                                          " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
-                                          e);
-                    }
-                }
+                var pickup = PickupCatalog.FindPickupIndex(EquipmentDef.equipmentIndex);
+                PickupIndex = pickup;
+                PickupIndexes.Add(pickup, this);
             }
-            catch (Exception e)
+            catch (NullReferenceException e)
             {
-                BubbetsItemsPlugin.Log.LogError(e);
+                Logger?.LogError("Equipment " + GetType().Name +
+                                 " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
+                                 e);
             }
         }
-        
-        [SystemInitializer(typeof(ExpansionCatalog))]
-        public static void FillRequiredExpansions()
+
+        public override void FillRequiredExpansions()
         {
-            foreach (var equipmentBase in Equipments)
-            {
-                if (equipmentBase.RequiresSotv)
-                    equipmentBase.EquipmentDef.requiredExpansion = SotvExpansion;
-            }
+            if (RequiresSotv)
+                EquipmentDef.requiredExpansion = SotvExpansion;
         }
     }
 }

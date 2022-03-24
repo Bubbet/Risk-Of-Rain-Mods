@@ -46,7 +46,7 @@ namespace BubbetsItems
 
             if (scalingInfos.Count <= 0) return Language.GetString(ItemDef.descriptionToken);
             
-            var formatArgs = scalingInfos.Select(info => info.ScalingFunction()).Cast<object>().ToArray();
+            var formatArgs = scalingInfos.Select(info => info.ScalingFunction(inventory?.GetItemCount(ItemDef))).Cast<object>().ToArray();
             var ret = Language.GetStringFormatted(token ?? ItemDef.descriptionToken, formatArgs);
             if (expandedTooltips.Value)
                 ret += "\n\n" + string.Join("\n", scalingInfos.Select(info => info.ToString()));
@@ -62,9 +62,9 @@ namespace BubbetsItems
             }
         }
 
-        protected override void FillDefs(SerializableContentPack serializableContentPack)
+        protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
         {
-            base.FillDefs(serializableContentPack);
+            base.FillDefsFromSerializableCP(serializableContentPack);
             var name = GetType().Name;
             foreach (var itemDef in serializableContentPack.itemDefs)
             {
@@ -76,67 +76,42 @@ namespace BubbetsItems
             }
         }
 
-        [SystemInitializer(typeof(ItemCatalog), typeof(PickupCatalog))]
-        public static void GetPickupIndexes()
+        protected override void FillDefsFromContentPack()
+        {
+            foreach (var pack in ContentPacks)
+            {
+                if (ItemDef != null) continue;
+                var name = GetType().Name;
+                foreach (var itemDef in pack.itemDefs)
+                    if (MatchName(itemDef.name, name))
+                        ItemDef = itemDef;
+            }
+            
+            if (ItemDef == null) 
+                Logger?.LogWarning(
+                    $"Could not find ItemDef for item {this}, class/itemdef name are probably mismatched. This will throw an exception later.");
+        }
+
+        protected override void FillPickupIndex()
         {
             try
             {
-                var items = Instances.OfType<ItemBase>().Where(x => x.Enabled?.Value ?? false).ToArray();
-                foreach (var pack in ContentPacks)
-                {
-                    foreach (var itemBase in items)
-                    {
-                        if (itemBase.ItemDef != null) continue;
-                        var name = itemBase.GetType().Name;
-                        foreach (var itemDef in pack.itemDefs)
-                            if (MatchName(itemDef.name, name))
-                                itemBase.ItemDef = itemDef;
-                        if (itemBase.ItemDef == null)
-                        {
-                            itemBase.Logger?.LogWarning($"Could not find ItemDef for item {itemBase}, class/itemdef name are probably mismatched. This will throw an exception later.");
-                        }
-                    }
-                }
-                
-                foreach (var x in items)
-                {
-                    try
-                    {
-                        var pickup = PickupCatalog.FindPickupIndex(x.ItemDef.itemIndex);
-                        x.PickupIndex = pickup;
-                        PickupIndexes.Add(pickup, x);
-                    }
-                    catch (NullReferenceException e)
-                    {
-                        x.Logger?.LogError("Item " + x.GetType().Name +
-                                           " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
-                                           e);
-                    }
-                }
+                var pickup = PickupCatalog.FindPickupIndex(ItemDef.itemIndex);
+                PickupIndex = pickup;
+                PickupIndexes.Add(pickup, this);
             }
-            catch (Exception e)
+            catch (NullReferenceException e)
             {
-                BubbetsItemsPlugin.Log.LogError(e);
+                Logger?.LogError("Equipment " + GetType().Name +
+                                 " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
+                                 e);
             }
         }
-        
-        
-        [SystemInitializer(typeof(ExpansionCatalog))]
-        public static void FillRequiredExpansions()
+
+        public override void FillRequiredExpansions()
         {
-            foreach (var itemBase in Items)
-            {
-                try
-                {
-                    if (itemBase.RequiresSotv)
-                        itemBase.ItemDef.requiredExpansion =
-                            ExpansionCatalog.expansionDefs.FirstOrDefault(x => x.nameToken == "DLC1_NAME");
-                }
-                catch (Exception e)
-                {
-                    itemBase.Logger?.LogError(e);
-                }
-            }
+            if (RequiresSotv)
+                ItemDef.requiredExpansion = SotvExpansion;
         }
         
         [HarmonyPrefix, HarmonyPatch(typeof(ContagiousItemManager), nameof(ContagiousItemManager.Init))]
@@ -183,9 +158,9 @@ namespace BubbetsItems
             {
                 return _function(context ?? _defaultContext);
             }
-            public float ScalingFunction(int itemCount)
+            public float ScalingFunction(int? itemCount)
             {
-                WorkingContext.a = itemCount;
+                WorkingContext.a = itemCount ?? _defaultContext.a;
                 return ScalingFunction(WorkingContext);
             }
 

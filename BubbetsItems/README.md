@@ -32,6 +32,15 @@ Patience is key~
   - `SOM#0001` for doing most of the icons
 
 # Changelog
+* v1.5.3 Mod Changes :
+  * Lowered the volume of the camera shutter from wildlife camera by 7(DB?)
+  * Fixed tooltips with newer versions of BetterUI
+  * Made Escape Plans percent accurate to the amount of health you have in the tooltip.
+  * Reworked the escape plans buff to update more when healing.  
+  * Fixed bug from scaling function refactor that didnt take into account the amount of item you had in tooltip.
+  * Fixed torturer having a poor outline
+  * Fixed incompatibility with other mods using SystemInitializer that load after this. (Skills++)
+
 * v1.5.2 Mod Changes :
   * Adjusted all item descriptions
   * Fixed Fuel Array Description

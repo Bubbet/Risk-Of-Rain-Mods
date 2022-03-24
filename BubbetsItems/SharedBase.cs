@@ -62,6 +62,7 @@ namespace BubbetsItems
             var descInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Description In Pickup", true, "Used the description in the pickup for my items.");
             foreach (var type in Assembly.GetCallingAssembly().GetTypes())
             {
+                //if(type == typeof(SharedBase) || type == typeof(ItemBase) || type == typeof(EquipmentBase)) continue;
                 if (!typeof(SharedBase).IsAssignableFrom(type)) continue; // || typeof(SharedBase) == type || typeof(ItemBase) == type || typeof(EquipmentBase) == type) continue;
                 SharedBase? shared;
                 try
@@ -97,10 +98,22 @@ namespace BubbetsItems
                 .Where(x => Instances.FirstOrDefault(y => MatchName(x.name, y.GetType().Name))?.Enabled?.Value ?? false).ToArray();
             serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs
                 .Where(x => Instances.FirstOrDefault(y => MatchName(x.name, y.GetType().Name))?.Enabled?.Value ?? false).ToArray();
-            foreach (var instance in localInstances) instance.FillDefs(serializableContentPack);
+            foreach (var instance in localInstances) instance.FillDefsFromSerializableCP(serializableContentPack);
         }
 
-        protected virtual void FillDefs(SerializableContentPack serializableContentPack) {}
+        [SystemInitializer(typeof(EquipmentCatalog), typeof(PickupCatalog))]
+        public static void InitializePickups()
+        {
+            foreach (var instance in Instances)
+            {
+                instance.FillDefsFromContentPack();
+            }
+            foreach (var instance in Instances)
+            {
+                instance.FillPickupIndex();
+            }
+        }
+        protected virtual void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack) {}
 
         protected static bool MatchName(string scriptableObject, string sharedBase)
         {
@@ -123,6 +136,15 @@ namespace BubbetsItems
             var master = PlayerCharacterMasterController.instances[0].master;
             PickupDropletController.CreatePickupDroplet(PickupIndex, master.GetBody().corePosition + Vector3.up * 1.5f, Vector3.one * 25f);
             //master.inventory.GiveItem(ItemDef.itemIndex);
+        }
+
+        [SystemInitializer(typeof(ExpansionCatalog))]
+        public static void FillAllExpansionDefs()
+        {
+            foreach (var instance in Instances)
+            {
+                instance.FillRequiredExpansions();
+            }
         }
         
         [SystemInitializer( typeof(ItemCatalog), typeof(EquipmentCatalog))]
@@ -152,5 +174,8 @@ namespace BubbetsItems
         {
             Language.languagesByName[language].SetStringByToken(_tokenPrefix + key, value);
         }*/
+        public abstract void FillRequiredExpansions();
+        protected abstract void FillDefsFromContentPack();
+        protected abstract void FillPickupIndex();
     }
 }

@@ -39,6 +39,16 @@ namespace BubbetsItems.Items
             scalingFunctions[ConfigCategoriesEnum.BalancingFunctions].Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Granularity));
         }
 
+        public override string GetFormattedDescription(Inventory inventory, string? token = null)
+        {
+            if (inventory)
+            {
+                scalingInfos[0].WorkingContext.h = inventory.GetComponent<CharacterMaster>()?.GetBody()
+                    ?.GetComponent<HealthComponent>()
+                    ?.combinedHealthFraction ?? 1f / 500f;
+            }
+            return base.GetFormattedDescription(inventory, token);
+        }
         /* TODO
         public override string GetFormattedDescription([CanBeNull] Inventory inventory) // TODO Fill this
         {
@@ -77,14 +87,14 @@ namespace BubbetsItems.Items
         {
             base.MakeBehaviours();
             GlobalEventManager.onServerDamageDealt += DamageDealt;
-            HealthComponent.onCharacterHealServer += HealServer;
+            //HealthComponent.onCharacterHealServer += HealServer;
         }
 
         protected override void DestroyBehaviours()
         {
             base.DestroyBehaviours();
             GlobalEventManager.onServerDamageDealt -= DamageDealt;
-            HealthComponent.onCharacterHealServer -= HealServer;
+            //HealthComponent.onCharacterHealServer -= HealServer;
         }
 
         /*
@@ -93,9 +103,10 @@ namespace BubbetsItems.Items
             SetBuff(healthComponent.body);
         }*/
         
-        private void HealServer(HealthComponent healthComponent, float arg2, ProcChainMask arg3)
+        [HarmonyPostfix, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.Heal))]
+        private static void HealServer(HealthComponent __instance)
         {
-            SetBuff(healthComponent.body);
+            SetBuff(__instance.body);
         }
         
         private void DamageDealt(DamageReport obj)
