@@ -33,14 +33,14 @@ namespace BubbetsItems.Items
         protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
         {
             var defaultValue = "bdBearVoidCooldown bdElementalRingsCooldown bdElementalRingVoidCooldown bdVoidFogMild bdVoidFogStrong bdVoidRaidCrabWardWipeFog";
-            buffBlacklist = configFile.Bind(ConfigCategoriesEnum.General, "Hourglass Buff Blacklist", defaultValue, "Valid values: " +  string.Join(" ", BuffCatalog.nameToBuffIndex.Keys));
+            buffBlacklist = configFile.Bind(ConfigCategoriesEnum.General, "Hourglass Buff Blacklist", defaultValue, "Blocks debuffs automatically. These are all considered buffs by the game and there is no way to tell if they're used as a timed buff it'll just do nothing if its not, Valid values: " +  string.Join(" ", BuffCatalog.nameToBuffIndex.Keys));
             buffBlacklist.SettingChanged += (_, _) => SettingChanged();
             SettingChanged();
         }
         
         private void SettingChanged()
         {
-            buffDefBlacklist = from str in buffBlacklist.Value.Split(' ') select BuffCatalog.FindBuffIndex(str) into index where index != BuffIndex.None select BuffCatalog.GetBuffDef(index);
+            buffDefBlacklist = from str in buffBlacklist.Value.Split(' ') select BuffCatalog.FindBuffIndex(str) into index where index != BuffIndex.None select BuffCatalog.GetBuffDef(index) into def where !def.isDebuff select def;
         }
 
         /*
