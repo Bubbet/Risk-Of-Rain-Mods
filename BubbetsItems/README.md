@@ -32,6 +32,10 @@ Patience is key~
   - `SOM#0001` for doing most of the icons
 
 # Changelog
+* v1.5.5 Mod Changes :
+  * Exposed the void pairings as a config value
+  * Added buff blacklist for hourglass as a config value
+  
 * v1.5.4 Mod Changes :
   * Re-enabled description in tooltip for my items. Did way too many things last patch and forgot it disabled from when i was debugging
   
