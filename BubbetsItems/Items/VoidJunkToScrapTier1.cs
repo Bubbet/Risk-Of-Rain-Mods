@@ -135,26 +135,7 @@ namespace BubbetsItems.Items
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
-			pairs.Add(new ItemDef.Pair
-			{
-				itemDef1 = DLC1Content.Items.FragileDamageBonusConsumed,
-				itemDef2 = ItemDef
-			});
-			pairs.Add(new ItemDef.Pair
-			{
-				itemDef1 = DLC1Content.Items.HealingPotionConsumed,
-				itemDef2 = ItemDef
-			});
-			pairs.Add(new ItemDef.Pair
-			{
-				itemDef1 = DLC1Content.Items.ExtraLifeVoidConsumed,
-				itemDef2 = ItemDef
-			});
-			pairs.Add(new ItemDef.Pair
-			{
-				itemDef1 = RoR2Content.Items.ExtraLifeConsumed,
-				itemDef2 = ItemDef
-			});
+			AddVoidPairing("FragileDamageBonusConsumed HealingPotionConsumed ExtraLifeVoidConsumed ExtraLifeConsumed");
 		}
 	}
 }

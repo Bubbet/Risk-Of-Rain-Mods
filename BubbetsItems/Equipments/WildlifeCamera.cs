@@ -17,8 +17,8 @@ namespace BubbetsItems.Equipments
         private ConfigEntry<bool> _filterOutBosses;
         private GameObject _indicator;
         
-        private static BuffDef _buffDef;
-        private static BuffDef BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefSepia");
+        private static BuffDef? _buffDef;
+        private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefSepia");
 
         public override bool PerformEquipment(EquipmentSlot equipmentSlot)
         { 

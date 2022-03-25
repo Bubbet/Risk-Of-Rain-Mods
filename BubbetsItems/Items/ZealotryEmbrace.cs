@@ -32,12 +32,7 @@ namespace BubbetsItems.Items
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
-			base.FillVoidConversions(pairs);
-			pairs.Add(new ItemDef.Pair
-			{
-				itemDef1 = RoR2Content.Items.DeathMark,
-				itemDef2 = ItemDef
-			});
+			AddVoidPairing("DeathMark");
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.TakeDamage))]

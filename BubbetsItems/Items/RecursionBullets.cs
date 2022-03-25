@@ -9,17 +9,12 @@ namespace BubbetsItems.Items
 	public class RecursionBullets : ItemBase
 	{
 		private static RecursionBullets _instance;
-		private static BuffDef _buffDef;
-		private static BuffDef BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefRecursionBullets");
+		private static BuffDef? _buffDef;
+		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefRecursionBullets");
 		public override bool RequiresSotv => true;
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
-			base.FillVoidConversions(pairs);
-			pairs.Add(new ItemDef.Pair
-			{
-				itemDef1 = RoR2Content.Items.BossDamageBonus,
-				itemDef2 = ItemDef
-			});
+			AddVoidPairing("BossDamageBonus");
 		}
 		public RecursionBullets()
 		{

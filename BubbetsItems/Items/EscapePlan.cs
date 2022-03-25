@@ -18,8 +18,8 @@ namespace BubbetsItems.Items
         public static ConfigEntry<float> Granularity;
         
         
-        private static BuffDef _buffDef;
-        private static BuffDef BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefEscapePlan");
+        private static BuffDef? _buffDef;
+        private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefEscapePlan");
 
         protected override void MakeConfigs()
         {

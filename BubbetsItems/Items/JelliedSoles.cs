@@ -16,7 +16,7 @@ namespace BubbetsItems.Items
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("[a] * 0.15", "Reduction");
+			AddScalingFunction("Min([a] * 0.15, 1)", "Reduction");
 		}
 
 		public JelliedSoles()

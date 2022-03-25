@@ -34,7 +34,8 @@ namespace BubbetsItems
         public static IEnumerable<ItemBase> Items => _items ??= Instances.OfType<ItemBase>();
 
         public List<ScalingInfo> scalingInfos = new();
-        
+        public List<VoidPairing> voidPairings = new();
+
         protected void AddScalingFunction(string defaultValue, string name, ExpressionContext? defaultContext = null, string? desc = null)
         {
             scalingInfos.Add(new ScalingInfo(configFile, defaultValue, name, new StackFrame(1).GetMethod().DeclaringType, defaultContext, desc));
@@ -192,6 +193,28 @@ namespace BubbetsItems
             }
         }
 
+        public class VoidPairing
+        {
+            public static string ValidEntries = string.Join(" ", ItemCatalog.itemNames);
+            private ConfigEntry<string> configEntry;
+            private ItemBase Parent;
+
+            public VoidPairing(string defaultValue, ItemBase parent)
+            {
+                Parent = parent;
+                configEntry = parent.configFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + parent.GetType().Name, defaultValue, "Valid values: " + ValidEntries);
+                configEntry.SettingChanged += (_, _) => SettingChanged();
+                SettingChanged();
+            }
+
+            private void SettingChanged()
+            {
+                var pairs = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].Where(x => x.itemDef2 != Parent.ItemDef);
+                var newPairs = from str in configEntry.Value.Split(' ') select ItemCatalog.FindItemIndex(str) into index where index != ItemIndex.None select new ItemDef.Pair {itemDef1 = ItemCatalog.GetItemDef(index), itemDef2 = Parent.ItemDef};
+                ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = pairs.Union(newPairs).ToArray();
+            }
+        }
+        
         public class ExpressionContext
         {
             // yes this is terrible but im not smart enough to figure out another way.
@@ -241,6 +264,11 @@ namespace BubbetsItems
             {
                 return Mathf.Min(x, y);
             }
+        }
+
+        public void AddVoidPairing(string defaultValue)
+        {
+            voidPairings.Add(new VoidPairing(defaultValue, this));
         }
     }
 }

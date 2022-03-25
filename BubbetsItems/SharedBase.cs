@@ -48,7 +48,9 @@ namespace BubbetsItems
                 return _sotvExpansion;
             }
         }
-        public virtual bool RequiresSotv => false;
+        
+        //This is probably bad practice
+        public virtual bool RequiresSotv => ((this as ItemBase)?.voidPairings.Count ?? 0) > 0;
         
         public virtual string GetFormattedDescription(Inventory? inventory, string? token = null)
         {

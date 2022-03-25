@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 //using Aetherium;
 using BepInEx.Bootstrap;
 using BepInEx.Configuration;
@@ -14,6 +16,10 @@ namespace BubbetsItems.Items
     {
         private MethodInfo _aetheriumOrig;
         private static Hourglass _instance;
+
+        private ConfigEntry<string> buffBlacklist;
+
+        private IEnumerable<BuffDef> buffDefBlacklist;
         //private static bool AetheriumEnabled => Chainloader.PluginInfos.ContainsKey(AetheriumPlugin.ModGuid);
 
         protected override void MakeConfigs()
@@ -21,6 +27,20 @@ namespace BubbetsItems.Items
             base.MakeConfigs();
             AddScalingFunction("[a] * 0.1 + 1.15", "Buff Duration");
             _instance = this;
+        }
+
+        // lmao i'm just going to abuse the timing of this because im lazy B)
+        protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
+        {
+            var defaultValue = "bdBearVoidCooldown bdElementalRingsCooldown bdElementalRingVoidCooldown bdVoidFogMild bdVoidFogStrong bdVoidRaidCrabWardWipeFog";
+            buffBlacklist = configFile.Bind(ConfigCategoriesEnum.General, "Hourglass Buff Blacklist", defaultValue, "Valid values: " +  string.Join(" ", BuffCatalog.nameToBuffIndex.Keys));
+            buffBlacklist.SettingChanged += (_, _) => SettingChanged();
+            SettingChanged();
+        }
+        
+        private void SettingChanged()
+        {
+            buffDefBlacklist = from str in buffBlacklist.Value.Split(' ') select BuffCatalog.FindBuffIndex(str) into index where index != BuffIndex.None select BuffCatalog.GetBuffDef(index);
         }
 
         /*
@@ -70,6 +90,7 @@ namespace BubbetsItems.Items
         private static float DoDurationPatch(CharacterBody cb, BuffDef def, float duration)
         {
             if (def.isDebuff) return duration;
+            if (_instance.buffDefBlacklist.Contains(def)) return duration;
             var inv = cb.inventory;
             if (!inv) return duration;
             var amount = cb.inventory.GetItemCount(_instance.ItemDef);

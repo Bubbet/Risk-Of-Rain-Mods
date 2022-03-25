@@ -20,6 +20,7 @@ namespace BubbetsItems.Items
 	public class ShiftedQuartz : ItemBase
 	{
 		public static ShiftedQuartz instance;
+		private ConfigEntry<string> voidMatches;
 		public override bool RequiresSotv => true;
 
 		public ShiftedQuartz()
@@ -77,11 +78,7 @@ namespace BubbetsItems.Items
 		}
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
-			pairs.Add(new ItemDef.Pair
-			{
-				itemDef1 = RoR2Content.Items.NearbyDamageBonus,
-				itemDef2 = ItemDef
-			});
+			AddVoidPairing("NearbyDamageBonus");
 		}
 	}
 }
