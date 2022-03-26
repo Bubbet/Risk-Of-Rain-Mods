@@ -157,7 +157,18 @@ namespace BubbetsItems
             }
         }
 
-        protected virtual void FillItemDisplayRules(){}
+        protected virtual void FillItemDisplayRules()
+        { /*TODO remove method body, as this is just debug placement rules
+            foreach (var key in IDRHelper.enumToBodyObjName.Keys)
+            {
+                AddDisplayRules(key, new []{new ItemDisplayRule()
+                {
+                    childName = "Chest",
+                    localScale = Vector3.one,
+                    followerPrefab = ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab ?? ((this as EquipmentBase)?.EquipmentDef as BubEquipmentDef)?.displayModelPrefab 
+                }});
+            }*/
+        }
 
         [SystemInitializer( typeof(ItemCatalog), typeof(EquipmentCatalog))]
         public static void MakeAllTokens()
