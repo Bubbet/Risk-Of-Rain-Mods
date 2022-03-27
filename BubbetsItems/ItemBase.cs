@@ -160,7 +160,7 @@ namespace BubbetsItems
                 _defaultContext.a = 1f;
                 WorkingContext = new ExpressionContext();
                 
-                _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, callingType.Name + "_" + name, defaultValue, "Scaling function for item. ;" + _description, oldDefault);
+                _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, callingType.Name + "_" + name, defaultValue,   callingType.Name + "; Scaling function for item. ;" + _description, oldDefault);
                 _oldValue = _configEntry.Value;
                 _function = new Expression(_oldValue).ToLambda<ExpressionContext, float>();
                 _configEntry.SettingChanged += EntryChanged;

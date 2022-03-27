@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using BepInEx.Configuration;
 
 namespace BubbetsItems
@@ -26,8 +27,8 @@ namespace BubbetsItems
 			if (oldDefault != null && !sharedEntry.Value.Contains(configEntry.Definition.Key + ": " + oldDefault) && Equals(configEntry.Value, (T) oldDefault))
 			{
 				configEntry.Value = (T) configEntry.DefaultValue;
-				var entries = sharedEntry.Value.Split(';').Where(x => !x.StartsWith(configEntry.Definition.Key)).ToArray();
-				sharedEntry.Value = string.Join(";", entries) +  configEntry.Definition.Key + ": " + oldDefault + "; ";
+				var entries = sharedEntry.Value.Split(new[]{";"}, StringSplitOptions.RemoveEmptyEntries).Where(x => !x.StartsWith(configEntry.Definition.Key)).ToArray();
+				sharedEntry.Value = string.Join("; ", entries) +  configEntry.Definition.Key + ": " + oldDefault + "; ";
 			}
 
 			return configEntry;
