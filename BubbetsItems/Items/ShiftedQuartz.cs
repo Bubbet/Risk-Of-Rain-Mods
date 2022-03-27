@@ -32,7 +32,7 @@ namespace BubbetsItems.Items
 		{
 			base.MakeConfigs();
 			AddScalingFunction("20", "Distance");
-			AddScalingFunction("[a] * 0.2", "Damage");
+			AddScalingFunction("[a] * 0.15", "Damage", oldDefault: "[a] * 0.2");
 		}
 
 		protected override void MakeTokens()

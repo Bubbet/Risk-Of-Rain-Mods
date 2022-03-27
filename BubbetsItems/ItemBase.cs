@@ -36,9 +36,10 @@ namespace BubbetsItems
         public List<ScalingInfo> scalingInfos = new();
         public List<VoidPairing> voidPairings = new();
 
-        protected void AddScalingFunction(string defaultValue, string name, ExpressionContext? defaultContext = null, string? desc = null)
+        protected void AddScalingFunction(string defaultValue, string name,
+            ExpressionContext? defaultContext = null, string? desc = null, string? oldDefault = null)
         {
-            scalingInfos.Add(new ScalingInfo(configFile, defaultValue, name, new StackFrame(1).GetMethod().DeclaringType, defaultContext, desc));
+            scalingInfos.Add(new ScalingInfo(configFile, defaultValue, name, new StackFrame(1).GetMethod().DeclaringType, defaultContext, desc, oldDefault));
         }
 
         public override string GetFormattedDescription([CanBeNull] Inventory inventory, string? token = null)
@@ -151,7 +152,7 @@ namespace BubbetsItems
             private readonly ExpressionContext _defaultContext;
             public readonly ExpressionContext WorkingContext;
 
-            public ScalingInfo(ConfigFile configFile, string defaultValue, string name, Type callingType, ExpressionContext? defaultContext, string? desc)
+            public ScalingInfo(ConfigFile configFile, string defaultValue, string name, Type callingType, ExpressionContext? defaultContext = null, string? desc = null, string? oldDefault = null)
             {
                 _description = desc ?? "[a] = item count";
                 _name = name;
@@ -159,7 +160,7 @@ namespace BubbetsItems
                 _defaultContext.a = 1f;
                 WorkingContext = new ExpressionContext();
                 
-                _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, callingType.Name + "_" + name, defaultValue, "Scaling function for item. ;" + _description);
+                _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, callingType.Name + "_" + name, defaultValue, "Scaling function for item. ;" + _description, oldDefault);
                 _oldValue = _configEntry.Value;
                 _function = new Expression(_oldValue).ToLambda<ExpressionContext, float>();
                 _configEntry.SettingChanged += EntryChanged;
@@ -199,10 +200,10 @@ namespace BubbetsItems
             private ConfigEntry<string> configEntry;
             private ItemBase Parent;
 
-            public VoidPairing(string defaultValue, ItemBase parent)
+            public VoidPairing(string defaultValue, ItemBase parent, string? oldDefault = null)
             {
                 Parent = parent;
-                configEntry = parent.configFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + parent.GetType().Name, defaultValue, "Valid values: " + ValidEntries);
+                configEntry = parent.configFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + parent.GetType().Name, defaultValue, "Valid values: " + ValidEntries, oldDefault);
                 configEntry.SettingChanged += (_, _) => SettingChanged();
                 SettingChanged();
             }
