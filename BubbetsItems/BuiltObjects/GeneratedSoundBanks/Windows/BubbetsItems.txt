@@ -1,0 +1,11 @@
+Event	ID	Name			Wwise Object Path	Notes
+	307722581	BrokenClock_Start			\Default Work Unit\BrokenClock_Start	
+	2116437630	WildlifeCamera_Success			\Default Work Unit\WildlifeCamera_Success	
+	2237372754	WildlifeCamera_TakePicture			\Default Work Unit\WildlifeCamera_TakePicture	
+	4248163672	BrokenClock_Break			\Default Work Unit\BrokenClock_Break	
+
+In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
+	469204133	171043__st303__mechanical-alarm-clock-is-ticking-slava	D:\Documents\WwiseProjects\BubbetsItems\.cache\Windows\SFX\171043__st303__mechanical-alarm-clock-is-ticking-slava_291FAEE5.wem		\Actor-Mixer Hierarchy\Default Work Unit\171043__st303__mechanical-alarm-clock-is-ticking-slava		2533856
+	595308455	441929__180149__laminated-paper-variation	D:\Documents\WwiseProjects\BubbetsItems\.cache\Windows\SFX\441929__180149__laminated-paper-variation_FAB3CB25.wem		\Actor-Mixer Hierarchy\Default Work Unit\441929__180149__laminated-paper-variation		679844
+	1005715064	353044__montclairguy__camera-shutter-and-flash-combined	D:\Documents\WwiseProjects\BubbetsItems\.cache\Windows\SFX\353044__montclairguy__camera-shutter-and-flash-combined_FA21C255.wem		\Actor-Mixer Hierarchy\Default Work Unit\353044__montclairguy__camera-shutter-and-flash-combined		422692
+
