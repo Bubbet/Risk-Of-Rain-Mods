@@ -7,7 +7,7 @@
 		{
 			base.MakeConfigs();
 			AddScalingFunction("1", "Vermin Count");
-			AddScalingFunction("[a] * 5", "Item Count");
+			AddScalingFunction("[a] * 5 + 5", "Item Count");
 			AddScalingFunction("0.2", "Green Item Chance"); 
 		}
 
