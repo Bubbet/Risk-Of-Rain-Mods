@@ -22,6 +22,12 @@ namespace BubbetsItems.Items
 			AddVoidPairing(nameof(DLC1Content.Items.OutOfCombatArmor));
 		}
 
+		public override string GetFormattedDescription(Inventory inventory, string? token = null)
+		{
+			scalingInfos[0].WorkingContext.b = 1; // Make tooltip not update with buff amount
+			return base.GetFormattedDescription(inventory, token);
+		}
+
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
@@ -55,6 +61,7 @@ namespace BubbetsItems.Items
 			var inv = body?.inventory;
 			var count = inv?.GetItemCount(ItemDef) ?? 0;
 			if (count <= 0) return;
+			//if (body.GetBuffCount(BuffDef) > 0) return; // Make the buff not get added again if you already have it.
 			body!.AddTimedBuff(BuffDef, scalingInfos[1].ScalingFunction(count));
 		}
 
