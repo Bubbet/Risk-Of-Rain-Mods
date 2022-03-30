@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
@@ -19,6 +21,7 @@ namespace BubbetsItems.Items
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
 			base.FillVoidConversions(pairs);
+			StackableChanged();
 			AddVoidPairing(nameof(DLC1Content.Items.OutOfCombatArmor));
 		}
 
@@ -33,6 +36,13 @@ namespace BubbetsItems.Items
 			base.MakeConfigs();
 			AddScalingFunction("([a] * 10 + 10) * [b]", "Armor amount", new ExpressionContext {b = 1}, "[a] = Item amount, [b] = Buff amount");
 			AddScalingFunction("2", "Buff Duration");
+			stackable = configFile.Bind(ConfigCategoriesEnum.General, "ScintillatingJet Buff Stackable", false, "Can the buff stack.");
+			stackable.SettingChanged += (_,_) => StackableChanged();
+		}
+
+		private void StackableChanged()
+		{
+			BuffDef!.canStack = stackable.Value;
 		}
 
 		public ScintillatingJet()
@@ -41,6 +51,7 @@ namespace BubbetsItems.Items
 		}
 		private static ScintillatingJet instance;
 		private static BuffDef? _buffDef;
+		private ConfigEntry<bool> stackable;
 		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefScintillatingJet");
 
 		protected override void MakeBehaviours()
