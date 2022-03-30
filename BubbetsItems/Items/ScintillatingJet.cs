@@ -11,8 +11,8 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("SCINTILLATINGJET_NAME", "Scintillating Jet");
-			AddToken("SCINTILLATINGJET_DESC", "Upon taking damage, gain {0} armor that rapidly decays over {1} seconds. " + "Corrupts all Oddly Shaped Opals.".Style(StyleEnum.Void));
-			AddToken("SCINTILLATINGJET_PICKUP", "Gain armor upon being hit. " + "Corrupts all Oddly Shaped Opals.".Style(StyleEnum.Void));
+			AddToken("SCINTILLATINGJET_PICKUP", "Reduce damage after getting hit. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ".");
+			AddToken("SCINTILLATINGJET_DESC", "Gain armor ".Style(StyleEnum.Heal) + "temporarily from " + "incoming damage ".Style(StyleEnum.Damage) + "for " + "{0}".Style(StyleEnum.Heal) + ", lasting {1} seconds. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ".");
 			AddToken("SCINTILLATINGJET_LORE", "");
 		}
 
@@ -61,7 +61,7 @@ namespace BubbetsItems.Items
 			var inv = body?.inventory;
 			var count = inv?.GetItemCount(ItemDef) ?? 0;
 			if (count <= 0) return;
-			//if (body.GetBuffCount(BuffDef) > 0) return; // Make the buff not get added again if you already have it.
+			if (body.GetBuffCount(BuffDef) > 0) return; // Make the buff not get added again if you already have it.
 			body!.AddTimedBuff(BuffDef, scalingInfos[1].ScalingFunction(count));
 		}
 
