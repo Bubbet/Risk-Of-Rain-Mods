@@ -1,4 +1,13 @@
-﻿namespace BubbetsItems.Items
+﻿using System;
+using BepInEx.Configuration;
+using BubbetsItems.Helpers;
+using HarmonyLib;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
+using RoR2;
+using UnityEngine;
+
+namespace BubbetsItems.Items
 {
 	public class AcidSoakedBlindfold : ItemBase
 	{
@@ -13,11 +22,12 @@
 
 		protected override void MakeTokens()
 		{
+			// Where III is located in ACIDSOAKEDBLINDFOLD_DESC, create a new config for spawn time please
 			base.MakeTokens();
 			AddToken("ACIDSOAKEDBLINDFOLD_NAME", "Acid Soaked Blindfold");
-			AddToken("ACIDSOAKEDBLINDFOLD_DESC", "Gain {0} blind vermin ally with {1} green or white items.");
-			AddToken("ACIDSOAKEDBLINDFOLD_PICKUP", "Gain a blind vermin ally.");
-			AddToken("ACIDSOAKEDBLINDFOLD_LORE", "");
+			AddToken("ACIDSOAKEDBLINDFOLD_PICKUP", "Recruit a Blind Vermin with items.");
+			AddToken("ACIDSOAKEDBLINDFOLD_DESC", "Every III seconds, " + "summon a Blind Vermin".Style(StyleEnum.Utility) + "with " + "{1} ".Style(StyleEnum.Utility) + "Common ".Style(StyleEnum.White) + "or " + "Uncommon ".Style(StyleEnum.Green) + "items.");
+			AddToken("ACIDSOAKEDBLINDFOLD_LORE", "What is that smell?");
 		}
 
 		public AcidSoakedBlindfold()
