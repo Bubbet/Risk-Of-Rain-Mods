@@ -1,9 +1,0 @@
-﻿using RoR2;
-
-namespace BubbetsItems.Items
-{
-	public class BunnyFoot : ItemBase
-	{
-		
-	}
-}
