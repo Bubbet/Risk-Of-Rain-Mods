@@ -11,7 +11,7 @@ namespace BubbetsItems.ItemBehaviors
 	public class ShiftedQuartzBehavior : BaseItemBodyBehavior
 	{
 
-		[ItemDefAssociation(useOnServer = true, useOnClient = false)]
+		[ItemDefAssociation(useOnServer = true, useOnClient = true)]
 		private static ItemDef GetItemDef()
 		{
 			return ShiftedQuartz.instance.ItemDef;
