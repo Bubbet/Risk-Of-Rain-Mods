@@ -32,6 +32,12 @@ Patience is key~
   - `SOM#0001` for doing most of the icons
 
 # Changelog
+* v1.6.0 Mod Changes :
+  * Fixed cooldown for broken clock
+  * Ported bunny foot to this mod from my other depreciated mod.
+  * Added new red item Acid Soaked Blindfold, spawn a blind vermin ally with random items.   
+  * Added new void tier 1 item Scintillating Jet, consumes opals by default
+
 * v1.5.5 Mod Changes :
   * Exposed the void pairings as a config value
   * Added buff blacklist for hourglass as a config value

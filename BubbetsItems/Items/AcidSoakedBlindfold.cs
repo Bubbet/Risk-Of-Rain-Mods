@@ -1,11 +1,4 @@
-﻿using System;
-using BepInEx.Configuration;
-using BubbetsItems.Helpers;
-using HarmonyLib;
-using Mono.Cecil.Cil;
-using MonoMod.Cil;
-using RoR2;
-using UnityEngine;
+﻿using BubbetsItems.Helpers;
 
 namespace BubbetsItems.Items
 {
