@@ -58,12 +58,24 @@ namespace BubbetsItems.Items
 		{
 			base.MakeBehaviours();
 			GlobalEventManager.onServerDamageDealt += DamageDealt;
+			Inventory.onInventoryChangedGlobal += CleanupOpal;
 		}
 
 		protected override void DestroyBehaviours()
 		{
 			base.DestroyBehaviours();
 			GlobalEventManager.onServerDamageDealt -= DamageDealt;
+			Inventory.onInventoryChangedGlobal -= CleanupOpal;
+		}
+		
+		private void CleanupOpal(Inventory obj)
+		{
+			if (obj.GetItemCount(DLC1Content.Items.OutOfCombatArmor) == 0)
+			{
+				var body = obj.GetComponent<CharacterMaster>()?.GetBody();
+				if (body && body!.HasBuff(DLC1Content.Buffs.OutOfCombatArmorBuff))
+					body.RemoveBuff(DLC1Content.Buffs.OutOfCombatArmorBuff);
+			}
 		}
 
 		private void DamageDealt(DamageReport obj)
