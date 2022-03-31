@@ -42,8 +42,8 @@ namespace BubbetsItems.Equipments
         public override bool PerformEquipment(EquipmentSlot equipmentSlot)
         {
             base.PerformEquipment(equipmentSlot);
-            equipmentSlot.inventory.GetComponent<BrokenClockBehaviour>().ToggleReversing();
-            return true;
+            ConfigUpdate();
+            return equipmentSlot.inventory.GetComponent<BrokenClockBehaviour>().ToggleReversing();
         }
 
         public override void OnUnEquip(Inventory inventory, EquipmentState newEquipmentState)
@@ -62,14 +62,26 @@ namespace BubbetsItems.Equipments
         {
             base.MakeConfigs();
             cooldown = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Cooldown", 60f, "Broken Clock equipment cooldown.", 5f);
+            cooldown.SettingChanged += (_, _) => ConfigUpdate();
             duration = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Buffer Duration", 10f, "Duration of time to store in the broken clock.");
+            duration.SettingChanged += (_, _) => ConfigUpdate();
             interval = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Keyframe Interval", 0.25f, "How often to capture a keyframe and store it. Also determines the size of the stack in conjunction with the duration. duration/interval = size size takes memory so try to keep it small enough.");
+            interval.SettingChanged += (_, _) => ConfigUpdate();
+            ConfigUpdate();
+        }
+
+        private void ConfigUpdate()
+        {
+            if (EquipmentDef != null)
+                EquipmentDef.cooldown = cooldown.Value;
+            BrokenClockBehaviour.stackDuration = duration.Value;
+            BrokenClockBehaviour.keyframeInterval = interval.Value;
         }
 
         protected override void PostEquipmentDef()
         {
             base.PostEquipmentDef();
-            EquipmentDef.cooldown = cooldown.Value;
+            ConfigUpdate();
         }
 
         
@@ -81,15 +93,12 @@ namespace BubbetsItems.Equipments
             
             var cool = new FloatConfigField(cooldown.Definition.Key, () => cooldown.Value, newValue => {
                 cooldown.Value = newValue;
-                EquipmentDef.cooldown = newValue;
             });
             var dura = new FloatConfigField(duration.Definition.Key, () => duration.Value, newValue => {
                 duration.Value = newValue;
-                BrokenClockBehaviour.stackDuration = newValue;
             });
             var inte = new FloatConfigField(interval.Definition.Key, () => interval.Value, newValue => {
                 interval.Value = newValue;
-                BrokenClockBehaviour.keyframeInterval = newValue;
             });
             general.Add(cool);
             general.Add(dura);
@@ -118,16 +127,17 @@ namespace BubbetsItems.Equipments
 
         public DropoutStack<BrokenClockKeyframe> dropoutStack = new DropoutStack<BrokenClockKeyframe>(Mathf.RoundToInt(stackDuration/keyframeInterval));
         
-        public void ToggleReversing()
+        public bool ToggleReversing()
         {
             reversing = !reversing;
             AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
-            if (!reversing) return;
+            if (!reversing) return true;
             AkSoundEngine.PostEvent("BrokenClock_Start", Body.gameObject);
-            if (!Body.hasEffectiveAuthority) return;
-            AddOneStock();
+            if (!Body.hasEffectiveAuthority) return true;
+            //AddOneStock(); // TODO does not work on clients, probably because we arent reaching here because its only ran on server?
             _previousKeyframe = MakeKeyframe();
             _currentTargetKeyframe = dropoutStack.Pop();
+            return false;
         }
 
         public void Awake()
@@ -172,6 +182,7 @@ namespace BubbetsItems.Equipments
             keyframe.Health = HealthComponent.health;
             keyframe.Barrier = HealthComponent.barrier;
             keyframe.Shield = HealthComponent.shield;
+            if (!CharacterMotor) return keyframe;
             keyframe.Position = CharacterMotor.transform.position;
             keyframe.Velocity = (CharacterMotor as IPhysMotor).velocity;
             
