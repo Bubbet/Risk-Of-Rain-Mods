@@ -103,7 +103,7 @@ namespace BubbetsItems
             foreach (var instance in localInstances) instance.FillDefsFromSerializableCP(serializableContentPack);
         }
 
-        [NotSystemInitializer(typeof(EquipmentCatalog), typeof(PickupCatalog))]
+        [SystemInitializer(typeof(EquipmentCatalog), typeof(PickupCatalog))]
         public static void InitializePickups()
         {
             foreach (var instance in Instances)
@@ -139,7 +139,7 @@ namespace BubbetsItems
             //master.inventory.GiveItem(ItemDef.itemIndex);
         }
 
-        [NotSystemInitializer(typeof(ExpansionCatalog))]
+        [SystemInitializer(typeof(ExpansionCatalog))]
         public static void FillAllExpansionDefs()
         {
             foreach (var instance in Instances)
@@ -148,7 +148,7 @@ namespace BubbetsItems
             }
         }
 
-        [NotSystemInitializer(typeof(BodyCatalog))]
+        [SystemInitializer(typeof(BodyCatalog))]
         public static void FillIDRS()
         {
             foreach (var instance in Instances)
@@ -170,7 +170,7 @@ namespace BubbetsItems
             }*/
         }
 
-        [NotSystemInitializer( typeof(ItemCatalog), typeof(EquipmentCatalog))]
+        [SystemInitializer( typeof(ItemCatalog), typeof(EquipmentCatalog))]
         public static void MakeAllTokens()
         {
             foreach (var item in Instances)
