@@ -21,12 +21,12 @@ namespace WhatAmILookingAt
 
 				string? str = WhatAmILookingAtPlugin.GetModString(identifier);
 				
-				
+				/*
 				if (WhatAmILookingAtPlugin.TILER2Enabled) // Yes, i hate it too.
 				{
 					if (ExternalAPICompat.GetPluginFromTiler2(__instance.bodyToken, out var plu))
 						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", WhatAmILookingAtPlugin.TextColor!.Value, plu!.Name);
-				}
+				}*/
 
 				if (str != null)
 					__result += "\n\n" + str;

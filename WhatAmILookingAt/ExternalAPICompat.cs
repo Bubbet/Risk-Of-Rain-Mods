@@ -45,7 +45,7 @@ namespace WhatAmILookingAt
 			return false;
 		}
 		
-		
+		/*
 		public static readonly Dictionary<object, Assembly> Tiler2Map = new Dictionary<object, Assembly>();
 		
 		public static void Tiler2AddItemToList(Item __instance)
@@ -70,11 +70,22 @@ namespace WhatAmILookingAt
 		{
 			if (ItemCatalog.itemDefs.TryFirst(x => x.descriptionToken == s || x.pickupToken == s, out var itemDef))
 			{
-				if (WhatAmILookingAtPlugin.GetPluginFromAssembly(Tiler2Map[itemDef], out var plugin))
-				{
-					o = plugin;
-					return true;
-				}
+				if (Tiler2Map.ContainsKey(itemDef))
+					if (WhatAmILookingAtPlugin.GetPluginFromAssembly(Tiler2Map[itemDef], out var plugin))
+					{
+						o = plugin;
+						return true;
+					}
+			}
+			
+			if (EquipmentCatalog.equipmentDefs.TryFirst(x => x.descriptionToken == s || x.pickupToken == s, out var eqDef))
+			{
+				if (Tiler2Map.ContainsKey(eqDef))
+					if (WhatAmILookingAtPlugin.GetPluginFromAssembly(Tiler2Map[eqDef], out var plugin))
+					{
+						o = plugin;
+						return true;
+					}
 			}
 			o = default;
 			return false;
@@ -90,5 +101,6 @@ namespace WhatAmILookingAt
 			patch = typeof(Equipment).GetMethod(nameof(Equipment.SetupAttributes));
 			harm.Patch(patch, null, new HarmonyMethod(method));
 		}
+		*/
 	}
 }

@@ -26,3 +26,9 @@
 
 1.3.0
 - Initial Tiler2 Support
+
+1.3.1
+- Fixed nre in tiler2 support
+
+1.3.2
+- Dropped support for tiler2 because it was somehow breaking systemintializers and i dont care enough to find out why
