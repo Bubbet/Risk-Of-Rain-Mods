@@ -13,8 +13,8 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("SCINTILLATINGJET_NAME", "Scintillating Jet");
-			AddToken("SCINTILLATINGJET_PICKUP", "Reduce damage after getting hit. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ".");
-			AddToken("SCINTILLATINGJET_DESC", "Gain armor ".Style(StyleEnum.Heal) + "temporarily from " + "incoming damage ".Style(StyleEnum.Damage) + "for " + "{0}".Style(StyleEnum.Heal) + ", lasting {1} seconds. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ".");
+			AddToken("SCINTILLATINGJET_PICKUP", "Reduce damage temporarily after getting hit. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ".");
+			AddToken("SCINTILLATINGJET_DESC", "Getting hit " + "increases armor ".Style(StyleEnum.Heal) + "by " + "{0} ".Style(StyleEnum.Heal) + "for {1} seconds. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ".");
 			AddToken("SCINTILLATINGJET_LORE", "");
 		}
 
