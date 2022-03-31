@@ -55,6 +55,8 @@ namespace BubbetsItems
             new PatchClassProcessor(harm, typeof(EquipmentBase)).Patch();
             new PatchClassProcessor(harm, typeof(ItemBase)).Patch(); // Only used for filling void items.
             
+            NotSystemInitializer.Hook(harm);
+            
             //Fucking bepinex pack constantly changing and now loading too late for searchableAttributes scan.
             //it changed again and no longer needs this
             //SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());

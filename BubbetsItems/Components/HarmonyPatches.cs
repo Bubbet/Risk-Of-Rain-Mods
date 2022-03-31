@@ -1,10 +1,8 @@
-﻿using System.Reflection;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
 using RoR2.Orbs;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace BubbetsItems
@@ -34,7 +32,7 @@ namespace BubbetsItems
         }
         private static void DoAmmoPickupAsOrb(DamageReport report)
         {
-	        OrbManager.instance.AddOrb(new AmmoPickupOrb {
+            OrbManager.instance.AddOrb(new AmmoPickupOrb {
                 origin = report.victim.transform.position,
                 target = report.attackerBody.mainHurtBox,
             });
