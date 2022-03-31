@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="R2API" Version="4.2.1" />
         <PackageReference Include="RiskOfRain2" Version="1.0.6" />
         <PackageReference Include="BepInEx.Core" Version="5.4.19" />
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
@@ -18,6 +19,9 @@
       </Reference>
       <Reference Include="R2API, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\Libs\R2API.dll</HintPath>
+      </Reference>
+      <Reference Include="TILER2, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\Libs\TILER2.dll</HintPath>
       </Reference>
     </ItemGroup>
 

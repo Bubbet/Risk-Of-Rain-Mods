@@ -23,3 +23,6 @@
 1.2.0
 - Support for DLC 1
 - Probably support for r2api when that comes too
+
+1.3.0
+- Initial Tiler2 Support

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using HarmonyLib;
+using RoR2;
 using RoR2.ContentManagement;
 using RoR2.UI;
 
@@ -17,7 +18,15 @@ namespace WhatAmILookingAt
 			{
 				var identifier = WhatAmILookingAtPlugin.FindItem(__instance, __result); // WhatAmILookingAtPlugin.GetIdentifier();
 				if (identifier == null) return;
+
 				string? str = WhatAmILookingAtPlugin.GetModString(identifier);
+				
+				
+				if (WhatAmILookingAtPlugin.TILER2Enabled) // Yes, i hate it too.
+				{
+					if (ExternalAPICompat.GetPluginFromTiler2(__instance.bodyToken, out var plu))
+						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", WhatAmILookingAtPlugin.TextColor!.Value, plu!.Name);
+				}
 
 				if (str != null)
 					__result += "\n\n" + str;

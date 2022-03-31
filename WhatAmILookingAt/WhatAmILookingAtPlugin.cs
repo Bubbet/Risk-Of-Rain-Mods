@@ -22,8 +22,9 @@ using RoR2.UI;
 namespace WhatAmILookingAt
 {
 	// needs to be prefixed with aaaa so it loads before all the mods that require r2api
-	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.2.0")]
+	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.3.0")]
 	[BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.SoftDependency)]
+	[BepInDependency("com.ThinkInvisible.TILER2", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterAPI", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
 	public class WhatAmILookingAtPlugin : BaseUnityPlugin
@@ -37,6 +38,7 @@ namespace WhatAmILookingAt
 		public static bool BetterUIEnabled;
 		public static bool BetterAPIEnabled;
 		public static bool R2APIEnabled;
+		public static bool TILER2Enabled;
 
 		/// <summary>
 		/// Contentpack Identifier to BepinPluginMap
@@ -60,7 +62,13 @@ namespace WhatAmILookingAt
 			
 			BetterAPIEnabled = Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterAPI");
 			BetterUIEnabled = Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterUI");
-			R2APIEnabled = Chainloader.PluginInfos.ContainsKey("com.bepis.r2api");
+			R2APIEnabled = Chainloader.PluginInfos.ContainsKey("com.bepis.r2api"); 
+			TILER2Enabled = Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.TILER2");
+			
+			if (TILER2Enabled)
+			{
+				ExternalAPICompat.PatchTiler2(harm);
+			}
 
 			RoR2Application.onLoad += ExtraTokens;
 			TextColor = Config.Bind("General", "Text Color", "#0055FF", "Color of the text displaying what mod something is from.");
