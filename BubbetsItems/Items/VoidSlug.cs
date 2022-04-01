@@ -15,7 +15,7 @@ namespace BubbetsItems.Items
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
-			AddToken("VOIDSLUG_NAME", "Void Slug");
+			AddToken("VOIDSLUG_NAME", "Adrenaline Sprout");
 			AddToken("VOIDSLUG_DESC", "Gain {0} regen per missing health. When in danger." + "Corrupts all Cautious Slug".Style(StyleEnum.Void));
 			AddToken("VOIDSLUG_PICKUP", "Gain regen for missing health. When in danger.");
 			AddToken("VOIDSLUG_LORE", "");
