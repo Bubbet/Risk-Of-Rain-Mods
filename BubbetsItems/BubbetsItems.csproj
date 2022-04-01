@@ -9,15 +9,10 @@
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.4.19" />
         <PackageReference Include="KinematicCharacterController" Version="1.0.0" />
+        <PackageReference Include="KingEnderBrine-InLobbyConfig" Version="1.4.0" />
         <PackageReference Include="RiskOfRain2" Version="1.0.6" />
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
         <PackageReference Include="CoreCLR-NCalc" Version="2.2.92" />
-    </ItemGroup>
-
-    <ItemGroup>
-		<Reference Include="InLobbyConfig">
-			<HintPath>..\Libs\InLobbyConfig.dll</HintPath>
-		</Reference>
     </ItemGroup>
 
 </Project>
