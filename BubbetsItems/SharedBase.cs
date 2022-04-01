@@ -118,7 +118,7 @@ namespace BubbetsItems
 
         protected static bool MatchName(string scriptableObject, string sharedBase)
         {
-            return scriptableObject.EndsWith(sharedBase);
+            return scriptableObject.StartsWith(sharedBase) || scriptableObject.StartsWith("ItemDef" + sharedBase) || scriptableObject.StartsWith("EquipmentDef" + sharedBase);
         }
 
         public static void AddContentPack(ContentPack contentPack)
