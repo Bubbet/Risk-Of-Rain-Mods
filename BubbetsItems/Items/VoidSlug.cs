@@ -51,7 +51,7 @@ namespace BubbetsItems.Items
 		public static void RecalcStats(CharacterBody __instance)
 		{
 			var count = __instance.inventory?.GetItemCount(Instance.ItemDef) ?? 0;
-			if (count <= 0) return;
+			if (count <= 0 || __instance.outOfDanger) return;
 			var info = Instance.scalingInfos[0];
 			info.WorkingContext.h = __instance.healthComponent.missingCombinedHealth;
 			__instance.regen += info.ScalingFunction(count);
