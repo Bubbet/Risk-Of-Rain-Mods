@@ -35,9 +35,9 @@ namespace BubbetsItems
         private string? _tokenPrefix;
         
         private static ExpansionDef? _sotvExpansion;
-        protected ConfigFile configFile;
-        protected ConfigEntry<bool> expandedTooltips;
-        public ConfigEntry<bool> descInPickup;
+        protected ConfigFile? configFile;
+        protected ConfigEntry<bool>? expandedTooltips;
+        public ConfigEntry<bool>? descInPickup;
 
         public static ExpansionDef? SotvExpansion
         {
