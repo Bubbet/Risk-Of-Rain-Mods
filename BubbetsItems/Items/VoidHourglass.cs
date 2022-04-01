@@ -17,16 +17,16 @@ namespace BubbetsItems.Items
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
-			AddToken("VOIDHOURGLASS_NAME", "");
-			AddToken("VOIDHOURGLASS_DESC", "Increase the duration of your inflicted DOTs by {0:0%}. " + "Corrupts all Abundant Hourglasses.".Style(StyleEnum.Void));
-			AddToken("VOIDHOURGLASS_PICKUP", "");
+			AddToken("VOIDHOURGLASS_NAME", "Deficient Clepsydra");
+			AddToken("VOIDHOURGLASS_DESC", "The duration of your inflicted Damage Over Times are multiplied by {0}. " + "Corrupts all Abundant Hourglasses.".Style(StyleEnum.Void));
+			AddToken("VOIDHOURGLASS_PICKUP", "Duration of inflicted debuffs are extended.");
 			AddToken("VOIDHOURGLASS_LORE", "");
 		}
 
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("0.05 + 0.05 * [a]", "Debuff Duration");
+			AddScalingFunction("1.15 + 0.1 * [a]", "Debuff Duration");
 		}
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
@@ -41,7 +41,7 @@ namespace BubbetsItems.Items
 			var aBody = attackerObject.GetComponent<CharacterBody>();
 			var count = aBody.inventory?.GetItemCount(Instance.ItemDef) ?? 0;
 			if (count <= 0) return;
-			duration *= 1f + Instance.scalingInfos[0].ScalingFunction(count);
+			duration *= Instance.scalingInfos[0].ScalingFunction(count);
 		}
 	}
 }
