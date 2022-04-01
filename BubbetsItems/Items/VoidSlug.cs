@@ -39,6 +39,14 @@ namespace BubbetsItems.Items
 			return base.GetFormattedDescription(inventory, token);
 		}
 
+		[HarmonyPostfix, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.Heal))]
+		private static void HealServer(HealthComponent __instance)
+		{
+			var count = __instance.body?.inventory?.GetItemCount(Instance.ItemDef) ?? 0;
+			if (count <= 0 || __instance.missingCombinedHealth < 0.1f) return;
+			__instance.body?.RecalculateStats();
+		}
+
 		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
 		public static void RecalcStats(CharacterBody __instance)
 		{
