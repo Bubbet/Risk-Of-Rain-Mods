@@ -12,6 +12,15 @@ namespace BubbetsItems.Items
 			Instance = this;
 		}
 
+		protected override void MakeTokens()
+		{
+			base.MakeTokens();
+			AddToken("PROCCOEFFICENTINCREASE_NAME", "");
+			AddToken("PROCCOEFFICENTINCREASE_DESC", "Multiplies proc coefficient on all your attacks by {0}.");
+			AddToken("PROCCOEFFICENTINCREASE_PICKUP", "");
+			AddToken("PROCCOEFFICENTINCREASE_LORE", "");
+		}
+
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
@@ -19,7 +28,7 @@ namespace BubbetsItems.Items
 		}
 
 		[HarmonyPrefix, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.TakeDamage))]
-		public static void ApplyCoefficent(HealthComponent __instance, ref DamageInfo damageInfo)
+		public static void ApplyCoefficient(HealthComponent __instance, ref DamageInfo damageInfo)
 		{
 			var count = damageInfo.attacker?.GetComponent<CharacterBody>()?.inventory?.GetItemCount(Instance.ItemDef) ?? 0;
 			if (count <= 0) return;
