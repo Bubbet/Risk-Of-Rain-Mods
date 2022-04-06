@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
@@ -13,14 +14,26 @@ namespace BubbetsItems.Items
 	public class VoidJunkToScrapTier1 : ItemBase
 	{
 		private static VoidJunkToScrapTier1? _instance;
+		private static ConfigEntry<bool> canConsumeLastStack;
 		public override bool RequiresSotv => true;
+
+		protected override void MakeConfigs()
+		{
+			base.MakeConfigs();
+			canConsumeLastStack = configFile!.Bind(ConfigCategoriesEnum.General, "Void Scrap Consume Last Stack", false, "Should the void scrap consume the last stack when being used for scrap.");
+		}
+
+		public override string GetFormattedDescription(Inventory inventory, string? token = null)
+		{
+			return Language.GetStringFormatted(ItemDef.descriptionToken, !canConsumeLastStack.Value ? "Cannot consume the last stack." : "");
+		}
 
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
 			AddToken("VOIDJUNKTOSCRAPTIER1_NAME", "Void Scrap");
 			AddToken("VOIDJUNKTOSCRAPTIER1_PICKUP", "Prioritized when used with " + "Common ".Style(StyleEnum.White) + "3D Printers. " + "Corrupts all Broken items".Style(StyleEnum.Void) + ".");
-			AddToken("VOIDJUNKTOSCRAPTIER1_DESC", "Does nothing. " + "Prioritized when used with " + "Common ".Style(StyleEnum.White) + "3D Printers. " + "Corrupts all Broken items".Style(StyleEnum.Void) + ".");
+			AddToken("VOIDJUNKTOSCRAPTIER1_DESC", "Does nothing. " + "Prioritized when used with " + "Common ".Style(StyleEnum.White) + "3D Printers. " + "Corrupts all Broken items".Style(StyleEnum.Void) + ". {0}");
 			AddToken("VOIDJUNKTOSCRAPTIER1_LORE", "");
 		}
 
@@ -43,7 +56,7 @@ namespace BubbetsItems.Items
 					{
 						if (typeDef.itemTier != ItemTier.Tier1) return false;
 						var inv = context.activator.GetComponent<CharacterBody>().inventory;
-						var voidAmount = Math.Max(0, inv.GetItemCount(_instance.ItemDef) - 1);
+						var voidAmount = Math.Max(0, inv.GetItemCount(_instance.ItemDef) - (canConsumeLastStack.Value ? 0 : 1));
 						return inv.GetTotalItemCountOfTier(ItemTier.Tier1) + voidAmount >= context.cost;
 					}
 					catch (Exception e)
@@ -71,7 +84,7 @@ namespace BubbetsItems.Items
 						var normalPriority = new WeightedSelection<ItemIndex>();
 						
 						var voidAmount = Math.Max(0, inv.GetItemCount(_instance.ItemDef) - 1);
-						if (voidAmount > 0)
+						if (canConsumeLastStack.Value || voidAmount > 0)
 							highestPriority.AddChoice(_instance.ItemDef.itemIndex, voidAmount);
 						
 						foreach (var itemIndex in ItemCatalog.tier1ItemList)
