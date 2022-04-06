@@ -19,16 +19,16 @@ namespace BubbetsItems.Items
 		{
 			base.MakeConfigs();
 			AddScalingFunction("[a] * 1.5", "Air Control");
-			AddScalingFunction("0.25", "On Ground Mercy");
+			AddScalingFunction("0.15", "On Ground Mercy");
 			AddScalingFunction("1", "Jump velocity retention");
-			AddScalingFunction("[a] * 0.5", "Jump Acceleration");
+			AddScalingFunction("[a] * 0.5", "Jump Control");
 		}
 
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
 			AddToken("BUNNYFOOT_NAME", "Bunny Foot");
-			AddToken("BUNNYFOOT_DESC", "You gain the ability to bunny hop. Air control: {0}");
+			AddToken("BUNNYFOOT_DESC", "You gain the ability to bunny hop. Air control: {0}, Jump control: {3}");
 			AddToken("BUNNYFOOT_PICKUP", "Your little feets start quivering.");
 			AddToken("BUNNYFOOT_LORE", "haha source go brrrr");
 		}

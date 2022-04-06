@@ -37,6 +37,7 @@ Patience is key~
   * Ported bunny foot to this mod from my other depreciated mod.
   * Added new red item Acid Soaked Blindfold, spawn a blind vermin ally with random items.   
   * Added new void tier 1 item Scintillating Jet, consumes opals by default
+  * Added new void tier 1 item Adrenaline Sprout, consumes cautious slug by default
 
 * v1.5.5 Mod Changes :
   * Exposed the void pairings as a config value

@@ -25,7 +25,7 @@ namespace BubbetsItems.Items
 
 		public override string GetFormattedDescription(Inventory inventory, string? token = null)
 		{
-			return Language.GetStringFormatted(ItemDef.descriptionToken, !canConsumeLastStack.Value ? "Cannot consume the last stack." : "");
+			return Language.GetStringFormatted(ItemDef.descriptionToken, !canConsumeLastStack.Value ? "Cannot consume the last stack. " : "");
 		}
 
 		protected override void MakeTokens()
@@ -33,7 +33,7 @@ namespace BubbetsItems.Items
 			base.MakeTokens();
 			AddToken("VOIDJUNKTOSCRAPTIER1_NAME", "Void Scrap");
 			AddToken("VOIDJUNKTOSCRAPTIER1_PICKUP", "Prioritized when used with " + "Common ".Style(StyleEnum.White) + "3D Printers. " + "Corrupts all Broken items".Style(StyleEnum.Void) + ".");
-			AddToken("VOIDJUNKTOSCRAPTIER1_DESC", "Does nothing. " + "Prioritized when used with " + "Common ".Style(StyleEnum.White) + "3D Printers. " + "Corrupts all Broken items".Style(StyleEnum.Void) + ". {0}");
+			AddToken("VOIDJUNKTOSCRAPTIER1_DESC", "Does nothing. " + "Prioritized when used with " + "Common ".Style(StyleEnum.White) + "3D Printers. {0}" + "Corrupts all Broken items".Style(StyleEnum.Void) + ".");
 			AddToken("VOIDJUNKTOSCRAPTIER1_LORE", "");
 		}
 
