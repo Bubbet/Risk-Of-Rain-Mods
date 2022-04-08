@@ -38,6 +38,9 @@ Patience is key~
   * Added new red item Acid Soaked Blindfold, spawn a blind vermin ally with random items.   
   * Added new void tier 1 item Scintillating Jet, consumes opals by default
   * Added new void tier 1 item Adrenaline Sprout, consumes cautious slug by default
+  * Made the indicator for enemies being inside shifted quartz more useful
+  * Buffed shifted quartz from 20m to 18m
+  * Added two new config entiries for zealotry embrace, only track your dots, and dots only count for one stack
 
 * v1.5.5 Mod Changes :
   * Exposed the void pairings as a config value
