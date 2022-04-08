@@ -50,13 +50,14 @@ namespace BubbetsItems.Items
 		private void OnDamage(DamageReport obj)
 		{
 			if (!obj.victimIsBoss) return;
-			// ReSharper disable thrice Unity.NoNullPropagation
-			var body = obj.attacker?.GetComponent<CharacterBody>();
+			if (!obj.attacker) return;
+			var body = obj.attacker.GetComponent<CharacterBody>();
 			var inv = body?.inventory;
-			var amount = inv?.GetItemCount(ItemDef) ?? 0;
+			if (!inv) return;
+			var amount = inv!.GetItemCount(ItemDef);
 			if (amount <= 0) return;
 			
-			body.AddTimedBuff(BuffDef, scalingInfos[2].ScalingFunction(amount), Mathf.FloorToInt(scalingInfos[1].ScalingFunction(amount) / scalingInfos[0].ScalingFunction(amount)));
+			body!.AddTimedBuff(BuffDef, scalingInfos[2].ScalingFunction(amount), Mathf.FloorToInt(scalingInfos[1].ScalingFunction(amount) / scalingInfos[0].ScalingFunction(amount)));
 		}
 		
 		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
