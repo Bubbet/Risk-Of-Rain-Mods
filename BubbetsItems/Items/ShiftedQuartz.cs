@@ -1,31 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using BepInEx.Configuration;
+using BubbetsItems.Bases;
 using BubbetsItems.Helpers;
 using BubbetsItems.ItemBehaviors;
 using HarmonyLib;
-using InLobbyConfig;
-using InLobbyConfig.Fields;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using NCalc.Domain;
 using RoR2;
-using UnityEngine;
 
 namespace BubbetsItems.Items
 {
 	public class ShiftedQuartz : ItemBase
 	{
-		public static ShiftedQuartz instance;
-		private ConfigEntry<string> voidMatches;
+		public static ShiftedQuartz? Instance;
 		public override bool RequiresSotv => true;
 
 		public ShiftedQuartz()
 		{
-			instance = this;
+			Instance = this;
 		}
 
 		protected override void MakeConfigs()
@@ -42,12 +35,6 @@ namespace BubbetsItems.Items
 			AddToken("SHIFTEDQUARTZ_PICKUP", "Deal bonus damage if there aren't nearby enemies. " + "Corrupts all Focus Crystals".Style(StyleEnum.Void) + ".");
 			AddToken("SHIFTEDQUARTZ_DESC", "Increase damage dealt by " + "{1:0%} ".Style(StyleEnum.Damage) + "when there are no enemies within " + "{0}m ".Style(StyleEnum.Damage) + "of you. " + "Corrupts all Focus Crystals".Style(StyleEnum.Void) + ".");
 			AddToken("SHIFTEDQUARTZ_LORE", "");
-		}
-
-		public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
-		{
-			base.MakeInLobbyConfig(scalingFunctions);
-			//list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(scalingInfos[0].)); TODO
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.TakeDamage))]
@@ -67,11 +54,11 @@ namespace BubbetsItems.Items
 			c.Emit(OpCodes.Ldloc, num2);
 			c.EmitDelegate<Func<CharacterBody, float, float>>((body, amount) =>
 			{
-				var count = body.inventory.GetItemCount(instance.ItemDef);
+				var count = body.inventory.GetItemCount(Instance!.ItemDef);
 				if (count <= 0) return amount;
 				var inside = body.GetComponent<ShiftedQuartzBehavior>().inside; // TODO this might not exist in scope and may throw errors in multiplayer
 				if (!inside)
-					amount *= 1f + instance.scalingInfos[1].ScalingFunction(count); // 1f + count * 0.2f
+					amount *= 1f + Instance.ScalingInfos[1].ScalingFunction(count); // 1f + count * 0.2f
 				return amount;
 			});
 			c.Emit(OpCodes.Stloc, num2);

@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BepInEx.Configuration;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using InLobbyConfig.Fields;
-using JetBrains.Annotations;
 using NCalc;
 using RoR2;
 using RoR2.ContentManagement;
-using RoR2.ExpansionManagement;
 using RoR2.Items;
 using UnityEngine;
 
 #nullable enable
 
-namespace BubbetsItems
+namespace BubbetsItems.Bases
 {
     [HarmonyPatch]
     public abstract class ItemBase : SharedBase
@@ -25,40 +25,40 @@ namespace BubbetsItems
         protected override void MakeConfigs()
         {
             var name = GetType().Name;
-            Enabled = configFile.Bind("Disable Items", name, true, "Should this item be enabled.");
+            Enabled = configFile!.Bind("Disable Items", name, true, "Should this item be enabled.");
         }
 
-        public ItemDef ItemDef;
+        public ItemDef? ItemDef;
 
         private static IEnumerable<ItemBase>? _items;
         public static IEnumerable<ItemBase> Items => _items ??= Instances.OfType<ItemBase>();
 
-        public List<ScalingInfo> scalingInfos = new();
-        public List<VoidPairing> voidPairings = new();
+        public readonly List<ScalingInfo> ScalingInfos = new();
+        public readonly List<VoidPairing> VoidPairings = new();
 
         protected void AddScalingFunction(string defaultValue, string name,
             ExpressionContext? defaultContext = null, string? desc = null, string? oldDefault = null)
         {
-            scalingInfos.Add(new ScalingInfo(configFile, defaultValue, name, new StackFrame(1).GetMethod().DeclaringType, defaultContext, desc, oldDefault));
+            ScalingInfos.Add(new ScalingInfo(configFile!, defaultValue, name, new StackFrame(1).GetMethod().DeclaringType, defaultContext, desc, oldDefault));
         }
 
-        public override string GetFormattedDescription([CanBeNull] Inventory inventory, string? token = null)
+        public override string GetFormattedDescription(Inventory? inventory = null, string? token = null)
         {
             // ReSharper disable twice Unity.NoNullPropagation
 
-            if (scalingInfos.Count <= 0) return Language.GetString(ItemDef.descriptionToken);
+            if (ScalingInfos.Count <= 0) return Language.GetString(ItemDef!.descriptionToken);
             
-            var formatArgs = scalingInfos.Select(info => info.ScalingFunction(inventory?.GetItemCount(ItemDef))).Cast<object>().ToArray();
-            var ret = Language.GetStringFormatted(token ?? ItemDef.descriptionToken, formatArgs);
-            if (expandedTooltips.Value)
-                ret += "\n\n" + string.Join("\n", scalingInfos.Select(info => info.ToString()));
+            var formatArgs = ScalingInfos.Select(info => info.ScalingFunction(inventory?.GetItemCount(ItemDef))).Cast<object>().ToArray();
+            var ret = Language.GetStringFormatted(token ?? ItemDef!.descriptionToken, formatArgs);
+            if (expandedTooltips!.Value)
+                ret += "\n\n" + string.Join("\n", ScalingInfos.Select(info => info.ToString()));
             return ret;
         }
 
         public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
             base.MakeInLobbyConfig(scalingFunctions);
-            foreach (var info in scalingInfos)
+            foreach (var info in ScalingInfos)
             {
                 info.MakeInLobbyConfig(scalingFunctions[ConfigCategoriesEnum.BalancingFunctions]);
             }
@@ -81,7 +81,8 @@ namespace BubbetsItems
         public override void AddDisplayRules(VanillaCharacterIDRS which, ItemDisplayRule[] displayRules)
         {
             var asset = IDRHelper.GetRuleSet(which);
-            asset.keyAssetRuleGroups = asset.keyAssetRuleGroups.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
+            if (!asset) return;
+            asset!.keyAssetRuleGroups = asset.keyAssetRuleGroups.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
             {
                 displayRuleGroup = new DisplayRuleGroup {rules = displayRules},
                 keyAsset = ItemDef
@@ -108,7 +109,7 @@ namespace BubbetsItems
         {
             try
             {
-                var pickup = PickupCatalog.FindPickupIndex(ItemDef.itemIndex);
+                var pickup = PickupCatalog.FindPickupIndex(ItemDef!.itemIndex);
                 PickupIndex = pickup;
                 PickupIndexes.Add(pickup, this);
             }
@@ -123,7 +124,7 @@ namespace BubbetsItems
         protected override void FillRequiredExpansions()
         {
             if (RequiresSotv)
-                ItemDef.requiredExpansion = SotvExpansion;
+                ItemDef!.requiredExpansion = SotvExpansion;
         }
         
         [HarmonyPrefix, HarmonyPatch(typeof(ContagiousItemManager), nameof(ContagiousItemManager.Init))]
@@ -203,7 +204,7 @@ namespace BubbetsItems
             public VoidPairing(string defaultValue, ItemBase parent, string? oldDefault = null)
             {
                 Parent = parent;
-                configEntry = parent.configFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + parent.GetType().Name, defaultValue, "Valid values: " + ValidEntries, oldDefault);
+                configEntry = parent.configFile!.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + parent.GetType().Name, defaultValue, "Valid values: " + ValidEntries, oldDefault);
                 configEntry.SettingChanged += (_, _) => SettingChanged();
                 SettingChanged();
             }
@@ -216,6 +217,8 @@ namespace BubbetsItems
             }
         }
         
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "ParameterHidesMember")]
         public class ExpressionContext
         {
             // yes this is terrible but im not smart enough to figure out another way.
@@ -269,7 +272,7 @@ namespace BubbetsItems
 
         public void AddVoidPairing(string defaultValue)
         {
-            voidPairings.Add(new VoidPairing(defaultValue, this));
+            VoidPairings.Add(new VoidPairing(defaultValue, this));
         }
     }
 }

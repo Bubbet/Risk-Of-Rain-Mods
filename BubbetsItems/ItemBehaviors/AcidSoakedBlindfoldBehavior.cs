@@ -1,5 +1,4 @@
-﻿using System;
-using BubbetsItems.Items;
+﻿using BubbetsItems.Items;
 using RoR2;
 using RoR2.Items;
 using UnityEngine;
@@ -16,14 +15,14 @@ namespace BubbetsItems.ItemBehaviors
 		[ItemDefAssociation(useOnServer = true, useOnClient = false)]
 		private static ItemDef GetItemDef()
 		{
-			return AcidSoakedBlindfold.instance.ItemDef;
+			return (AcidSoakedBlindfold.Instance!.ItemDef is not null ? AcidSoakedBlindfold.Instance!.ItemDef : default)!;
 		}
 
 		private void FixedUpdate()
 		{
 			var master = body.master; 
 			if (!master) return;
-			var maxCount = AcidSoakedBlindfold.instance.scalingInfos[0].ScalingFunction(stack);
+			var maxCount = AcidSoakedBlindfold.Instance!.ScalingInfos[0].ScalingFunction(stack);
 			var count = master.GetDeployableCount(Slot);
 			if (count >= maxCount) return;
 			_deployableTime -= Time.fixedDeltaTime;
@@ -52,12 +51,12 @@ namespace BubbetsItems.ItemBehaviors
 			master.teamIndex = body.master.teamIndex;
 			//master.inventory;
 
-			var greenChance = AcidSoakedBlindfold.instance.scalingInfos[2].ScalingFunction(stack);
+			var greenChance = AcidSoakedBlindfold.Instance!.ScalingInfos[2].ScalingFunction(stack);
 
 			var list1 = Run.instance.availableTier1DropList;
 			var list2 = Run.instance.availableTier2DropList;
 			
-			for (var i = 0; i < AcidSoakedBlindfold.instance.scalingInfos[1].ScalingFunction(stack); i++)
+			for (var i = 0; i < AcidSoakedBlindfold.Instance.ScalingInfos[1].ScalingFunction(stack); i++)
 			{
 				master.inventory.GiveItem(Run.instance.treasureRng.nextNormalizedFloat < greenChance
 					? list2[Run.instance.treasureRng.RangeInt(0, list2.Count)].pickupDef.itemIndex

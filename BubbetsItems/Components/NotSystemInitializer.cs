@@ -5,7 +5,7 @@ using HarmonyLib;
 using JetBrains.Annotations;
 using RoR2;
 
-namespace BubbetsItems
+namespace BubbetsItems.Components
 {
 	/// <summary>
 	///	An attribute that flags a method to be subscribed to a delegate that gets called in the postfix of the type passed as an argument
@@ -16,7 +16,7 @@ namespace BubbetsItems
 	public class NotSystemInitializer : Attribute
 	{
 		private readonly Type[]? _dependency;
-		private MethodInfo? Target;
+		private MethodInfo? _target;
 		private static readonly List<NotSystemInitializer> Instances = new();
 		private static readonly Dictionary<Type, Info> Types = new();
 		private static readonly List<NotSystemInitializer> NoType = new();
@@ -28,6 +28,7 @@ namespace BubbetsItems
 			Instances.Add(this);
 		}
 		
+		// ReSharper disable once InconsistentNaming
 		private static void HarmonyPostfix(MethodBase __originalMethod)
 		{
 			var typ = __originalMethod.DeclaringType;
@@ -35,7 +36,7 @@ namespace BubbetsItems
 			{
 				foreach (var attribute in NoType)
 				{
-					attribute.Target?.Invoke(null, new object[] { });
+					attribute._target?.Invoke(null, new object[] { });
 				}
 				return;
 			}
@@ -53,7 +54,7 @@ namespace BubbetsItems
 				}
 				
 				if (loaded)
-					attribute.Target?.Invoke(null, new object[] { });
+					attribute._target?.Invoke(null, new object[] { });
 			}
 
 			Types[typ].Loaded = true;
@@ -67,7 +68,7 @@ namespace BubbetsItems
 			foreach (var method in type.GetMethods())
 			foreach (var attribute in method.GetCustomAttributes())
 				if (attribute is NotSystemInitializer attrib)
-					attrib.Target = method;
+					attrib._target = method;
 			
 			foreach (var notSystemInitializer in Instances)
 			{

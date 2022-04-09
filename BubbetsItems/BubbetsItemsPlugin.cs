@@ -8,6 +8,10 @@ using System.Security.Permissions;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using BubbetsItems.Bases;
+using BubbetsItems.Components;
+using BubbetsItems.Helpers;
+using BubbetsItems.ScriptableObjects;
 using HarmonyLib;
 using RoR2;
 using RoR2.ContentManagement;
@@ -31,15 +35,15 @@ namespace BubbetsItems
     {
         private const string AssetBundleName = "MainAssetBundle";
         
-        public static ContentPack ContentPack;
-        public static AssetBundle AssetBundle;
-        public List<SharedBase> forwardTest => SharedBase.Instances;
-        public static BubbetsItemsPlugin instance;
-        public static ManualLogSource Log;
+        public static ContentPack? ContentPack;
+        public static AssetBundle? AssetBundle;
+        public List<SharedBase> ForwardTest => SharedBase.Instances;
+        public static BubbetsItemsPlugin? Instance;
+        public static ManualLogSource? Log;
 
         public void Awake()
         {
-            instance = this;
+            Instance = this;
             Log = Logger;
             RoR2Application.isModded = true;
             Conf.Init(Config);
@@ -64,8 +68,6 @@ namespace BubbetsItems
             //PickupTooltipFormat.Init(harm);
         }
 
-        private static uint _bankID;
-
         [SystemInitializer]
         public static void LoadSoundBank()
         {
@@ -73,13 +75,13 @@ namespace BubbetsItems
             {
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
                 AkSoundEngine.AddBasePath(path);
-                var result = AkSoundEngine.LoadBank("BubbetsItems.bnk", out _bankID);
+                var result = AkSoundEngine.LoadBank("BubbetsItems.bnk", out _);
                 if (result != AKRESULT.AK_Success)
                     Debug.LogError("[Bubbets Items] SoundBank Load Failed: " + result);
             }
             catch (Exception e)
             {
-                Log.LogError(e);
+                Log?.LogError(e);
             }
         }
 
@@ -91,7 +93,7 @@ namespace BubbetsItems
 
         public static class Conf
         {
-            public static ConfigEntry<bool> AmmoPickupAsOrbEnabled;
+            public static ConfigEntry<bool>? AmmoPickupAsOrbEnabled;
             //public static bool RequiresR2Api;
 
             internal static void Init(ConfigFile configFile)
@@ -103,7 +105,7 @@ namespace BubbetsItems
         private void LoadContentPack(Harmony harmony)
         {
             var path = Path.GetDirectoryName(Info.Location);
-            AssetBundle = AssetBundle.LoadFromFile(Path.Combine(path, AssetBundleName));
+            AssetBundle = AssetBundle.LoadFromFile(Path.Combine(path ?? throw new InvalidOperationException(), AssetBundleName));
             var serialContent = AssetBundle.LoadAsset<BubsItemsContentPackProvider>("MainContentPack");
             
             SharedBase.Initialize(Logger, Config, serialContent, harmony, "BUB_");
@@ -111,7 +113,7 @@ namespace BubbetsItems
             SharedBase.AddContentPack(ContentPack);
             ContentPackProvider.Initialize(Info.Metadata.GUID, ContentPack);
 
-            if (!Conf.AmmoPickupAsOrbEnabled.Value) return;
+            if (!Conf.AmmoPickupAsOrbEnabled!.Value) return;
             var go = AssetBundle.LoadAsset<GameObject>("AmmoPickupOrb");
             //go.AddComponent<HarmonyPatches.AmmoPickupOrbBehavior>(); // Doing this at runtime to avoid reimporting component to unity
             ContentPack.effectDefs.Add(new[] {new EffectDef(go)});
@@ -119,9 +121,9 @@ namespace BubbetsItems
 
         private class ContentPackProvider : IContentPackProvider
         {
-            private static ContentPack contentPack;
-            private static string _identifier;
-            public string identifier => _identifier;
+            private static ContentPack? _contentPack;
+            private static string? _identifier;
+            public string identifier => _identifier ?? throw new InvalidOperationException();
 
             public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
             {
@@ -132,7 +134,7 @@ namespace BubbetsItems
 
             public IEnumerator GenerateContentPackAsync(GetContentPackAsyncArgs args)
             {
-                ContentPack.Copy(contentPack, args.output);
+                ContentPack.Copy(_contentPack!, args.output);
                 //Log.LogError(ContentPack.identifier);
                 args.ReportProgress(1f);
                 yield break;
@@ -141,14 +143,14 @@ namespace BubbetsItems
             public IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
             {
                 args.ReportProgress(1f);
-                Log.LogInfo("Contentpack finished");
+                Log?.LogInfo("Contentpack finished");
                 yield break;
             }
 
             internal static void Initialize(string identifier, ContentPack pack)
             {
                 _identifier = identifier;
-                contentPack = pack;
+                _contentPack = pack;
                 ContentManager.collectContentPackProviders += AddCustomContent;
             }
 

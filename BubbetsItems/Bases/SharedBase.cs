@@ -5,13 +5,14 @@ using System.Linq;
 using System.Reflection;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.ExpansionManagement;
 using UnityEngine;
 
-namespace BubbetsItems
+namespace BubbetsItems.Bases
 {
     public abstract class SharedBase
     {
@@ -25,7 +26,8 @@ namespace BubbetsItems
 
         public ConfigEntry<bool>? Enabled;
         public static readonly List<SharedBase> Instances = new List<SharedBase>();
-        public static readonly Dictionary<PickupIndex, SharedBase> PickupIndexes = new Dictionary<PickupIndex, SharedBase>();
+        // ReSharper disable once CollectionNeverQueried.Global  // TODO make use of this instead of linq, it might be cheaper
+        public static readonly Dictionary<PickupIndex, SharedBase> PickupIndexes = new();
         public PickupIndex PickupIndex;
 
         protected ManualLogSource? Logger;
@@ -35,6 +37,7 @@ namespace BubbetsItems
         private string? _tokenPrefix;
         
         private static ExpansionDef? _sotvExpansion;
+        // ReSharper disable thrice InconsistentNaming
         protected ConfigFile? configFile;
         protected ConfigEntry<bool>? expandedTooltips;
         public ConfigEntry<bool>? descInPickup;
@@ -50,9 +53,9 @@ namespace BubbetsItems
         }
         
         //This is probably bad practice
-        public virtual bool RequiresSotv => ((this as ItemBase)?.voidPairings.Count ?? 0) > 0;
+        public virtual bool RequiresSotv => ((this as ItemBase)?.VoidPairings.Count ?? 0) > 0;
         
-        public virtual string GetFormattedDescription(Inventory? inventory, string? token = null)
+        public virtual string GetFormattedDescription(Inventory? inventory = null, string? token = null)
         {
             return "Not Implemented";
         }
@@ -147,6 +150,7 @@ namespace BubbetsItems
         }
 
         [SystemInitializer(typeof(BodyCatalog))]
+        // ReSharper disable once InconsistentNaming
         public static void FillIDRS()
         {
             foreach (var instance in Instances)
@@ -195,6 +199,7 @@ namespace BubbetsItems
         {
             Language.languagesByName[language].SetStringByToken(_tokenPrefix + key, value);
         }*/
+        // ReSharper disable once InconsistentNaming
         protected virtual void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack) {}
         protected abstract void FillDefsFromContentPack();
         protected abstract void FillPickupIndex();

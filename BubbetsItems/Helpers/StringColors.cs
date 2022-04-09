@@ -4,7 +4,7 @@ namespace BubbetsItems.Helpers
 {
     public static class StringColors
     {
-        public static readonly Dictionary<StyleEnum, string> styleStrings = new Dictionary<StyleEnum, string>()
+        public static readonly Dictionary<StyleEnum, string> StyleStrings = new Dictionary<StyleEnum, string>()
         {
             [StyleEnum.Damage] = "<style=cIsDamage>",
             [StyleEnum.Heal] = "<style=cIsHealing>",
@@ -33,7 +33,7 @@ namespace BubbetsItems.Helpers
             [StyleEnum.Black] = "<color=#000000>",
         };
 
-        public static bool IsStyle(StyleEnum style) => styleStrings[style].StartsWith("<style="); //(int) style <= 6;
+        public static bool IsStyle(StyleEnum style) => StyleStrings[style].StartsWith("<style="); //(int) style <= 6;
 
         public const string CloseStyle = "</style>";
         public const string CloseColor = "</color>";
@@ -41,7 +41,7 @@ namespace BubbetsItems.Helpers
         public static string Style(StyleEnum style, string contents)
         {
             var close = IsStyle(style) ? CloseStyle : CloseColor;
-            return styleStrings[style] + contents + close;
+            return StyleStrings[style] + contents + close;
         }
 
         public static string Style(this string contents, StyleEnum style)

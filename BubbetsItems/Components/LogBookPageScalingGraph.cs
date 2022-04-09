@@ -1,30 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using HarmonyLib;
-using RoR2;
-using RoR2.UI;
-using RoR2.UI.LogBook;
+﻿using HarmonyLib;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace BubbetsItems
+namespace BubbetsItems.Components
 {
     [HarmonyPatch]
     public class LogBookPageScalingGraph : MonoBehaviour //Graphic
     {
-        public RectTransform RectTransform;
-        private ItemBase _item;
-        public ManagerGraphic LineRenderer;
+        public RectTransform? rectTransform;
+        public ManagerGraphic? lineRenderer;
 
-        public ItemBase Item
-        {
-            get => _item;
-            set
-            {
-                _item = value;
-            }
-        }
+        //public ItemBase? Item { get; set; }
 
         private void FillWidthAndHeight()
         {
@@ -33,11 +18,11 @@ namespace BubbetsItems
             //width = RectTransform.sizeDelta.x * 5;
             //height = RectTransform.sizeDelta.y * 5;
             //var rect = transform.parent.GetComponent<RectTransform>().rect;
-            var rect = RectTransform.rect;
-            width = rect.width;
-            height = rect.height;
+            var rect = rectTransform!.rect;
+            _width = rect.width;
+            _height = rect.height;
             //Debug.Log(width);
-            LineRenderer.size = new Vector2(width, height);
+            lineRenderer!.size = new Vector2(_width, _height);
         }
 
         public bool built;
@@ -54,13 +39,13 @@ namespace BubbetsItems
             built = true;
             //if (Item.scalingFunction == null) return;
             FillWidthAndHeight();
-            var points = new List<float>();
             /*
+            var points = new List<float>();
             for (var i = 0; i < 50; i++)
             {
                 points.Add(Item.GraphScalingFunction(i+1));
                 //points.Add(test(i+1));
-            }*/
+            }
             var max = Mathf.Ceil(points.Max());
             for (var i = 0; i < 50; i++)
             {
@@ -81,17 +66,17 @@ namespace BubbetsItems
             }
 
             LineRenderer.gridSize.y = (int) max;
-            
-            LineRenderer.SetVerticesDirty();
+            */
+            lineRenderer!.SetVerticesDirty();
         }
         
-        public int Granularity = 50;
+        public int granularity = 50;
 
         public Vector2Int gridSize = new Vector2Int(1, 1);
         public float thickness = 10f;
 
-        private float width;
-        private float height;
+        private float _width;
+        private float _height;
 
 
 
@@ -121,7 +106,8 @@ namespace BubbetsItems
             LineRenderer.SetPositions(positions.ToArray());
         }*/
 
-        //[HarmonyPostfix, HarmonyPatch(typeof(PageBuilder), nameof(PageBuilder.AddSimplePickup))] //TODO
+        /*[HarmonyPostfix, HarmonyPatch(typeof(PageBuilder), nameof(PageBuilder.AddSimplePickup))] //TODO
+        // ReSharper disable once InconsistentNaming
         public static void AddGraph(PageBuilder __instance, PickupIndex pickupIndex)
         {
             if (!SharedBase.PickupIndexes.ContainsKey(pickupIndex)) return;
@@ -129,8 +115,8 @@ namespace BubbetsItems
             //if (item?.scalingFunction == null) return;
             __instance.AddSimpleTextPanel("Scaling Function:");
             var obj = __instance.managedObjects[__instance.managedObjects.Count - 1];
-            var graph = Instantiate(BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("LogBookGraph"), obj.transform);
+            var graph = Instantiate(BubbetsItemsPlugin.AssetBundle!.LoadAsset<GameObject>("LogBookGraph"), obj.transform);
             graph.GetComponent<LogBookPageScalingGraph>().Item = item;
-        }
+        }*/
     }
 }

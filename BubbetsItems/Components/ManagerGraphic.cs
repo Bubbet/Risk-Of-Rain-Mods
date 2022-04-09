@@ -2,13 +2,13 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace BubbetsItems
+namespace BubbetsItems.Components
 {
-	public class ManagerGraphic : UnityEngine.UI.MaskableGraphic
+	public class ManagerGraphic : MaskableGraphic
 	{
 
-		public static Vector2 PerpCCW(Vector2 v) => new Vector2(-v.y, v.x);
-		public static Vector2 PerpCW(Vector2 v) => new Vector2(v.y, -v.x);
+		public static Vector2 PerpCcw(Vector2 v) => new Vector2(-v.y, v.x);
+		public static Vector2 PerpCw(Vector2 v) => new Vector2(v.y, -v.x);
 
 		/// <summary>
 		/// The width of the edge to create.
@@ -18,7 +18,7 @@ namespace BubbetsItems
 		/// <summary>
 		/// The points we're tracking (that we made in Start()) to make into a line strip.
 		/// </summary>
-		List<RectTransform> points = new List<RectTransform>();
+		//private List<RectTransform> _points = new List<RectTransform>();
 
 		public List<Vector2> lineStrip = new List<Vector2>();
 
@@ -26,7 +26,7 @@ namespace BubbetsItems
 		/// <summary>
 		/// Virtual function to create the UI mesh.
 		/// </summary>
-		public override void OnPopulateMesh(UnityEngine.UI.VertexHelper vh)
+		public override void OnPopulateMesh(VertexHelper vh)
 		{
 			if (lineStrip.Count == 0) return;
 			//if(!built) parent.BuildGraph();
@@ -42,12 +42,12 @@ namespace BubbetsItems
 			//CreateInflatedMesh(vh, lineStrip, infs, 1.0f, Color.black);
 		}
 
-		private float cellWidth;
-		private float cellHeight;
+		private float _cellWidth;
+		private float _cellHeight;
 		public Vector2Int gridSize = new Vector2Int(49, 5);
 		private float thickness = 2f;
 		public Vector2 size;
-		public LogBookPageScalingGraph parent;
+		public LogBookPageScalingGraph? parent;
 
 		private void MakeGrid(VertexHelper vh)
 		{
@@ -55,8 +55,8 @@ namespace BubbetsItems
 			//var width = rectTransform.rect.width * 5f;
 			//var height = rectTransform.rect.height * 5f;
 
-			cellWidth = size.x / gridSize.x;
-			cellHeight = size.y / gridSize.y;
+			_cellWidth = size.x / gridSize.x;
+			_cellHeight = size.y / gridSize.y;
 
 			int count = 0;
 			for (int y = 0; y < gridSize.y; y++)
@@ -71,8 +71,8 @@ namespace BubbetsItems
 
 		private void DrawCell(int x, int y, int index, VertexHelper vh)
 		{
-			float xPos = cellWidth * x - 0.5f * size.x;
-			float yPos = cellHeight * y - 0.5f * size.y;
+			float xPos = _cellWidth * x - 0.5f * size.x;
+			float yPos = _cellHeight * y - 0.5f * size.y;
             
 			UIVertex vertex = UIVertex.simpleVert;
 			vertex.color = new Color(0.6f, 0.6f, 0.6f);
@@ -81,13 +81,13 @@ namespace BubbetsItems
 			vertex.position = new Vector3(xPos, yPos);
 			vh.AddVert(vertex);
 
-			vertex.position = new Vector3(xPos, yPos + cellHeight);
+			vertex.position = new Vector3(xPos, yPos + _cellHeight);
 			vh.AddVert(vertex);
             
-			vertex.position = new Vector3(xPos + cellWidth, yPos + cellHeight);
+			vertex.position = new Vector3(xPos + _cellWidth, yPos + _cellHeight);
 			vh.AddVert(vertex);
             
-			vertex.position = new Vector3(xPos + cellWidth, yPos);
+			vertex.position = new Vector3(xPos + _cellWidth, yPos);
 			vh.AddVert(vertex);
             
 			//vh.AddTriangle(0, 1, 2);
@@ -100,13 +100,13 @@ namespace BubbetsItems
 			vertex.position = new Vector3(xPos + distance, yPos + distance);
 			vh.AddVert(vertex);
             
-			vertex.position = new Vector3(xPos + distance, yPos + cellHeight - distance);
+			vertex.position = new Vector3(xPos + distance, yPos + _cellHeight - distance);
 			vh.AddVert(vertex);
             
-			vertex.position = new Vector3(xPos + cellWidth - distance, yPos + cellHeight - distance);
+			vertex.position = new Vector3(xPos + _cellWidth - distance, yPos + _cellHeight - distance);
 			vh.AddVert(vertex);
             
-			vertex.position = new Vector3(xPos + cellWidth - distance, yPos + distance);
+			vertex.position = new Vector3(xPos + _cellWidth - distance, yPos + distance);
 			vh.AddVert(vertex);
 
 			int offset = index * 8;
@@ -136,7 +136,7 @@ namespace BubbetsItems
 		/// <param name="inf">The unit-inflation amount form line strip.</param>
 		/// <param name="amt">The radius of how much to inflate the line strip.</param>
 		/// <param name="c">The color of the inflated line mesh.</param>
-		public static void CreateInflatedMesh(UnityEngine.UI.VertexHelper vh, List<Vector2> lst, List<Vector2> inf,
+		public static void CreateInflatedMesh(VertexHelper vh, List<Vector2> lst, List<Vector2> inf,
 			float amt, Color c)
 		{
 			int ct = vh.currentVertCount;
@@ -181,18 +181,18 @@ namespace BubbetsItems
 		{
 			List<Vector2> ret = new List<Vector2>();
 
-			ret.Add(PerpCCW((vecs[1] - vecs[0]).normalized));
+			ret.Add(PerpCcw((vecs[1] - vecs[0]).normalized));
 
 			for (int i = 1; i < vecs.Count - 1; ++i)
 			{
-				Vector2 toPt = PerpCCW((vecs[i] - vecs[i - 1]).normalized);
-				Vector2 frPt = PerpCW((vecs[i] - vecs[i + 1]).normalized);
+				Vector2 toPt = PerpCcw((vecs[i] - vecs[i - 1]).normalized);
+				Vector2 frPt = PerpCw((vecs[i] - vecs[i + 1]).normalized);
 				Vector2 half = (toPt + frPt).normalized;
 				float dot = Vector2.Dot(toPt, half);
 				ret.Add((1.0f / dot) * half);
 			}
 
-			ret.Add(PerpCCW((vecs[vecs.Count - 1] - vecs[vecs.Count - 2]).normalized));
+			ret.Add(PerpCcw((vecs[vecs.Count - 1] - vecs[vecs.Count - 2]).normalized));
 			return ret;
 		}
 	}

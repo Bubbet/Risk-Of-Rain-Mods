@@ -1,5 +1,5 @@
 ﻿using System;
-using BepInEx.Configuration;
+using BubbetsItems.Bases;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -11,7 +11,7 @@ namespace BubbetsItems.Items
 {
 	public class JelliedSoles : ItemBase
 	{
-		private static JelliedSoles _instance;
+		private static JelliedSoles? _instance;
 
 		protected override void MakeConfigs()
 		{
@@ -42,9 +42,9 @@ namespace BubbetsItems.Items
 		
 		private static DamageInfo UpdateDamage(HealthComponent component, DamageInfo info)
 		{
-			var count = component.body.inventory.GetItemCount(_instance.ItemDef);
+			var count = component.body.inventory.GetItemCount(_instance!.ItemDef);
 			if (count <= 0) return info;
-			info.damage *= Mathf.Max(0f, 1f - _instance.scalingInfos[0].ScalingFunction(count));
+			info.damage *= Mathf.Max(0f, 1f - _instance.ScalingInfos[0].ScalingFunction(count));
 			return info;
 		}
 

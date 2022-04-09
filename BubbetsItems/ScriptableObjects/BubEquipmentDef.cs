@@ -1,12 +1,12 @@
 ﻿using RoR2;
 using UnityEngine;
 
-namespace BubbetsItems
+namespace BubbetsItems.ScriptableObjects
 {
 	[CreateAssetMenu(menuName = "BubbetsItems/BubEquipmentDef")]
 	public class BubEquipmentDef : EquipmentDef
 	{
-		public GameObject displayModelPrefab;
+		public GameObject? displayModelPrefab;
 		
 		[ContextMenu("Bub Auto Populate Tokens")]
 		public new void AutoPopulateTokens()

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
 using RoR2.ContentManagement;
-using RoR2.ExpansionManagement;
 using UnityEngine.Networking;
 
-namespace BubbetsItems
+namespace BubbetsItems.Bases
 {
     [HarmonyPatch]
     public abstract class EquipmentBase : SharedBase
@@ -17,7 +17,7 @@ namespace BubbetsItems
         protected override void MakeConfigs()
         {
             var name = GetType().Name;
-            Enabled = configFile.Bind("Disable Equipments", name, true, "Should this equipment be enabled.");
+            Enabled = configFile!.Bind("Disable Equipments", name, true, "Should this equipment be enabled.");
         }
 
         public virtual bool PerformEquipment(EquipmentSlot equipmentSlot) { return false; }
@@ -26,12 +26,13 @@ namespace BubbetsItems
         public virtual bool UpdateTargets(EquipmentSlot equipmentSlot) { return false; }
         protected virtual void PostEquipmentDef() {}
         
-        public EquipmentDef EquipmentDef;
+        public EquipmentDef? EquipmentDef;
         
-        private static IEnumerable<EquipmentBase> _equipments;
+        private static IEnumerable<EquipmentBase>? _equipments;
         public static IEnumerable<EquipmentBase> Equipments => _equipments ??= Instances.OfType<EquipmentBase>();
 
         [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.RpcOnClientEquipmentActivationRecieved))]
+        // ReSharper disable thrice InconsistentNaming
         public static void PerformEquipmentActionRpc(EquipmentSlot __instance) // third
         {
             if (NetworkServer.active) return;
@@ -86,7 +87,7 @@ namespace BubbetsItems
         }
         public static bool UpdateTargetsHook(EquipmentSlot __instance) // this is probably the most expensive function in my mod, its mostly because of the linq inside a update function which is pretty ew but im not smart enough to change it
         {
-            var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef.equipmentIndex == __instance.equipmentIndex);
+            var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef!.equipmentIndex == __instance.equipmentIndex);
             if (equipment == null) return false;
             
             try
@@ -101,12 +102,13 @@ namespace BubbetsItems
             return false;
         }
 
-        public override string GetFormattedDescription(Inventory inventory = null, string? token = null)
+        public override string GetFormattedDescription(Inventory? inventory = null, string? token = null)
         {
-            return Language.GetString(token ?? EquipmentDef.descriptionToken);
+            return Language.GetString(token ?? EquipmentDef!.descriptionToken);
         }
 
         [HarmonyPrefix, HarmonyPatch(typeof(Inventory), nameof(Inventory.SetEquipmentInternal))]
+        // ReSharper disable once InconsistentNaming
         public static void OnEquipmentSwap(Inventory __instance, EquipmentState equipmentState, uint slot)
         {
             EquipmentState? oldState = null;
@@ -127,7 +129,7 @@ namespace BubbetsItems
             }
             catch (Exception e)
             {
-                oldEquip.Logger.LogError(e);
+                oldEquip?.Logger?.LogError(e);
             }
 
             try
@@ -136,13 +138,13 @@ namespace BubbetsItems
             }
             catch (Exception e)
             {
-                newEquip?.Logger.LogError(e);
+                newEquip?.Logger?.LogError(e);
             }
         }
         
         public override void AddDisplayRules(VanillaCharacterIDRS which, ItemDisplayRule[] displayRules)
         {
-            IDRHelper.GetRuleSet(which).keyAssetRuleGroups.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
+            IDRHelper.GetRuleSet(which)?.keyAssetRuleGroups.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
             {
                 displayRuleGroup = new DisplayRuleGroup {rules = displayRules},
                 keyAsset = EquipmentDef
@@ -189,7 +191,7 @@ namespace BubbetsItems
         {
             try
             {
-                var pickup = PickupCatalog.FindPickupIndex(EquipmentDef.equipmentIndex);
+                var pickup = PickupCatalog.FindPickupIndex(EquipmentDef!.equipmentIndex);
                 PickupIndex = pickup;
                 PickupIndexes.Add(pickup, this);
             }
@@ -204,7 +206,7 @@ namespace BubbetsItems
         protected override void FillRequiredExpansions()
         {
             if (RequiresSotv)
-                EquipmentDef.requiredExpansion = SotvExpansion;
+                EquipmentDef!.requiredExpansion = SotvExpansion;
         }
     }
 }

@@ -1,7 +1,5 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using BubbetsItems.Items;
-using HarmonyLib;
 using RoR2;
 using RoR2.Items;
 using UnityEngine;
@@ -14,7 +12,7 @@ namespace BubbetsItems.ItemBehaviors
 		[ItemDefAssociation(useOnServer = true, useOnClient = true)]
 		private static ItemDef GetItemDef()
 		{
-			return ShiftedQuartz.instance.ItemDef;
+			return (ShiftedQuartz.Instance!.ItemDef is not null ? ShiftedQuartz.Instance!.ItemDef : default)!;
 		}
 
 		private void OnEnable()
@@ -25,62 +23,70 @@ namespace BubbetsItems.ItemBehaviors
 			{
 				allButNeutral.RemoveTeam(objectTeam);
 			}
-			search = new BullseyeSearch
+			_search = new BullseyeSearch
 			{
-				maxDistanceFilter = ShiftedQuartz.instance.scalingInfos[0].ScalingFunction(stack),
+				maxDistanceFilter = ShiftedQuartz.Instance!.ScalingInfos[0].ScalingFunction(stack),
 				teamMaskFilter = allButNeutral,
 				viewer = body
 			};
-			indicatorEnabled = true;
+			IndicatorEnabled = true;
 		}
 
 		private bool Search()
 		{
-			search.searchOrigin = gameObject.transform.position;
-			search.RefreshCandidates();
-			return search.GetResults()?.Any() ?? false;
+			if (_search == null) return false;
+			
+			_search.searchOrigin = gameObject.transform.position;
+			_search.RefreshCandidates();
+			return _search.GetResults()?.Any() ?? false;
 		}
 		private void OnDisable()
 		{
-			indicatorEnabled = false;
-			search = null;
+			IndicatorEnabled = false;
+			_search = null;
 		}
 
 		private void FixedUpdate()
 		{
-			search.maxDistanceFilter = ShiftedQuartz.instance.scalingInfos[0].ScalingFunction(stack);
+			if (_search == null) return;
+			_search.maxDistanceFilter = ShiftedQuartz.Instance!.ScalingInfos[0].ScalingFunction(stack);
 			inside = Search();
 			var inRadius = inside ? 1f : 0f;
-			renderer.material.SetFloat("_ColorMix", inRadius);
+			if (!_renderer) return;
+			_renderer!.material.SetFloat(ColorMix, inRadius);
 		}
 
-		private bool indicatorEnabled
+		private bool IndicatorEnabled
 		{
-			get => nearbyDamageBonusIndicator;
+			get => _nearbyDamageBonusIndicator;
 			set
 			{
-				if (indicatorEnabled == value)
+				if (IndicatorEnabled == value)
 				{
 					return;
 				}
 				if (value)
 				{
-					var original = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("FarDamageBonusIndicator");
-					nearbyDamageBonusIndicator = Instantiate(original, body.corePosition, Quaternion.identity);
-					var radius = search.maxDistanceFilter / 20f;
-					nearbyDamageBonusIndicator.transform.localScale *= radius;
-					nearbyDamageBonusIndicator.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(gameObject);
-					renderer = nearbyDamageBonusIndicator.GetComponentInChildren<Renderer>();
+					if (_search == null) return;
+					var original = BubbetsItemsPlugin.AssetBundle!.LoadAsset<GameObject>("FarDamageBonusIndicator");
+					_nearbyDamageBonusIndicator = Instantiate(original, body.corePosition, Quaternion.identity);
+
+					var radius = _search.maxDistanceFilter / 20f;
+					_nearbyDamageBonusIndicator.transform.localScale *= radius;
+
+					_nearbyDamageBonusIndicator.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(gameObject);
+					_renderer = _nearbyDamageBonusIndicator.GetComponentInChildren<Renderer>();
 					return;
 				}
-				Destroy(nearbyDamageBonusIndicator);
-				nearbyDamageBonusIndicator = null;
+				Destroy(_nearbyDamageBonusIndicator);
+				_nearbyDamageBonusIndicator = null;
 			}
 		}
 		
-		private GameObject nearbyDamageBonusIndicator;
-		private Renderer renderer;
-		private BullseyeSearch search;
+		private GameObject? _nearbyDamageBonusIndicator;
+		private Renderer? _renderer;
+		private BullseyeSearch? _search;
 		public bool inside;
+		private static readonly int ColorMix = Shader.PropertyToID("_ColorMix");
 	}
 }

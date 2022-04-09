@@ -2,7 +2,7 @@
 using System.Linq;
 using BepInEx.Configuration;
 
-namespace BubbetsItems
+namespace BubbetsItems.Helpers
 {
 	public enum ConfigCategoriesEnum
 	{

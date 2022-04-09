@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using BepInEx.Configuration;
+using BubbetsItems.Bases;
 using BubbetsItems.Helpers;
 using HarmonyLib;
-using InLobbyConfig;
 using InLobbyConfig.Fields;
-using JetBrains.Annotations;
 using RoR2;
 using UnityEngine;
 
@@ -14,12 +12,12 @@ namespace BubbetsItems.Items
     [HarmonyPatch]
     public class EscapePlan : ItemBase
     {
-        private static EscapePlan _instance;
-        public static ConfigEntry<float> Granularity;
+        private static EscapePlan? _instance;
+        public static ConfigEntry<float>? Granularity;
         
         
         private static BuffDef? _buffDef;
-        private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefEscapePlan");
+        private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack!.buffDefs.Find("BuffDefEscapePlan");
 
         protected override void MakeConfigs()
         {
@@ -42,11 +40,11 @@ namespace BubbetsItems.Items
             scalingFunctions[ConfigCategoriesEnum.BalancingFunctions].Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Granularity));
         }
 
-        public override string GetFormattedDescription(Inventory inventory, string? token = null)
+        public override string GetFormattedDescription(Inventory? inventory = null, string? token = null)
         {
             if (inventory)
             {
-                scalingInfos[0].WorkingContext.h = inventory.GetComponent<CharacterMaster>()?.GetBody()
+                ScalingInfos[0].WorkingContext.h = inventory!.GetComponent<CharacterMaster>()?.GetBody()
                     ?.GetComponent<HealthComponent>()
                     ?.combinedHealthFraction ?? 1f / 500f;
             }
@@ -107,6 +105,7 @@ namespace BubbetsItems.Items
         }*/
         
         [HarmonyPostfix, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.Heal))]
+        // ReSharper disable once InconsistentNaming
         private static void HealServer(HealthComponent __instance)
         {
             SetBuff(__instance.body);
@@ -121,7 +120,7 @@ namespace BubbetsItems.Items
         {
             var inv = body.inventory;
             if (!inv) return;
-            var amt = body.inventory.GetItemCount(_instance.ItemDef);
+            var amt = body.inventory.GetItemCount(_instance!.ItemDef);
             if (amt <= 0) return;
             //_instance.Logger.LogInfo("DamageDealt And Item");
             /*
@@ -129,35 +128,36 @@ namespace BubbetsItems.Items
             var buffI = Mathf.RoundToInt(buff * 25);*/
             
             //_instance.Logger.LogInfo(buffI + " : " + buff);
-            var info = _instance.scalingInfos[0];
+            var info = _instance.ScalingInfos[0];
             info.WorkingContext.h = body.healthComponent.combinedHealthFraction;
-            body.SetBuffCount(BuffDef!.buffIndex, Mathf.RoundToInt(info.ScalingFunction(amt) * Granularity.Value ));
+            body.SetBuffCount(BuffDef!.buffIndex, Mathf.RoundToInt(info.ScalingFunction(amt) * Granularity!.Value ));
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
+        // ReSharper disable once InconsistentNaming
         private static void RecalcStats(CharacterBody __instance)
         {
             var amt = __instance.GetBuffCount(BuffDef);
             if (amt > 0)
             {
-                __instance.moveSpeed *= 1f + amt / Granularity.Value;
+                __instance.moveSpeed *= 1f + amt / Granularity!.Value;
             }
 
             //SetBuff(__instance);
         }
         
-            /*
-            var inv = __instance.inventory;
-            if (!__instance.inventory) return;
-            _instance.Logger.LogInfo("Inventory yes");
-            var amt = inv.GetItemCount(_instance.ItemDef);
-            if (amt <= 0) return;
-            _instance.Logger.LogInfo("EscapePlan Before: " + __instance.moveSpeed);
-            //1.0f + 0.025f * (amt+1) * (1 - __instance.healthComponent.combinedHealthFraction);
-            var buff = -Mathf.Log(-(1-__instance.healthComponent.combinedHealthFraction) + 1f) * (0.65f + 0.1f * amt);
-            __instance.moveSpeed *= 1f + buff;
-            _instance.Logger.LogInfo("EscapePlan After: " + __instance.moveSpeed + " : " + buff);
-        }*/
+        /*
+        var inv = __instance.inventory;
+        if (!__instance.inventory) return;
+        _instance.Logger.LogInfo("Inventory yes");
+        var amt = inv.GetItemCount(_instance.ItemDef);
+        if (amt <= 0) return;
+        _instance.Logger.LogInfo("EscapePlan Before: " + __instance.moveSpeed);
+        //1.0f + 0.025f * (amt+1) * (1 - __instance.healthComponent.combinedHealthFraction);
+        var buff = -Mathf.Log(-(1-__instance.healthComponent.combinedHealthFraction) + 1f) * (0.65f + 0.1f * amt);
+        __instance.moveSpeed *= 1f + buff;
+        _instance.Logger.LogInfo("EscapePlan After: " + __instance.moveSpeed + " : " + buff);
+    }*/
 
         protected override void MakeTokens()
         {

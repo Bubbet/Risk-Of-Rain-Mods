@@ -1,4 +1,5 @@
 ﻿using System;
+using BubbetsItems.Bases;
 using BubbetsItems.ItemBehaviors;
 using EntityStates;
 using HarmonyLib;
@@ -98,14 +99,14 @@ namespace BubbetsItems.Items
 			}
 
 			var addvel = Accelerate(velocity, wishDir, wishSpeed,
-				wishSpeed * Instance.scalingInfos[2].ScalingFunction(count),
-				Instance.scalingInfos[3].ScalingFunction(count), 1f);
+				wishSpeed * Instance.ScalingInfos[2].ScalingFunction(count),
+				Instance.ScalingInfos[3].ScalingFunction(count), 1f);
 
 			addvel.y = vector.y;
 			
 			if (!grounded) return addvel;
 
-			return Time.time - bh.hitGroundTime > Instance!.scalingInfos[1].ScalingFunction(characterBody.inventory.GetItemCount(Instance.ItemDef)) ? vector : addvel;
+			return Time.time - bh.hitGroundTime > Instance!.ScalingInfos[1].ScalingFunction(characterBody.inventory.GetItemCount(Instance.ItemDef)) ? vector : addvel;
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(CharacterMotor), nameof(CharacterMotor.PreMove))]
@@ -123,7 +124,8 @@ namespace BubbetsItems.Items
 
 		private static Vector3 DoAirMovement(Vector3 velocity, Vector3 target, float num, float deltaTime, CharacterMotor motor)
 		{
-			var count = motor.body?.inventory?.GetItemCount(Instance.ItemDef) ?? 0; 
+			if (!motor.body || !motor.body.inventory) return Vector3.MoveTowards(velocity, target, num * deltaTime);
+			var count = motor.body.inventory.GetItemCount(Instance!.ItemDef); 
 			if (count <= 0 || motor.disableAirControlUntilCollision || motor.Motor.GroundingStatus.IsStableOnGround)
 				return Vector3.MoveTowards(velocity, target, num * deltaTime);
 
@@ -134,7 +136,7 @@ namespace BubbetsItems.Items
 			var wishDir = newTarget.normalized;
 			var wishSpeed = motor.walkSpeed * wishDir.magnitude;
 
-			return Accelerate(velocity, wishDir, wishSpeed, Instance.scalingInfos[0].ScalingFunction(count), motor.acceleration, deltaTime);
+			return Accelerate(velocity, wishDir, wishSpeed, Instance.ScalingInfos[0].ScalingFunction(count), motor.acceleration, deltaTime);
 		}
 
 		//Ripped from sbox or gmod, i dont remember

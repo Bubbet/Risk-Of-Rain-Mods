@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
+using BubbetsItems.Bases;
 using BubbetsItems.Helpers;
 using HarmonyLib;
-using InLobbyConfig;
-using InLobbyConfig.Fields;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -15,9 +14,9 @@ namespace BubbetsItems.Items
 {
 	public class ZealotryEmbrace : ItemBase
 	{
-		private static ZealotryEmbrace _instance;
-		private static ConfigEntry<bool> onlyMyDots;
-		private static ConfigEntry<bool> onlyOneDot;
+		private static ZealotryEmbrace? _instance;
+		private static ConfigEntry<bool>? _onlyMyDots;
+		private static ConfigEntry<bool>? _onlyOneDot;
 		public override bool RequiresSotv => true;
 
 		protected override void MakeConfigs()
@@ -25,9 +24,9 @@ namespace BubbetsItems.Items
 			base.MakeConfigs();
 			AddScalingFunction("0.25", "Damage Increase");
 			AddScalingFunction("2 + [a]", "Debuff Amount");
-			onlyMyDots = configFile!.Bind(ConfigCategoriesEnum.General, "Zealotry Embrace: Only track my debuffs", true,
+			_onlyMyDots = configFile!.Bind(ConfigCategoriesEnum.General, "Zealotry Embrace: Only track my debuffs", true,
 				"Should only your dots track to the total");
-			onlyOneDot = configFile.Bind(ConfigCategoriesEnum.General, "Zealotry Embrace: Only one dot stack", false,
+			_onlyOneDot = configFile.Bind(ConfigCategoriesEnum.General, "Zealotry Embrace: Only one dot stack", false,
 				"Should each dot stack count towards the total, else treat all stacks as one buff.");
 		}
 
@@ -59,27 +58,27 @@ namespace BubbetsItems.Items
 			c.Emit(OpCodes.Ldloc, num2);
 			c.EmitDelegate<Func<HealthComponent, CharacterBody, float, float>>((hc, body, amount) =>
 			{
-				var count = body.inventory.GetItemCount(_instance.ItemDef);
+				var count = body.inventory.GetItemCount(_instance!.ItemDef);
 				if (count <= 0) return amount;
 				
 				var debuffCount = BuffCatalog.debuffBuffIndices.Sum(buffType => hc.body.GetBuffCount(buffType));
 				var dotController = DotController.FindDotController(hc.gameObject);
 				if (dotController)
-					if (onlyOneDot.Value)
+					if (_onlyOneDot!.Value)
 					{
-						var list = from dotStack in onlyMyDots.Value ? dotController.dotStackList.Where(x => x.attackerObject == body.gameObject) : dotController.dotStackList select dotStack.dotIndex;
+						var list = from dotStack in _onlyMyDots!.Value ? dotController.dotStackList.Where(x => x.attackerObject == body.gameObject) : dotController.dotStackList select dotStack.dotIndex;
 						debuffCount += list.Distinct().Count();
 					}
 					else
 					{
-						if (onlyMyDots.Value)
+						if (_onlyMyDots!.Value)
 							debuffCount += dotController.dotStackList.Count(x => x.attackerObject == body.gameObject);
 						else
 							debuffCount += dotController.dotStackList.Count;
 					}
 
-				if (debuffCount < _instance.scalingInfos[1].ScalingFunction(count))
-					amount *= 1f + _instance.scalingInfos[0].ScalingFunction(count);
+				if (debuffCount < _instance.ScalingInfos[1].ScalingFunction(count))
+					amount *= 1f + _instance.ScalingInfos[0].ScalingFunction(count);
 				
 				return amount;
 			});

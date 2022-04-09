@@ -1,11 +1,12 @@
-﻿using HarmonyLib;
+﻿using BubbetsItems.Behaviours;
+using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
 using RoR2.Orbs;
 using UnityEngine.Networking;
 
-namespace BubbetsItems
+namespace BubbetsItems.Components
 {
     [HarmonyPatch]
     public static class HarmonyPatches
@@ -13,7 +14,7 @@ namespace BubbetsItems
         [HarmonyILManipulator, HarmonyPatch(typeof(GlobalEventManager), nameof(GlobalEventManager.OnCharacterDeath))]
         private static void AmmoPickupPatch(ILContext il)
         {
-            if (!BubbetsItemsPlugin.Conf.AmmoPickupAsOrbEnabled.Value) return;
+            if (!BubbetsItemsPlugin.Conf.AmmoPickupAsOrbEnabled!.Value) return;
             var c = new ILCursor(il);
             c.GotoNext(
                 x => x.MatchLdstr("Prefabs/NetworkedObjects/AmmoPack"),

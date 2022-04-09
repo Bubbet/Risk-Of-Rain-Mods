@@ -6,8 +6,7 @@ using BepInEx.Bootstrap;
 using HG.Reflection;
 using UnityEngine;
 
-
-namespace BubbetsItems
+namespace BubbetsItems.Shelfed
 {
     /*
      * set up bepin dependencies for the plugin that calls execute based on the attributes defined types
@@ -15,15 +14,15 @@ namespace BubbetsItems
      */
     public class BepinExDependantInitializeAttribute : SearchableAttribute // TODO replace searchable attribute with my own system that only scans this assembly
     {
-        public Type[] dependencies = Array.Empty<Type>();
-        private MethodInfo methodInfo;
-        private Type associatedType;
+        public readonly Type[] Dependencies = Array.Empty<Type>();
+        private MethodInfo? _methodInfo;
+        private Type? _associatedType;
 
-        public BepinExDependantInitializeAttribute(params Type[] dependencies)
+        public BepinExDependantInitializeAttribute(params Type[]? dependencies)
         {
             if (dependencies != null)
             {
-                this.dependencies = dependencies;
+                this.Dependencies = dependencies;
             }
         }
 
@@ -37,8 +36,8 @@ namespace BubbetsItems
                 if (methodInfo != null && methodInfo.IsStatic)
                 {
                     queue.Enqueue(bepinDepInitAttribute);
-                    bepinDepInitAttribute.methodInfo = methodInfo;
-                    bepinDepInitAttribute.associatedType = methodInfo.DeclaringType;
+                    bepinDepInitAttribute._methodInfo = methodInfo;
+                    bepinDepInitAttribute._associatedType = methodInfo.DeclaringType;
                 }
             }
 
@@ -46,7 +45,7 @@ namespace BubbetsItems
             var initializationLogHandler = new BepinExDependantInitializeLogHandler();
             //var logHandler = Assembly.GetCallingAssembly(). TODO get the logger from the bepinchainloader and this function, figure out what plugin called this function;
             var logHandler = Debug.unityLogger.logHandler;
-            initializationLogHandler.underlyingLogHandler = logHandler;
+            initializationLogHandler.UnderlyingLogHandler = logHandler;
 
             var num = 0;
             while (queue.Count > 0)
@@ -56,60 +55,60 @@ namespace BubbetsItems
                 {
                     queue.Enqueue(attribute);
                     ++num;
-                    if (num >= queue.Count)
-                    {
-                        Debug.LogFormat(
-                            nameof(BepinExDependantInitializeAttribute) + " infinite loop detected. currentMethod={0}",
-                            attribute.associatedType.FullName + attribute.methodInfo.Name);
-                        break;
-                    }
+                    if (num < queue.Count) continue;
+                    if (attribute._associatedType is not null && attribute._methodInfo is not null)
+                        Debug.LogFormat(nameof(BepinExDependantInitializeAttribute) + " infinite loop detected. currentMethod={0}", attribute._associatedType.FullName + attribute._methodInfo.Name);
+                    break;
                 }
-                else
+
+                try
                 {
-                    try
+                    Debug.unityLogger.logHandler = initializationLogHandler;
+                    initializationLogHandler.CurrentInitializer = attribute;
+                    if (attribute._methodInfo is null || attribute._associatedType is null)
                     {
-                        Debug.unityLogger.logHandler = initializationLogHandler;
-                        initializationLogHandler.currentInitializer = attribute;
-                        attribute.methodInfo.Invoke(null, new object[] { });
-                        initializedTypes.Add(attribute.associatedType);
+                        num = 0;
+                        continue;
                     }
-                    catch (Exception e)
-                    {
-                        Debug.LogError(e);
-                    }
-                    finally
-                    {
-                        Debug.unityLogger.logHandler = logHandler;
-                    }
-                    num = 0;
+                    attribute._methodInfo.Invoke(null, new object[] { });
+                    initializedTypes.Add(attribute._associatedType);
                 }
+                catch (Exception e)
+                {
+                    Debug.LogError(e);
+                }
+                finally
+                {
+                    Debug.unityLogger.logHandler = logHandler;
+                }
+                num = 0;
             }
         }
 
         private static bool InitializerDependenciesMet(BepinExDependantInitializeAttribute attribute)
         {
-            return attribute.dependencies.All(dependency => Chainloader.PluginInfos.Any(x => x.Value.Instance.GetType() == dependency));
+            return attribute.Dependencies.All(dependency => Chainloader.PluginInfos.Any(x => x.Value.Instance.GetType() == dependency));
         }
 
         private class BepinExDependantInitializeLogHandler : ILogHandler
         {
-            public ILogHandler underlyingLogHandler;
-            private BepinExDependantInitializeAttribute _currentInitializer;
-            private string logPrefix = string.Empty;
+            public ILogHandler? UnderlyingLogHandler;
+            private BepinExDependantInitializeAttribute? _currentInitializer;
+            private string _logPrefix = string.Empty;
 
-            public BepinExDependantInitializeAttribute currentInitializer
+            public BepinExDependantInitializeAttribute CurrentInitializer
             {
-                get => _currentInitializer;
+                get => _currentInitializer ?? throw new InvalidOperationException();
                 set
                 {
                     _currentInitializer = value;
-                    logPrefix = "[" + currentInitializer.associatedType.FullName + "] ";
+                    _logPrefix = "[" + CurrentInitializer._associatedType!.FullName + "] ";
                 }
             }
 
-            public void LogException(Exception exception, UnityEngine.Object context) => LogFormat(LogType.Exception, context, exception.Message, null);
+            public void LogException(Exception exception, UnityEngine.Object context) => LogFormat(LogType.Exception, context, exception.Message);
 
-            public void LogFormat(LogType logType, UnityEngine.Object context, string format, params object[] args) => underlyingLogHandler.LogFormat(logType, context, logPrefix + format, args);
+            public void LogFormat(LogType logType, UnityEngine.Object context, string format, params object[] args) => UnderlyingLogHandler?.LogFormat(logType, context, _logPrefix + format, args);
         }
     }
 }

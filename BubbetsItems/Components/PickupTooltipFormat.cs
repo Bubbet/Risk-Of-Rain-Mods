@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using BubbetsItems.Bases;
 using HarmonyLib;
 using MonoMod.Cil;
 using RoR2;
 using RoR2.UI;
 using RoR2.UI.LogBook;
 
-namespace BubbetsItems
+namespace BubbetsItems.Components
 {
     [HarmonyPatch]
     public class PickupTooltipFormat
@@ -34,6 +35,7 @@ namespace BubbetsItems
         }*/
 
         [HarmonyPrefix, HarmonyPatch(typeof(TooltipProvider), "get_bodyText")]
+        // ReSharper disable twice InconsistentNaming
         public static bool FixToken(TooltipProvider __instance, ref string __result)
         {
             try
@@ -43,20 +45,20 @@ namespace BubbetsItems
                 var item = ItemBase.Items.FirstOrDefault(x =>
                 {
                     if (x.ItemDef == null) // This is a really bad way of doing this
-                        BubbetsItemsPlugin.Log.LogWarning($"ItemDef is null for {x} in tooltipProvider, this will throw errors.");
-                    return __instance.bodyToken == x.ItemDef.descriptionToken || __instance.bodyToken == x.ItemDef.pickupToken;
+                        BubbetsItemsPlugin.Log?.LogWarning($"ItemDef is null for {x} in tooltipProvider, this will throw errors.");
+                    return __instance.bodyToken == x.ItemDef!.descriptionToken || __instance.bodyToken == x.ItemDef.pickupToken;
                 });
                 var equipment = EquipmentBase.Equipments.FirstOrDefault(x =>
                 {
                     if (x.EquipmentDef == null)
-                        BubbetsItemsPlugin.Log.LogWarning($"EquipmentDef is null for {x} in tooltipProvider, this will throw errors.");
-                    return __instance.bodyToken == x.EquipmentDef.descriptionToken || __instance.bodyToken == x.EquipmentDef.pickupToken;
+                        BubbetsItemsPlugin.Log?.LogWarning($"EquipmentDef is null for {x} in tooltipProvider, this will throw errors.");
+                    return __instance.bodyToken == x.EquipmentDef!.descriptionToken || __instance.bodyToken == x.EquipmentDef.pickupToken;
                 });
                 var titleEquipment = EquipmentBase.Equipments.FirstOrDefault(x =>
                 {
                     if (x.EquipmentDef == null)
-                        BubbetsItemsPlugin.Log.LogWarning($"EquipmentDef is null for {x} in tooltipProvider, this will throw errors.");
-                    return __instance.titleToken == x.EquipmentDef.nameToken;
+                        BubbetsItemsPlugin.Log?.LogWarning($"EquipmentDef is null for {x} in tooltipProvider, this will throw errors.");
+                    return __instance.titleToken == x.EquipmentDef!.nameToken;
                 });
 
                 var inventoryDisplay = __instance.transform.parent.GetComponent<ItemInventoryDisplay>();
@@ -80,13 +82,13 @@ namespace BubbetsItems
                     // TODO this also doesnt work very well without betterui, infact it probably throws an exception
                     __result = titleEquipment.GetFormattedDescription(inventoryDisplay?.inventory) +
                                __instance.overrideBodyText.Substring(Language
-                                   .GetString(titleEquipment.EquipmentDef.descriptionToken).Length);
+                                   .GetString(titleEquipment.EquipmentDef!.descriptionToken).Length);
                     return false;
                 }
             }
             catch (Exception e)
             {
-                BubbetsItemsPlugin.Log.LogError(e);
+                BubbetsItemsPlugin.Log?.LogError(e);
             }
 
             return true;
@@ -107,7 +109,7 @@ namespace BubbetsItems
             c.EmitDelegate<Func<ItemDef, string>>(def =>
             {
                 var item = ItemBase.Items.FirstOrDefault(x => x.ItemDef == def);
-                return item != null ? item.GetFormattedDescription(null) : Language.GetString(def.descriptionToken);
+                return item != null ? item.GetFormattedDescription() : Language.GetString(def.descriptionToken);
             });
             
             c.GotoNext( MoveType.After,
@@ -129,15 +131,15 @@ namespace BubbetsItems
         public static void NotifItemPostfix(GenericNotification __instance, ItemDef itemDef)
         {
             var item = ItemBase.Items.FirstOrDefault(x => x.ItemDef == itemDef);
-            if (item != null && item.descInPickup.Value)
-                __instance.descriptionText.token = item.GetFormattedDescription(null);
+            if (item != null && item.descInPickup!.Value)
+                __instance.descriptionText.token = item.GetFormattedDescription();
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(GenericNotification), nameof(GenericNotification.SetEquipment))]
         public static void NotifEquipmentPostfix(GenericNotification __instance, EquipmentDef equipmentDef)
         {
             var equipment = EquipmentBase.Equipments.FirstOrDefault(x => x.EquipmentDef == equipmentDef);
-            if (equipment != null && equipment.descInPickup.Value)
+            if (equipment != null && equipment.descInPickup!.Value)
                 __instance.descriptionText.token = equipment.GetFormattedDescription();
         }
 

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using RoR2;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
 
-namespace BubbetsItems
+// ReSharper disable InconsistentNaming 
+
+namespace BubbetsItems.Helpers
 {
 	public enum VanillaCharacterIDRS
 	{
@@ -46,12 +46,13 @@ namespace BubbetsItems
 
 		public static Dictionary<VanillaCharacterIDRS, ItemDisplayRuleSet> bodyReference = new();
 		
-		public static ItemDisplayRuleSet GetRuleSet(VanillaCharacterIDRS which)
+		public static ItemDisplayRuleSet? GetRuleSet(VanillaCharacterIDRS which)
 		{
 			if (bodyReference.ContainsKey(which)) return bodyReference[which];
 
-			var body = BodyCatalog.FindBodyPrefab(enumToBodyObjName[which]); 
-			bodyReference.Add(which, body.GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet);
+			var body = BodyCatalog.FindBodyPrefab(enumToBodyObjName[which]);
+			if (!body) return null;
+			bodyReference.Add(which, body!.GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet);
 
 			return bodyReference[which];
 		}

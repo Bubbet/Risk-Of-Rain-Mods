@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Reflection;
 using BepInEx.Configuration;
+using BubbetsItems.Bases;
 using BubbetsItems.Helpers;
-using InLobbyConfig;
 using InLobbyConfig.Fields;
 using RoR2;
 using UnityEngine;
@@ -13,16 +13,16 @@ namespace BubbetsItems.Equipments
 {
     public class BrokenClock : EquipmentBase
     {
-        private ConfigEntry<float> cooldown;
-        public static ConfigEntry<float> duration;
-        public static ConfigEntry<float> interval;
+        public static ConfigEntry<float>? Cooldown;
+        public static ConfigEntry<float>? Duration;
+        public static ConfigEntry<float>? Interval;
 
-        public static FieldInfo velocity = typeof(CharacterMotor).GetField("velocity");
-        public static BrokenClock instance;
+        public static readonly FieldInfo Velocity = typeof(CharacterMotor).GetField("velocity");
+        public static BrokenClock? Instance;
 
         public BrokenClock()
         {
-            instance = this;
+            Instance = this;
         }
 
         protected override void MakeTokens()
@@ -34,9 +34,9 @@ namespace BubbetsItems.Equipments
             AddToken("BROKEN_CLOCK_LORE", "Broken clock lore.");
         }
 
-        public override string GetFormattedDescription(Inventory inventory = null, string? token = null)
+        public override string GetFormattedDescription(Inventory? inventory = null, string? token = null)
         {
-            return Language.GetStringFormatted(EquipmentDef.descriptionToken, duration.Value);
+            return Language.GetStringFormatted(EquipmentDef!.descriptionToken, Duration!.Value);
         }
 
         public override bool PerformEquipment(EquipmentSlot equipmentSlot)
@@ -61,21 +61,21 @@ namespace BubbetsItems.Equipments
         protected override void MakeConfigs()
         {
             base.MakeConfigs();
-            cooldown = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Cooldown", 60f, "Broken Clock equipment cooldown.", 5f);
-            cooldown.SettingChanged += (_, _) => ConfigUpdate();
-            duration = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Buffer Duration", 10f, "Duration of time to store in the broken clock.");
-            duration.SettingChanged += (_, _) => ConfigUpdate();
-            interval = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Keyframe Interval", 0.25f, "How often to capture a keyframe and store it. Also determines the size of the stack in conjunction with the duration. duration/interval = size size takes memory so try to keep it small enough.");
-            interval.SettingChanged += (_, _) => ConfigUpdate();
+            Cooldown = configFile!.Bind(ConfigCategoriesEnum.General, "Broken Clock Cooldown", 60f, "Broken Clock equipment cooldown.", 5f);
+            Cooldown.SettingChanged += (_, _) => ConfigUpdate();
+            Duration = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Buffer Duration", 10f, "Duration of time to store in the broken clock.");
+            Duration.SettingChanged += (_, _) => ConfigUpdate();
+            Interval = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Keyframe Interval", 0.25f, "How often to capture a keyframe and store it. Also determines the size of the stack in conjunction with the duration. duration/interval = size size takes memory so try to keep it small enough.");
+            Interval.SettingChanged += (_, _) => ConfigUpdate();
             ConfigUpdate();
         }
 
         private void ConfigUpdate()
         {
             if (EquipmentDef != null)
-                EquipmentDef.cooldown = cooldown.Value;
-            BrokenClockBehaviour.stackDuration = duration.Value;
-            BrokenClockBehaviour.keyframeInterval = interval.Value;
+                EquipmentDef.cooldown = Cooldown!.Value;
+            BrokenClockBehaviour.StackDuration = Duration!.Value;
+            BrokenClockBehaviour.KeyframeInterval = Interval!.Value;
         }
 
         protected override void PostEquipmentDef()
@@ -91,43 +91,60 @@ namespace BubbetsItems.Equipments
 
             var general = scalingFunctions[ConfigCategoriesEnum.General];
 
-            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(cooldown));
-            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(duration));
-            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(interval));
+            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Cooldown));
+            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Duration));
+            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Interval));
         }
     }
 
+    [RequireComponent(typeof(CharacterBody))]
     public class BrokenClockBehaviour : MonoBehaviour
     {
-        public static float stackDuration = 10f;
-        public static float keyframeInterval = 0.25f;
+        public static float StackDuration = 10f;
+        public static float KeyframeInterval = 0.25f;
 
         private float _keyframeStopwatch;
         public bool reversing;
 
-        private CharacterMaster _master;
-        private CharacterBody _body;
-        private CharacterBody Body => _body ? _body : _body = _master.GetBody();
-        
-        private HealthComponent _healthComponent;
+        private CharacterMaster? _master;
+        private CharacterBody? _body;
+        private CharacterBody? Body
+        {
+            get
+            {
+                if (!_master) return null;
+                var body = _master!.GetBody();
+                if (body)
+                    return _body ??= body!;
+                return null;
+            }
+        }
+
+        private HealthComponent? _healthComponent;
         // ReSharper disable twice Unity.NoNullPropagation
-        private HealthComponent HealthComponent => _healthComponent ? _healthComponent : _healthComponent = Body?.GetComponent<HealthComponent>();
+        private HealthComponent? HealthComponent => _healthComponent ??= Body?.GetComponent<HealthComponent>();
 
-        private CharacterMotor _characterMotor;
-        private CharacterMotor CharacterMotor => _characterMotor ? _characterMotor : (_characterMotor = Body?.GetComponent<CharacterMotor>());
+        private CharacterMotor? _characterMotor;
+        private CharacterMotor? CharacterMotor => _characterMotor ??= Body?.GetComponent<CharacterMotor>();
 
-        public DropoutStack<BrokenClockKeyframe> dropoutStack = new DropoutStack<BrokenClockKeyframe>(Mathf.RoundToInt(stackDuration/keyframeInterval));
+        public readonly DropoutStack<BrokenClockKeyframe> DropoutStack = new(Mathf.RoundToInt(StackDuration/KeyframeInterval));
         
         public bool ToggleReversing()
         {
             reversing = !reversing;
-            AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
+            if (!Body)
+            {
+                return false;
+            }
+
+            AkSoundEngine.PostEvent("BrokenClock_Break", Body!.gameObject);
             if (!reversing) return true;
             AkSoundEngine.PostEvent("BrokenClock_Start", Body.gameObject);
             if (!Body.hasEffectiveAuthority) return true;
+
             //AddOneStock(); // TODO does not work on clients, probably because we arent reaching here because its only ran on server?
             _previousKeyframe = MakeKeyframe();
-            _currentTargetKeyframe = dropoutStack.Pop();
+            _currentTargetKeyframe = DropoutStack.Pop();
             return false;
         }
 
@@ -139,14 +156,14 @@ namespace BubbetsItems.Equipments
 
         public void OnDeath()
         {
-            AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
+            if (Body is not null) AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
             reversing = false;
         }
 
         public void FixedUpdate()
         {
             if (!Body) return;
-            if (!Body.hasEffectiveAuthority) return;
+            if (!Body!.hasEffectiveAuthority) return;
             if (reversing)
             {
                 DoReverseBehaviour();
@@ -154,27 +171,25 @@ namespace BubbetsItems.Equipments
             else
             {
                 _keyframeStopwatch += Time.fixedDeltaTime;
-                if (_keyframeStopwatch < keyframeInterval) return;
-                _keyframeStopwatch -= keyframeInterval;
-                dropoutStack.Push(MakeKeyframe());
+                if (_keyframeStopwatch < KeyframeInterval) return;
+                _keyframeStopwatch -= KeyframeInterval;
+                var frame = MakeKeyframe();
+                if (frame is null) return;
+                DropoutStack.Push((BrokenClockKeyframe) frame);
             }
         }
-        
-        private void AddOneStock()
-        {
-            var slot = Body.inventory.activeEquipmentSlot;
-            var equipmentState = Body.inventory.GetEquipment(slot);
-            Body.inventory.SetEquipment(new EquipmentState(equipmentState.equipmentIndex, equipmentState.chargeFinishTime, (byte) (equipmentState.charges + 1)), slot);
-        }
 
-        private BrokenClockKeyframe MakeKeyframe()
+        private BrokenClockKeyframe? MakeKeyframe()
         {
             var keyframe = new BrokenClockKeyframe();
+            if (HealthComponent is null) return null;
+
             keyframe.Health = HealthComponent.health;
             keyframe.Barrier = HealthComponent.barrier;
             keyframe.Shield = HealthComponent.shield;
+
             if (!CharacterMotor) return keyframe;
-            keyframe.Position = CharacterMotor.transform.position;
+            keyframe.Position = CharacterMotor!.transform.position;
             keyframe.Velocity = (CharacterMotor as IPhysMotor).velocity;
             
             //keyframe.LookDir = body.inputBank.aimDirection; // TODO replace with CameraRigController.desiredCameraState.rotation;
@@ -189,14 +204,21 @@ namespace BubbetsItems.Equipments
 
         private void ApplyKeyframe(BrokenClockKeyframe keyframe)
         {
+            if (HealthComponent is null) return;
+
             HealthComponent.health = keyframe.Health;
             HealthComponent.barrier = keyframe.Barrier;
             HealthComponent.shield = keyframe.Shield;
 
-            CharacterMotor.Motor.MoveCharacter(keyframe.Position); // This does not work as we are in the server scope right now and server cannot move client authoritive player.
-            //CharacterMotor.velocity = keyframe.Velocity; thanks i hate it
-            BrokenClock.velocity.SetValue(CharacterMotor, keyframe.Velocity);
-            
+            if (CharacterMotor is not null)
+            {
+                CharacterMotor.Motor
+                    .MoveCharacter(keyframe
+                        .Position); // This does not work as we are in the server scope right now and server cannot move client authoritive player.
+                //CharacterMotor.velocity = keyframe.Velocity; thanks i hate it
+                BrokenClock.Velocity.SetValue(CharacterMotor, keyframe.Velocity);
+            }
+
             //characterMotor.velocity = Vector3.zero;
             //_lastVelocity = keyframe.Velocity;
 
@@ -208,24 +230,26 @@ namespace BubbetsItems.Equipments
             */
         }
 
-        private BrokenClockKeyframe _previousKeyframe;
+        private BrokenClockKeyframe? _previousKeyframe;
         private BrokenClockKeyframe _currentTargetKeyframe;
-        private float ratio;
+        private float _ratio;
 
         private void DoReverseBehaviour()
         {
-            var any = dropoutStack.Any(); 
+            var any = DropoutStack.Any(); 
             if (!any || !Body)
             {
                 reversing = false;
+                if (Body is null) return;
                 AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
                 byte i = 0;
                 foreach (var equipmentState in Body.inventory.equipmentStateSlots)
                 {
-                    if (equipmentState.equipmentDef == BrokenClock.instance.EquipmentDef)
+                    if (equipmentState.equipmentDef == BrokenClock.Instance!.EquipmentDef)
                         Body.inventory.DeductEquipmentCharges(i, 1);
                     i++;
                 }
+
                 //characterMotor.velocity = _lastVelocity;
                 return;
             }
@@ -238,15 +262,16 @@ namespace BubbetsItems.Equipments
             currentKeyframe.LerpFrom(_currentTargetKeyframe, speed * 5f);
             */
 
-            ratio += Time.fixedDeltaTime;
-            if (ratio > keyframeInterval)
+            _ratio += Time.fixedDeltaTime;
+            if (_ratio > KeyframeInterval)
             {
-                ratio = 0f;
+                _ratio = 0f;
                 _previousKeyframe = _currentTargetKeyframe;
-                _currentTargetKeyframe = dropoutStack.Pop();
+                _currentTargetKeyframe = DropoutStack.Pop();
             }
-            
-            var currentKeyframe = BrokenClockKeyframe.Lerp(_previousKeyframe, _currentTargetKeyframe, ratio/keyframeInterval);
+
+            if (_previousKeyframe == null) return;
+            var currentKeyframe = BrokenClockKeyframe.Lerp((BrokenClockKeyframe) _previousKeyframe, _currentTargetKeyframe, _ratio/KeyframeInterval);
             ApplyKeyframe(currentKeyframe);
         }
     }

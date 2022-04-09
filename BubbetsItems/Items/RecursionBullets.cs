@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BubbetsItems.Bases;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
@@ -8,9 +9,9 @@ namespace BubbetsItems.Items
 {
 	public class RecursionBullets : ItemBase
 	{
-		private static RecursionBullets _instance;
+		private static RecursionBullets? _instance;
 		private static BuffDef? _buffDef;
-		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefRecursionBullets");
+		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack!.buffDefs.Find("BuffDefRecursionBullets");
 		public override bool RequiresSotv => true;
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
@@ -52,26 +53,29 @@ namespace BubbetsItems.Items
 			if (!obj.victimIsBoss) return;
 			if (!obj.attacker) return;
 			var body = obj.attacker.GetComponent<CharacterBody>();
-			var inv = body?.inventory;
+			if (!body) return;
+			var inv = body.inventory;
 			if (!inv) return;
 			var amount = inv!.GetItemCount(ItemDef);
 			if (amount <= 0) return;
 
 
-			body!.AddTimedBuff(BuffDef, scalingInfos[2].ScalingFunction(amount), Mathf.FloorToInt(scalingInfos[1].ScalingFunction(amount) / scalingInfos[0].ScalingFunction(amount)));
+			body!.AddTimedBuff(BuffDef, ScalingInfos[2].ScalingFunction(amount), Mathf.FloorToInt(ScalingInfos[1].ScalingFunction(amount) / ScalingInfos[0].ScalingFunction(amount)));
 		}
 		
 		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
+		// ReSharper disable once InconsistentNaming
 		public static void RecalcStatsAttackSpeed(CharacterBody __instance)
 		{
 			var inv = __instance!.inventory;
-			var amount = inv?.GetItemCount(_instance.ItemDef) ?? 0;
+			if (!inv) return;
+			var amount = inv.GetItemCount(_instance!.ItemDef);
 			if (amount <= 0) return;
 			
 			var buffAmount = __instance.GetBuffCount(BuffDef);
 			var baseAttack = __instance.baseAttackSpeed + __instance.levelAttackSpeed * (__instance.level - 1f);
 			__instance.attackSpeed /= baseAttack;
-			__instance.attackSpeed *= 1f + buffAmount * _instance.scalingInfos[0].ScalingFunction(amount);
+			__instance.attackSpeed *= 1f + buffAmount * _instance.ScalingInfos[0].ScalingFunction(amount);
 			__instance.attackSpeed *= baseAttack;
 		}
 	}

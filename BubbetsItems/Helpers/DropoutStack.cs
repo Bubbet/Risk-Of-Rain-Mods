@@ -26,7 +26,7 @@ namespace BubbetsItems.Helpers
         private int _count; // The amount of items in the array.
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EnumerableDropOutStack{T}"/> class.
+        /// Initializes a new instance of the <see cref="DropoutStack{T}"/> class.
         /// </summary>
         /// <param name="capacity">The capacity of the stack.</param>
         public DropoutStack(int capacity)

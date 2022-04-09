@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
+using BubbetsItems.Bases;
+using BubbetsItems.Helpers;
 using HarmonyLib;
-using InLobbyConfig;
 using InLobbyConfig.Fields;
 using RoR2;
 using UnityEngine;
@@ -13,12 +14,12 @@ namespace BubbetsItems.Equipments
 {
     public class WildlifeCamera : EquipmentBase
     {
-        private ConfigEntry<float> _cooldown;
-        private ConfigEntry<bool> _filterOutBosses;
-        private GameObject _indicator;
+        private ConfigEntry<float>? _cooldown;
+        private ConfigEntry<bool>? _filterOutBosses;
+        private GameObject? _indicator;
         
         private static BuffDef? _buffDef;
-        private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefSepia");
+        private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack!.buffDefs.Find("BuffDefSepia");
 
         public override bool PerformEquipment(EquipmentSlot equipmentSlot)
         { 
@@ -46,7 +47,7 @@ namespace BubbetsItems.Equipments
             if (!behaviour || behaviour.target) return false;
             
             equipmentSlot.ConfigureTargetFinderForEnemies();
-            equipmentSlot.currentTarget = new EquipmentSlot.UserTargetInfo(equipmentSlot.targetFinder.GetResults().FirstOrDefault(x => x.healthComponent && (!_filterOutBosses.Value && !x.healthComponent.body.isBoss || _filterOutBosses.Value)));
+            equipmentSlot.currentTarget = new EquipmentSlot.UserTargetInfo(equipmentSlot.targetFinder.GetResults().FirstOrDefault(x => x.healthComponent && (!_filterOutBosses!.Value && !x.healthComponent.body.isBoss || _filterOutBosses.Value)));
 
             if (!equipmentSlot.currentTarget.transformToIndicateAt) return false;
             
@@ -71,18 +72,18 @@ Luckily they seem friendly enough");
         protected override void MakeConfigs()
         {
             base.MakeConfigs();
-            _cooldown = configFile.Bind(ConfigCategoriesEnum.General, "Wildlife Camera Cooldown", 25f, "Cooldown for wildlife camera equipment.");
+            _cooldown = configFile!.Bind(ConfigCategoriesEnum.General, "Wildlife Camera Cooldown", 25f, "Cooldown for wildlife camera equipment.");
             _filterOutBosses = configFile.Bind(ConfigCategoriesEnum.General, "Wildlife Camera Can Do Bosses", false, "Can the camera capture bosses.");
-            _indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("CameraIndicator");
+            _indicator = BubbetsItemsPlugin.AssetBundle!.LoadAsset<GameObject>("CameraIndicator");
         }
 
         
         public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
             base.MakeInLobbyConfig(scalingFunctions);
-            var cool = new FloatConfigField(_cooldown.Definition.Key, () => _cooldown.Value, newValue => {
+            var cool = new FloatConfigField(_cooldown!.Definition.Key, () => _cooldown.Value, newValue => {
                 _cooldown.Value = newValue;
-                EquipmentDef.cooldown = newValue;
+                EquipmentDef!.cooldown = newValue;
             });
 
             var general = scalingFunctions[ConfigCategoriesEnum.General];
@@ -93,15 +94,16 @@ Luckily they seem friendly enough");
         protected override void PostEquipmentDef()
         {
             base.PostEquipmentDef();
-            EquipmentDef.cooldown = _cooldown.Value;
+            EquipmentDef!.cooldown = _cooldown!.Value;
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CharacterModel), nameof(CharacterModel.UpdateOverlays))]
+        // ReSharper disable once InconsistentNaming
         public static void UpdateOverlays(CharacterModel __instance)
         {
             // ReSharper disable once Unity.NoNullPropagation
             var isSepia = __instance.body?.HasBuff(BuffDef) ?? false;
-            AddOverlay(__instance, BubbetsItemsPlugin.AssetBundle.LoadAsset<Material>("SepiaMaterial"), isSepia);
+            AddOverlay(__instance, BubbetsItemsPlugin.AssetBundle!.LoadAsset<Material>("SepiaMaterial"), isSepia);
         }
 
         public static void AddOverlay(CharacterModel self, Material overlayMaterial, bool condition)
@@ -122,10 +124,20 @@ Luckily they seem friendly enough");
 
     public class WildLifeCameraBehaviour : MonoBehaviour, MasterSummon.IInventorySetupCallback
     {
-        private CharacterMaster _master;
-        private CharacterBody _body;
-        public GameObject target;
-        private CharacterBody Body => _body ? _body : _body = _master.GetBody();
+        private CharacterMaster? _master;
+        private CharacterBody? _body;
+        public GameObject? target;
+        private CharacterBody? Body
+        {
+            get
+            {
+                if (!_master) return null;
+                var body = _master!.GetBody();
+                if (!body) return null;
+                return _body ??= body;
+            }
+        }
+
         public void Awake()
         {
             _master = GetComponent<CharacterMaster>();
@@ -133,72 +145,61 @@ Luckily they seem friendly enough");
 
         public bool Perform()
         {
+            if (Body is null) return false;
             if (!target)
             {
                 var targ = GetTarget();
-                if (targ)
-                {
-                    target = MasterCatalog.GetMasterPrefab(targ.healthComponent.body.master.masterIndex);
-                    if (target)
-                    {
-                        AkSoundEngine.PostEvent("WildlifeCamera_TakePicture", Body.gameObject); // Sound does not play for clients, does play for body owner
-                        AddOneStock();
-                        return true;
-                    }
-                }
+                if (!targ || targ is null) return false;
+                target = MasterCatalog.GetMasterPrefab(targ.healthComponent.body.master.masterIndex);
+                if (!target) return false;
+                AkSoundEngine.PostEvent("WildlifeCamera_TakePicture", Body.gameObject); // Sound does not play for clients, does play for body owner
+                return false;
             }
-            else
-            {
-                RaycastHit info;
-                if (Util.CharacterRaycast(Body.gameObject, GetAimRay(), out info, 50f,
-                    LayerIndex.world.mask | LayerIndex.entityPrecise.mask, QueryTriggerInteraction.Ignore))
-                {
-                    if (NetworkServer.active)
-                    {
-                        var summon = new MasterSummon
-                        {
-                            masterPrefab = target,
-                            position = info.point,
-                            rotation = Quaternion.identity,
-                            //inventoryToCopy = Body.inventory,
-                            useAmbientLevel = true,
-                            teamIndexOverride = TeamIndex.Player,
-                            summonerBodyObject = Body.gameObject,
-                            inventorySetupCallback = this
-                        };
-                        summon.Perform();
-                    }
 
-                    AkSoundEngine.PostEvent("WildlifeCamera_Success", Body.gameObject);
-                    target = null;
-                    return true;
+            RaycastHit info;
+            if (Util.CharacterRaycast(Body.gameObject, GetAimRay(), out info, 50f,
+                LayerIndex.world.mask | LayerIndex.entityPrecise.mask, QueryTriggerInteraction.Ignore))
+            {
+                if (NetworkServer.active)
+                {
+                    var summon = new MasterSummon
+                    {
+                        masterPrefab = target,
+                        position = info.point,
+                        rotation = Quaternion.identity,
+                        //inventoryToCopy = Body.inventory,
+                        useAmbientLevel = true,
+                        teamIndexOverride = TeamIndex.Player,
+                        summonerBodyObject = Body.gameObject,
+                        inventorySetupCallback = this
+                    };
+                    summon.Perform();
                 }
+
+                AkSoundEngine.PostEvent("WildlifeCamera_Success", Body.gameObject);
+                target = null;
+                return true;
             }
             return false;
         }
 
-        private void AddOneStock()
+        private HurtBox? GetTarget()
         {
-            var slot = Body.inventory.activeEquipmentSlot;
-            var equipmentState = Body.inventory.GetEquipment(slot);
-            Body.inventory.SetEquipment(new EquipmentState(equipmentState.equipmentIndex, equipmentState.chargeFinishTime, (byte) (equipmentState.charges + 1)), slot);
-        }
-
-        private HurtBox GetTarget()
-        {
-            return Body.equipmentSlot.currentTarget.hurtBox;
+            // ReSharper disable once Unity.NoNullPropagation
+            return Body?.equipmentSlot.currentTarget.hurtBox;
         }
 
         private Ray GetAimRay()
         {
-            var bank = Body.inputBank;
-            return bank ? new Ray(bank.aimOrigin, bank.aimDirection) : new Ray(Body.transform.position, Body.transform.forward);
+            var bank = Body!.inputBank;
+            return bank ? new Ray(bank!.aimOrigin, bank.aimDirection) : new Ray(Body.transform.position, Body.transform.forward);
         }
 
         public void SetupSummonedInventory(MasterSummon masterSummon, Inventory summonedInventory)
         {
             //summonedInventory.SetEquipmentIndex(BubbetsItemsPlugin.ContentPack.eliteDefs[0].eliteEquipmentDef.equipmentIndex); ArtificerExtended throws an nre here.
-            summonedInventory.SetEquipment(new EquipmentState(BubbetsItemsPlugin.ContentPack.eliteDefs[0].eliteEquipmentDef.equipmentIndex, Run.FixedTimeStamp.negativeInfinity, 1), 0);
+            // TODO swap elitedefs direct ref with a property and linq
+            summonedInventory.SetEquipment(new EquipmentState(BubbetsItemsPlugin.ContentPack!.eliteDefs[0].eliteEquipmentDef.equipmentIndex, Run.FixedTimeStamp.negativeInfinity, 1), 0);
         }
     }
 }

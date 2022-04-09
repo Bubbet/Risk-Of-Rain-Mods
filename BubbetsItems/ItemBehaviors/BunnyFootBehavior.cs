@@ -1,5 +1,4 @@
-﻿using System;
-using BubbetsItems.Items;
+﻿using BubbetsItems.Items;
 using RoR2;
 using RoR2.Items;
 using UnityEngine;
@@ -14,7 +13,7 @@ namespace BubbetsItems.ItemBehaviors
 		[ItemDefAssociation(useOnServer = true, useOnClient = true)]
 		private static ItemDef GetItemDef()
 		{
-			return BunnyFoot.Instance!.ItemDef;
+			return (BunnyFoot.Instance!.ItemDef is not null ? BunnyFoot.Instance!.ItemDef : default)!;
 		}
 
 		private void OnEnable()

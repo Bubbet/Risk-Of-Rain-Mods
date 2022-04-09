@@ -4,7 +4,7 @@ using RoR2.ContentManagement;
 using RoR2.ExpansionManagement;
 using UnityEngine;
 
-namespace BubbetsItems
+namespace BubbetsItems.ScriptableObjects
 {
 	
 	[CreateAssetMenu(menuName = "BubbetsItems/ContentPackProvider")]

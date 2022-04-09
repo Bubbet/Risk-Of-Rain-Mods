@@ -1,10 +1,11 @@
-﻿using BubbetsItems.Helpers;
+﻿using BubbetsItems.Bases;
+using BubbetsItems.Helpers;
 
 namespace BubbetsItems.Items
 {
 	public class AcidSoakedBlindfold : ItemBase
 	{
-		public static AcidSoakedBlindfold instance;
+		public static AcidSoakedBlindfold? Instance;
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
@@ -25,7 +26,7 @@ namespace BubbetsItems.Items
 
 		public AcidSoakedBlindfold()
 		{
-			instance = this;
+			Instance = this;
 		}
 	}
 }

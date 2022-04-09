@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Bootstrap;
+using BubbetsItems.Bases;
+using BubbetsItems.Helpers;
 using InLobbyConfig;
 using InLobbyConfig.Fields;
-using NCalc;
 
-namespace BubbetsItems
+namespace BubbetsItems.Components
 {
     public static class InLobbyConfigCompat
     {

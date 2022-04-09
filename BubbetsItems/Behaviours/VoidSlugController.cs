@@ -1,14 +1,14 @@
-﻿using System;
-using RoR2;
+﻿using RoR2;
 using UnityEngine;
 
-namespace BubbetsItems
+namespace BubbetsItems.Behaviours
 {
 	public class VoidSlugController : MonoBehaviour
 	{
-		private Animator _animator;
-		private CharacterModel _characterModel;
+		private Animator? _animator;
+		private CharacterModel? _characterModel;
 		private bool _lastInDanger;
+		private static readonly int InCombat = Animator.StringToHash("inCombat");
 
 		private void Start()
 		{
@@ -18,21 +18,19 @@ namespace BubbetsItems
 
 		private void FixedUpdate()
 		{
-			if (_characterModel && _characterModel.body && _animator)
+			if (!_characterModel || !_characterModel!.body || !_animator) return;
+			var body = _characterModel.body;
+			var inDanger = !body.outOfDanger;
+			if (inDanger && _lastInDanger)
 			{
-				var body = _characterModel.body;
-				var inDanger = !body.outOfDanger;
-				if (inDanger && _lastInDanger)
-				{
-					_animator.SetBool("inCombat", true);
-					// Do effect system stuff
-				}else if (!inDanger && _lastInDanger)
-				{
-					_animator.SetBool("inCombat", false);
-					// Do effect system stuff
-				}
-				_lastInDanger = inDanger;
+				_animator!.SetBool(InCombat, true);
+				// Do effect system stuff
+			}else if (!inDanger && _lastInDanger)
+			{
+				_animator!.SetBool(InCombat, false);
+				// Do effect system stuff
 			}
+			_lastInDanger = inDanger;
 		}
 	}
 }

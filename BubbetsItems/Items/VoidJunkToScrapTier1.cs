@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using BepInEx.Configuration;
+using BubbetsItems.Bases;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
@@ -23,9 +24,9 @@ namespace BubbetsItems.Items
 			_canConsumeLastStack = configFile!.Bind(ConfigCategoriesEnum.General, "Void Scrap Consume Last Stack", false, "Should the void scrap consume the last stack when being used for scrap.");
 		}
 
-		public override string GetFormattedDescription(Inventory inventory, string? token = null)
+		public override string GetFormattedDescription(Inventory? inventory = null, string? token = null)
 		{
-			return Language.GetStringFormatted(ItemDef.descriptionToken, !_canConsumeLastStack!.Value ? "Cannot consume the last stack. " : "");
+			return Language.GetStringFormatted(ItemDef!.descriptionToken, !_canConsumeLastStack!.Value ? "Cannot consume the last stack. " : "");
 		}
 
 		protected override void MakeTokens()
@@ -55,7 +56,7 @@ namespace BubbetsItems.Items
 			}
 			catch (Exception e)
 			{
-				BubbetsItemsPlugin.Log.LogError(e);
+				BubbetsItemsPlugin.Log?.LogError(e);
 			}
 		}
 
@@ -77,7 +78,7 @@ namespace BubbetsItems.Items
 				var normalPriority = new WeightedSelection<ItemIndex>();
 
 				var voidAmount = Math.Max(0, inv.GetItemCount(_instance!.ItemDef) - 1);
-				if (_canConsumeLastStack!.Value || voidAmount > 0) highestPriority.AddChoice(_instance.ItemDef.itemIndex, voidAmount);
+				if (_canConsumeLastStack!.Value || voidAmount > 0) highestPriority.AddChoice(_instance.ItemDef!.itemIndex, voidAmount);
 
 				foreach (var itemIndex in ItemCatalog.tier1ItemList)
 				{
@@ -105,7 +106,7 @@ namespace BubbetsItems.Items
 			}
 			catch (Exception e)
 			{
-				BubbetsItemsPlugin.Log.LogError(e);
+				_instance!.Logger?.LogError(e);
 			}
 		}
 
@@ -121,7 +122,7 @@ namespace BubbetsItems.Items
 			}
 			catch (Exception e)
 			{
-				BubbetsItemsPlugin.Log.LogError(e);
+				_instance!.Logger?.LogError(e);
 				return false;
 			}
 		}

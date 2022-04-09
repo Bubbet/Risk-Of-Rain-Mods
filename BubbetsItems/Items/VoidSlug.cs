@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BubbetsItems.Bases;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
@@ -7,7 +8,7 @@ namespace BubbetsItems.Items
 {
 	public class VoidSlug : ItemBase
 	{
-		public static VoidSlug Instance;
+		public static VoidSlug? Instance;
 		public VoidSlug()
 		{
 			Instance = this;
@@ -33,26 +34,32 @@ namespace BubbetsItems.Items
 			AddScalingFunction("[h] * 0.005 * [a] + 0.0196", "Regen", new ExpressionContext {h = 1}, "[h] = Missing health, [a] = Item count");
 		}
 
-		public override string GetFormattedDescription(Inventory inventory, string? token = null)
+		public override string GetFormattedDescription(Inventory? inventory = null, string? token = null)
 		{
-			scalingInfos[0].WorkingContext.h = 1f;
+			ScalingInfos[0].WorkingContext.h = 1f;
 			return base.GetFormattedDescription(inventory, token);
 		}
 
 		[HarmonyPostfix, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.Heal))]
+		// ReSharper disable once InconsistentNaming
 		private static void HealServer(HealthComponent __instance)
 		{
-			var count = __instance.body?.inventory?.GetItemCount(Instance.ItemDef) ?? 0;
+			if (!__instance.body) return;
+			if (!__instance.body.inventory) return;
+			var count = __instance.body.inventory.GetItemCount(Instance!.ItemDef);
 			if (count <= 0 || __instance.missingCombinedHealth < 0.1f) return;
-			__instance.body?.RecalculateStats();
+			__instance.body.RecalculateStats();
 		}
 
 		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
+		// ReSharper disable once InconsistentNaming
 		public static void RecalcStats(CharacterBody __instance)
 		{
-			var count = __instance.inventory?.GetItemCount(Instance.ItemDef) ?? 0;
+			if (!__instance) return;
+			if (!__instance.inventory) return;
+			var count = __instance.inventory.GetItemCount(Instance!.ItemDef);
 			if (count <= 0 || __instance.outOfDanger) return;
-			var info = Instance.scalingInfos[0];
+			var info = Instance.ScalingInfos[0];
 			info.WorkingContext.h = __instance.healthComponent.missingCombinedHealth;
 			__instance.regen += info.ScalingFunction(count);
 		}
