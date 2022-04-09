@@ -90,19 +90,10 @@ namespace BubbetsItems.Equipments
             base.MakeInLobbyConfig(scalingFunctions);
 
             var general = scalingFunctions[ConfigCategoriesEnum.General];
-            
-            var cool = new FloatConfigField(cooldown.Definition.Key, () => cooldown.Value, newValue => {
-                cooldown.Value = newValue;
-            });
-            var dura = new FloatConfigField(duration.Definition.Key, () => duration.Value, newValue => {
-                duration.Value = newValue;
-            });
-            var inte = new FloatConfigField(interval.Definition.Key, () => interval.Value, newValue => {
-                interval.Value = newValue;
-            });
-            general.Add(cool);
-            general.Add(dura);
-            general.Add(inte);
+
+            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(cooldown));
+            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(duration));
+            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(interval));
         }
     }
 

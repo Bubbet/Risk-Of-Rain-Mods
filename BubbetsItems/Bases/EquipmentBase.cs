@@ -84,7 +84,7 @@ namespace BubbetsItems
             c.Emit(OpCodes.Or);
             c.Emit(OpCodes.Stloc, activeFlag);
         }
-        public static bool UpdateTargetsHook(EquipmentSlot __instance)
+        public static bool UpdateTargetsHook(EquipmentSlot __instance) // this is probably the most expensive function in my mod, its mostly because of the linq inside a update function which is pretty ew but im not smart enough to change it
         {
             var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef.equipmentIndex == __instance.equipmentIndex);
             if (equipment == null) return false;

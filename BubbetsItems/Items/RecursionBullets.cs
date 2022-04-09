@@ -56,7 +56,8 @@ namespace BubbetsItems.Items
 			if (!inv) return;
 			var amount = inv!.GetItemCount(ItemDef);
 			if (amount <= 0) return;
-			
+
+
 			body!.AddTimedBuff(BuffDef, scalingInfos[2].ScalingFunction(amount), Mathf.FloorToInt(scalingInfos[1].ScalingFunction(amount) / scalingInfos[0].ScalingFunction(amount)));
 		}
 		

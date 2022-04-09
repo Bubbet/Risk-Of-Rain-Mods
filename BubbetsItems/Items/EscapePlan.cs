@@ -26,13 +26,16 @@ namespace BubbetsItems.Items
             //if (ItemEnabled.Value) RepulsionArmorPlateMk2Plugin.Conf.RequiresR2Api = true;
             base.MakeConfigs();
             AddScalingFunction("-Log(1 - (1 - [h])) * (0.65 + 0.1 * [a])", "Movement Speed", new ExpressionContext{h = 1f/500f}, "[a] = amount, [h] = health");
-            Granularity = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, GetType().Name + " Granularity", 25f, "Value to multiply the scaling function by before its rounded, and then value to divide the buff count by.");
-            _instance = this;
+            Granularity = configFile!.Bind(ConfigCategoriesEnum.BalancingFunctions, GetType().Name + " Granularity", 25f, "Value to multiply the scaling function by before its rounded, and then value to divide the buff count by.");
             /*
             if (!Chainloader.PluginInfos.ContainsKey(R2API.R2API.PluginGUID))
                 ItemEnabled.Value = false;*/
         }
-        
+
+        public EscapePlan()
+        {
+            _instance = this;
+        }
         public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
             base.MakeInLobbyConfig(scalingFunctions);
@@ -116,8 +119,9 @@ namespace BubbetsItems.Items
         }
         private static void SetBuff(CharacterBody body)
         {
-            if (!_instance.Enabled.Value) return;
-            var amt = body.inventory != null ? body.inventory.GetItemCount(_instance.ItemDef) : 0;
+            var inv = body.inventory;
+            if (!inv) return;
+            var amt = body.inventory.GetItemCount(_instance.ItemDef);
             if (amt <= 0) return;
             //_instance.Logger.LogInfo("DamageDealt And Item");
             /*
@@ -127,7 +131,7 @@ namespace BubbetsItems.Items
             //_instance.Logger.LogInfo(buffI + " : " + buff);
             var info = _instance.scalingInfos[0];
             info.WorkingContext.h = body.healthComponent.combinedHealthFraction;
-            body.SetBuffCount(BuffDef.buffIndex, Mathf.RoundToInt(info.ScalingFunction(amt) * Granularity.Value ));
+            body.SetBuffCount(BuffDef!.buffIndex, Mathf.RoundToInt(info.ScalingFunction(amt) * Granularity.Value ));
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
@@ -139,7 +143,7 @@ namespace BubbetsItems.Items
                 __instance.moveSpeed *= 1f + amt / Granularity.Value;
             }
 
-            SetBuff(__instance);
+            //SetBuff(__instance);
         }
         
             /*

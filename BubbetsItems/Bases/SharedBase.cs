@@ -96,10 +96,8 @@ namespace BubbetsItems
             Instances.AddRange(localInstances);
 
             if (!serializableContentPack) return;
-            serializableContentPack!.itemDefs = serializableContentPack.itemDefs
-                .Where(x => Instances.FirstOrDefault(y => MatchName(x.name, y.GetType().Name))?.Enabled?.Value ?? false).ToArray();
-            serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs
-                .Where(x => Instances.FirstOrDefault(y => MatchName(x.name, y.GetType().Name))?.Enabled?.Value ?? false).ToArray();
+            serializableContentPack!.itemDefs = serializableContentPack.itemDefs.Where(x => ItemBase.Items.Any(y => MatchName(x.name, y.GetType().Name))).ToArray();
+            serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs.Where(x => EquipmentBase.Equipments.Any(y => MatchName(x.name, y.GetType().Name))).ToArray();
             foreach (var instance in localInstances) instance.FillDefsFromSerializableCP(serializableContentPack);
         }
 
