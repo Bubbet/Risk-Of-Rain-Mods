@@ -128,6 +128,7 @@ The cost of purchase and production associated with Mk2 is considerably higher t
         
         private static bool DoMk2ArmorPlates(HealthComponent hc, ref float damage)
         {
+            if (!_reductionOnTrue!.Value) return false;
             if (hc == null) return false;
             if (hc.body == null) return false;
             if (hc.body.inventory == null) return false;
@@ -147,7 +148,6 @@ The cost of purchase and production associated with Mk2 is considerably higher t
         [HarmonyILManipulator, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.TakeDamage))]
         public static void TakeDamageHook(ILContext il)
         {
-            if (!_reductionOnTrue!.Value) return;
             var c = new ILCursor(il);
             ILLabel? jumpInstruction = null;
             int damageNum = -1;

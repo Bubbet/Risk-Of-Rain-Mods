@@ -96,8 +96,7 @@ namespace BubbetsItems.Equipments
             general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Interval));
         }
     }
-
-    [RequireComponent(typeof(CharacterBody))]
+    
     public class BrokenClockBehaviour : MonoBehaviour
     {
         public static float StackDuration = 10f;
