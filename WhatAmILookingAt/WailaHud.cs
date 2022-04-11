@@ -71,7 +71,21 @@ namespace WhatAmILookingAt
 
 			if (body && GetInfo(body, out var localizedName, out var gObject))
 			{
-				var str = WailaInWorldChecks.GetIdentifier(gObject);
+				var str = "";
+				var sstr = "";
+				WailaInWorldChecks.PickupCheck(gObject, ref sstr); // I dont like this
+				if (sstr != "")
+				{
+					WailaInWorldChecks.InteractableCheck(gObject, ref str);
+					if (str != "")
+					{
+						var start = WhatAmILookingAtPlugin.GetModString(str);
+						textMesh.text = localizedName + "\n" + start!.Substring(0, start.Length - 8) + " (" + WhatAmILookingAtPlugin.GetModString(sstr) + ")</color>"; // i hate this too
+						return;
+					}
+				};
+				
+				str = sstr != "" ? sstr : WailaInWorldChecks.GetIdentifier(gObject);
 				textMesh.text = localizedName + "\n" + WhatAmILookingAtPlugin.GetModString(str);
 				return;
 			}
@@ -167,8 +181,14 @@ namespace WhatAmILookingAt
 			var shopTerminal = gObject.GetComponent<ShopTerminalBehavior>();
 			if (shopTerminal)
 			{
-				var def = PickupCatalog.GetPickupDef(shopTerminal.CurrentPickupIndex());
-				return Language.GetString(def?.nameToken ?? PickupCatalog.invalidPickupToken);
+				
+				//CostTypeCatalog.GetCostTypeDef(pingTargetPurchaseInteraction.costType).BuildCostStringStyled(pingTargetPurchaseInteraction.cost, PingIndicator.sharedStringBuilder, false, true);
+				if (!shopTerminal.pickupIndexIsHidden && shopTerminal.pickupDisplay)
+				{
+
+					var def = PickupCatalog.GetPickupDef(shopTerminal.CurrentPickupIndex());
+					return bestBodyName + " (" + Language.GetString(def?.nameToken ?? PickupCatalog.invalidPickupToken) + ")";
+				}
 			}
 
 			return bestBodyName == "???" ? gObject.name : bestBodyName;

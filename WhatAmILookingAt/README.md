@@ -36,3 +36,8 @@
 1.4.0
 - Added in world support for waila
 - You can now look at interactables, shops for which item is inside, enemies, players, and scenes to figure out where they are from.
+
+1.4.1
+- Fixed shops that are ? showing what they actually are
+- Fixed some maps not being found
+- Changed the tips when looking at duplicators and shops to be better

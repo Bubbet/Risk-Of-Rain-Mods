@@ -80,8 +80,8 @@ namespace WhatAmILookingAt
 		public static void Register()
 		{
 			InWorldChecks += BodyCheck;
-			InWorldChecks += PickupCheck;
 			InWorldChecks += InteractableCheck;
+			InWorldChecks += PickupCheck;
 			InWorldChecks += SceneCheck;
 		}
 		public static string GetIdentifier(GameObject go)
@@ -111,7 +111,7 @@ namespace WhatAmILookingAt
 			}
 		}
 
-		private static void InteractableCheck(GameObject go, ref string identifier)
+		public static void InteractableCheck(GameObject go, ref string identifier)
 		{
 			var netIdentity = go.GetComponent<NetworkIdentity>();
 			if (netIdentity == null) return;
@@ -128,13 +128,14 @@ namespace WhatAmILookingAt
 			}
 		}
 
-		private static void PickupCheck(GameObject go, ref string identifier)
+		public static void PickupCheck(GameObject go, ref string identifier)
 		{
 			var display = go.GetComponent<GenericPickupController>();
 			var shop = go.GetComponent<ShopTerminalBehavior>();
-			if (!display && !shop) return;
+			if (!display && !shop || shop.pickupIndexIsHidden) return;
 			var def = PickupCatalog.GetPickupDef(display ? display.pickupIndex : shop.pickupIndex);
 			if (def == null) return;
+
 			if (def.itemIndex != ItemIndex.None)
 			{
 				var itemDef = ItemCatalog.GetItemDef(def.itemIndex);
