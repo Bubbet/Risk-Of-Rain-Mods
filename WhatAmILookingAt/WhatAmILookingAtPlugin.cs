@@ -22,7 +22,7 @@ using RoR2.UI;
 namespace WhatAmILookingAt
 {
 	// needs to be prefixed with aaaa so it loads before all the mods that require r2api
-	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.3.2")]
+	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.4.0")]
 	[BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.SoftDependency)]
 	//[BepInDependency("com.ThinkInvisible.TILER2", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterAPI", BepInDependency.DependencyFlags.SoftDependency)]
@@ -53,6 +53,8 @@ namespace WhatAmILookingAt
 		private static readonly List<string> UnknownIdentifiers = new List<string>(); 
 
 
+		public static List<HUD> HUDs = new List<HUD>();
+		
 		public void Awake()
 		{
 			Instance = this;
@@ -73,6 +75,15 @@ namespace WhatAmILookingAt
 			RoR2Application.onLoad += ExtraTokens;
 			TextColor = Config.Bind("General", "Text Color", "#0055FF", "Color of the text displaying what mod something is from.");
 			GenerateChecks();
+			
+			HUD.shouldHudDisplay += CreateHud;
+		}
+		
+		private static void CreateHud(HUD hud, ref bool shoulddisplay)
+		{
+			if (HUDs.Contains(hud)) return;
+			hud.gameObject.AddComponent<WailaHud>();
+			HUDs.Add(hud);
 		}
 
 
@@ -100,6 +111,9 @@ namespace WhatAmILookingAt
 					break;
 				case "RoR2.DLC1":
 					str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_VANILLA", TextColor!.Value, $"DLC 1 ({Language.GetString("DLC1_NAME")})");
+					break;
+				case "RoR2.JunkContent":
+					str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_VANILLA", TextColor!.Value, "DLC 0 Junk");
 					break;
 				default:
 				{
@@ -134,14 +148,9 @@ namespace WhatAmILookingAt
 		}
 		private static void GenerateChecks()
 		{
-			BodyChecks += WhatAmILookingAtBodyChecks.ItemDef;
-			BodyChecks += WhatAmILookingAtBodyChecks.EquipmentDef;
-			BodyChecks += WhatAmILookingAtBodyChecks.ArtifactDef;
-			BodyChecks += WhatAmILookingAtBodyChecks.SkillDef;
-			BodyChecks += WhatAmILookingAtBodyChecks.ExpansionDef;
-
-			BodyTextChecks += WhatAmILookingAtBodyTextChecks.SkillDef;
-			BodyTextChecks += WhatAmILookingAtBodyTextChecks.UnlockableDef;
+			WhatAmILookingAtBodyChecks.Register(ref BodyChecks);
+			WhatAmILookingAtBodyTextChecks.Register(ref BodyTextChecks);
+			WailaInWorldChecks.Register();
 		}
 
 		/// <summary> Delegate for finding a identifier from a token. </summary>

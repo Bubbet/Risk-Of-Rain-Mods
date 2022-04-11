@@ -32,3 +32,7 @@
 
 1.3.2
 - Dropped support for tiler2 because it was somehow breaking systemintializers and i dont care enough to find out why
+
+1.4.0
+- Added in world support for waila
+- You can now look at interactables, shops for which item is inside, enemies, players, and scenes to figure out where they are from.
