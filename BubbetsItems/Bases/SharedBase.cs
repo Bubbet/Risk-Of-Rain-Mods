@@ -97,7 +97,8 @@ namespace BubbetsItems
 
             if (!serializableContentPack) return;
             serializableContentPack!.itemDefs = serializableContentPack.itemDefs.Where(x => ItemBase.Items.Any(y => MatchName(x.name, y.GetType().Name))).ToArray();
-            serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs.Where(x => EquipmentBase.Equipments.Any(y => MatchName(x.name, y.GetType().Name))).ToArray();
+            var eliteEquipments = serializableContentPack.eliteDefs.Select(x => x.eliteEquipmentDef);
+            serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs.Where(x => EquipmentBase.Equipments.Any(y => MatchName(x.name, y.GetType().Name))).Union(eliteEquipments).ToArray();
             foreach (var instance in localInstances) instance.FillDefsFromSerializableCP(serializableContentPack);
         }
 

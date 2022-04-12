@@ -176,8 +176,8 @@ namespace BubbetsItems.Equipments
             if (!CharacterMotor) return keyframe;
             keyframe.Position = CharacterMotor.transform.position;
             keyframe.Velocity = (CharacterMotor as IPhysMotor).velocity;
-            
-            //keyframe.LookDir = body.inputBank.aimDirection; // TODO replace with CameraRigController.desiredCameraState.rotation;
+
+            //keyframe.LookDir = something.GetComponent<CameraRigController>().currentCameraState.rotation; //Body.inputBank.aimDirection; // TODO replace with CameraRigController.desiredCameraState.rotation;
 
             /*
             ArrayUtils.CloneTo(body.buffs, ref keyframe.Buffs);
@@ -200,7 +200,11 @@ namespace BubbetsItems.Equipments
             //characterMotor.velocity = Vector3.zero;
             //_lastVelocity = keyframe.Velocity;
 
-            //body.inputBank.aimDirection = keyframe.LookDir;
+            //var controller = something.GetComponent<CameraRigController>();
+            //var state = controller.currentCameraState
+            //state.rotation = keyframe.LookDir;
+            //controller.SetCameraState(state);
+            //Body.inputBank.aimDirection = keyframe.LookDir;
 
             /*
             ArrayUtils.CloneTo(keyframe.Buffs, ref body.buffs);
@@ -255,7 +259,7 @@ namespace BubbetsItems.Equipments
     {
         public Vector3 Position;
         public Vector3 Velocity;
-        public Vector3 LookDir;
+        public Quaternion LookDir;
         public float Health;
         public float Shield;
         public float Barrier;
@@ -271,7 +275,7 @@ namespace BubbetsItems.Equipments
             Position = Vector3.MoveTowards(Position, target.Position, time);
             //Velocity = Vector3.MoveTowards(Velocity, target.Velocity, time);
             Velocity = target.Velocity;
-            LookDir = Vector3.MoveTowards(LookDir, target.LookDir, time);
+            //LookDir = Vector3.MoveTowards(LookDir, target.LookDir, time);
 
             Health = Mathf.MoveTowards(Health, target.Health, time);
             Shield = Mathf.MoveTowards(Shield, target.Shield, time);
@@ -295,7 +299,8 @@ namespace BubbetsItems.Equipments
             {
                 Position = Vector3.Lerp(from.Position, to.Position, v),
                 Velocity = Vector3.Lerp(from.Velocity, to.Velocity, v),
-                LookDir = Vector3.Lerp(from.LookDir, to.LookDir, v),
+                //LookDir = Vector3.Lerp(from.LookDir, to.LookDir, v),
+                LookDir = Quaternion.Lerp(from.LookDir, to.LookDir, v),
                 Health = Mathf.Lerp(from.Health, to.Health, v),
                 Shield = Mathf.Lerp(from.Shield, to.Shield, v),
                 Barrier = Mathf.Lerp(from.Barrier, to.Barrier, v)

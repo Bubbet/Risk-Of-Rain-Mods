@@ -41,6 +41,9 @@ Patience is key~
   * Made the indicator for enemies being inside shifted quartz more useful
   * Buffed shifted quartz from 20m to 18m
   * Added two new config entiries for zealotry embrace, only track your dots, and dots only count for one stack
+  * Fixed wildlife cameras effect not working
+  * Made camera copy loadout, giving the captured guys the stage variants
+  * Made camera copy previous elite effect
 
 * v1.5.5 Mod Changes :
   * Exposed the void pairings as a config value
