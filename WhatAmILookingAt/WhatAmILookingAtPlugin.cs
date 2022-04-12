@@ -37,7 +37,7 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 		}
 		
 		public static ConfigEntry<string>? TextColor;
-		public static ConfigEntry<InWorldOptions> RequireTABForInWorld;
+		public static ConfigEntry<InWorldOptions>? RequireTABForInWorld;
 		
 		public static WhatAmILookingAtPlugin? Instance;
 		public static ManualLogSource? Log;
@@ -182,8 +182,6 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 		public static event StringTest? TitleChecks;
 		/// <summary> Body Text to ItemDef, EquipmentDef, etc </summary>
 		public static readonly Dictionary<string, string?> BodyTextMap = new Dictionary<string, string?>();
-
-		public static object InWorldEnabled;
 
 		/// <summary>
 		/// Check the body text, last resort.

@@ -70,7 +70,7 @@ namespace WhatAmILookingAt
 			var body = controller.targetBody;
 
 			var keyPressCondition =
-				WhatAmILookingAtPlugin.RequireTABForInWorld.Value ==
+				WhatAmILookingAtPlugin.RequireTABForInWorld!.Value ==
 				WhatAmILookingAtPlugin.InWorldOptions.WhileScoreboardOpen && _hud.localUserViewer?.inputPlayer != null && _hud.localUserViewer.inputPlayer.GetButton("info");
 
 			if (!keyPressCondition && WhatAmILookingAtPlugin.RequireTABForInWorld.Value != WhatAmILookingAtPlugin.InWorldOptions.AlwaysOn || !body || !GetInfo(body, out var localizedName, out var gObject))
