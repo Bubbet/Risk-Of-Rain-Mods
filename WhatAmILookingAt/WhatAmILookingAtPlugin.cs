@@ -22,14 +22,22 @@ using RoR2.UI;
 namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc version if they only add networked objects
 {
 	// needs to be prefixed with aaaa so it loads before all the mods that require r2api
-	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.4.1")]
+	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.4.3")]
 	[BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.SoftDependency)]
 	//[BepInDependency("com.ThinkInvisible.TILER2", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterAPI", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
 	public class WhatAmILookingAtPlugin : BaseUnityPlugin
 	{
+		public enum InWorldOptions
+		{
+			Disabled,
+			WhileScoreboardOpen,
+			AlwaysOn
+		}
+		
 		public static ConfigEntry<string>? TextColor;
+		public static ConfigEntry<InWorldOptions> RequireTABForInWorld;
 		
 		public static WhatAmILookingAtPlugin? Instance;
 		public static ManualLogSource? Log;
@@ -74,6 +82,7 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 
 			RoR2Application.onLoad += ExtraTokens;
 			TextColor = Config.Bind("General", "Text Color", "#0055FF", "Color of the text displaying what mod something is from.");
+			RequireTABForInWorld = Config.Bind("General", "In World Setting", InWorldOptions.AlwaysOn, "When should the in world waila be displayed");
 			GenerateChecks();
 			
 			HUD.shouldHudDisplay += CreateHud;
@@ -173,6 +182,9 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 		public static event StringTest? TitleChecks;
 		/// <summary> Body Text to ItemDef, EquipmentDef, etc </summary>
 		public static readonly Dictionary<string, string?> BodyTextMap = new Dictionary<string, string?>();
+
+		public static object InWorldEnabled;
+
 		/// <summary>
 		/// Check the body text, last resort.
 		/// First subscription to set the second string to something wins.

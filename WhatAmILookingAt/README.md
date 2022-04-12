@@ -41,3 +41,10 @@
 - Fixed shops that are ? showing what they actually are
 - Fixed some maps not being found
 - Changed the tips when looking at duplicators and shops to be better
+
+1.4.2
+- Fixed nre in pickup check, i should not be programming when im this tired
+
+1.4.3
+- Fixed some vanilla things not being found
+- Added config to disable in world, hide it so it only shows when tab is pressed, or have it always on (default)

@@ -69,28 +69,33 @@ namespace WhatAmILookingAt
 			var controller = _hud.cameraRigController;
 			var body = controller.targetBody;
 
-			if (body && GetInfo(body, out var localizedName, out var gObject))
+			var keyPressCondition =
+				WhatAmILookingAtPlugin.RequireTABForInWorld.Value ==
+				WhatAmILookingAtPlugin.InWorldOptions.WhileScoreboardOpen && _hud.localUserViewer?.inputPlayer != null && _hud.localUserViewer.inputPlayer.GetButton("info");
+
+			if (!keyPressCondition && WhatAmILookingAtPlugin.RequireTABForInWorld.Value != WhatAmILookingAtPlugin.InWorldOptions.AlwaysOn || !body || !GetInfo(body, out var localizedName, out var gObject))
 			{
-				var str = "";
-				var sstr = "";
-				WailaInWorldChecks.PickupCheck(gObject, ref sstr); // I dont like this
-				if (sstr != "")
-				{
-					WailaInWorldChecks.InteractableCheck(gObject, ref str);
-					if (str != "")
-					{
-						var start = WhatAmILookingAtPlugin.GetModString(str);
-						textMesh.text = localizedName + "\n" + start!.Substring(0, start.Length - 8) + " (" + WhatAmILookingAtPlugin.GetModString(sstr) + ")</color>"; // i hate this too
-						return;
-					}
-				};
-				
-				str = sstr != "" ? sstr : WailaInWorldChecks.GetIdentifier(gObject);
-				textMesh.text = localizedName + "\n" + WhatAmILookingAtPlugin.GetModString(str);
+				textMesh.text = "";
 				return;
 			}
-			
-			textMesh.text = "";
+
+			var str = "";
+			var sstr = "";
+			WailaInWorldChecks.PickupCheck(gObject, ref sstr); // I dont like this
+			if (sstr != "")
+			{
+				WailaInWorldChecks.InteractableCheck(gObject, ref str);
+				if (str != "")
+				{
+					var start = WhatAmILookingAtPlugin.GetModString(str);
+					textMesh.text = localizedName + "\n" + start!.Substring(0, start.Length - 8) + " (" +
+					                WhatAmILookingAtPlugin.GetModString(sstr) + ")</color>"; // i hate this too
+					return;
+				}
+			}
+
+			str = sstr != "" ? sstr : WailaInWorldChecks.GetIdentifier(gObject);
+			textMesh.text = localizedName + "\n" + WhatAmILookingAtPlugin.GetModString(str);
 		}
 		
 		

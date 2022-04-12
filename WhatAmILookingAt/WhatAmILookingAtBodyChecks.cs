@@ -113,7 +113,18 @@ namespace WhatAmILookingAt
 
 		public static void InteractableCheck(GameObject go, ref string identifier)
 		{
-			var netIdentity = go.GetComponent<NetworkIdentity>();
+			var current = go.transform;
+			while (current.parent)
+			{
+				current = current.parent;
+			}
+
+			if (current.name == "PortalDialerEvent")
+			{
+				identifier = "RoR2.BaseContent"; // We're all about professional solutions here
+				return;
+			} 
+			var netIdentity = current.GetComponent<NetworkIdentity>();
 			if (netIdentity == null) return;
 			var netId = netIdentity.assetId;
 			foreach (var pack in ContentManager.allLoadedContentPacks.Where(pack => pack.networkedObjectPrefabs.Any(x =>
@@ -132,7 +143,7 @@ namespace WhatAmILookingAt
 		{
 			var display = go.GetComponent<GenericPickupController>();
 			var shop = go.GetComponent<ShopTerminalBehavior>();
-			if (!display && !shop || shop.pickupIndexIsHidden) return;
+			if (!display && !shop || shop && shop.pickupIndexIsHidden) return;
 			var def = PickupCatalog.GetPickupDef(display ? display.pickupIndex : shop.pickupIndex);
 			if (def == null) return;
 
