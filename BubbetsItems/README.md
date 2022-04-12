@@ -5,17 +5,21 @@ Yet another item mod that adds all sorts of unique items, including Void Tiers. 
 
 Items | Function | Type
 ---|---:|---
-Jellied Soles | Reduces fall damage | `Common` |
+Jellied Soles | Reduces fall damage and add the reduced damage to your next attack | `Common` |
 ---|---|---|
 Torturer | Heal from inflicted damage over time | `Uncommon` |
 Abundant Hourglass | Duration of buffs are increased | `Uncommon` |
 Escape Plan | Increases movement speed the closer you are to death | `Uncommon` |
+Bunny Foot | Source bhopping in a item | `Uncommon` |
 ---|---|---|
 Repulsion Armor Mk2 | Two modes in config, gives extra reduction or armor per Repulsion Plate | `Legendary` |
+Acid Soaked Blindfold | Spawn a blind vermin ally with some items | `Legendary` |
 ---|---|---|
 Void Scrap | Prioritized when used with Common 3D Printers. Corrupts all Broken items | `Void Common` |
 Shifted Quartz | Deal bonus damage if there aren't nearby enemies. Corrupts all Focus Crystals | `Void Common` |
 Recursion Bullets | Attacking bosses increases attack speed. Corrupts all Armor-Piercing Rounds | `Void Common` |
+Scintillating Jet | Reduce damage temporarily after getting hit. Corrupts all oddly shaped opal | `Void Common` |
+Adrenaline Sprout | Increase regen while in combat. Corrupts all cautious slug | `Void Common` |
 Zealotry Embrace | Deal more damage to enemies with barely any debuffs inflicted. Corrupts all Death Marks | `Void Uncommon` |
 ---|---|---|
 Broken Clock | Turn back the clock 10 seconds for yourself | `Equipment` |
@@ -44,6 +48,7 @@ Patience is key~
   * Fixed wildlife cameras effect not working
   * Made camera copy loadout, giving the captured guys the stage variants
   * Made camera copy previous elite effect
+  * Jellied soles now stores the damage you would have taken and you use it in your next attack
 
 * v1.5.5 Mod Changes :
   * Exposed the void pairings as a config value
