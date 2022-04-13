@@ -74,7 +74,7 @@ namespace WhatAmILookingAt
 
 	public static class WailaInWorldChecks
 	{
-		public delegate void InWorldChecksDelegate(GameObject go, ref string identifier);
+		public delegate bool InWorldChecksDelegate(GameObject go, out string identifier);
 		public static event InWorldChecksDelegate InWorldChecks;
 
 		public static void Register()
@@ -86,32 +86,43 @@ namespace WhatAmILookingAt
 		}
 		public static string GetIdentifier(GameObject go)
 		{
-			var str = "";
-			if (InWorldChecks == null || !go) return str;
+			if (InWorldChecks == null || !go) return "";
 			foreach (var dele in InWorldChecks.GetInvocationList())
 			{
-				(dele as InWorldChecksDelegate)?.Invoke(go, ref str);
-				if (str != "") return str;
+				if (dele is InWorldChecksDelegate deleg && deleg.Invoke(go, out var str))
+					return str;
 			}
-			return str;
+			return "";
 		}
-		
-		private static void SceneCheck(GameObject go, ref string identifier)
+
+		public static bool SceneCheck(GameObject go, out string identifier)
 		{
 			// test if the object is from the scene
-			if (!go.IsInScene()) return;
-			
+			if (!go.IsInScene())
+			{
+				identifier = null;
+				return false;
+			}
+
 			var scene = SceneManager.GetActiveScene();
 			var def = SceneCatalog.GetSceneDef(SceneCatalog.FindSceneIndex(scene.name));
-			if (def == null) return;
+			if (def == null)
+			{
+				identifier = null;
+				return false;
+			}
+
 			foreach (var pack in ContentManager.allLoadedContentPacks.Where(pack => pack.sceneDefs.Contains(def)))
 			{
 				identifier = pack.identifier;
-				return;
+				return true;
 			}
+
+			identifier = null;
+			return false;
 		}
 
-		public static void InteractableCheck(GameObject go, ref string identifier)
+		public static bool InteractableCheck(GameObject go, out string identifier)
 		{
 			var current = go.transform;
 			while (current.parent)
@@ -122,10 +133,15 @@ namespace WhatAmILookingAt
 			if (current.name == "PortalDialerEvent")
 			{
 				identifier = "RoR2.BaseContent"; // We're all about professional solutions here
-				return;
+				return true;
 			} 
 			var netIdentity = current.GetComponent<NetworkIdentity>();
-			if (netIdentity == null) return;
+			if (netIdentity == null)
+			{
+				identifier = null;
+				return false;
+			}
+
 			var netId = netIdentity.assetId;
 			foreach (var pack in ContentManager.allLoadedContentPacks.Where(pack => pack.networkedObjectPrefabs.Any(x =>
 			{
@@ -135,17 +151,29 @@ namespace WhatAmILookingAt
 			})))
 			{
 				identifier = pack.identifier;
-				return;
+				return true;
 			}
+
+			identifier = null;
+			return false;
 		}
 
-		public static void PickupCheck(GameObject go, ref string identifier)
+		public static bool PickupCheck(GameObject go, out string identifier)
 		{
 			var display = go.GetComponent<GenericPickupController>();
 			var shop = go.GetComponent<ShopTerminalBehavior>();
-			if (!display && !shop || shop && shop.pickupIndexIsHidden) return;
+			if (!display && !shop || shop && shop.pickupIndexIsHidden)
+			{
+				identifier = null;
+				return false;
+			}
+
 			var def = PickupCatalog.GetPickupDef(display ? display.pickupIndex : shop.pickupIndex);
-			if (def == null) return;
+			if (def == null)
+			{
+				identifier = null;
+				return false;
+			}
 
 			if (def.itemIndex != ItemIndex.None)
 			{
@@ -153,7 +181,7 @@ namespace WhatAmILookingAt
 				foreach (var pack in ContentManager.allLoadedContentPacks.Where(pack => pack.itemDefs.Contains(itemDef)))
 				{
 					identifier = pack.identifier;
-					return;
+					return true;
 				}
 			}
 
@@ -163,7 +191,7 @@ namespace WhatAmILookingAt
 				foreach (var pack in ContentManager.allLoadedContentPacks.Where(pack => pack.equipmentDefs.Contains(equipmentDef)))
 				{
 					identifier = pack.identifier;
-					return;
+					return true;
 				}
 			}
 
@@ -173,7 +201,7 @@ namespace WhatAmILookingAt
 				foreach (var pack in ContentManager.allLoadedContentPacks.Where(pack => pack.artifactDefs.Contains(artifactDef)))
 				{
 					identifier = pack.identifier;
-					return;
+					return true;
 				}
 			}
 
@@ -183,22 +211,38 @@ namespace WhatAmILookingAt
 				foreach (var pack in ContentManager.allLoadedContentPacks.Where(pack => pack.miscPickupDefs.Contains(miscPickupDef)))
 				{
 					identifier = pack.identifier;
-					return;
+					return true;
 				}
 			}
+
+			identifier = null;
+			return false;
 		}
 
-		private static void BodyCheck(GameObject go, ref string identifier)
+		public static bool BodyCheck(GameObject go, out string identifier)
 		{
 			var body = go.GetComponent<CharacterBody>();
-			if (!body) return;
+			if (!body)
+			{
+				identifier = null;
+				return false;
+			}
+
 			var prefab = BodyCatalog.GetBodyPrefab(body.bodyIndex);
-			if (!prefab) return;
+			if (!prefab)
+			{
+				identifier = null;
+				return false;
+			}
+
 			foreach (var pack in ContentManager.allLoadedContentPacks.Where(pack => pack.bodyPrefabs.Contains(prefab)))
 			{
 				identifier = pack.identifier;
-				break;
+				return true;
 			}
+
+			identifier = null;
+			return false;
 		}
 	}
 }

@@ -36,6 +36,11 @@ Patience is key~
   - `SOM#0001` for doing most of the icons
 
 # Changelog
+* v1.6.1 Mod Changes :
+  * Fixed bunny foot crashing when given to something that can fly
+  * Fixed crash in dedicated servers
+  * Fixed shifted quartz indicator being disjointed as a client
+
 * v1.6.0 Mod Changes :
   * Fixed cooldown for broken clock
   * Ported bunny foot to this mod from my other depreciated mod.

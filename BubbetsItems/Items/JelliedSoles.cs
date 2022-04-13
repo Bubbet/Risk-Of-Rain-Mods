@@ -40,7 +40,7 @@ namespace BubbetsItems.Items
 			c.EmitDelegate<Func<HealthComponent, DamageInfo, DamageInfo>>(UpdateDamage);
 		}
 
-		//TODO takedamage hook
+		
 		// body.damage/body.basedamage * storedDamage
 		[HarmonyILManipulator, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.TakeDamage))]
 		public static void IlTakeDamage(ILContext il)

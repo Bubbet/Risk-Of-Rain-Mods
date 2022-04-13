@@ -22,7 +22,7 @@ using RoR2.UI;
 namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc version if they only add networked objects
 {
 	// needs to be prefixed with aaaa so it loads before all the mods that require r2api
-	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.4.3")]
+	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.4.4")]
 	[BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.SoftDependency)]
 	//[BepInDependency("com.ThinkInvisible.TILER2", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterAPI", BepInDependency.DependencyFlags.SoftDependency)]
@@ -38,6 +38,7 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 		
 		public static ConfigEntry<string>? TextColor;
 		public static ConfigEntry<InWorldOptions>? RequireTABForInWorld;
+		public static ConfigEntry<bool>? StageOnlyInTab;
 		
 		public static WhatAmILookingAtPlugin? Instance;
 		public static ManualLogSource? Log;
@@ -83,6 +84,7 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 			RoR2Application.onLoad += ExtraTokens;
 			TextColor = Config.Bind("General", "Text Color", "#0055FF", "Color of the text displaying what mod something is from.");
 			RequireTABForInWorld = Config.Bind("General", "In World Setting", InWorldOptions.AlwaysOn, "When should the in world waila be displayed");
+			StageOnlyInTab = Config.Bind("General", "Stage Only In Tab", false, "In world waila only displays the stage when holding tab");
 			GenerateChecks();
 			
 			HUD.shouldHudDisplay += CreateHud;

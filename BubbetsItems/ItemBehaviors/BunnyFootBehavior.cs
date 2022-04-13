@@ -19,11 +19,13 @@ namespace BubbetsItems.ItemBehaviors
 
 		private void OnEnable()
 		{
+			if (!body.characterMotor) return;
 			body.characterMotor.onHitGroundAuthority += HitGround;
 		}
 
 		private void OnDisable()
 		{
+			if (!body.characterMotor) return;
 			body.characterMotor.onHitGroundAuthority -= HitGround;
 		}
 

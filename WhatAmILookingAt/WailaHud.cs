@@ -69,33 +69,40 @@ namespace WhatAmILookingAt
 			var controller = _hud.cameraRigController;
 			var body = controller.targetBody;
 
-			var keyPressCondition =
-				WhatAmILookingAtPlugin.RequireTABForInWorld!.Value ==
-				WhatAmILookingAtPlugin.InWorldOptions.WhileScoreboardOpen && _hud.localUserViewer?.inputPlayer != null && _hud.localUserViewer.inputPlayer.GetButton("info");
+			var tab = _hud.localUserViewer?.inputPlayer != null && _hud.localUserViewer.inputPlayer.GetButton("info");
+			var shouldShow = WhatAmILookingAtPlugin.RequireTABForInWorld!.Value == WhatAmILookingAtPlugin.InWorldOptions.WhileScoreboardOpen && tab; 
+			//shouldShow |= WhatAmILookingAtPlugin.RequireTABForInWorld!.Value != WhatAmILookingAtPlugin.InWorldOptions.WhileScoreboardOpen;
+			//shouldShow &= WhatAmILookingAtPlugin.RequireTABForInWorld!.Value != WhatAmILookingAtPlugin.InWorldOptions.Disabled;
+			shouldShow |= WhatAmILookingAtPlugin.RequireTABForInWorld!.Value == WhatAmILookingAtPlugin.InWorldOptions.AlwaysOn;
 
-			if (!keyPressCondition && WhatAmILookingAtPlugin.RequireTABForInWorld.Value != WhatAmILookingAtPlugin.InWorldOptions.AlwaysOn || !body || !GetInfo(body, out var localizedName, out var gObject))
+			if (!shouldShow || !body || !GetInfo(body, out var localizedName, out var gObject))
 			{
 				textMesh.text = "";
 				return;
 			}
 
-			var str = "";
-			var sstr = "";
-			WailaInWorldChecks.PickupCheck(gObject, ref sstr); // I dont like this
-			if (sstr != "")
+			var shouldShowScene = WhatAmILookingAtPlugin.StageOnlyInTab!.Value && tab || !WhatAmILookingAtPlugin.StageOnlyInTab!.Value;
+
+			if (WailaInWorldChecks.PickupCheck(gObject, out var strp))
 			{
-				WailaInWorldChecks.InteractableCheck(gObject, ref str);
-				if (str != "")
+				if (WailaInWorldChecks.InteractableCheck(gObject, out var str))
 				{
 					var start = WhatAmILookingAtPlugin.GetModString(str);
-					textMesh.text = localizedName + "\n" + start!.Substring(0, start.Length - 8) + " (" +
-					                WhatAmILookingAtPlugin.GetModString(sstr) + ")</color>"; // i hate this too
+					textMesh.text = localizedName + "\n" + start!.Substring(0, start.Length - 8) + " (" + WhatAmILookingAtPlugin.GetModString(strp) + ")</color>"; // i hate this too
 					return;
 				}
+				
+				textMesh.text = localizedName + "\n" + WhatAmILookingAtPlugin.GetModString(strp);
+				return;
+			}
+			
+			if (WailaInWorldChecks.BodyCheck(gObject, out var strb) || WailaInWorldChecks.InteractableCheck(gObject, out strb) || WailaInWorldChecks.SceneCheck(gObject, out strb) && shouldShowScene)
+			{
+				textMesh.text = localizedName + "\n" + WhatAmILookingAtPlugin.GetModString(strb);
+				return;
 			}
 
-			str = sstr != "" ? sstr : WailaInWorldChecks.GetIdentifier(gObject);
-			textMesh.text = localizedName + "\n" + WhatAmILookingAtPlugin.GetModString(str);
+			textMesh.text = "";
 		}
 		
 		

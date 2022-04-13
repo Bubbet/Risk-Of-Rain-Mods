@@ -48,3 +48,7 @@
 1.4.3
 - Fixed some vanilla things not being found
 - Added config to disable in world, hide it so it only shows when tab is pressed, or have it always on (default)
+
+1.4.4
+- Fixed more vanilla things not found
+- Added config to disable only scene display to tab only

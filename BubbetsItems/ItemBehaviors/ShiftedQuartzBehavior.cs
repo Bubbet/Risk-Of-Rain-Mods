@@ -11,7 +11,7 @@ namespace BubbetsItems.ItemBehaviors
 	public class ShiftedQuartzBehavior : BaseItemBodyBehavior
 	{
 
-		[ItemDefAssociation(useOnServer = true, useOnClient = true)]
+		[ItemDefAssociation(useOnServer = true, useOnClient = false)]
 		private static ItemDef GetItemDef()
 		{
 			return ShiftedQuartz.instance.ItemDef;
@@ -50,8 +50,6 @@ namespace BubbetsItems.ItemBehaviors
 		{
 			search.maxDistanceFilter = ShiftedQuartz.instance.scalingInfos[0].ScalingFunction(stack);
 			inside = Search();
-			var inRadius = inside ? 1f : 0f;
-			renderer.material.SetFloat("_ColorMix", inRadius);
 		}
 
 		private bool indicatorEnabled
@@ -69,8 +67,7 @@ namespace BubbetsItems.ItemBehaviors
 					nearbyDamageBonusIndicator = Instantiate(original, body.corePosition, Quaternion.identity);
 					var radius = search.maxDistanceFilter / 20f;
 					nearbyDamageBonusIndicator.transform.localScale *= radius;
-					nearbyDamageBonusIndicator.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(gameObject);
-					renderer = nearbyDamageBonusIndicator.GetComponentInChildren<Renderer>();
+					nearbyDamageBonusIndicator.GetComponent<NetworkedBodyAttachment>().AttachToGameObjectAndSpawn(gameObject); // TODO figure out what the fuck this is doing and replace it with my own client and server ran code
 					return;
 				}
 				Destroy(nearbyDamageBonusIndicator);
@@ -79,7 +76,6 @@ namespace BubbetsItems.ItemBehaviors
 		}
 		
 		private GameObject nearbyDamageBonusIndicator;
-		private Renderer renderer;
 		private BullseyeSearch search;
 		public bool inside;
 	}

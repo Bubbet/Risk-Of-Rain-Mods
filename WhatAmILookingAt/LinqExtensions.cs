@@ -17,7 +17,7 @@ namespace WhatAmILookingAt
 			}
 
 			var nam = current.name;
-			if (nam.Contains("HOLDER") || nam.StartsWith("FOLIAGE") || nam.Contains("mdlSP") || nam.StartsWith("SKYBOX") || nam == "GAMEPLAY SPACE")
+			if (nam.Contains("HOLDER") || nam.StartsWith("FOLIAGE") || nam.Contains("RaidAL") || nam.StartsWith("RaidVoid") || nam.Contains("mdlSP") || nam.StartsWith("SKYBOX") || nam == "GAMEPLAY SPACE")
 				return true;
 			return false;
 		}

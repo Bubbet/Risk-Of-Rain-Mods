@@ -30,9 +30,11 @@ namespace BubbetsItems
         
         private static IEnumerable<EquipmentBase> _equipments;
         public static IEnumerable<EquipmentBase> Equipments => _equipments ??= Instances.OfType<EquipmentBase>();
+        
+        //Can manually call CallRpcOnClientEquipmentActivationRecieved maybe?
 
         [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.RpcOnClientEquipmentActivationRecieved))]
-        public static void PerformEquipmentActionRpc(EquipmentSlot __instance) // third
+        public static void PerformEquipmentActionRpc(EquipmentSlot __instance) // third, all clients except host and authority, only on successful equipmentAction(second)
         {
             if (NetworkServer.active) return;
             if (__instance.characterBody.hasEffectiveAuthority) return;
@@ -41,16 +43,18 @@ namespace BubbetsItems
         }
         
         [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.CallCmdExecuteIfReady))]
-        public static void PerformEquipmentActionClient(EquipmentSlot __instance) // first
+        public static void PerformEquipmentActionClient(EquipmentSlot __instance) // first, activator client
         {
             if (!__instance.characterBody.hasEffectiveAuthority) return;
+            if (NetworkServer.active) return; // dont call here because it'll call in second instead
             if (__instance.equipmentIndex == EquipmentIndex.None || __instance.stock <= 0) return;
             var boo = false;
             PerformEquipmentAction(__instance, EquipmentCatalog.GetEquipmentDef(__instance.equipmentIndex), ref boo);
         }
+        //OnEquipmentExecuted runs EquipmentSlot.onServerEquipmentActivated and it runs on server right after calling the rpc so somewhere between second and third, maybe after third
         
         [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.PerformEquipmentAction))]
-        public static bool PerformEquipmentAction(EquipmentSlot __instance, EquipmentDef equipmentDef, ref bool __result) // second
+        public static bool PerformEquipmentAction(EquipmentSlot __instance, EquipmentDef equipmentDef, ref bool __result) // second, server
         {
             var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef == equipmentDef);
             if (equipment == null) return true;

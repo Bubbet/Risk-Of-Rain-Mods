@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Configuration;
@@ -7,6 +8,7 @@ using InLobbyConfig;
 using InLobbyConfig.Fields;
 using RoR2;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 namespace BubbetsItems.Equipments
@@ -43,7 +45,7 @@ namespace BubbetsItems.Equipments
         {
             base.PerformEquipment(equipmentSlot);
             ConfigUpdate();
-            return equipmentSlot.inventory.GetComponent<BrokenClockBehaviour>().ToggleReversing();
+            return equipmentSlot.inventory.GetComponent<BrokenClockBehaviour>().ToggleReversing(); // This only matters on the server and all the data is tracked on the authority character
         }
 
         public override void OnUnEquip(Inventory inventory, EquipmentState newEquipmentState)
@@ -124,7 +126,7 @@ namespace BubbetsItems.Equipments
             AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
             if (!reversing) return true;
             AkSoundEngine.PostEvent("BrokenClock_Start", Body.gameObject);
-            if (!Body.hasEffectiveAuthority) return true;
+            if (!Body.hasEffectiveAuthority) return false;
             //AddOneStock(); // TODO does not work on clients, probably because we arent reaching here because its only ran on server?
             _previousKeyframe = MakeKeyframe();
             _currentTargetKeyframe = dropoutStack.Pop();
@@ -135,6 +137,17 @@ namespace BubbetsItems.Equipments
         {
             _master = GetComponent<CharacterMaster>();
             _master.onBodyDeath.AddListener(OnDeath);
+            Stage.onStageStartGlobal += StageStart;
+        }
+
+        private void OnDestroy()
+        {
+            Stage.onStageStartGlobal -= StageStart;
+        }
+
+        private void StageStart(Stage obj)
+        {
+            dropoutStack.Clear();
         }
 
         public void OnDeath()
