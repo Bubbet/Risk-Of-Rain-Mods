@@ -1,0 +1,12 @@
+﻿{
+	"name": "OnlyYourDamageNumbers",
+	"authorName":"Bubbet",
+	"website_url":"https://github.com/Bubbet",
+	"displayName":"Only Your Damage Numbers",
+
+	"version_number": "1.0.0",
+	"description": "Makes damage numbers only appear for the damage you've dealt.",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.1902"
+	]
+}

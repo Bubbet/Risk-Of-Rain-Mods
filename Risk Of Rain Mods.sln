@@ -26,6 +26,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatAmILookingAt", "WhatAmI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FuckOffBadStateTypeIndex", "FuckOffBadStateTypeIndex\FuckOffBadStateTypeIndex.csproj", "{CC7D3058-D88F-44A2-94E8-91F61482B518}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoCursorGrabInLoading", "NoCursorGrabInLoading\NoCursorGrabInLoading.csproj", "{2F57927E-8A21-48F1-984E-FE395E8A46E9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaItemsGUI", "MetaItemsGUI\MetaItemsGUI.csproj", "{C6F41377-96FB-4E19-AF3A-3AB67479E265}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlyYourDamageNumbers", "OnlyYourDamageNumbers\OnlyYourDamageNumbers.csproj", "{DF15A474-22CF-4610-BCAC-600FB306A90D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,5 +90,17 @@ Global
 		{CC7D3058-D88F-44A2-94E8-91F61482B518}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC7D3058-D88F-44A2-94E8-91F61482B518}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC7D3058-D88F-44A2-94E8-91F61482B518}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F57927E-8A21-48F1-984E-FE395E8A46E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F57927E-8A21-48F1-984E-FE395E8A46E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F57927E-8A21-48F1-984E-FE395E8A46E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F57927E-8A21-48F1-984E-FE395E8A46E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6F41377-96FB-4E19-AF3A-3AB67479E265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6F41377-96FB-4E19-AF3A-3AB67479E265}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6F41377-96FB-4E19-AF3A-3AB67479E265}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6F41377-96FB-4E19-AF3A-3AB67479E265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF15A474-22CF-4610-BCAC-600FB306A90D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF15A474-22CF-4610-BCAC-600FB306A90D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF15A474-22CF-4610-BCAC-600FB306A90D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF15A474-22CF-4610-BCAC-600FB306A90D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
