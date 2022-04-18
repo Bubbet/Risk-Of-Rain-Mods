@@ -1,5 +1,4 @@
-﻿#nullable enable
-using System;
+﻿using System;
 using System.Collections.Generic;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
@@ -11,23 +10,9 @@ namespace BubbetsItems.Items
 {
 	public class VoidJunkToScrapTier1 : ItemBase
 	{
-		private static VoidJunkToScrapTier1? _instance;
 		private static ConfigEntry<bool>? _canConsumeLastStack;
 		private static CostTypeDef.IsAffordableDelegate? _oldCan;
 		private static CostTypeDef.PayCostDelegate? _oldCost;
-		public override bool RequiresSotv => true;
-
-		protected override void MakeConfigs()
-		{
-			base.MakeConfigs();
-			_canConsumeLastStack = configFile!.Bind(ConfigCategoriesEnum.General, "Void Scrap Consume Last Stack", false, "Should the void scrap consume the last stack when being used for scrap.");
-		}
-
-		public override string GetFormattedDescription(Inventory inventory, string? token = null)
-		{
-			return Language.GetStringFormatted(ItemDef.descriptionToken, !_canConsumeLastStack!.Value ? "Cannot consume the last stack. " : "");
-		}
-
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
@@ -36,12 +21,19 @@ namespace BubbetsItems.Items
 			AddToken("VOIDJUNKTOSCRAPTIER1_DESC", "Does nothing. " + "Prioritized when used with " + "Common ".Style(StyleEnum.White) + "3D Printers. {0}" + "Corrupts all Broken items".Style(StyleEnum.Void) + ".");
 			AddToken("VOIDJUNKTOSCRAPTIER1_LORE", "");
 		}
-
-		public VoidJunkToScrapTier1()
+		protected override void MakeConfigs()
 		{
-			_instance = this;
+			base.MakeConfigs();
+			_canConsumeLastStack = configFile!.Bind(ConfigCategoriesEnum.General, "Void Scrap Consume Last Stack", false, "Should the void scrap consume the last stack when being used for scrap.");
 		}
-
+		public override string GetFormattedDescription(Inventory inventory, string? token = null)
+		{
+			return Language.GetStringFormatted(ItemDef.descriptionToken, !_canConsumeLastStack!.Value ? "Cannot consume the last stack. " : "");
+		}
+		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
+		{
+			AddVoidPairing("FragileDamageBonusConsumed HealingPotionConsumed ExtraLifeVoidConsumed ExtraLifeConsumed");
+		}
 		[HarmonyPostfix, HarmonyPatch(typeof(CostTypeCatalog), nameof(CostTypeCatalog.Init))]
 		public static void FixBuying()
 		{
@@ -76,8 +68,9 @@ namespace BubbetsItems.Items
 				var highPriority = new WeightedSelection<ItemIndex>();
 				var normalPriority = new WeightedSelection<ItemIndex>();
 
-				var voidAmount = Math.Max(0, inv.GetItemCount(_instance!.ItemDef) - 1);
-				if (_canConsumeLastStack!.Value || voidAmount > 0) highestPriority.AddChoice(_instance.ItemDef.itemIndex, voidAmount);
+				var voidJunkToScrapTier1 = GetInstance<VoidJunkToScrapTier1>();
+				var voidAmount = Math.Max(0, inv.GetItemCount(voidJunkToScrapTier1!.ItemDef) - 1);
+				if (_canConsumeLastStack!.Value || voidAmount > 0) highestPriority.AddChoice(voidJunkToScrapTier1.ItemDef.itemIndex, voidAmount);
 
 				foreach (var itemIndex in ItemCatalog.tier1ItemList)
 				{
@@ -116,7 +109,8 @@ namespace BubbetsItems.Items
 			{
 				if (typeDef.itemTier != ItemTier.Tier1) return false;
 				var inv = context.activator.GetComponent<CharacterBody>().inventory;
-				var voidAmount = Math.Max(0, inv.GetItemCount(_instance!.ItemDef) - (_canConsumeLastStack!.Value ? 0 : 1));
+				var voidJunkToScrapTier1 = GetInstance<VoidJunkToScrapTier1>();
+				var voidAmount = Math.Max(0, inv.GetItemCount(voidJunkToScrapTier1!.ItemDef) - (_canConsumeLastStack!.Value ? 0 : 1));
 				return inv.GetTotalItemCountOfTier(ItemTier.Tier1) + voidAmount >= context.cost;
 			}
 			catch (Exception e)
@@ -145,12 +139,6 @@ namespace BubbetsItems.Items
 				}
 				itemsToTake.Add(value);
 			}
-		}
-
-
-		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
-		{
-			AddVoidPairing("FragileDamageBonusConsumed HealingPotionConsumed ExtraLifeVoidConsumed ExtraLifeConsumed");
 		}
 	}
 }

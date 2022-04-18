@@ -34,7 +34,7 @@ namespace BubbetsItems
         public static IEnumerable<ItemBase> Items => _items ??= Instances.OfType<ItemBase>();
 
         public List<ScalingInfo> scalingInfos = new();
-        public List<VoidPairing> voidPairings = new();
+        public VoidPairing? voidPairing;
 
         protected void AddScalingFunction(string defaultValue, string name,
             ExpressionContext? defaultContext = null, string? desc = null, string? oldDefault = null)
@@ -151,6 +151,11 @@ namespace BubbetsItems
             private readonly string _name;
             private readonly ExpressionContext _defaultContext;
             public readonly ExpressionContext WorkingContext;
+            public string Value
+            {
+                get => _configEntry.Value;
+                set => _configEntry.Value = value;
+            }
 
             public ScalingInfo(ConfigFile configFile, string defaultValue, string name, Type callingType, ExpressionContext? defaultContext = null, string? desc = null, string? oldDefault = null)
             {
@@ -269,7 +274,7 @@ namespace BubbetsItems
 
         public void AddVoidPairing(string defaultValue)
         {
-            voidPairings.Add(new VoidPairing(defaultValue, this));
+            voidPairing = new VoidPairing(defaultValue, this);
         }
     }
 }

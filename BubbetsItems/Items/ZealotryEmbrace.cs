@@ -4,8 +4,6 @@ using System.Linq;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
-using InLobbyConfig;
-using InLobbyConfig.Fields;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -15,11 +13,17 @@ namespace BubbetsItems.Items
 {
 	public class ZealotryEmbrace : ItemBase
 	{
-		private static ZealotryEmbrace _instance;
 		private static ConfigEntry<bool> onlyMyDots;
 		private static ConfigEntry<bool> onlyOneDot;
-		public override bool RequiresSotv => true;
+		protected override void MakeTokens()
+		{
+			base.MakeTokens();
 
+			AddToken("ZEALOTRYEMBRACE_NAME", "Zealotry Embrace");
+			AddToken("ZEALOTRYEMBRACE_PICKUP", "Deal more damage to enemies with barely any debuffs inflicted." + " Corrupts all Death Marks".Style(StyleEnum.Void) + ".");
+			AddToken("ZEALOTRYEMBRACE_DESC", "Deal " + "{0:0%} more damage ".Style(StyleEnum.Damage) + "on enemies with less than " + "{1} ".Style(StyleEnum.Damage) + "debuffs. " + "Corrupts all Death Marks".Style(StyleEnum.Void) + ".");
+			AddToken("ZEALOTRYEMBRACE_LORE", "");
+		}
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
@@ -30,12 +34,6 @@ namespace BubbetsItems.Items
 			onlyOneDot = configFile.Bind(ConfigCategoriesEnum.General, "Zealotry Embrace: Only one dot stack", false,
 				"Should each dot stack count towards the total, else treat all stacks as one buff.");
 		}
-
-		public ZealotryEmbrace()
-		{
-			_instance = this;
-		}
-
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
 			AddVoidPairing("DeathMark");
@@ -56,10 +54,12 @@ namespace BubbetsItems.Items
 			c.Index = where;
 			c.Emit(OpCodes.Ldarg_0);
 			c.Emit(OpCodes.Ldloc_1); // Body; 0 is master
+			c.Emit(OpCodes.Ldarg_1);
 			c.Emit(OpCodes.Ldloc, num2);
-			c.EmitDelegate<Func<HealthComponent, CharacterBody, float, float>>((hc, body, amount) =>
+			c.EmitDelegate<Func<HealthComponent, CharacterBody,  DamageInfo, float, float>>((hc, body, damageInfo, amount) =>
 			{
-				var count = body.inventory.GetItemCount(_instance.ItemDef);
+				var zealotryEmbrace = GetInstance<ZealotryEmbrace>();
+				var count = body.inventory.GetItemCount(zealotryEmbrace.ItemDef);
 				if (count <= 0) return amount;
 				
 				var debuffCount = BuffCatalog.debuffBuffIndices.Sum(buffType => hc.body.GetBuffCount(buffType));
@@ -78,22 +78,15 @@ namespace BubbetsItems.Items
 							debuffCount += dotController.dotStackList.Count;
 					}
 
-				if (debuffCount < _instance.scalingInfos[1].ScalingFunction(count))
-					amount *= 1f + _instance.scalingInfos[0].ScalingFunction(count);
-				
+				if (debuffCount < zealotryEmbrace.scalingInfos[1].ScalingFunction(count))
+				{
+					damageInfo.damageColorIndex = DamageColorIndex.Void;
+					amount *= 1f + zealotryEmbrace.scalingInfos[0].ScalingFunction(count);
+				}
+
 				return amount;
 			});
 			c.Emit(OpCodes.Stloc, num2);
-		}
-
-		protected override void MakeTokens()
-		{
-			base.MakeTokens();
-
-			AddToken("ZEALOTRYEMBRACE_NAME", "Zealotry Embrace");
-			AddToken("ZEALOTRYEMBRACE_PICKUP", "Deal more damage to enemies with barely any debuffs inflicted." + " Corrupts all Death Marks".Style(StyleEnum.Void) + ".");
-			AddToken("ZEALOTRYEMBRACE_DESC", "Deal " + "{0:0%} more damage ".Style(StyleEnum.Damage) + "on enemies with less than " + "{1} ".Style(StyleEnum.Damage) + "debuffs. " + "Corrupts all Death Marks".Style(StyleEnum.Void) + ".");
-			AddToken("ZEALOTRYEMBRACE_LORE", "");
 		}
 	}
 }

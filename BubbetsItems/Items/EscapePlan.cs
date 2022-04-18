@@ -1,11 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
-using InLobbyConfig;
 using InLobbyConfig.Fields;
-using JetBrains.Annotations;
 using RoR2;
 using UnityEngine;
 
@@ -14,12 +11,20 @@ namespace BubbetsItems.Items
     [HarmonyPatch]
     public class EscapePlan : ItemBase
     {
-        private static EscapePlan _instance;
         public static ConfigEntry<float> Granularity;
         
         
         private static BuffDef? _buffDef;
         private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefEscapePlan");
+        
+        protected override void MakeTokens()
+        {
+            AddToken("ESCAPE_PLAN_NAME", "Escape Plan");
+            AddToken("ESCAPE_PLAN_PICKUP", "Increases " + "movement speed ".Style(StyleEnum.Utility) + "the closer you are to death.");
+            AddToken("ESCAPE_PLAN_DESC", "Move up to " + "{0:0%} faster".Style(StyleEnum.Utility) + ". Increases the closer you are to " + "death".Style(StyleEnum.Death) + ".");
+            AddToken("ESCAPE_PLAN_LORE", "Escape Plan");
+            base.MakeTokens();
+        } 
 
         protected override void MakeConfigs()
         {
@@ -30,11 +35,6 @@ namespace BubbetsItems.Items
             /*
             if (!Chainloader.PluginInfos.ContainsKey(R2API.R2API.PluginGUID))
                 ItemEnabled.Value = false;*/
-        }
-
-        public EscapePlan()
-        {
-            _instance = this;
         }
         public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
@@ -121,7 +121,8 @@ namespace BubbetsItems.Items
         {
             var inv = body.inventory;
             if (!inv) return;
-            var amt = body.inventory.GetItemCount(_instance.ItemDef);
+            var escapePlan = GetInstance<EscapePlan>();
+            var amt = body.inventory.GetItemCount(escapePlan.ItemDef);
             if (amt <= 0) return;
             //_instance.Logger.LogInfo("DamageDealt And Item");
             /*
@@ -129,7 +130,7 @@ namespace BubbetsItems.Items
             var buffI = Mathf.RoundToInt(buff * 25);*/
             
             //_instance.Logger.LogInfo(buffI + " : " + buff);
-            var info = _instance.scalingInfos[0];
+            var info = escapePlan.scalingInfos[0];
             info.WorkingContext.h = body.healthComponent.combinedHealthFraction;
             body.SetBuffCount(BuffDef!.buffIndex, Mathf.RoundToInt(info.ScalingFunction(amt) * Granularity.Value ));
         }
@@ -158,15 +159,6 @@ namespace BubbetsItems.Items
             __instance.moveSpeed *= 1f + buff;
             _instance.Logger.LogInfo("EscapePlan After: " + __instance.moveSpeed + " : " + buff);
         }*/
-
-        protected override void MakeTokens()
-        {
-            AddToken("ESCAPE_PLAN_NAME", "Escape Plan");
-            AddToken("ESCAPE_PLAN_PICKUP", "Increases " + "movement speed ".Style(StyleEnum.Utility) + "the closer you are to death.");
-            AddToken("ESCAPE_PLAN_DESC", "Move up to " + "{0:0%} faster".Style(StyleEnum.Utility) + ". Increases the closer you are to " + "death".Style(StyleEnum.Death) + ".");
-            AddToken("ESCAPE_PLAN_LORE", "Escape Plan");
-            base.MakeTokens();
-        } 
         // 0.5 * x * 1(amount) = 1.25 
         // 0.1 * x * 1(amount) = 1.5
         

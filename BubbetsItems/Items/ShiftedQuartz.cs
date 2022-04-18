@@ -1,40 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using BubbetsItems.ItemBehaviors;
 using HarmonyLib;
-using InLobbyConfig;
-using InLobbyConfig.Fields;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using NCalc.Domain;
 using RoR2;
-using UnityEngine;
 
 namespace BubbetsItems.Items
 {
 	public class ShiftedQuartz : ItemBase
 	{
-		public static ShiftedQuartz instance;
-		private ConfigEntry<string> voidMatches;
-		public override bool RequiresSotv => true;
-
-		public ShiftedQuartz()
-		{
-			instance = this;
-		}
-
-		protected override void MakeConfigs()
-		{
-			base.MakeConfigs();
-			AddScalingFunction("18", "Distance", oldDefault: "20");
-			AddScalingFunction("[a] * 0.15", "Damage", oldDefault: "[a] * 0.2");
-		}
-
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
@@ -43,11 +20,15 @@ namespace BubbetsItems.Items
 			AddToken("SHIFTEDQUARTZ_DESC", "Increase damage dealt by " + "{1:0%} ".Style(StyleEnum.Damage) + "when there are no enemies within " + "{0}m ".Style(StyleEnum.Damage) + "of you. " + "Corrupts all Focus Crystals".Style(StyleEnum.Void) + ".");
 			AddToken("SHIFTEDQUARTZ_LORE", "");
 		}
-
-		public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
+		protected override void MakeConfigs()
 		{
-			base.MakeInLobbyConfig(scalingFunctions);
-			//list.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(scalingInfos[0].)); TODO
+			base.MakeConfigs();
+			AddScalingFunction("18", "Distance", oldDefault: "20");
+			AddScalingFunction("[a] * 0.15", "Damage", oldDefault: "[a] * 0.2");
+		}
+		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
+		{
+			AddVoidPairing("NearbyDamageBonus");
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.TakeDamage))]
@@ -67,6 +48,7 @@ namespace BubbetsItems.Items
 			c.Emit(OpCodes.Ldloc, num2);
 			c.EmitDelegate<Func<CharacterBody, float, float>>((body, amount) =>
 			{
+				var instance = GetInstance<ShiftedQuartz>();
 				var count = body.inventory.GetItemCount(instance.ItemDef);
 				if (count <= 0) return amount;
 				var inside = body.GetComponent<ShiftedQuartzBehavior>().inside; // TODO this might not exist in scope and may throw errors in multiplayer
@@ -75,10 +57,6 @@ namespace BubbetsItems.Items
 				return amount;
 			});
 			c.Emit(OpCodes.Stloc, num2);
-		}
-		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
-		{
-			AddVoidPairing("NearbyDamageBonus");
 		}
 	}
 }

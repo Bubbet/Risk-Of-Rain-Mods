@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
@@ -17,20 +16,6 @@ namespace BubbetsItems.Items
 			AddToken("SCINTILLATINGJET_DESC", "Getting hit " + "increases armor ".Style(StyleEnum.Heal) + "by " + "{0} ".Style(StyleEnum.Heal) + "for {1} seconds. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ".");
 			AddToken("SCINTILLATINGJET_LORE", "\"What do you mean Jet isn't a gemstone? It clearly is!\"");
 		}
-
-		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
-		{
-			base.FillVoidConversions(pairs);
-			StackableChanged();
-			AddVoidPairing(nameof(DLC1Content.Items.OutOfCombatArmor));
-		}
-
-		public override string GetFormattedDescription(Inventory inventory, string? token = null)
-		{
-			scalingInfos[0].WorkingContext.b = 1; // Make tooltip not update with buff amount
-			return base.GetFormattedDescription(inventory, token);
-		}
-
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
@@ -39,17 +24,21 @@ namespace BubbetsItems.Items
 			stackable = configFile.Bind(ConfigCategoriesEnum.General, "ScintillatingJet Buff Stackable", false, "Can the buff stack.");
 			stackable.SettingChanged += (_,_) => StackableChanged();
 		}
-
+		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
+		{
+			base.FillVoidConversions(pairs);
+			StackableChanged();
+			AddVoidPairing(nameof(DLC1Content.Items.OutOfCombatArmor));
+		}
 		private void StackableChanged()
 		{
 			BuffDef!.canStack = stackable.Value;
 		}
-
-		public ScintillatingJet()
+		public override string GetFormattedDescription(Inventory inventory, string? token = null)
 		{
-			instance = this;
+			scalingInfos[0].WorkingContext.b = 1; // Make tooltip not update with buff amount
+			return base.GetFormattedDescription(inventory, token);
 		}
-		private static ScintillatingJet instance;
 		private static BuffDef? _buffDef;
 		private ConfigEntry<bool> stackable;
 		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefScintillatingJet");
@@ -93,6 +82,7 @@ namespace BubbetsItems.Items
 		{
 			if (!__instance) return;
 			if (!__instance.inventory) return;
+			var instance = GetInstance<ScintillatingJet>();
 			var info = instance.scalingInfos[0];
 			info.WorkingContext.b = __instance.GetBuffCount(BuffDef);
 			__instance.armor += info.ScalingFunction(__instance.inventory.GetItemCount(instance.ItemDef));

@@ -1,0 +1,12 @@
+﻿{
+	"name": "RampingEgo",
+	"authorName":"Bubbet",
+	"website_url":"https://github.com/Bubbet",
+	"displayName":"Ramping Ego",
+
+	"version_number": "1.0.0",
+	"description": "Makes the delay before egocentrism consumes another item scale with the amount of egocentrisms",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.1902"
+	]
+}

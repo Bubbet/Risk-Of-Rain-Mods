@@ -26,6 +26,7 @@ namespace BubbetsItems
         public ConfigEntry<bool>? Enabled;
         public static readonly List<SharedBase> Instances = new List<SharedBase>();
         public static readonly Dictionary<PickupIndex, SharedBase> PickupIndexes = new Dictionary<PickupIndex, SharedBase>();
+        private static readonly Dictionary<Type, SharedBase> InstanceDict = new();
         public PickupIndex PickupIndex;
 
         protected ManualLogSource? Logger;
@@ -50,7 +51,7 @@ namespace BubbetsItems
         }
         
         //This is probably bad practice
-        public virtual bool RequiresSotv => ((this as ItemBase)?.voidPairings.Count ?? 0) > 0;
+        public virtual bool RequiresSotv => (this as ItemBase)?.voidPairing is not null;
         
         public virtual string GetFormattedDescription(Inventory? inventory, string? token = null)
         {
@@ -92,6 +93,7 @@ namespace BubbetsItems
                 shared.MakeBehaviours();
                 shared.PatchProcessor?.Patch();
                 localInstances.Add(shared);
+                InstanceDict[type] = shared;
             }
             Instances.AddRange(localInstances);
 
@@ -100,6 +102,10 @@ namespace BubbetsItems
             var eliteEquipments = serializableContentPack.eliteDefs.Select(x => x.eliteEquipmentDef);
             serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs.Where(x => EquipmentBase.Equipments.Any(y => MatchName(x.name, y.GetType().Name))).Union(eliteEquipments).ToArray();
             foreach (var instance in localInstances) instance.FillDefsFromSerializableCP(serializableContentPack);
+        }
+        public static T GetInstance<T>() where T : SharedBase
+        {
+            return (T) InstanceDict[typeof(T)];
         }
 
         [SystemInitializer(typeof(EquipmentCatalog), typeof(PickupCatalog))]

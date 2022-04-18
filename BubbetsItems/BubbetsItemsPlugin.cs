@@ -22,7 +22,7 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 [assembly: SearchableAttribute.OptIn]
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.6.1")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.6.2")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     //[BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
@@ -50,6 +50,7 @@ namespace BubbetsItems
             new PatchClassProcessor(harm, typeof(HarmonyPatches)).Patch();
             new PatchClassProcessor(harm, typeof(PickupTooltipFormat)).Patch();
             new PatchClassProcessor(harm, typeof(LogBookPageScalingGraph)).Patch();
+            new PatchClassProcessor(harm, typeof(ModdedDamageColors)).Patch();
             
             // Do not use SystemInitializers in PatchClassProcessors, because patch triggers the static constructor of SearchableAttribute breaking mods that load after
             new PatchClassProcessor(harm, typeof(EquipmentBase)).Patch();
@@ -66,7 +67,7 @@ namespace BubbetsItems
 
         private static uint _bankID;
 
-        [SystemInitializer]
+        //[SystemInitializer]
         public static void LoadSoundBank()
         {
             if (Application.isBatchMode) return;

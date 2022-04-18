@@ -52,3 +52,7 @@
 1.4.4
 - Fixed more vanilla things not found
 - Added config to disable only scene display to tab only
+
+1.5.0
+- Log book support
+- Log book for items and equipment

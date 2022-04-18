@@ -14,7 +14,8 @@ namespace BubbetsItems.ItemBehaviors
 		[ItemDefAssociation(useOnServer = true, useOnClient = false)]
 		private static ItemDef GetItemDef()
 		{
-			return ShiftedQuartz.instance.ItemDef;
+			var instance = SharedBase.GetInstance<ShiftedQuartz>();
+			return instance.ItemDef;
 		}
 
 		private void OnEnable()
@@ -25,9 +26,10 @@ namespace BubbetsItems.ItemBehaviors
 			{
 				allButNeutral.RemoveTeam(objectTeam);
 			}
+			var instance = SharedBase.GetInstance<ShiftedQuartz>();
 			search = new BullseyeSearch
 			{
-				maxDistanceFilter = ShiftedQuartz.instance.scalingInfos[0].ScalingFunction(stack),
+				maxDistanceFilter = instance.scalingInfos[0].ScalingFunction(stack),
 				teamMaskFilter = allButNeutral,
 				viewer = body
 			};
@@ -48,7 +50,8 @@ namespace BubbetsItems.ItemBehaviors
 
 		private void FixedUpdate()
 		{
-			search.maxDistanceFilter = ShiftedQuartz.instance.scalingInfos[0].ScalingFunction(stack);
+			var instance = SharedBase.GetInstance<ShiftedQuartz>();
+			search.maxDistanceFilter = instance.scalingInfos[0].ScalingFunction(stack);
 			inside = Search();
 		}
 

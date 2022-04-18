@@ -2,9 +2,12 @@
 using System;
 using System.Collections.Generic;
 using HarmonyLib;
+using Mono.Cecil.Cil;
+using MonoMod.Cil;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.UI;
+using RoR2.UI.LogBook;
 
 namespace WhatAmILookingAt
 {
@@ -50,6 +53,27 @@ namespace WhatAmILookingAt
 						WhatAmILookingAtPlugin.Log!.LogWarning("Key already exists for " + provider.identifier);
 				}
 			}
+		}
+		
+		[HarmonyILManipulator, HarmonyPatch(typeof(PageBuilder), nameof(PageBuilder.AddSimplePickup))]
+		public static void PagebuilderPatch(ILContext il)
+		{
+			var c = new ILCursor(il);
+			c.GotoNext( MoveType.After,
+				x => x.MatchLdfld<ItemDef>("descriptionToken")
+			);
+			c.Index-=1;
+			c.Emit(OpCodes.Dup);
+			c.Index += 2;
+			c.EmitDelegate<Func<ItemDef, string, string>>((def, str) => str  + "\n" + WhatAmILookingAtPlugin.GetModString(WhatAmILookingAtPlugin.GetIdentifier(def) ?? "Unknown"));
+            
+			c.GotoNext( MoveType.After,
+				x => x.MatchLdfld<EquipmentDef>("descriptionToken")
+			);
+			c.Index-=1;
+			c.Emit(OpCodes.Dup);
+			c.Index += 2;
+			c.EmitDelegate<Func<EquipmentDef, string, string>>((def, str) => str  + "\n" + WhatAmILookingAtPlugin.GetModString(WhatAmILookingAtPlugin.GetIdentifier(def) ?? "Unknown"));
 		}
 	}
 }

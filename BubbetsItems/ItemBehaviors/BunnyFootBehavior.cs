@@ -14,7 +14,8 @@ namespace BubbetsItems.ItemBehaviors
 		[ItemDefAssociation(useOnServer = true, useOnClient = true)]
 		private static ItemDef GetItemDef()
 		{
-			return BunnyFoot.Instance!.ItemDef;
+			var instance = SharedBase.GetInstance<BunnyFoot>();
+			return instance.ItemDef;
 		}
 
 		private void OnEnable()

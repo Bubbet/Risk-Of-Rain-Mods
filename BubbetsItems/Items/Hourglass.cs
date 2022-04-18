@@ -15,18 +15,23 @@ namespace BubbetsItems.Items
     public class Hourglass : ItemBase
     {
         private MethodInfo _aetheriumOrig;
-        private static Hourglass _instance;
-
         private ConfigEntry<string> buffBlacklist;
 
         private IEnumerable<BuffDef> buffDefBlacklist;
         //private static bool AetheriumEnabled => Chainloader.PluginInfos.ContainsKey(AetheriumPlugin.ModGuid);
 
+        protected override void MakeTokens()
+        {
+            AddToken("TIMED_BUFF_DURATION_ITEM_NAME", "Abundant Hourglass");
+            AddToken("TIMED_BUFF_DURATION_ITEM_PICKUP", "Duration of " + "buffs ".Style(StyleEnum.Damage) + "are increased.");
+            AddToken("TIMED_BUFF_DURATION_ITEM_DESC", "Duration of " + "buffs ".Style(StyleEnum.Damage) + "are multiplied by " + "{0}".Style(StyleEnum.Utility) + ".");
+            AddToken("TIMED_BUFF_DURATION_ITEM_LORE", "BUB_TIMED_BUFF_DURATION_ITEM_LORE");
+            base.MakeTokens();
+        }
         protected override void MakeConfigs()
         {
             base.MakeConfigs();
             AddScalingFunction("[a] * 0.1 + 1.15", "Buff Duration");
-            _instance = this;
         }
 
         // lmao i'm just going to abuse the timing of this because im lazy B)
@@ -64,14 +69,6 @@ namespace BubbetsItems.Items
             Harmony.Unpatch(_aetheriumOrig, HarmonyPatchType.Prefix);
         }*/
 
-        protected override void MakeTokens()
-        {
-            AddToken("TIMED_BUFF_DURATION_ITEM_NAME", "Abundant Hourglass");
-            AddToken("TIMED_BUFF_DURATION_ITEM_PICKUP", "Duration of " + "buffs ".Style(StyleEnum.Damage) + "are increased.");
-            AddToken("TIMED_BUFF_DURATION_ITEM_DESC", "Duration of " + "buffs ".Style(StyleEnum.Damage) + "are multiplied by " + "{0}".Style(StyleEnum.Utility) + ".");
-            AddToken("TIMED_BUFF_DURATION_ITEM_LORE", "BUB_TIMED_BUFF_DURATION_ITEM_LORE");
-            base.MakeTokens();
-        }
         
         // ReSharper disable once InconsistentNaming
         [HarmonyPrefix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.AddTimedBuff), typeof(BuffDef), typeof(float))]
@@ -90,14 +87,15 @@ namespace BubbetsItems.Items
         private static float DoDurationPatch(CharacterBody cb, BuffDef def, float duration)
         {
             if (def.isDebuff) return duration;
-            if (_instance.buffDefBlacklist.Contains(def)) return duration;
+            var hourglass = GetInstance<Hourglass>();
+            if (hourglass.buffDefBlacklist.Contains(def)) return duration;
             var inv = cb.inventory;
             if (!inv) return duration;
-            var amount = cb.inventory.GetItemCount(_instance.ItemDef);
+            var amount = cb.inventory.GetItemCount(hourglass.ItemDef);
             if (amount <= 0) return duration;
             //scalingFunc.Parameters["a"] = amount;
             //var cont = new ExpressionC();
-            duration *= _instance.scalingInfos[0].ScalingFunction(amount);
+            duration *= hourglass.scalingInfos[0].ScalingFunction(amount);
             //duration *= amount * 0.10f + 1.15f;
             //_instance.Logger.LogError(duration);
             return duration;

@@ -12,18 +12,6 @@ namespace BubbetsItems.Items
 {
 	public class BunnyFoot : ItemBase
 	{
-		public static BunnyFoot? Instance;
-		public BunnyFoot() => Instance = this;
-
-		protected override void MakeConfigs()
-		{
-			base.MakeConfigs();
-			AddScalingFunction("[a] * 1.5", "Air Control");
-			AddScalingFunction("0.15", "On Ground Mercy");
-			AddScalingFunction("1", "Jump velocity retention");
-			AddScalingFunction("[a] * 0.5", "Jump Control");
-		}
-
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
@@ -31,6 +19,14 @@ namespace BubbetsItems.Items
 			AddToken("BUNNYFOOT_DESC", "You gain the ability to bunny hop. Air control: {0}, Jump control: {3}");
 			AddToken("BUNNYFOOT_PICKUP", "Your little feets start quivering.");
 			AddToken("BUNNYFOOT_LORE", "haha source go brrrr");
+		}
+		protected override void MakeConfigs()
+		{
+			base.MakeConfigs();
+			AddScalingFunction("[a] * 1.5", "Air Control");
+			AddScalingFunction("0.15", "On Ground Mercy");
+			AddScalingFunction("1", "Jump velocity retention");
+			AddScalingFunction("[a] * 0.5", "Jump Control");
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(ProjectileGrappleController.GripState), nameof(ProjectileGrappleController.GripState.FixedUpdateBehavior))]
@@ -83,7 +79,8 @@ namespace BubbetsItems.Items
 			var bh = characterBody.GetComponent<BunnyFootBehavior>();
 			if (!bh) return vector;
 
-			var count = characterBody.inventory.GetItemCount(Instance!.ItemDef);
+			var bunnyFoot = GetInstance<BunnyFoot>();
+			var count = characterBody.inventory.GetItemCount(bunnyFoot.ItemDef);
 			var grounded = true;
 
 			var velocity = bh.hitGroundVelocity;
@@ -98,14 +95,14 @@ namespace BubbetsItems.Items
 			}
 
 			var addvel = Accelerate(velocity, wishDir, wishSpeed,
-				wishSpeed * Instance.scalingInfos[2].ScalingFunction(count),
-				Instance.scalingInfos[3].ScalingFunction(count), 1f);
+				wishSpeed * bunnyFoot.scalingInfos[2].ScalingFunction(count),
+				bunnyFoot.scalingInfos[3].ScalingFunction(count), 1f);
 
 			addvel.y = vector.y;
 			
 			if (!grounded) return addvel;
 
-			return Time.time - bh.hitGroundTime > Instance!.scalingInfos[1].ScalingFunction(characterBody.inventory.GetItemCount(Instance.ItemDef)) ? vector : addvel;
+			return Time.time - bh.hitGroundTime > bunnyFoot!.scalingInfos[1].ScalingFunction(characterBody.inventory.GetItemCount(bunnyFoot.ItemDef)) ? vector : addvel;
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(CharacterMotor), nameof(CharacterMotor.PreMove))]
@@ -123,7 +120,8 @@ namespace BubbetsItems.Items
 
 		private static Vector3 DoAirMovement(Vector3 velocity, Vector3 target, float num, float deltaTime, CharacterMotor motor)
 		{
-			var count = motor.body?.inventory?.GetItemCount(Instance.ItemDef) ?? 0; 
+			var bunnyFoot = GetInstance<BunnyFoot>();
+			var count = motor.body?.inventory?.GetItemCount(bunnyFoot.ItemDef) ?? 0; 
 			if (count <= 0 || motor.disableAirControlUntilCollision || motor.Motor.GroundingStatus.IsStableOnGround)
 				return Vector3.MoveTowards(velocity, target, num * deltaTime);
 
@@ -134,7 +132,7 @@ namespace BubbetsItems.Items
 			var wishDir = newTarget.normalized;
 			var wishSpeed = motor.walkSpeed * wishDir.magnitude;
 
-			return Accelerate(velocity, wishDir, wishSpeed, Instance.scalingInfos[0].ScalingFunction(count), motor.acceleration, deltaTime);
+			return Accelerate(velocity, wishDir, wishSpeed, bunnyFoot.scalingInfos[0].ScalingFunction(count), motor.acceleration, deltaTime);
 		}
 
 		//Ripped from sbox or gmod, i dont remember

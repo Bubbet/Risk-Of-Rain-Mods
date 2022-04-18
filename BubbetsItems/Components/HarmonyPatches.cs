@@ -2,6 +2,7 @@
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
+using RoR2.Audio;
 using RoR2.Orbs;
 using UnityEngine.Networking;
 
@@ -10,6 +11,11 @@ namespace BubbetsItems
     [HarmonyPatch]
     public static class HarmonyPatches
     {
+        [HarmonyPrefix, HarmonyPatch(typeof(NetworkSoundEventCatalog), nameof(NetworkSoundEventCatalog.Init))]
+        public static void LoadSoundbank()
+        {
+            BubbetsItemsPlugin.LoadSoundBank();
+        }
         [HarmonyILManipulator, HarmonyPatch(typeof(GlobalEventManager), nameof(GlobalEventManager.OnCharacterDeath))]
         private static void AmmoPickupPatch(ILContext il)
         {

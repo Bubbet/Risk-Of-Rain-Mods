@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using HarmonyLib;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
 using RoR2.UI;
@@ -97,31 +98,27 @@ namespace BubbetsItems
         {
             var c = new ILCursor(il);
             c.GotoNext( MoveType.After,
-                x => x.MatchLdarg(0),
-                x => x.MatchLdloc(out _),
-                x => x.MatchLdfld<ItemDef>("descriptionToken"),
-                x => x.MatchCall<Language>("GetString")
+                x => x.MatchLdfld<ItemDef>("descriptionToken")
             );
-            c.Index-=2;
-            c.RemoveRange(2);
-            c.EmitDelegate<Func<ItemDef, string>>(def =>
+            c.Index-=1;
+            c.Emit(OpCodes.Dup);
+            c.Index += 2;
+            c.EmitDelegate<Func<ItemDef, string, string>>((def, str) =>
             {
                 var item = ItemBase.Items.FirstOrDefault(x => x.ItemDef == def);
-                return item != null ? item.GetFormattedDescription(null) : Language.GetString(def.descriptionToken);
+                return item != null ? item.GetFormattedDescription(null) : str;
             });
             
             c.GotoNext( MoveType.After,
-                x => x.MatchLdarg(0),
-                x => x.MatchLdloc(out _),
-                x => x.MatchLdfld<EquipmentDef>("descriptionToken"),
-                x => x.MatchCall<Language>("GetString")
+                x => x.MatchLdfld<EquipmentDef>("descriptionToken")
             );
-            c.Index-=2;
-            c.RemoveRange(2); //TODO replace this with a dup on the equipmentdef and consume the old string to return if we dont find our item
-            c.EmitDelegate<Func<EquipmentDef, string>>(def =>
+            c.Index-=1;
+            c.Emit(OpCodes.Dup);
+            c.Index += 2;
+            c.EmitDelegate<Func<EquipmentDef, string, string>>((def, str) =>
             {
                 var equipment = EquipmentBase.Equipments.FirstOrDefault(x => x.EquipmentDef == def);
-                return equipment != null ? equipment.GetFormattedDescription() : Language.GetString(def.descriptionToken);
+                return equipment != null ? equipment.GetFormattedDescription() : str;
             });
         }
 

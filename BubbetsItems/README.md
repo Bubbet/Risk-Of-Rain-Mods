@@ -36,6 +36,14 @@ Patience is key~
   - `SOM#0001` for doing most of the icons
 
 # Changelog
+* v1.6.2 Mod Changes :
+  * Made jellied soles store the damage in the master, so when you change scene it still remembers
+  * Added sound effects and damage color for jellied soles
+  * Gave Zealotry Embrace void damage color
+  * Made logbook patch more robust
+  * Changed the orb inside voidscrap to not cause flashing when looking at it
+  * Made acid soaked blindfold blacklisted for ai
+  
 * v1.6.1 Mod Changes :
   * Fixed bunny foot crashing when given to something that can fly
   * Fixed crash in dedicated servers

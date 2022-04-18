@@ -10,7 +10,7 @@ using HarmonyLib;
 
 namespace OnlyYourDamageNumbers
 {
-	[BepInPlugin("bubbet.onlyyourDamagenumbers", "Only Your Damage Numbers", "1.0.0")]
+	[BepInPlugin("bubbet.onlyyourDamagenumbers", "Only Your Damage Numbers", "1.0.1")]
 	public class OnlyYourDamageNumbersPlugin : BaseUnityPlugin
 	{
 		public void Awake()

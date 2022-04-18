@@ -22,6 +22,8 @@ namespace DamageHistory
         {
             Instances.Add(this);
             healthComponent = GetComponent<HealthComponent>();
+            //TODO fix respawn not clearing from StaticHistory
+            
             //HarmonyPatches.onCharacterHealWithRegen += OnHeal;
             GlobalEventManager.onClientDamageNotified += ClientDamaged;
             //GlobalEventManager.onServerDamageDealt += report => report.damageInfo.inflictor;

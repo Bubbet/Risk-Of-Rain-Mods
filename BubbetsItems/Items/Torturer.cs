@@ -6,24 +6,29 @@ namespace BubbetsItems.Items
 {
     public class Torturer : ItemBase
     {
-        protected override void MakeBehaviours()
+        protected override void MakeTokens()
         {
-            GlobalEventManager.onServerDamageDealt += DamageDealt;
-            base.MakeBehaviours();
+            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_NAME", "Torturer");
+            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_PICKUP", "Heal ".Style(StyleEnum.Heal) + "from inflicted damage over time.");
+            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_DESC", "Heal ".Style(StyleEnum.Heal) + "for " + "{0:1%} ".Style(StyleEnum.Heal) + "of damage over time you inflict.");
+            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_LORE", "Torturer");
+            base.MakeTokens();
         }
-
-        protected override void DestroyBehaviours()
-        {
-            GlobalEventManager.onServerDamageDealt -= DamageDealt;
-            base.DestroyBehaviours();
-        }
-
         protected override void MakeConfigs()
         {
             base.MakeConfigs();
             AddScalingFunction("[d] * ([a] * 0.025 + 0.025)", "Healing From Damage", new ExpressionContext {d = 1f}, "[a] = amount, [d] = damage");
         }
-
+        protected override void MakeBehaviours()
+        {
+            GlobalEventManager.onServerDamageDealt += DamageDealt;
+            base.MakeBehaviours();
+        }
+        protected override void DestroyBehaviours()
+        {
+            GlobalEventManager.onServerDamageDealt -= DamageDealt;
+            base.DestroyBehaviours();
+        }
         private void DamageDealt(DamageReport obj)
         {
             var dot = (obj.damageInfo.damageType & DamageType.DoT) > DamageType.Generic;
@@ -37,15 +42,6 @@ namespace BubbetsItems.Items
             var amt = info.ScalingFunction(count);
             //Logger.LogInfo("HEALED FROM DAMAGE: " + amt);
             obj.attackerBody.healthComponent.Heal(amt, default);
-        }
-
-        protected override void MakeTokens()
-        {
-            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_NAME", "Torturer");
-            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_PICKUP", "Heal ".Style(StyleEnum.Heal) + "from inflicted damage over time.");
-            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_DESC", "Heal ".Style(StyleEnum.Heal) + "for " + "{0:1%} ".Style(StyleEnum.Heal) + "of damage over time you inflict.");
-            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_LORE", "Torturer");
-            base.MakeTokens();
         }
     }
 }

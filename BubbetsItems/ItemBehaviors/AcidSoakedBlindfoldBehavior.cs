@@ -16,14 +16,16 @@ namespace BubbetsItems.ItemBehaviors
 		[ItemDefAssociation(useOnServer = true, useOnClient = false)]
 		private static ItemDef GetItemDef()
 		{
-			return AcidSoakedBlindfold.instance.ItemDef;
+			var instance = SharedBase.GetInstance<AcidSoakedBlindfold>();
+			return instance.ItemDef;
 		}
 
 		private void FixedUpdate()
 		{
 			var master = body.master; 
 			if (!master) return;
-			var maxCount = AcidSoakedBlindfold.instance.scalingInfos[0].ScalingFunction(stack);
+			var instance = SharedBase.GetInstance<AcidSoakedBlindfold>();
+			var maxCount = instance.scalingInfos[0].ScalingFunction(stack);
 			var count = master.GetDeployableCount(Slot);
 			if (count >= maxCount) return;
 			_deployableTime -= Time.fixedDeltaTime;
@@ -45,26 +47,29 @@ namespace BubbetsItems.ItemBehaviors
 
 		private void VerminSpawnedServer(SpawnCard.SpawnResult obj)
 		{
-			var instance = obj.spawnedInstance;
-			if (!instance) return;
-			var master = instance.GetComponent<CharacterMaster>();
+			var instances = obj.spawnedInstance;
+			if (!instances) return;
+			var master = instances.GetComponent<CharacterMaster>();
 			if (!master) return;
 			master.teamIndex = body.master.teamIndex;
 			//master.inventory;
 
-			var greenChance = AcidSoakedBlindfold.instance.scalingInfos[2].ScalingFunction(stack);
+			var instance = SharedBase.GetInstance<AcidSoakedBlindfold>();
+			var greenChance = instance.scalingInfos[2].ScalingFunction(stack);
 
-			var list1 = Run.instance.availableTier1DropList;
-			var list2 = Run.instance.availableTier2DropList;
+			var runInstance = Run.instance;
+			var list1 = runInstance.availableTier1DropList;
+			var list2 = runInstance.availableTier2DropList;
+			var tRng = runInstance.treasureRng;
 			
-			for (var i = 0; i < AcidSoakedBlindfold.instance.scalingInfos[1].ScalingFunction(stack); i++)
+			for (var i = 0; i < instance.scalingInfos[1].ScalingFunction(stack); i++)
 			{
-				master.inventory.GiveItem(Run.instance.treasureRng.nextNormalizedFloat < greenChance
-					? list2[Run.instance.treasureRng.RangeInt(0, list2.Count)].pickupDef.itemIndex
-					: list1[Run.instance.treasureRng.RangeInt(0, list1.Count)].pickupDef.itemIndex);
+				master.inventory.GiveItem(tRng.nextNormalizedFloat < greenChance
+					? list2[tRng.RangeInt(0, list2.Count)].pickupDef.itemIndex
+					: list1[tRng.RangeInt(0, list1.Count)].pickupDef.itemIndex);
 			}
 
-			var deployable = instance.AddComponent<Deployable>();
+			var deployable = instances.AddComponent<Deployable>();
 			if (!deployable) return;
 			deployable.ownerMaster = body.master;
 			body.master.AddDeployable(deployable, Slot);
