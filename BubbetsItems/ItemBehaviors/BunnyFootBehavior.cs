@@ -12,10 +12,10 @@ namespace BubbetsItems.ItemBehaviors
 		public float hitGroundTime;
 
 		[ItemDefAssociation(useOnServer = true, useOnClient = true)]
-		private static ItemDef GetItemDef()
+		private static ItemDef? GetItemDef()
 		{
 			var instance = SharedBase.GetInstance<BunnyFoot>();
-			return instance.ItemDef;
+			return instance?.ItemDef;
 		}
 
 		private void OnEnable()

@@ -83,9 +83,16 @@ namespace DamageHistory
             // ReSharper disable twice Unity.PerformanceCriticalCodeNullComparison cry about it
             if (_hud.targetBodyObject == null) return;
             var historyBehavior = _hud.targetBodyObject.GetComponent<DamageHistoryBehavior>();
+            
             var visible = !DamageHistoryPlugin.mustHoldTab.Value || DamageHistoryPlugin.mustHoldTab.Value && Input.GetKeyDown(KeyCode.Tab);
             if (historyBehavior != null && visible)
-                _textMesh.SetText(BuildString(historyBehavior.history, who: historyBehavior.healthComponent.body.GetUserName()).ToString());
+            {
+                var master = _hud.localUserViewer.cachedMaster;
+                if (master != historyBehavior.healthComponent.body.master && DamageHistoryBehavior.StaticHistory.ContainsKey(master))
+                    _textMesh.SetText(BuildString(historyBehavior.history, who: historyBehavior.healthComponent.body.GetUserName()).Append("Your ").Append(BuildString(DamageHistoryBehavior.StaticHistory[master], who: master.playerCharacterMasterController.GetDisplayName())).ToString());
+                else
+                    _textMesh.SetText(BuildString(historyBehavior.history, who: historyBehavior.healthComponent.body.GetUserName()).ToString());
+            }
             else
                 _textMesh.SetText("");
         }

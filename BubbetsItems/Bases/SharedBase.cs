@@ -103,9 +103,10 @@ namespace BubbetsItems
             serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs.Where(x => EquipmentBase.Equipments.Any(y => MatchName(x.name, y.GetType().Name))).Union(eliteEquipments).ToArray();
             foreach (var instance in localInstances) instance.FillDefsFromSerializableCP(serializableContentPack);
         }
-        public static T GetInstance<T>() where T : SharedBase
+        public static T? GetInstance<T>() where T : SharedBase
         {
-            return (T) InstanceDict[typeof(T)];
+            InstanceDict.TryGetValue(typeof(T), out var t);
+            return t as T;
         }
 
         [SystemInitializer(typeof(EquipmentCatalog), typeof(PickupCatalog))]

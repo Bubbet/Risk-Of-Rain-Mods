@@ -20,9 +20,15 @@ namespace BubbetsItems.Equipments
         private static BuffDef? _buffDef;
         private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefSepia");
 
-        public override bool PerformEquipment(EquipmentSlot equipmentSlot)
+        public override EquipmentActivationState PerformEquipment(EquipmentSlot equipmentSlot)
         { 
             return equipmentSlot.inventory.gameObject.GetComponent<WildLifeCameraBehaviour>().Perform();
+        }
+
+        public override void PerformClientAction(EquipmentSlot equipmentSlot, EquipmentActivationState state)
+        {
+            base.PerformClientAction(equipmentSlot, state);
+            equipmentSlot.inventory.gameObject.GetComponent<WildLifeCameraBehaviour>().PlaySounds(state);
         }
 
         public override void OnEquip(Inventory inventory, EquipmentState? oldEquipmentState)
@@ -133,7 +139,21 @@ Luckily they seem friendly enough");
             _master = GetComponent<CharacterMaster>();
         }
 
-        public bool Perform()
+
+        public void PlaySounds(EquipmentBase.EquipmentActivationState state)
+        {
+            switch (state)
+            {
+                case EquipmentBase.EquipmentActivationState.DontConsume:
+                    AkSoundEngine.PostEvent("WildlifeCamera_TakePicture", Body.gameObject);
+                    break;
+                case EquipmentBase.EquipmentActivationState.ConsumeStock:
+                    AkSoundEngine.PostEvent("WildlifeCamera_Success", Body.gameObject);
+                    break;
+            }
+        }
+
+        public EquipmentBase.EquipmentActivationState Perform()
         {
             if (!target)
             {
@@ -146,8 +166,7 @@ Luckily they seem friendly enough");
                     _targetEquipment = master.inventory.GetEquipment(0);
                     if (target)
                     {
-                        AkSoundEngine.PostEvent("WildlifeCamera_TakePicture", Body.gameObject); // Sound does not play for clients, does play for body owner
-                        return false;
+                        return EquipmentBase.EquipmentActivationState.DontConsume;
                     }
                 }
             }
@@ -173,13 +192,12 @@ Luckily they seem friendly enough");
                         };
                         summon.Perform();
                     }
-
-                    AkSoundEngine.PostEvent("WildlifeCamera_Success", Body.gameObject);
+                    
                     target = null;
-                    return true;
+                    return EquipmentBase.EquipmentActivationState.ConsumeStock;
                 }
             }
-            return false;
+            return EquipmentBase.EquipmentActivationState.DidNothing;
         }
 
         private HurtBox GetTarget()

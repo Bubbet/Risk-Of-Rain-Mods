@@ -22,8 +22,7 @@ namespace DamageHistory
         {
             Instances.Add(this);
             healthComponent = GetComponent<HealthComponent>();
-            //TODO fix respawn not clearing from StaticHistory
-            
+
             //HarmonyPatches.onCharacterHealWithRegen += OnHeal;
             GlobalEventManager.onClientDamageNotified += ClientDamaged;
             //GlobalEventManager.onServerDamageDealt += report => report.damageInfo.inflictor;
@@ -50,6 +49,10 @@ namespace DamageHistory
             if (newHealth >= healthComponent.fullHealth)
             {
                 history.Clear();
+                var master = healthComponent.body.master;
+                if (master) // TODO replace this with a master.onBodyStart subscription
+                    if (StaticHistory.ContainsKey(master))
+                        StaticHistory.Remove(master);
             }
 
             oldHealth = newHealth;
@@ -106,8 +109,7 @@ namespace DamageHistory
                 StaticHistory.Add(what, history);
         }
     }
-
-    // TODO gut this whole thing to store logs by gameobject(attacker) so i can do a tablelookup when adding new damage; set the time to most recent damage; track the amount of hits per attacker;
+    
     public class DamageLog
     {
         public float when;

@@ -51,7 +51,7 @@ namespace BubbetsItems
             var formatArgs = scalingInfos.Select(info => info.ScalingFunction(inventory?.GetItemCount(ItemDef))).Cast<object>().ToArray();
             var ret = Language.GetStringFormatted(token ?? ItemDef.descriptionToken, formatArgs);
             if (expandedTooltips.Value)
-                ret += "\n\n" + string.Join("\n", scalingInfos.Select(info => info.ToString()));
+                ret += "\n\nScaling Functions:\n" + string.Join("\n", scalingInfos.Select(info => info.ToString()));
             return ret;
         }
 

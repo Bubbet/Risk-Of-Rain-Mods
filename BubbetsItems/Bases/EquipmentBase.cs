@@ -20,7 +20,13 @@ namespace BubbetsItems
             Enabled = configFile.Bind("Disable Equipments", name, true, "Should this equipment be enabled.");
         }
 
-        public virtual bool PerformEquipment(EquipmentSlot equipmentSlot) { return false; }
+        public virtual void AuthorityEquipmentPress(EquipmentSlot equipmentSlot) {}
+        public virtual void PerformClientAction(EquipmentSlot equipmentSlot, EquipmentActivationState state) { }
+
+        public virtual EquipmentActivationState PerformEquipment(EquipmentSlot equipmentSlot)
+        {
+            return EquipmentActivationState.DidNothing;
+        }
         public virtual void OnUnEquip(Inventory inventory, EquipmentState newEquipmentState) {}
         public virtual void OnEquip(Inventory inventory, EquipmentState? oldEquipmentState) {}
         public virtual bool UpdateTargets(EquipmentSlot equipmentSlot) { return false; }
@@ -30,26 +36,53 @@ namespace BubbetsItems
         
         private static IEnumerable<EquipmentBase> _equipments;
         public static IEnumerable<EquipmentBase> Equipments => _equipments ??= Instances.OfType<EquipmentBase>();
+
+        public enum EquipmentActivationState
+        {
+            ConsumeStock,
+            DontConsume,
+            DidNothing
+        }
         
         //Can manually call CallRpcOnClientEquipmentActivationRecieved maybe?
 
+        
+        /*
         [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.RpcOnClientEquipmentActivationRecieved))]
         public static void PerformEquipmentActionRpc(EquipmentSlot __instance) // third, all clients except host and authority, only on successful equipmentAction(second)
         {
             if (NetworkServer.active) return;
-            if (__instance.characterBody.hasEffectiveAuthority) return;
+            //if (__instance.characterBody.hasEffectiveAuthority) return;
             var boo = false;
             PerformEquipmentAction(__instance, EquipmentCatalog.GetEquipmentDef(__instance.equipmentIndex), ref boo);
-        }
+        }*/
         
+        [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.InvokeRpcRpcOnClientEquipmentActivationRecieved))]
+        public static bool NetReceive(NetworkBehaviour obj, NetworkReader reader) // 2.5
+        {
+            try
+            {
+                var state = (EquipmentActivationState) reader.ReadByte();
+                var __instance = (EquipmentSlot) obj;
+                var equipmentDef = EquipmentCatalog.GetEquipmentDef(__instance.equipmentIndex);
+                var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef == equipmentDef);
+                equipment.PerformClientAction(__instance, state);
+                return false;
+            } catch (IndexOutOfRangeException){}
+
+            return true;
+        }
+
         [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.CallCmdExecuteIfReady))]
         public static void PerformEquipmentActionClient(EquipmentSlot __instance) // first, activator client
         {
             if (!__instance.characterBody.hasEffectiveAuthority) return;
             if (NetworkServer.active) return; // dont call here because it'll call in second instead
             if (__instance.equipmentIndex == EquipmentIndex.None || __instance.stock <= 0) return;
-            var boo = false;
-            PerformEquipmentAction(__instance, EquipmentCatalog.GetEquipmentDef(__instance.equipmentIndex), ref boo);
+
+            var equipmentDef = EquipmentCatalog.GetEquipmentDef(__instance.equipmentIndex);
+            var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef == equipmentDef);
+            equipment?.AuthorityEquipmentPress(__instance);
         }
         //OnEquipmentExecuted runs EquipmentSlot.onServerEquipmentActivated and it runs on server right after calling the rpc so somewhere between second and third, maybe after third
         
@@ -61,7 +94,20 @@ namespace BubbetsItems
             
             try
             {
-                __result = equipment.PerformEquipment(__instance);
+                var state = equipment.PerformEquipment(__instance);
+                __result = state == EquipmentActivationState.ConsumeStock;
+                if (state != EquipmentActivationState.DidNothing && NetworkServer.active)
+                {
+                    NetworkWriter networkWriter = new();
+                    networkWriter.StartMessage(2); // 2 being rpc
+                    networkWriter.WritePackedUInt32((uint)EquipmentSlot.kRpcRpcOnClientEquipmentActivationRecieved);
+                    networkWriter.Write(__instance.GetComponent<NetworkIdentity>().netId);
+                    networkWriter.Write((byte) state); // this may end up breaking other mods, maybe.
+                    // if that happens use my own packeduint32 and hook static constructor of equipmentslot and call NetworkBehaviour.RegisterRpcDelegate with my id and point it to a static method here
+                    // NetworkBehaviour.RegisterRpcDelegate(typeof(EquipmentSlot), myID, new NetworkBehaviour.CmdDelegate(EquipmentBase.InvokeRpcEquipment));
+                    // rpcName is unused, not sure why it even exists
+                    __instance.SendRPCInternal(networkWriter, 0, "RpcOnClientEquipmentActivationRecieved");
+                } 
             }
             catch (Exception e)
             {

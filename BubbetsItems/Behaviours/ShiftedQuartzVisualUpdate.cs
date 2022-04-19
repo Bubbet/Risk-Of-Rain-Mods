@@ -29,6 +29,12 @@ namespace BubbetsItems.Behaviours
 				teamMaskFilter = allButNeutral,
 				viewer = body
 			};
+			renderer.material.SetFloat("_Color2BaseAlpha", ShiftedQuartz.visualTransparency.Value);
+			if (ShiftedQuartz.visualOnlyForAuthority.Value && !body.hasEffectiveAuthority)
+			{
+				renderer.material.SetColor("_Color", Color.clear);
+				renderer.material.SetColor("_Color2", Color.clear);
+			}
 		}
 
 		private bool Search()

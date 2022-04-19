@@ -3,6 +3,7 @@ using BubbetsItems.Items;
 using RoR2;
 using RoR2.Items;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace BubbetsItems.ItemBehaviors
 {
@@ -14,10 +15,10 @@ namespace BubbetsItems.ItemBehaviors
 		private const DeployableSlot Slot = (DeployableSlot) 340502;
 		
 		[ItemDefAssociation(useOnServer = true, useOnClient = false)]
-		private static ItemDef GetItemDef()
+		private static ItemDef? GetItemDef()
 		{
 			var instance = SharedBase.GetInstance<AcidSoakedBlindfold>();
-			return instance.ItemDef;
+			return instance?.ItemDef;
 		}
 
 		private void FixedUpdate()
@@ -42,7 +43,7 @@ namespace BubbetsItems.ItemBehaviors
 				}, RoR2Application.rng
 			) {summonerBodyObject = gameObject, onSpawnedServer = VerminSpawnedServer};
 			DirectorCore.instance.TrySpawnObject(request);
-			_deployableTime = master.GetDeployableCount(Slot) >= maxCount ? TimeBetweenRetries : TimeBetweenRespawns;
+			_deployableTime = master.GetDeployableCount(Slot) >= maxCount ? TimeBetweenRetries : instance.scalingInfos[3].ScalingFunction(stack);
 		}
 
 		private void VerminSpawnedServer(SpawnCard.SpawnResult obj)
@@ -71,7 +72,8 @@ namespace BubbetsItems.ItemBehaviors
 
 			var deployable = instances.AddComponent<Deployable>();
 			if (!deployable) return;
-			deployable.ownerMaster = body.master;
+			deployable.onUndeploy = new UnityEvent();
+			//deployable.ownerMaster = body.master;
 			body.master.AddDeployable(deployable, Slot);
 		}
 	}

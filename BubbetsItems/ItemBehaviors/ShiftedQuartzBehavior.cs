@@ -12,10 +12,10 @@ namespace BubbetsItems.ItemBehaviors
 	{
 
 		[ItemDefAssociation(useOnServer = true, useOnClient = false)]
-		private static ItemDef GetItemDef()
+		private static ItemDef? GetItemDef()
 		{
 			var instance = SharedBase.GetInstance<ShiftedQuartz>();
-			return instance.ItemDef;
+			return instance?.ItemDef;
 		}
 
 		private void OnEnable()

@@ -36,6 +36,20 @@ Patience is key~
   - `SOM#0001` for doing most of the icons
 
 # Changelog
+* v1.6.4 Mod Changes :
+  * Fixed jellied soles hit ground sound not having attenuation
+  * Updated Acid soaked blindfold
+    * Fixed it not respecting its limit in swarms
+    * Added a scaling function for respawn time
+    * Fixed a space in the tooltip that was missing
+  * Updated Shifted Quarts
+    * Added config value for should the effect only draw for authority
+    * Added config value for the inside radius's transparency
+  * Reworked the equipment again to fix some issues with gesture and sounds not stopping when they should
+  
+* v1.6.3 Mod Changes :
+  * Fixed a nre for disabled items
+  
 * v1.6.2 Mod Changes :
   * Made jellied soles store the damage in the master, so when you change scene it still remembers
   * Added sound effects and damage color for jellied soles

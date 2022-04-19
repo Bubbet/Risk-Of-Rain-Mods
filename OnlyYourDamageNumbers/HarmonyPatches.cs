@@ -18,7 +18,7 @@ namespace OnlyYourDamageNumbers
 			c.GotoPrev(x => x.MatchCall(typeof(DamageNumberManager),"get_instance"));
 			
 			c.Emit(OpCodes.Ldloc_0);
-			c.EmitDelegate<Func<DamageDealtMessage, bool>>(message => message.attacker == LocalUserManager.readOnlyLocalUsersList[0].cachedBodyObject); // TODO replace this with something that works while spectating
+			c.EmitDelegate<Func<DamageDealtMessage, bool>>(message => message.attacker == LocalUserManager.readOnlyLocalUsersList[0].cameraRigController.hud.targetBodyObject);
 			c.Emit(OpCodes.Brfalse, where);
 		}
 		
@@ -29,7 +29,7 @@ namespace OnlyYourDamageNumbers
 			var where = c.Next;
 			c.GotoPrev(x => x.MatchCall(typeof(DamageNumberManager),"get_instance")); // c.GotoPrev(x => x.MatchCall(typeof(DamageNumberManager).GetProperty("instance", BindingFlags.Public | BindingFlags.Static)?.GetGetMethod()));
 			c.Emit(OpCodes.Ldloc_0);
-			c.EmitDelegate<Func<HealthComponent.HealMessage, bool>>(message => message.target == LocalUserManager.readOnlyLocalUsersList[0].cachedBodyObject);
+			c.EmitDelegate<Func<HealthComponent.HealMessage, bool>>(message => message.target == LocalUserManager.readOnlyLocalUsersList[0].cameraRigController.hud.targetBodyObject);
 			c.Emit(OpCodes.Brfalse, where);
 		}
 	}

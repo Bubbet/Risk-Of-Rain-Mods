@@ -41,11 +41,17 @@ namespace BubbetsItems.Equipments
             return Language.GetStringFormatted(EquipmentDef.descriptionToken, duration.Value);
         }
 
-        public override bool PerformEquipment(EquipmentSlot equipmentSlot)
+        public override EquipmentActivationState PerformEquipment(EquipmentSlot equipmentSlot)
         {
             base.PerformEquipment(equipmentSlot);
             ConfigUpdate();
             return equipmentSlot.inventory.GetComponent<BrokenClockBehaviour>().ToggleReversing(); // This only matters on the server and all the data is tracked on the authority character
+        }
+
+        public override void PerformClientAction(EquipmentSlot equipmentSlot, EquipmentActivationState state)
+        {
+            base.PerformClientAction(equipmentSlot, state);
+            equipmentSlot.inventory.GetComponent<BrokenClockBehaviour>().PlaySounds(state);
         }
 
         public override void OnUnEquip(Inventory inventory, EquipmentState newEquipmentState)
@@ -119,18 +125,29 @@ namespace BubbetsItems.Equipments
         private CharacterMotor CharacterMotor => _characterMotor ? _characterMotor : (_characterMotor = Body?.GetComponent<CharacterMotor>());
 
         public DropoutStack<BrokenClockKeyframe> dropoutStack = new DropoutStack<BrokenClockKeyframe>(Mathf.RoundToInt(stackDuration/keyframeInterval));
+
+        public void PlaySounds(EquipmentBase.EquipmentActivationState state)
+        {
+            AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
+            if (state == EquipmentBase.EquipmentActivationState.DontConsume)
+            {
+                AkSoundEngine.PostEvent("BrokenClock_Start", Body.gameObject);
+                if (!_body.hasEffectiveAuthority) return;
+                reversing = true;
+                _previousKeyframe = MakeKeyframe();
+                _currentTargetKeyframe = dropoutStack.Pop();
+            }
+
+            if (state == EquipmentBase.EquipmentActivationState.ConsumeStock && _body.hasEffectiveAuthority)
+            {
+                reversing = false;
+            }
+        }
         
-        public bool ToggleReversing()
+        public EquipmentBase.EquipmentActivationState ToggleReversing()
         {
             reversing = !reversing;
-            AkSoundEngine.PostEvent("BrokenClock_Break", Body.gameObject);
-            if (!reversing) return true;
-            AkSoundEngine.PostEvent("BrokenClock_Start", Body.gameObject);
-            if (!Body.hasEffectiveAuthority) return false;
-            //AddOneStock(); // TODO does not work on clients, probably because we arent reaching here because its only ran on server?
-            _previousKeyframe = MakeKeyframe();
-            _currentTargetKeyframe = dropoutStack.Pop();
-            return false;
+            return reversing ? EquipmentBase.EquipmentActivationState.DontConsume : EquipmentBase.EquipmentActivationState.ConsumeStock;
         }
 
         public void Awake()
