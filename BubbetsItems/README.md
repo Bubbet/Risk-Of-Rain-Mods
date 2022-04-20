@@ -36,6 +36,9 @@ Patience is key~
   - `SOM#0001` for doing most of the icons
 
 # Changelog
+* v1.6.6 Mod Changes :
+  * Fixed equipments throwing a nre
+  
 * v1.6.5 Mod Changes :
   * Rebuilt the mod so the item tiers are properly assigned, thanks hopoo
   

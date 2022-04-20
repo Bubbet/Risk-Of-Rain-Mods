@@ -66,8 +66,11 @@ namespace BubbetsItems
                 var __instance = (EquipmentSlot) obj;
                 var equipmentDef = EquipmentCatalog.GetEquipmentDef(__instance.equipmentIndex);
                 var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef == equipmentDef);
-                equipment.PerformClientAction(__instance, state);
-                return false;
+                if (equipment != null)
+                {
+                    equipment.PerformClientAction(__instance, state);
+                    return false;
+                }
             } catch (IndexOutOfRangeException){}
 
             return true;
