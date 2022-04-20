@@ -15,7 +15,7 @@ namespace RampingEgo
 			var c = new ILCursor(il);
 			c.GotoNext(MoveType.After, x => x.MatchLdcR4(60f));
 			c.Emit(OpCodes.Ldarg_0);
-			c.EmitDelegate<Func<float, LunarSunBehavior, float>>((f, behavior) => f / (float)behavior.stack);
+			c.EmitDelegate<Func<float, LunarSunBehavior, float>>((f, behavior) => RampingEgoPlugin.GetDuration(f, behavior.stack));
 		}
 	}
 }
