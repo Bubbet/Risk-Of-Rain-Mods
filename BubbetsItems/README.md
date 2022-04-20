@@ -36,6 +36,9 @@ Patience is key~
   - `SOM#0001` for doing most of the icons
 
 # Changelog
+* v1.6.5 Mod Changes :
+  * Rebuilt the mod so the item tiers are properly assigned, thanks hopoo
+  
 * v1.6.4 Mod Changes :
   * Fixed jellied soles hit ground sound not having attenuation
   * Updated Acid soaked blindfold
