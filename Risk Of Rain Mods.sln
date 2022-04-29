@@ -34,6 +34,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlyYourDamageNumbers", "On
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RampingEgo", "RampingEgo\RampingEgo.csproj", "{8DF649CB-D355-439E-AFE0-5FB8B0756478}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MaterialHud", "MaterialHud\MaterialHud.csproj", "{09A579AB-0427-49F0-8331-622141F3318D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoStopTransform", "NoStopTransform\NoStopTransform.csproj", "{188BDAD4-3AF9-484E-9749-6F48E1BCE90F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkedTimedBuffs", "NetworkedTimedBuffs\NetworkedTimedBuffs.csproj", "{DF126A19-3F91-45B5-9450-519197123660}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,5 +114,17 @@ Global
 		{8DF649CB-D355-439E-AFE0-5FB8B0756478}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DF649CB-D355-439E-AFE0-5FB8B0756478}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DF649CB-D355-439E-AFE0-5FB8B0756478}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09A579AB-0427-49F0-8331-622141F3318D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09A579AB-0427-49F0-8331-622141F3318D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09A579AB-0427-49F0-8331-622141F3318D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09A579AB-0427-49F0-8331-622141F3318D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{188BDAD4-3AF9-484E-9749-6F48E1BCE90F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{188BDAD4-3AF9-484E-9749-6F48E1BCE90F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{188BDAD4-3AF9-484E-9749-6F48E1BCE90F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{188BDAD4-3AF9-484E-9749-6F48E1BCE90F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF126A19-3F91-45B5-9450-519197123660}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF126A19-3F91-45B5-9450-519197123660}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF126A19-3F91-45B5-9450-519197123660}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF126A19-3F91-45B5-9450-519197123660}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
