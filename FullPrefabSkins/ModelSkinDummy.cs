@@ -1,5 +1,4 @@
-﻿using RoR2;
-using UnityEngine;
+﻿using UnityEngine;
 
 //[RequireComponent(typeof(CharacterModel))]
 namespace FullPrefabSkins
