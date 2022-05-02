@@ -13,6 +13,7 @@ using RoR2;
 using RoR2.ContentManagement;
 using RoR2.Items;
 using UnityEngine;
+using Random = System.Random;
 
 #nullable enable
 
@@ -47,7 +48,7 @@ namespace BubbetsItems
             // ReSharper disable twice Unity.NoNullPropagation
 
             if (scalingInfos.Count <= 0) return Language.GetString(ItemDef.descriptionToken);
-            
+
             var formatArgs = scalingInfos.Select(info => info.ScalingFunction(inventory?.GetItemCount(ItemDef))).Cast<object>().ToArray();
             var ret = Language.GetStringFormatted(token ?? ItemDef.descriptionToken, formatArgs);
             if (sharedInfo.ExpandedTooltips.Value && !forceHideExtended)
@@ -87,15 +88,23 @@ namespace BubbetsItems
             }
         }
         
-        public override void AddDisplayRules(VanillaCharacterIDRS which, ItemDisplayRule[] displayRules)
+        public override void AddDisplayRules(VanillaIDRS which, ItemDisplayRule[] displayRules)
         {
-            var asset = IDRHelper.GetRuleSet(which);
-            asset.keyAssetRuleGroups = asset.keyAssetRuleGroups.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
+            IDRHelper.GetRuleSet(which).keyAssetRuleGroups.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
             {
                 displayRuleGroup = new DisplayRuleGroup {rules = displayRules},
                 keyAsset = ItemDef
-            }).ToArray();
+            });
         }
+        public override void AddDisplayRules(ModdedIDRS which, ItemDisplayRule[] displayRules)
+        {
+            IDRHelper.GetRuleSet(which).keyAssetRuleGroups.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
+            {
+                displayRuleGroup = new DisplayRuleGroup {rules = displayRules},
+                keyAsset = ItemDef
+            });
+        }
+        
 
         protected override void FillDefsFromContentPack()
         {
@@ -107,7 +116,7 @@ namespace BubbetsItems
                     if (MatchName(itemDef.name, name))
                         ItemDef = itemDef;
             }
-            
+
             if (ItemDef == null) 
                 sharedInfo.Logger?.LogWarning(
                     $"Could not find ItemDef for item {this}, class/itemdef name are probably mismatched. This will throw an exception later.");
@@ -151,6 +160,14 @@ namespace BubbetsItems
         protected virtual void FillVoidConversions(List<ItemDef.Pair> pairs) {}
 
 
+        public static void CheatForAllItems()
+        {
+            foreach (var itemBase in Items)
+            {
+                itemBase.CheatForItem(UnityEngine.Random.onUnitSphere);
+            }
+        }
+        
         public class ScalingInfo
         {
             private readonly string _description;

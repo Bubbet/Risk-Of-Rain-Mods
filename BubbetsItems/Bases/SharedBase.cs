@@ -133,10 +133,10 @@ namespace BubbetsItems
             DestroyBehaviours();
         }
         
-        public void CheatForItem()
+        public void CheatForItem(Vector3? rotationUniform = null)
         {
             var master = PlayerCharacterMasterController.instances[0].master;
-            PickupDropletController.CreatePickupDroplet(PickupIndex, master.GetBody().corePosition + Vector3.up * 1.5f, Vector3.one * 25f);
+            PickupDropletController.CreatePickupDroplet(PickupIndex, master.GetBody().corePosition + Vector3.up * 1.5f,  rotationUniform ?? Vector3.one * 25f);
             //master.inventory.GiveItem(ItemDef.itemIndex);
         }
 
@@ -155,6 +155,28 @@ namespace BubbetsItems
             foreach (var instance in Instances)
             {
                 instance.FillItemDisplayRules();
+
+                // TODO hide this
+                object? inst = (instance as ItemBase)?.ItemDef;
+                inst ??= (instance as EquipmentBase)?.EquipmentDef; 
+                
+                foreach (var key in IDRHelper.enumToBodyObjName.Keys)
+                {
+                    var ruleset = IDRHelper.GetRuleSet(key);
+                    if (ruleset == null) continue;
+                    var idrs = ruleset.keyAssetRuleGroups.FirstOrDefault(x => ReferenceEquals(x.keyAsset, inst));
+                    if (!ReferenceEquals(idrs.keyAsset, inst))
+                        instance.sharedInfo.Logger.LogWarning($"{instance.GetType().Name} has no item display rules for {key}");
+                }
+                
+                foreach (var key in IDRHelper.moddedEnumToBodyObjName.Keys)
+                {
+                    var ruleset = IDRHelper.GetRuleSet(key);
+                    if (ruleset == null) continue;
+                    var idrs = ruleset.keyAssetRuleGroups.FirstOrDefault(x => ReferenceEquals(x.keyAsset, inst));
+                    if (!ReferenceEquals(idrs.keyAsset, inst))
+                        instance.sharedInfo.Logger.LogWarning($"{instance.GetType().Name} has no item display rules for {key}");
+                }
             }
         }
 
@@ -164,14 +186,15 @@ namespace BubbetsItems
             {
                 var prefab = ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab ? ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab : ((this as EquipmentBase)?.EquipmentDef as BubEquipmentDef)?.displayModelPrefab;
                 if (!prefab) continue;
-                AddDisplayRules(key, new []{new ItemDisplayRule()
+                AddDisplayRules(key, new ItemDisplayRule()
                 {
                     childName = "Chest",
                     localScale = Vector3.one,
                     followerPrefab = prefab 
-                }});
+                });
             }//*/
         }
+
 
         [SystemInitializer( typeof(ItemCatalog), typeof(EquipmentCatalog))]
         public static void MakeAllTokens()
@@ -204,7 +227,6 @@ namespace BubbetsItems
         protected abstract void FillDefsFromContentPack();
         protected abstract void FillPickupIndex();
         protected abstract void FillRequiredExpansions();
-        public abstract void AddDisplayRules(VanillaCharacterIDRS which, ItemDisplayRule[] displayRules);
 
         [SuppressMessage("ReSharper", "NotAccessedField.Global")]
         public class SharedInfo
@@ -238,6 +260,18 @@ namespace BubbetsItems
                 ModSettingsManager.AddOption(new CheckBoxOption(ForceHideScalingInfoInPickup));
                 _riskOfOptionsMade = true;
             }
+        }
+
+        public abstract void AddDisplayRules(ModdedIDRS which, ItemDisplayRule[] displayRules);
+        public abstract void AddDisplayRules(VanillaIDRS which, ItemDisplayRule[] displayRules);
+
+        public virtual void AddDisplayRules(ModdedIDRS which, ItemDisplayRule displayRule)
+        {
+            AddDisplayRules(which, new []{displayRule});
+        }
+        public virtual void AddDisplayRules(VanillaIDRS which, ItemDisplayRule displayRule)
+        {
+            AddDisplayRules(which, new []{displayRule});
         }
     }
 }

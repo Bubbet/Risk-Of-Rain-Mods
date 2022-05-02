@@ -24,14 +24,17 @@ namespace BubbetsItems.Items.BarrierItems
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("0.05 * [b] * [m] + 0.1", "Barrier Add", desc: "[a] = item count; [b] = buff stacks; [m] = maximum barrier");
+			AddScalingFunction("(0.075 * [b] + 0.1)  * [m]", "Barrier Add", desc: "[a] = item count; [b] = buff stacks; [m] = maximum barrier");
 			AddScalingFunction("1", "Refresh Duration");
 			AddScalingFunction("[a]", "Max Buff Stacks");
 		}
 
 		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
 		{
-			scalingInfos[0].WorkingContext.b = 1;
+			var context = scalingInfos[0].WorkingContext;
+			context.b = 1;
+			context.m = 1;
+			
 			return base.GetFormattedDescription(inventory, token, forceHideExtended);
 		}
 

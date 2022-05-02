@@ -1,5 +1,6 @@
 ﻿using BubbetsItems.Helpers;
 using RoR2;
+using UnityEngine;
 
 namespace BubbetsItems.Items
 {
@@ -15,16 +16,6 @@ namespace BubbetsItems.Items
 			AddToken("ACIDSOAKEDBLINDFOLD_LORE", "What is that smell?");
 		}
 
-		protected override void FillItemDisplayRules()
-		{
-			base.FillItemDisplayRules();
-			AddDisplayRules(VanillaCharacterIDRS.Engineer, new []{new ItemDisplayRule()
-			{
-				// from the tool
-				
-			}});
-		}
-
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
@@ -32,6 +23,89 @@ namespace BubbetsItems.Items
 			AddScalingFunction("[a] * 5 + 5", "Item Count");
 			AddScalingFunction("0.2", "Green Item Chance");
 			AddScalingFunction("30", "Respawn Delay"); 
+		}
+
+		protected override void FillItemDisplayRules()
+		{
+			base.FillItemDisplayRules();
+			AddDisplayRules(VanillaIDRS.Engineer, 
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Commando, 
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Huntress, 
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Bandit, 
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Mult, 
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Artificer, 
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Mercenary, 
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Rex,
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Loader,
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Acrid,
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Captain, 
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.RailGunner, 
+				new ItemDisplayRule
+				{
+					
+				}
+			);
+			AddDisplayRules(VanillaIDRS.VoidFiend, 
+				new ItemDisplayRule
+				{
+					
+				}
+			);
 		}
 	}
 }
