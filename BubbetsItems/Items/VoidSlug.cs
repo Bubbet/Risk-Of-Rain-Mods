@@ -18,7 +18,7 @@ namespace BubbetsItems.Items
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("[h] * (1 - 100/(102+[a]))", "Regen", new ExpressionContext {h = 1}, "[h] = Missing health, [a] = Item count", "[h] * 0.005 * [a] + 0.0196");
+			AddScalingFunction("[h] * (1 - 100/(102+[a]))", "Regen", "[h] = Missing health, [a] = Item count", "[h] * 0.005 * [a] + 0.0196");
 		}
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
@@ -26,10 +26,10 @@ namespace BubbetsItems.Items
 			AddVoidPairing(nameof(RoR2Content.Items.HealWhileSafe));
 		}
 
-		public override string GetFormattedDescription(Inventory inventory, string? token = null)
+		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
 		{
 			scalingInfos[0].WorkingContext.h = 1f;
-			return base.GetFormattedDescription(inventory, token);
+			return base.GetFormattedDescription(inventory, token, forceHideExtended);
 		}
 		
 

@@ -31,6 +31,12 @@ namespace BubbetsItems.Helpers
             [StyleEnum.Magenta] = "<color=#FF00FF>",
             [StyleEnum.White] = "<color=#FFFFFF>",
             [StyleEnum.Black] = "<color=#000000>",
+            [StyleEnum.WhiteItem] = "<color=#FFFFFF>",
+            [StyleEnum.GreenItem] = "<color=#77FF17>",
+            [StyleEnum.RedItem] =  "<color=#E7543A>",
+            [StyleEnum.BossItem] = "<color=#FFEB04>",
+            [StyleEnum.LunarItem] = "<color=#307FFF>",
+            [StyleEnum.VoidItem] = "<color=#ED7FCD>",
         };
 
         public static bool IsStyle(StyleEnum style) => styleStrings[style].StartsWith("<style="); //(int) style <= 6;
@@ -76,6 +82,12 @@ namespace BubbetsItems.Helpers
         Cyan,
         Magenta,
         White,
-        Black
+        Black,
+        WhiteItem, 
+        GreenItem, 
+        RedItem, 
+        BossItem,
+        LunarItem, 
+        VoidItem
     }
 }

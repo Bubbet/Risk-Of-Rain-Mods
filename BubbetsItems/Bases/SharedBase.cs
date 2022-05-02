@@ -1,11 +1,14 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.ExpansionManagement;
@@ -22,23 +25,23 @@ namespace BubbetsItems
 
         //public virtual void MakeInLobbyConfig(ModConfigEntry modConfigEntry){}
         public virtual void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> dict){} // Has to be list of object because this class cannot have reference to inlobbyconfig, incase its not loaded
+        
+        public virtual void MakeRiskOfOptions()
+        {
+            sharedInfo.MakeRiskOfOptions();
+        }
 
         public ConfigEntry<bool>? Enabled;
         public static readonly List<SharedBase> Instances = new List<SharedBase>();
         public static readonly Dictionary<PickupIndex, SharedBase> PickupIndexes = new Dictionary<PickupIndex, SharedBase>();
         private static readonly Dictionary<Type, SharedBase> InstanceDict = new();
         public PickupIndex PickupIndex;
-
-        protected ManualLogSource? Logger;
-        protected Harmony? Harmony;
+        
         protected PatchClassProcessor? PatchProcessor;
         protected static readonly List<ContentPack> ContentPacks = new List<ContentPack>();
-        private string? _tokenPrefix;
-        
+
         private static ExpansionDef? _sotvExpansion;
-        protected ConfigFile? configFile;
-        protected ConfigEntry<bool>? expandedTooltips;
-        public ConfigEntry<bool>? descInPickup;
+        public SharedInfo sharedInfo;
 
         public static ExpansionDef? SotvExpansion
         {
@@ -53,55 +56,47 @@ namespace BubbetsItems
         //This is probably bad practice
         public virtual bool RequiresSotv => (this as ItemBase)?.voidPairing is not null;
         
-        public virtual string GetFormattedDescription(Inventory? inventory, string? token = null)
+        public virtual string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
         {
             return "Not Implemented";
         }
         
         public static void Initialize(ManualLogSource manualLogSource, ConfigFile configFile, SerializableContentPack? serializableContentPack = null, Harmony? harmony = null, string tokenPrefix = "")
         {
-            var localInstances = new List<SharedBase>();
-            var expandedTooltips = configFile.Bind(ConfigCategoriesEnum.General, "Expanded Tooltips", true, "Enables the scaling function in the tooltip.");
-            var descInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Description In Pickup", true, "Used the description in the pickup for my items.");
+            var sharedInfo = new SharedInfo(manualLogSource, configFile, harmony, tokenPrefix);
+
             foreach (var type in Assembly.GetCallingAssembly().GetTypes())
             {
                 //if(type == typeof(SharedBase) || type == typeof(ItemBase) || type == typeof(EquipmentBase)) continue;
                 if (!typeof(SharedBase).IsAssignableFrom(type)) continue; // || typeof(SharedBase) == type || typeof(ItemBase) == type || typeof(EquipmentBase) == type) continue;
-                SharedBase? shared;
-                try
+                if (type.IsAbstract) continue;
+                var shared = Activator.CreateInstance(type) as SharedBase;
+                if (shared == null)
                 {
-                    shared = Activator.CreateInstance(type) as SharedBase;
-                }
-                catch (MissingMethodException)
-                {
+                    manualLogSource.LogError($"Failed to make instance of {type}");
                     continue;
                 }
 
-                if (harmony != null)
-                {
-                    shared!.Harmony = harmony;
-                    shared.PatchProcessor = new PatchClassProcessor(harmony, shared.GetType());
-                }
-
-                shared!.Logger = manualLogSource;
-                shared.configFile = configFile;
-                shared.expandedTooltips = expandedTooltips;
-                shared.descInPickup = descInPickup;
+                shared!.sharedInfo = sharedInfo;
                 shared.MakeConfigs();
-                shared._tokenPrefix = tokenPrefix;
+                
                 if (!shared.Enabled?.Value ?? false) continue;
                 shared.MakeBehaviours();
-                shared.PatchProcessor?.Patch();
-                localInstances.Add(shared);
+                if (harmony != null)
+                {
+                    shared.PatchProcessor = new PatchClassProcessor(harmony, shared.GetType());
+                    shared.PatchProcessor.Patch();
+                }
+                Instances.Add(shared);
                 InstanceDict[type] = shared;
+                if(serializableContentPack)
+                    shared.FillDefsFromSerializableCP(serializableContentPack!);
             }
-            Instances.AddRange(localInstances);
 
             if (!serializableContentPack) return;
             serializableContentPack!.itemDefs = serializableContentPack.itemDefs.Where(x => ItemBase.Items.Any(y => MatchName(x.name, y.GetType().Name))).ToArray();
             var eliteEquipments = serializableContentPack.eliteDefs.Select(x => x.eliteEquipmentDef);
             serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs.Where(x => EquipmentBase.Equipments.Any(y => MatchName(x.name, y.GetType().Name))).Union(eliteEquipments).ToArray();
-            foreach (var instance in localInstances) instance.FillDefsFromSerializableCP(serializableContentPack);
         }
         public static T? GetInstance<T>() where T : SharedBase
         {
@@ -164,16 +159,18 @@ namespace BubbetsItems
         }
 
         protected virtual void FillItemDisplayRules()
-        { /*TODO remove method body, as this is just debug placement rules
+        { //*TODO remove method body, as this is just debug placement rules
             foreach (var key in IDRHelper.enumToBodyObjName.Keys)
             {
+                var prefab = ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab ? ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab : ((this as EquipmentBase)?.EquipmentDef as BubEquipmentDef)?.displayModelPrefab;
+                if (!prefab) continue;
                 AddDisplayRules(key, new []{new ItemDisplayRule()
                 {
                     childName = "Chest",
                     localScale = Vector3.one,
-                    followerPrefab = ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab ?? ((this as EquipmentBase)?.EquipmentDef as BubEquipmentDef)?.displayModelPrefab 
+                    followerPrefab = prefab 
                 }});
-            }*/
+            }//*/
         }
 
         [SystemInitializer( typeof(ItemCatalog), typeof(EquipmentCatalog))]
@@ -183,19 +180,19 @@ namespace BubbetsItems
             {
                 try
                 {
-                    item.Logger?.LogMessage($"Making tokens for {item}.");
+                    item.sharedInfo.Logger?.LogMessage($"Making tokens for {item}.");
                     item.MakeTokens();
                 }
                 catch (Exception e)
                 {
-                    item.Logger?.LogError(e);
+                    item.sharedInfo.Logger?.LogError(e);
                 }
             }
         }
 
         protected void AddToken(string key, string value)
         {
-            Language.english.SetStringByToken(_tokenPrefix + key, value);
+            Language.english.SetStringByToken(sharedInfo.TokenPrefix + key, value);
         }
         
         /* other languages get unloaded on language change, and these keys would be discarded
@@ -208,5 +205,39 @@ namespace BubbetsItems
         protected abstract void FillPickupIndex();
         protected abstract void FillRequiredExpansions();
         public abstract void AddDisplayRules(VanillaCharacterIDRS which, ItemDisplayRule[] displayRules);
+
+        [SuppressMessage("ReSharper", "NotAccessedField.Global")]
+        public class SharedInfo
+        {
+            public readonly ConfigEntry<bool> ExpandedTooltips;
+            public readonly ConfigEntry<bool> DescInPickup;
+            public readonly ConfigEntry<bool> ForceHideScalingInfoInPickup;
+            public ConfigFile ConfigFile;
+            public Harmony? Harmony;
+            public readonly ManualLogSource Logger;
+            public readonly string TokenPrefix;
+            private bool _riskOfOptionsMade;
+            
+            public SharedInfo(ManualLogSource manualLogSource, ConfigFile configFile, Harmony? harmony, string tokenPrefix)
+            {
+                Logger = manualLogSource;
+                ConfigFile = configFile;
+                Harmony = harmony;
+                TokenPrefix = tokenPrefix;
+                
+                ExpandedTooltips = configFile.Bind(ConfigCategoriesEnum.General, "Expanded Tooltips", true, "Enables the scaling function in the tooltip.");
+                DescInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Description In Pickup", true, "Used the description in the pickup for my items.");
+                ForceHideScalingInfoInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Disable Scaling Info In Pickup", true, "Should the scaling infos be hidden from pickups.");
+            }
+
+            public void MakeRiskOfOptions()
+            {
+                if (_riskOfOptionsMade) return;
+                ModSettingsManager.AddOption(new CheckBoxOption(ExpandedTooltips));
+                ModSettingsManager.AddOption(new CheckBoxOption(DescInPickup));
+                ModSettingsManager.AddOption(new CheckBoxOption(ForceHideScalingInfoInPickup));
+                _riskOfOptionsMade = true;
+            }
+        }
     }
 }

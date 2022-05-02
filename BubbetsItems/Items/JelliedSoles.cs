@@ -4,6 +4,7 @@ using HarmonyLib;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using NCalc;
 using RoR2;
 using RoR2.Audio;
 using UnityEngine;
@@ -29,14 +30,15 @@ namespace BubbetsItems.Items
 		{
 			base.MakeConfigs();
 			AddScalingFunction("Min([a] * 0.15, 1)", "Reduction");
-			AddScalingFunction("[s] * [d]", "Damage Add", desc: "[a] = amount; [s] = stored damage; [d] = level scaled damage over base damage");
+			AddScalingFunction("[s] * [d] * [a] * 0.1", "Damage Add", desc: "[a] = amount; [s] = result from damage amount remove; [d] = level scaled damage over base damage; [h] = the enemies combined health before the damage", oldDefault: "[s] * [d]");
+			AddScalingFunction("Min([s] * [d] * [a] * 0.1, Max([h] - [c], 0))/([d] * [a] * 0.1)", "Damage Amount Remove", desc: "[a] = amount; [s] = stored damage; [d] = level scaled damage over base damage; [h] = the enemies combined health before the damage; [c] = damage from the current attack");
 		}
 
-		public override string GetFormattedDescription(Inventory inventory, string? token = null)
+		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
 		{
-			if (!inventory) return base.GetFormattedDescription(inventory, token);
+			if (!inventory) return base.GetFormattedDescription(inventory, token, forceHideExtended);
 			var body = inventory.GetComponent<CharacterMaster>().GetBody();
-			if (!body) return base.GetFormattedDescription(inventory, token);
+			if (!body) return base.GetFormattedDescription(inventory, token, forceHideExtended);
 			var info = scalingInfos[1].WorkingContext;
 			var beh = inventory.GetComponent<JelliedSolesBehavior>();
 			if (beh)
@@ -44,7 +46,7 @@ namespace BubbetsItems.Items
 			else
 				info.s = 0;
 			info.d = body.damage / body.baseDamage;
-			return base.GetFormattedDescription(inventory, token);
+			return base.GetFormattedDescription(inventory, token, forceHideExtended);
 		}
 		protected override void MakeBehaviours()
 		{
@@ -77,6 +79,17 @@ namespace BubbetsItems.Items
 			var c = new ILCursor(il);
 			//var h = -1;
 			//var d = -1;
+
+			c.GotoNext(MoveType.After,
+				x => x.MatchLdcI4(0),
+				x => x.MatchStloc(out _)
+			);
+			
+			c.Emit(OpCodes.Ldarg_1);
+			c.Emit(OpCodes.Ldarg_2);
+			c.Emit(OpCodes.Ldloc_0); // weak ass knees
+			c.EmitDelegate<Action<CharacterBody, Vector3, bool>>(CollectDamage);
+			
 			c.GotoNext(x => x.MatchCallvirt<CharacterBody>("get_footPosition"));
 			c.GotoNext(MoveType.Before, x => x.MatchLdloc(out _), x => x.MatchLdloc(out _), x => x.MatchCallvirt<HealthComponent>(nameof(HealthComponent.TakeDamage)));
 			c.Index++;
@@ -116,13 +129,24 @@ namespace BubbetsItems.Items
 				var behavior = inv.GetComponent<JelliedSolesBehavior>();
 				if (behavior.storedDamage <= 0) return amount;
 				
+				
+				var info2 = instance.scalingInfos[2];
+				info2.WorkingContext.d = body.damage / body.baseDamage;
+				info2.WorkingContext.s = behavior.storedDamage;
+				info2.WorkingContext.h = hc.combinedHealth;
+				info2.WorkingContext.c = amount;
+				var y = info2.ScalingFunction(count);
+				
 				var info = instance.scalingInfos[1];
 				
 				info.WorkingContext.d = body.damage / body.baseDamage;
-				info.WorkingContext.s = behavior.storedDamage;
+				info.WorkingContext.s = y;
+				info.WorkingContext.h = hc.combinedHealth;
 				var x = info.ScalingFunction(count);
+
 				amount += x;
-				behavior.storedDamage = Mathf.Max(0, behavior.storedDamage - x);
+				
+				behavior.storedDamage = Mathf.Max(0, behavior.storedDamage - y);
 				damageInfo.damageColorIndex = (DamageColorIndex) 145;
 				EntitySoundManager.EmitSoundServer(hitSound.index, body.gameObject);
 
@@ -136,6 +160,26 @@ namespace BubbetsItems.Items
 		private static NetworkSoundEventDef? _hitGroundSound;
 		public static NetworkSoundEventDef hitGroundSound => (_hitGroundSound ??= BubbetsItemsPlugin.ContentPack.networkSoundEventDefs.Find("JelliedSolesHitGround"))!;
 
+		private static void CollectDamage(CharacterBody body, Vector3 impactVelocity, bool weakAssKnees)
+		{
+			var damage = Mathf.Max(Mathf.Abs(impactVelocity.y) - (body.jumpPower + 20f), 0f);
+			if (damage <= 0f) return;
+			var inv = body.inventory;
+			if (!inv) return;
+			var instance = GetInstance<JelliedSoles>();
+			var count = inv.GetItemCount(instance.ItemDef);
+			if (count <= 0) return;
+			var behavior = inv.GetComponent<JelliedSolesBehavior>();
+			
+			damage /= 60f;
+			damage *= body.maxHealth;
+			if (weakAssKnees || body.teamComponent.teamIndex == TeamIndex.Player && Run.instance.selectedDifficulty >= DifficultyIndex.Eclipse3)
+				damage *= 2f;
+			
+			var frac = instance.scalingInfos[0].ScalingFunction(count);
+			behavior.storedDamage += damage * frac;
+			EntitySoundManager.EmitSoundServer(hitGroundSound.index, body.gameObject);
+		}
 		private static DamageInfo UpdateDamage(HealthComponent component, DamageInfo info)
 		{
 			var inv = component.body.inventory;
@@ -143,11 +187,8 @@ namespace BubbetsItems.Items
 			var instance = GetInstance<JelliedSoles>();
 			var count = inv.GetItemCount(instance.ItemDef);
 			if (count <= 0) return info;
-			var behavior = inv.GetComponent<JelliedSolesBehavior>();
 			var frac = instance.scalingInfos[0].ScalingFunction(count);
-			behavior.storedDamage += info.damage * frac;
 			info.damage *= 1f - frac;
-			EntitySoundManager.EmitSoundServer(hitGroundSound.index, component.gameObject);
 			return info;
 		}
 

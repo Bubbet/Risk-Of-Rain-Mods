@@ -126,15 +126,15 @@ namespace BubbetsItems
         public static void NotifItemPostfix(GenericNotification __instance, ItemDef itemDef)
         {
             var item = ItemBase.Items.FirstOrDefault(x => x.ItemDef == itemDef);
-            if (item != null && item.descInPickup.Value)
-                __instance.descriptionText.token = item.GetFormattedDescription(null);
+            if (item != null && item.sharedInfo.DescInPickup.Value)
+                __instance.descriptionText.token = item.GetFormattedDescription(null, forceHideExtended: item.sharedInfo.ForceHideScalingInfoInPickup.Value);
         }
         
         [HarmonyPostfix, HarmonyPatch(typeof(GenericNotification), nameof(GenericNotification.SetEquipment))]
         public static void NotifEquipmentPostfix(GenericNotification __instance, EquipmentDef equipmentDef)
         {
             var equipment = EquipmentBase.Equipments.FirstOrDefault(x => x.EquipmentDef == equipmentDef);
-            if (equipment != null && equipment.descInPickup.Value)
+            if (equipment != null && equipment.sharedInfo.DescInPickup.Value)
                 __instance.descriptionText.token = equipment.GetFormattedDescription();
         }
 

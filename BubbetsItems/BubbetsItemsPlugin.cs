@@ -14,18 +14,20 @@ using RoR2.ContentManagement;
 using UnityEngine;
 using Path = System.IO.Path;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
+[assembly: SearchableAttribute.OptIn]
 
 #pragma warning disable CS0618 // Type or member is obsolete
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 #pragma warning restore CS0618 // Type or member is obsolete
 [module: UnverifiableCode]
-[assembly: SearchableAttribute.OptIn]
+
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.6.6")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.7.0")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     //[BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
     public class BubbetsItemsPlugin : BaseUnityPlugin
     {
@@ -46,7 +48,8 @@ namespace BubbetsItems
             var harm = new Harmony(Info.Metadata.GUID);
             LoadContentPack(harm);
             InLobbyConfigCompat.Init();
-            
+            RiskOfOptionsCompat.Init();
+
             new PatchClassProcessor(harm, typeof(HarmonyPatches)).Patch();
             new PatchClassProcessor(harm, typeof(PickupTooltipFormat)).Patch();
             new PatchClassProcessor(harm, typeof(LogBookPageScalingGraph)).Patch();

@@ -17,7 +17,7 @@ namespace BubbetsItems
         protected override void MakeConfigs()
         {
             var name = GetType().Name;
-            Enabled = configFile.Bind("Disable Equipments", name, true, "Should this equipment be enabled.");
+            Enabled = sharedInfo.ConfigFile.Bind("Disable Equipments", name, true, "Should this equipment be enabled.");
         }
 
         public virtual void AuthorityEquipmentPress(EquipmentSlot equipmentSlot) {}
@@ -114,7 +114,7 @@ namespace BubbetsItems
             }
             catch (Exception e)
             {
-                equipment.Logger?.LogError(e);
+                equipment.sharedInfo.Logger?.LogError(e);
             }
 
             return false;
@@ -148,13 +148,13 @@ namespace BubbetsItems
             }
             catch (Exception e)
             {
-                equipment.Logger?.LogError(e);
+                equipment.sharedInfo.Logger?.LogError(e);
             }
 
             return false;
         }
 
-        public override string GetFormattedDescription(Inventory inventory = null, string? token = null)
+        public override string GetFormattedDescription(Inventory? inventory = null, string? token = null, bool forceHideExtended = false)
         {
             return Language.GetString(token ?? EquipmentDef.descriptionToken);
         }
@@ -180,7 +180,7 @@ namespace BubbetsItems
             }
             catch (Exception e)
             {
-                oldEquip.Logger.LogError(e);
+                oldEquip.sharedInfo.Logger.LogError(e);
             }
 
             try
@@ -189,7 +189,7 @@ namespace BubbetsItems
             }
             catch (Exception e)
             {
-                newEquip?.Logger.LogError(e);
+                newEquip?.sharedInfo.Logger.LogError(e);
             }
         }
         
@@ -218,7 +218,7 @@ namespace BubbetsItems
             }
             if (EquipmentDef == null)
             {
-                Logger?.LogWarning($"Could not find EquipmentDef for item {this} in serializableContentPack, class/equipmentdef name are probably mismatched. This will throw an exception later.");
+                sharedInfo.Logger?.LogWarning($"Could not find EquipmentDef for item {this} in serializableContentPack, class/equipmentdef name are probably mismatched. This will throw an exception later.");
             }
         }
 
@@ -234,7 +234,7 @@ namespace BubbetsItems
             }
             
             if (EquipmentDef == null) 
-                Logger?.LogWarning(
+                sharedInfo.Logger?.LogWarning(
                     $"Could not find EquipmentDef for item {this}, class/equipmentdef name are probably mismatched. This will throw an exception later.");
         }
 
@@ -248,9 +248,9 @@ namespace BubbetsItems
             }
             catch (NullReferenceException e)
             {
-                Logger?.LogError("Equipment " + GetType().Name +
-                                 " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
-                                 e);
+                sharedInfo.Logger?.LogError("Equipment " + GetType().Name +
+                                            " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
+                                            e);
             }
         }
 

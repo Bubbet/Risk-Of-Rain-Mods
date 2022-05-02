@@ -19,9 +19,9 @@ namespace BubbetsItems.Items
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("([a] * 10 + 10) * [b]", "Armor amount", new ExpressionContext {b = 1}, "[a] = Item amount, [b] = Buff amount");
+			AddScalingFunction("([a] * 10 + 10) * [b]", "Armor amount", "[a] = Item amount, [b] = Buff amount");
 			AddScalingFunction("2", "Buff Duration");
-			stackable = configFile.Bind(ConfigCategoriesEnum.General, "ScintillatingJet Buff Stackable", false, "Can the buff stack.");
+			stackable = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "ScintillatingJet Buff Stackable", false, "Can the buff stack.");
 			stackable.SettingChanged += (_,_) => StackableChanged();
 		}
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
@@ -34,13 +34,13 @@ namespace BubbetsItems.Items
 		{
 			BuffDef!.canStack = stackable.Value;
 		}
-		public override string GetFormattedDescription(Inventory inventory, string? token = null)
+		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
 		{
 			scalingInfos[0].WorkingContext.b = 1; // Make tooltip not update with buff amount
-			return base.GetFormattedDescription(inventory, token);
+			return base.GetFormattedDescription(inventory, token, forceHideExtended);
 		}
-		private static BuffDef? _buffDef;
 		private ConfigEntry<bool> stackable;
+		private static BuffDef? _buffDef;
 		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefScintillatingJet");
 
 		protected override void MakeBehaviours()

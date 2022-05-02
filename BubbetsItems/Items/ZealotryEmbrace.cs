@@ -29,9 +29,9 @@ namespace BubbetsItems.Items
 			base.MakeConfigs();
 			AddScalingFunction("0.25", "Damage Increase");
 			AddScalingFunction("2 + [a]", "Debuff Amount");
-			onlyMyDots = configFile!.Bind(ConfigCategoriesEnum.General, "Zealotry Embrace: Only track my debuffs", true,
+			onlyMyDots = sharedInfo.ConfigFile!.Bind(ConfigCategoriesEnum.General, "Zealotry Embrace: Only track my debuffs", true,
 				"Should only your dots track to the total");
-			onlyOneDot = configFile.Bind(ConfigCategoriesEnum.General, "Zealotry Embrace: Only one dot stack", false,
+			onlyOneDot = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Zealotry Embrace: Only one dot stack", false,
 				"Should each dot stack count towards the total, else treat all stacks as one buff.");
 		}
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)

@@ -43,12 +43,12 @@ The cost of purchase and production associated with Mk2 is considerably higher t
         protected override void MakeConfigs()
         {
             base.MakeConfigs();
-            _reductionOnTrue = configFile!.Bind(ConfigCategoriesEnum.General, "Reduction On True", true,  "Makes the item behave more like mk1 and give a flat reduction in damage taken if set to true.");
+            _reductionOnTrue = sharedInfo.ConfigFile!.Bind(ConfigCategoriesEnum.General, "Reduction On True", true,  "Makes the item behave more like mk1 and give a flat reduction in damage taken if set to true.");
             _reductionOnTrue.SettingChanged += (_, _) => UpdateScalingFunction(); 
             
             var name = GetType().Name;;
-            AddScalingFunction("[d] - (20 + [p] * (4 + [a]))", name + " Reduction", new ExpressionContext {d = 1, p = 1}, "[a] = amount, [p] = plate amount, [d] = damage");
-            AddScalingFunction("20 + [p] * (4 + [a])", name + " Armor", new ExpressionContext {p = 1}, "[a] = amount, [p] = plate amount");
+            AddScalingFunction("[d] - (20 + [p] * (4 + [a]))", name + " Reduction", "[a] = amount, [p] = plate amount, [d] = damage");
+            AddScalingFunction("20 + [p] * (4 + [a])", name + " Armor", "[a] = amount, [p] = plate amount");
             _reductionScalingConfig = scalingInfos[0];
             _armorScalingConfig = scalingInfos[1];
             
@@ -62,7 +62,7 @@ The cost of purchase and production associated with Mk2 is considerably higher t
             scalingInfos.Clear();
             scalingInfos.Add(_reductionOnTrue.Value ? _reductionScalingConfig : _armorScalingConfig);
         }
-        public override string GetFormattedDescription(Inventory? inventory, string? token = null)
+        public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
         {
             //ItemDef.descriptionToken = _reductionOnTrue.Value ? "BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION" :  "BUB_REPULSION_ARMOR_MK2_DESC_ARMOR"; Cannot do this, it breaks the token matching from the tooltip patch
             var context = scalingInfos[0].WorkingContext;
@@ -73,7 +73,7 @@ The cost of purchase and production associated with Mk2 is considerably higher t
                 ? "BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION"
                 : "BUB_REPULSION_ARMOR_MK2_DESC_ARMOR";
             
-            return base.GetFormattedDescription(inventory, tokenChoice);
+            return base.GetFormattedDescription(inventory, tokenChoice, forceHideExtended);
         }
 
         public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)

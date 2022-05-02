@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using BepInEx.Configuration;
 using HarmonyLib;
 using InLobbyConfig.Fields;
-using JetBrains.Annotations;
 using NCalc;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
-using RoR2.ExpansionManagement;
 using RoR2.Items;
 using UnityEngine;
 
@@ -25,7 +26,7 @@ namespace BubbetsItems
         protected override void MakeConfigs()
         {
             var name = GetType().Name;
-            Enabled = configFile.Bind("Disable Items", name, true, "Should this item be enabled.");
+            Enabled = sharedInfo.ConfigFile.Bind("Disable Items", name, true, "Should this item be enabled.");
         }
 
         public ItemDef ItemDef;
@@ -36,13 +37,12 @@ namespace BubbetsItems
         public List<ScalingInfo> scalingInfos = new();
         public VoidPairing? voidPairing;
 
-        protected void AddScalingFunction(string defaultValue, string name,
-            ExpressionContext? defaultContext = null, string? desc = null, string? oldDefault = null)
+        protected void AddScalingFunction(string defaultValue, string name, string? desc = null, string? oldDefault = null)
         {
-            scalingInfos.Add(new ScalingInfo(configFile, defaultValue, name, new StackFrame(1).GetMethod().DeclaringType, defaultContext, desc, oldDefault));
+            scalingInfos.Add(new ScalingInfo(sharedInfo.ConfigFile, defaultValue, name, new StackFrame(1).GetMethod().DeclaringType, desc, oldDefault));
         }
 
-        public override string GetFormattedDescription([CanBeNull] Inventory inventory, string? token = null)
+        public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
         {
             // ReSharper disable twice Unity.NoNullPropagation
 
@@ -50,7 +50,7 @@ namespace BubbetsItems
             
             var formatArgs = scalingInfos.Select(info => info.ScalingFunction(inventory?.GetItemCount(ItemDef))).Cast<object>().ToArray();
             var ret = Language.GetStringFormatted(token ?? ItemDef.descriptionToken, formatArgs);
-            if (expandedTooltips.Value)
+            if (sharedInfo.ExpandedTooltips.Value && !forceHideExtended)
                 ret += "\n\nTooltip updates automatically with these fully configurable Scaling Functions:\n" + string.Join("\n", scalingInfos.Select(info => info.ToString()));
             return ret;
         }
@@ -61,6 +61,15 @@ namespace BubbetsItems
             foreach (var info in scalingInfos)
             {
                 info.MakeInLobbyConfig(scalingFunctions[ConfigCategoriesEnum.BalancingFunctions]);
+            }
+        }
+        
+        public override void MakeRiskOfOptions()
+        {
+            base.MakeRiskOfOptions();
+            foreach (var info in scalingInfos)
+            {
+                info.MakeRiskOfOptions();
             }
         }
 
@@ -74,7 +83,7 @@ namespace BubbetsItems
             }
             if (ItemDef == null)
             {
-                Logger?.LogWarning($"Could not find ItemDef for item {this} in serializableContentPack, class/itemdef name are probably mismatched. This will throw an exception later.");
+                sharedInfo.Logger?.LogWarning($"Could not find ItemDef for item {this} in serializableContentPack, class/itemdef name are probably mismatched. This will throw an exception later.");
             }
         }
         
@@ -100,7 +109,7 @@ namespace BubbetsItems
             }
             
             if (ItemDef == null) 
-                Logger?.LogWarning(
+                sharedInfo.Logger?.LogWarning(
                     $"Could not find ItemDef for item {this}, class/itemdef name are probably mismatched. This will throw an exception later.");
         }
 
@@ -114,9 +123,9 @@ namespace BubbetsItems
             }
             catch (NullReferenceException e)
             {
-                Logger?.LogError("Equipment " + GetType().Name +
-                                 " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
-                                 e);
+                sharedInfo.Logger?.LogError("Equipment " + GetType().Name +
+                                            " threw a NRE when filling pickup indexes, this could mean its not defined in your content pack:\n" +
+                                            e);
             }
         }
 
@@ -157,14 +166,12 @@ namespace BubbetsItems
                 set => _configEntry.Value = value;
             }
 
-            public ScalingInfo(ConfigFile configFile, string defaultValue, string name, Type callingType, ExpressionContext? defaultContext = null, string? desc = null, string? oldDefault = null)
+            public ScalingInfo(ConfigFile configFile, string defaultValue, string name, Type callingType, string? desc = null, string? oldDefault = null)
             {
                 _description = desc ?? "[a] = item count";
                 _name = name;
-                _defaultContext = defaultContext ?? new ExpressionContext();
-                _defaultContext.a = 1f;
                 WorkingContext = new ExpressionContext();
-                
+
                 _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, callingType.Name + "_" + name, defaultValue,   callingType.Name + "; Scaling function for item. ;" + _description, oldDefault);
                 _oldValue = _configEntry.Value;
                 _function = new Expression(_oldValue).ToLambda<ExpressionContext, float>();
@@ -177,7 +184,7 @@ namespace BubbetsItems
             }
             public float ScalingFunction(int? itemCount)
             {
-                WorkingContext.a = itemCount ?? _defaultContext.a;
+                WorkingContext.a = itemCount ?? 1;
                 return ScalingFunction(WorkingContext);
             }
 
@@ -191,11 +198,19 @@ namespace BubbetsItems
                 modConfigEntryObj.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(_configEntry));
             }
 
+            public void MakeRiskOfOptions()
+            {
+                ModSettingsManager.AddOption(new StringInputFieldOption(_configEntry));
+            }
+
             private void EntryChanged(object sender, EventArgs e)
             {
                 if (_configEntry.Value == _oldValue) return;
-                _function = new Expression(_configEntry.Value).ToLambda<ExpressionContext, float>();
-                _oldValue = _configEntry.Value;
+                try
+                {
+                    _function = new Expression(_configEntry.Value).ToLambda<ExpressionContext, float>();
+                    _oldValue = _configEntry.Value;
+                } catch(EvaluationException){}
             }
         }
 
@@ -208,7 +223,7 @@ namespace BubbetsItems
             public VoidPairing(string defaultValue, ItemBase parent, string? oldDefault = null)
             {
                 Parent = parent;
-                configEntry = parent.configFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + parent.GetType().Name, defaultValue, "Valid values: " + ValidEntries, oldDefault);
+                configEntry = parent.sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + parent.GetType().Name, defaultValue, "Valid values: " + ValidEntries, oldDefault);
                 configEntry.SettingChanged += (_, _) => SettingChanged();
                 SettingChanged();
             }
@@ -221,6 +236,7 @@ namespace BubbetsItems
             }
         }
         
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public class ExpressionContext
         {
             // yes this is terrible but im not smart enough to figure out another way.
@@ -259,6 +275,21 @@ namespace BubbetsItems
             public float Log(float x)
             {
                 return Mathf.Log(x);
+            }
+
+            public float Pow(float x, float y)
+            {
+                return Mathf.Pow(x, y);
+            }
+
+            public float Sin(float x)
+            {
+                return Mathf.Sin(x);
+            }
+            
+            public float Tan(float x)
+            {
+                return Mathf.Tan(x);
             }
 
             public float Max(float x, float y)

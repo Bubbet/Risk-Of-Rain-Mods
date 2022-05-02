@@ -36,7 +36,7 @@ namespace BubbetsItems.Equipments
             AddToken("BROKEN_CLOCK_LORE", "Broken clock lore.");
         }
 
-        public override string GetFormattedDescription(Inventory inventory = null, string? token = null)
+        public override string GetFormattedDescription(Inventory inventory = null, string? token = null, bool forceHideExtended = false)
         {
             return Language.GetStringFormatted(EquipmentDef.descriptionToken, duration.Value);
         }
@@ -69,13 +69,13 @@ namespace BubbetsItems.Equipments
         protected override void MakeConfigs()
         {
             base.MakeConfigs();
-            cooldown = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Cooldown", 60f, "Broken Clock equipment cooldown.", 5f);
+            cooldown = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Cooldown", 60f, "Broken Clock equipment cooldown.", 5f);
             cooldown.SettingChanged += (_, _) => ConfigUpdate();
-            duration = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Buffer Duration", 10f, "Duration of time to store in the broken clock.");
+            duration = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Buffer Duration", 10f, "Duration of time to store in the broken clock.");
             duration.SettingChanged += (_, _) => ConfigUpdate();
-            interval = configFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Keyframe Interval", 0.25f, "How often to capture a keyframe and store it. Also determines the size of the stack in conjunction with the duration. duration/interval = size size takes memory so try to keep it small enough.");
+            interval = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Keyframe Interval", 0.25f, "How often to capture a keyframe and store it. Also determines the size of the stack in conjunction with the duration. duration/interval = size size takes memory so try to keep it small enough.");
             interval.SettingChanged += (_, _) => ConfigUpdate();
-            ConfigUpdate();
+            ConfigUpdate(); // TODO make risk of options support
         }
 
         private void ConfigUpdate()

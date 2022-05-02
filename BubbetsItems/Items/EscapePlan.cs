@@ -30,8 +30,8 @@ namespace BubbetsItems.Items
         {
             //if (ItemEnabled.Value) RepulsionArmorPlateMk2Plugin.Conf.RequiresR2Api = true;
             base.MakeConfigs();
-            AddScalingFunction("-Log(1 - (1 - [h])) * (0.65 + 0.1 * [a])", "Movement Speed", new ExpressionContext{h = 1f/500f}, "[a] = amount, [h] = health");
-            Granularity = configFile!.Bind(ConfigCategoriesEnum.BalancingFunctions, GetType().Name + " Granularity", 25f, "Value to multiply the scaling function by before its rounded, and then value to divide the buff count by.");
+            AddScalingFunction("-Log(1 - (1 - [h])) * (0.65 + 0.1 * [a])", "Movement Speed", "[a] = amount, [h] = health");
+            Granularity = sharedInfo.ConfigFile!.Bind(ConfigCategoriesEnum.BalancingFunctions, GetType().Name + " Granularity", 25f, "Value to multiply the scaling function by before its rounded, and then value to divide the buff count by.");
             /*
             if (!Chainloader.PluginInfos.ContainsKey(R2API.R2API.PluginGUID))
                 ItemEnabled.Value = false;*/
@@ -42,7 +42,7 @@ namespace BubbetsItems.Items
             scalingFunctions[ConfigCategoriesEnum.BalancingFunctions].Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Granularity));
         }
 
-        public override string GetFormattedDescription(Inventory inventory, string? token = null)
+        public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
         {
             if (inventory)
             {
@@ -50,7 +50,7 @@ namespace BubbetsItems.Items
                     ?.GetComponent<HealthComponent>()
                     ?.combinedHealthFraction ?? 1f / 500f;
             }
-            return base.GetFormattedDescription(inventory, token);
+            return base.GetFormattedDescription(inventory, token, forceHideExtended);
         }
         /* TODO
         public override string GetFormattedDescription([CanBeNull] Inventory inventory) // TODO Fill this

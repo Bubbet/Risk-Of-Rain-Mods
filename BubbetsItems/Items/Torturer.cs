@@ -17,8 +17,15 @@ namespace BubbetsItems.Items
         protected override void MakeConfigs()
         {
             base.MakeConfigs();
-            AddScalingFunction("[d] * ([a] * 0.025 + 0.025)", "Healing From Damage", new ExpressionContext {d = 1f}, "[a] = amount, [d] = damage");
+            AddScalingFunction("[d] * ([a] * 0.025 + 0.025)", "Healing From Damage", "[a] = amount, [d] = damage");
         }
+
+        public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
+        {
+            scalingInfos[0].WorkingContext.d = 1;
+            return base.GetFormattedDescription(inventory, token, forceHideExtended);
+        }
+
         protected override void MakeBehaviours()
         {
             GlobalEventManager.onServerDamageDealt += DamageDealt;

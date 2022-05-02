@@ -1,4 +1,5 @@
 ﻿using BubbetsItems.Helpers;
+using RoR2;
 
 namespace BubbetsItems.Items
 {
@@ -13,6 +14,17 @@ namespace BubbetsItems.Items
 			AddToken("ACIDSOAKEDBLINDFOLD_DESC", "Every {3} seconds, " + "summon a Blind Vermin".Style(StyleEnum.Utility) + " with " + "{1} ".Style(StyleEnum.Utility) + "Common".Style(StyleEnum.White) + " or " + "Uncommon".Style(StyleEnum.Green) + " items.");
 			AddToken("ACIDSOAKEDBLINDFOLD_LORE", "What is that smell?");
 		}
+
+		protected override void FillItemDisplayRules()
+		{
+			base.FillItemDisplayRules();
+			AddDisplayRules(VanillaCharacterIDRS.Engineer, new []{new ItemDisplayRule()
+			{
+				// from the tool
+				
+			}});
+		}
+
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();

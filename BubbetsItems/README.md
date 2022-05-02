@@ -36,6 +36,15 @@ Patience is key~
   - `SOM#0001` for doing most of the icons
 
 # Changelog
+* v1.7.0 Mod Changes :
+  * Added Deficient Clepsydra, Void Tier 2, Chance to duplicate dot procs, Consumes all Abundant Hourglass.
+  * Made Jellied soles collect damage even if you're already immune to fall damage.
+  * Added config to disable scaling functions in the pickup text.
+  * Made jellied soles not overuse the buffered damage.
+
+* v1.6.7 Mod Changes :
+  * Fixed void scrap on consume last stack mode giving infinite items in printers
+  
 * v1.6.6 Mod Changes :
   * Fixed equipments throwing a nre
   

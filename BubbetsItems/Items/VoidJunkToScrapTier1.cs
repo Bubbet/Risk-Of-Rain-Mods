@@ -24,9 +24,9 @@ namespace BubbetsItems.Items
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			_canConsumeLastStack = configFile!.Bind(ConfigCategoriesEnum.General, "Void Scrap Consume Last Stack", false, "Should the void scrap consume the last stack when being used for scrap.");
+			_canConsumeLastStack = sharedInfo.ConfigFile!.Bind(ConfigCategoriesEnum.General, "Void Scrap Consume Last Stack", false, "Should the void scrap consume the last stack when being used for scrap.");
 		}
-		public override string GetFormattedDescription(Inventory inventory, string? token = null)
+		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
 		{
 			return Language.GetStringFormatted(ItemDef.descriptionToken, !_canConsumeLastStack!.Value ? "Cannot consume the last stack. " : "");
 		}
@@ -69,8 +69,8 @@ namespace BubbetsItems.Items
 				var normalPriority = new WeightedSelection<ItemIndex>();
 
 				var voidJunkToScrapTier1 = GetInstance<VoidJunkToScrapTier1>();
-				var voidAmount = Math.Max(0, inv.GetItemCount(voidJunkToScrapTier1!.ItemDef) - 1);
-				if (_canConsumeLastStack!.Value || voidAmount > 0) highestPriority.AddChoice(voidJunkToScrapTier1.ItemDef.itemIndex, voidAmount);
+				var voidAmount = Math.Max(0, inv.GetItemCount(voidJunkToScrapTier1!.ItemDef) - (_canConsumeLastStack!.Value ? 0 : 1));
+				if (voidAmount > 0) highestPriority.AddChoice(voidJunkToScrapTier1.ItemDef.itemIndex, voidAmount);
 
 				foreach (var itemIndex in ItemCatalog.tier1ItemList)
 				{

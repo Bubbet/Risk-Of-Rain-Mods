@@ -20,6 +20,7 @@ namespace BubbetsItems.Items
 			AddToken("BUNNYFOOT_PICKUP", "Your little feets start quivering.");
 			AddToken("BUNNYFOOT_LORE", "haha source go brrrr");
 		}
+
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
