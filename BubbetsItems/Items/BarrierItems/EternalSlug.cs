@@ -1,9 +1,12 @@
-﻿using BubbetsItems.Helpers;
+using BubbetsItems.Helpers;
 using System;
+using BubbetsItems.Behaviours;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RoR2;
+using RoR2.UI;
+using UnityEngine;
 
 namespace BubbetsItems.Items.BarrierItems
 {
@@ -30,7 +33,6 @@ namespace BubbetsItems.Items.BarrierItems
 			scalingInfos[0].WorkingContext.b = 1;
 			return base.GetFormattedDescription(inventory, token, forceHideExtended);
 		}
-
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.ServerFixedUpdate))]
 		public static void EditMinimumBarrier(ILContext il)
@@ -60,6 +62,60 @@ namespace BubbetsItems.Items.BarrierItems
 			info.WorkingContext.b = hc.fullBarrier;
 			info.WorkingContext.p = previous;
 			return info.ScalingFunction(amount);
+		}
+		
+		protected override void MakeBehaviours()
+		{
+			base.MakeBehaviours();
+			ExtraHealthBarSegments.AddType<SlugData>();
+		}
+
+		public class SlugData : ExtraHealthBarSegments.BarData
+		{
+			private bool enabled;
+			private float barPos;
+
+			public override HealthBarStyle.BarStyle GetStyle()
+			{
+				var style = bar.style.barrierBarStyle;
+				style.sizeDelta = bar.style.lowHealthOverStyle.sizeDelta;
+				return style;
+			}
+
+			public override void CheckInventory(ref HealthBar.BarInfo info, Inventory inv)
+			{
+				base.CheckInventory(ref info, inv);
+				
+				var inst = GetInstance<EternalSlug>();
+				if (inst == null) return;
+				var amount = inv.GetItemCount(inst.ItemDef);
+				if (amount <= 0)
+				{
+					enabled = false;
+					return;
+				}
+				var master = inv.GetComponent<CharacterMaster>();
+				if (!master) return;
+				var body = master.GetBody();
+				if (!body) return;
+				var hc = body.healthComponent;
+				if (!hc) return;
+				
+				var sinfo = inst.scalingInfos[0];
+				sinfo.WorkingContext.h = hc.health;
+				sinfo.WorkingContext.b = hc.fullBarrier;
+				sinfo.WorkingContext.p = 0f;
+				barPos = sinfo.ScalingFunction(amount) / hc.fullHealth;
+				enabled = true;
+			}
+
+			public override void UpdateInfo(ref HealthBar.BarInfo info)
+			{
+				info.enabled = enabled;
+				info.normalizedXMin = barPos;
+				info.normalizedXMax = barPos + 0.005f;
+				base.UpdateInfo(ref info);
+			}
 		}
 	}
 }

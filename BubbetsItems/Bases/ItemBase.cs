@@ -142,6 +142,8 @@ namespace BubbetsItems
         {
             if (RequiresSotv)
                 ItemDef.requiredExpansion = SotvExpansion;
+            else
+                ItemDef.requiredExpansion = BubExpansion;
         }
         
         [HarmonyPrefix, HarmonyPatch(typeof(ContagiousItemManager), nameof(ContagiousItemManager.Init))]

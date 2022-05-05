@@ -8,6 +8,8 @@ using System.Security.Permissions;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using BubbetsItems.Behaviours;
+using EntityStates;
 using HarmonyLib;
 using RoR2;
 using RoR2.ContentManagement;
@@ -58,9 +60,11 @@ namespace BubbetsItems
             // Do not use SystemInitializers in PatchClassProcessors, because patch triggers the static constructor of SearchableAttribute breaking mods that load after
             new PatchClassProcessor(harm, typeof(EquipmentBase)).Patch();
             new PatchClassProcessor(harm, typeof(ItemBase)).Patch(); // Only used for filling void items.
-            
+
+            new PatchClassProcessor(harm, typeof(ExtraHealthBarSegments)).Patch();
+
             //NotSystemInitializer.Hook(harm);
-            
+
             //Fucking bepinex pack constantly changing and now loading too late for searchableAttributes scan.
             //it changed again and no longer needs this
             //SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
@@ -92,6 +96,11 @@ namespace BubbetsItems
         public static void ExtraTokens()
         {
             Language.english.SetStringByToken("BUB_HOLD_TOOLTIP", "Hold Capslock for more.");
+            
+            Language.english.SetStringByToken("BUB_EXPANSION", "Bubbet's Content");
+            Language.english.SetStringByToken("BUB_EXPANSION_DESC", "Adds content from 'Bubbets Items' to the game.");
+            Language.english.SetStringByToken("BUB_EXPANSION_VOID", "Bubbet's Void Content");
+            Language.english.SetStringByToken("BUB_EXPANSION_VOID_DESC", "Adds the void content from 'Bubbets Items' and requires 'Survivors of the Void'.");
         }
 
         public static class Conf
@@ -110,6 +119,14 @@ namespace BubbetsItems
             var path = Path.GetDirectoryName(Info.Location);
             AssetBundle = AssetBundle.LoadFromFile(Path.Combine(path, AssetBundleName));
             var serialContent = AssetBundle.LoadAsset<BubsItemsContentPackProvider>("MainContentPack");
+
+            var states = new List<SerializableEntityStateType>();
+            foreach (var typ in Assembly.GetCallingAssembly().GetTypes())
+            {
+                if (!typeof(EntityState).IsAssignableFrom(typ)) continue;
+                states.Add(new SerializableEntityStateType(typ));
+            }
+            serialContent.entityStateTypes = states.ToArray();
             
             SharedBase.Initialize(Logger, Config, serialContent, harmony, "BUB_");
             ContentPack = serialContent.CreateContentPack();

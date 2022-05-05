@@ -40,19 +40,41 @@ namespace BubbetsItems
         protected PatchClassProcessor? PatchProcessor;
         protected static readonly List<ContentPack> ContentPacks = new List<ContentPack>();
 
-        private static ExpansionDef? _sotvExpansion;
         public SharedInfo sharedInfo;
+        
+        private static ExpansionDef? _bubExpansion;
+        private static ExpansionDef? _sotvExpansion;
+
+        public static ExpansionDef? BubExpansion
+        {
+            get
+            {
+                if (_bubExpansion is null)
+                {
+                    _bubExpansion = BubbetsItemsPlugin.ContentPack.expansionDefs.First(x => x.nameToken == "BUB_EXPANSION");
+                    _bubExpansion.disabledIconSprite = SotvExpansion.disabledIconSprite;
+                }
+
+                return _bubExpansion;
+            }
+        }
 
         public static ExpansionDef? SotvExpansion
         {
             get
             {
-                if (_sotvExpansion == null)
-                    _sotvExpansion = ExpansionCatalog.expansionDefs.FirstOrDefault(x => x.nameToken == "DLC1_NAME");
+                if (_sotvExpansion is null)
+                {
+                    _sotvExpansion = BubbetsItemsPlugin.ContentPack.expansionDefs.First(x => x.nameToken == "BUB_EXPANSION_VOID");
+                    var sotv = ExpansionCatalog.expansionDefs.First(x => x.nameToken == "DLC1_NAME");
+                    _sotvExpansion.requiredEntitlement = sotv.requiredEntitlement;
+                    _sotvExpansion.disabledIconSprite = sotv.disabledIconSprite;
+                }
+
                 return _sotvExpansion;
             }
         }
-        
+
         //This is probably bad practice
         public virtual bool RequiresSotv => (this as ItemBase)?.voidPairing is not null;
         
@@ -267,10 +289,16 @@ namespace BubbetsItems
 
         public virtual void AddDisplayRules(ModdedIDRS which, ItemDisplayRule displayRule)
         {
+            var prefab = ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab ? ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab : ((this as EquipmentBase)?.EquipmentDef as BubEquipmentDef)?.displayModelPrefab;
+            if (!prefab) return;
+            displayRule.followerPrefab = prefab;
             AddDisplayRules(which, new []{displayRule});
         }
         public virtual void AddDisplayRules(VanillaIDRS which, ItemDisplayRule displayRule)
         {
+            var prefab = ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab ? ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab : ((this as EquipmentBase)?.EquipmentDef as BubEquipmentDef)?.displayModelPrefab;
+            if (!prefab) return;
+            displayRule.followerPrefab = prefab;
             AddDisplayRules(which, new []{displayRule});
         }
     }

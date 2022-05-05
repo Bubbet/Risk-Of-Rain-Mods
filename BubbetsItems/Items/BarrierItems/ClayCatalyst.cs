@@ -9,6 +9,8 @@ namespace BubbetsItems.Items.BarrierItems
 {
 	public class ClayCatalyst : ItemBase
 	{
+		private static BuffDef? _buffDef;
+		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefClayCatalyst");
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
@@ -25,6 +27,17 @@ namespace BubbetsItems.Items.BarrierItems
 			AddScalingFunction("1 - (1.1 - Pow(0.9, [a]))", "Barrier Decay Mult");
 		}
 
+		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
+		public static void FixBarrier(CharacterBody __instance)
+		{
+			var instance = GetInstance<ClayCatalyst>();
+			if (instance == null) return;
+			var teamIndex = __instance.teamComponent.teamIndex;
+			if (__instance.GetBuffCount(BuffDef) <= 0) return;
+			var amount = Util.GetItemCountForTeam(teamIndex, instance.ItemDef.itemIndex, false);
+			__instance.barrierDecayRate *= instance.scalingInfos[1].ScalingFunction(amount);
+		}
+		
 		public static Dictionary<HoldoutZoneController, GameObject[]> ZoneInstances = new(); 
 		
 		[HarmonyPostfix, HarmonyPatch(typeof(HoldoutZoneController), nameof(HoldoutZoneController.UpdateHealingNovas))]
@@ -62,6 +75,14 @@ namespace BubbetsItems.Items.BarrierItems
 			ZoneInstances[__instance] = zones;
 		}
 
-		public static GameObject ZoneObject { get; set; } // TODO
+		private static GameObject? _zoneObject;
+
+		public static GameObject ZoneObject
+		{
+			get
+			{
+				return _zoneObject ??= BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("ClayCatalystTeleporter");
+			}
+		}
 	}
 }
