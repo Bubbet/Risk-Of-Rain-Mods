@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BubbetsItems.Helpers;
+using HarmonyLib;
 using RoR2;
 
 namespace BubbetsItems.Items.BarrierItems
@@ -9,8 +10,8 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("CEREMONIALPROBE_NAME", "Ceremonial Probe");
-			AddToken("CEREMONIALPROBE_DESC", "When below {0:0%} health, freeze barrier decay.");
-			AddToken("CEREMONIALPROBE_PICKUP", "");
+			AddToken("CEREMONIALPROBE_DESC", "Falling bellow " + "{0:0%} health ".Style(StyleEnum.Health) + "causes " + "barrier decay ".Style(StyleEnum.Heal) + "to stop.");
+			AddToken("CEREMONIALPROBE_PICKUP", "Pause barrier decay at low health.");
 			AddToken("CEREMONIALPROBE_LORE", "");
 		}
 

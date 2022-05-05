@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BubbetsItems.Helpers;
+using HarmonyLib;
 using RoR2;
 
 namespace BubbetsItems.Items.BarrierItems
@@ -12,9 +13,9 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("BONEVISOR_NAME","Bone Visor");
-			AddToken("BONEVISOR_DESC","Killing enemies stacks a buff that lasts for {0} seconds, and multiplies barrier decay by {1:0%}.");
-			AddToken("BONEVISOR_PICKUP","");
-			AddToken("BONEVISOR_LORE","");
+			AddToken("BONEVISOR_DESC", "Killing an enemy " + "multiplies barrier decay ".Style(StyleEnum.Heal) + "by " + "{1:0%}".Style(StyleEnum.Heal) + ", lasting for " + "{0} ".Style(StyleEnum.Utility) + "seconds.");
+			AddToken("BONEVISOR_PICKUP", "Killing an enemy grants a buff that slows barrier decay temporarily.");
+			AddToken("BONEVISOR_LORE","Was there a bone tribe somewhere lost here? I've found this near an ancient ruins on Mars and still haven't figured out the origins to it yet.");
 		}
 
 		protected override void MakeConfigs()

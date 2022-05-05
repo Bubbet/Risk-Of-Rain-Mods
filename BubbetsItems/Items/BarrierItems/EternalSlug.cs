@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BubbetsItems.Helpers;
+using System;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -12,8 +13,8 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("ETERNALSLUG_NAME","Eternal Slug");
-			AddToken("ETERNALSLUG_DESC","Prevents barrier from decaying natrually past {0:0%}.");
-			AddToken("ETERNALSLUG_PICKUP","");
+			AddToken("ETERNALSLUG_DESC", "Stops" + "temporary barrier".Style(StyleEnum.Health) + "from decaying naturally past" + "{0:0%}".Style(StyleEnum.Health) + ".");
+			AddToken("ETERNALSLUG_PICKUP", "Stops barrier decay at a certain point.");
 			AddToken("ETERNALSLUG_LORE",@"Fascinatingly, this alien species appears to have been perfectly preserved in an extra-terrestrial substance, similar to amber, yet with the smell of…. strawberries? Little Fern here certainly will live forever in this amber.”
 	- Doctor Jyemo of Archeology, Researcher aboard the UES Contact Light");
 		}

@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using BubbetsItems.Helpers;
+using HarmonyLib;
 using RoR2;
 
 namespace BubbetsItems.Items
@@ -9,8 +10,8 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("DECREASEBARRIERDECAY_NAME", "Mechanical Snail");
-			AddToken("DECREASEBARRIERDECAY_DESC", "Multiplies barrier decay by {0:0%}.");
-			AddToken("DECREASEBARRIERDECAY_PICKUP", "");
+			AddToken("DECREASEBARRIERDECAY_DESC", "Multiplies " + "barrier decay ".Style(StyleEnum.Health) + "by " + "{0:0%}".Style(StyleEnum.Health) + ".");
+			AddToken("DECREASEBARRIERDECAY_PICKUP", "Slow down barrier decay.");
 			AddToken("DECREASEBARRIERDECAY_LORE", "");
 		}
 
