@@ -1,5 +1,4 @@
-﻿using BubbetsItems.Helpers;
-using HarmonyLib;
+﻿using HarmonyLib;
 using RoR2;
 using UnityEngine;
 
@@ -17,8 +16,8 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("GEMCARAPACE_NAME", "Gem Carapace");
-			AddToken("GEMCARAPACE_DESC", "{1} seconds after getting hurt, gain a" + "{0:0%} temporary barrier".Style(StyleEnum.Health) + ". Triggers up to {2} times.");
-			AddToken("GEMCARAPACE_PICKUP", "Receive a delayed temporary barrier after taking damage.");
+			AddToken("GEMCARAPACE_DESC", "When you are hit gain a buff that stacks up to {2} times and gives you {0:0%} barrier when it expires, in {1} seconds.");
+			AddToken("GEMCARAPACE_PICKUP", "");
 			AddToken("GEMCARAPACE_LORE", "");
 		}
 
