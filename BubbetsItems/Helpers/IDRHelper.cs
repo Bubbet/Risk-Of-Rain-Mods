@@ -155,15 +155,5 @@ namespace BubbetsItems
 
 			return bodyReference[which];
 		}
-
-		public static ItemDisplayRuleSet? GetRuleSet<T>(T which)
-		{
-			return which switch
-			{
-				VanillaIDRS van => GetRuleSet(van),
-				ModdedIDRS mod => GetRuleSet(mod),
-				_ => null
-			};
-		}
 	}
 }

@@ -206,13 +206,10 @@ namespace BubbetsItems
         { //*TODO remove method body, as this is just debug placement rules
             foreach (var key in IDRHelper.enumToBodyObjName.Keys)
             {
-                var prefab = ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab ? ((this as ItemBase)?.ItemDef as BubItemDef)?.displayModelPrefab : ((this as EquipmentBase)?.EquipmentDef as BubEquipmentDef)?.displayModelPrefab;
-                if (!prefab) continue;
                 AddDisplayRules(key, new ItemDisplayRule()
                 {
                     childName = "Chest",
-                    localScale = Vector3.one,
-                    followerPrefab = prefab 
+                    localScale = Vector3.one
                 });
             }//*/
         }
