@@ -3,27 +3,34 @@ Yet another item mod that adds all sorts of unique items, including Void Tiers. 
 
 # Items Added
 
-Items | Function | Type
----|---:|---
-Jellied Soles | Reduces fall damage and add the reduced damage to your next attack | `Common` |
+Icons | Items | Function | Type
+|---|---:|---:|---
+<img src="https://media.discordapp.net/attachments/953688831750709278/955216159270109255/GEMO_JelliedSoles.png" width="100"/> | Jellied Soles | Reduces fall damage and add the reduced damage to your next attack. | `Common` |
+<img src="https://media.discordapp.net/attachments/953688831750709278/970448356667162632/RenderIcon.png" width="100"/> | Gem Carapace | Receive a delayed temporary barrier after taking damage. | `Common` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/970496618010923068/clayCatalystIcon.png" width="100"/> | Clay Catalyst | Slow down barrier decay nearby the Teleporter event and 'Holdout Zones' such as the Void Fields. | `Common` |
+<img src="https://media.discordapp.net/attachments/953688831750709278/971245392362622986/boneVisorIcon.png" width="100"/> | Bone Visor | Killing an enemy grants a buff that slows barrier decay temporarily. | `Common` |
 ---|---|---|
-Torturer | Heal from inflicted damage over time | `Uncommon` |
-Abundant Hourglass | Duration of buffs are increased | `Uncommon` |
-Escape Plan | Increases movement speed the closer you are to death | `Uncommon` |
-Bunny Foot | Source bhopping in a item | `Uncommon` |
+<img src="https://media.discordapp.net/attachments/953688831750709278/971948105438232686/unknown.png" width="100"/> | Torturer | Heal from inflicted damage over time. | `Uncommon` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/967538771211980820/Hourglass128.png" width="100"/> | Abundant Hourglass | Duration of buffs are increased. | `Uncommon` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/Plan128.png" width="100"/> | Escape Plan | Increases movement speed the closer you are to death. | `Uncommon` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/bhop.png" width="100"/> | Bunny Foot | Source bhopping in a item. | `Uncommon` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/970904553186811924/ceremonialProbeIcon.png" width="100"/> | Ceremonial Probe | Pause barrier decay at low health. | `Uncommon` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/970814203457843230/mechSnailIcon.png" width="100"/> | Mechanical Snail | Slow down barrier decay. | `Uncommon` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/970169637067169822/sluggyBoyIcon.png" width="100"/> | Eternal Slug | Stops barrier decay at a certain point. | `Uncommon` |
 ---|---|---|
-Repulsion Armor Mk2 | Two modes in config, gives extra reduction or armor per Repulsion Plate | `Legendary` |
-Acid Soaked Blindfold | Spawn a blind vermin ally with some items | `Legendary` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/Plate128.png" width="100"/> | Repulsion Armor Mk2 | Two modes in config, gives extra reduction or armor per Repulsion Plate. | `Legendary` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/957570332082970624/acidSoakedBlindfoldRender-1.png" width="100"/> | Acid Soaked Blindfold | Spawn a blind vermin ally with some items. | `Legendary` |
 ---|---|---|
-Void Scrap | Prioritized when used with Common 3D Printers. Corrupts all Broken items | `Void Common` |
-Shifted Quartz | Deal bonus damage if there aren't nearby enemies. Corrupts all Focus Crystals | `Void Common` |
-Recursion Bullets | Attacking bosses increases attack speed. Corrupts all Armor-Piercing Rounds | `Void Common` |
-Scintillating Jet | Reduce damage temporarily after getting hit. Corrupts all oddly shaped opal | `Void Common` |
-Adrenaline Sprout | Increase regen while in combat. Corrupts all cautious slug | `Void Common` |
-Zealotry Embrace | Deal more damage to enemies with barely any debuffs inflicted. Corrupts all Death Marks | `Void Uncommon` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/voidscrap.png" width="100"/> | Void Scrap | Prioritized when used with Common 3D Printers. Corrupts all Broken items. | `Void Common` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/955219913981718638/GEMO_shiftedQuartzRender.png" width="100"/> | Shifted Quartz | Deal bonus damage if there aren't nearby enemies. Corrupts all Focus Crystals. | `Void Common` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/955582068287488000/recursionBullets.png" width="100"/> | Recursion Bullets | Attacking bosses increases attack speed. Corrupts all Armor-Piercing Rounds. | `Void Common` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/958535209773588521/scintillatingJetOutline.png" width="100"/> | Scintillating Jet | Reduce damage temporarily after getting hit. Corrupts all Oddly-Shaped Opals. | `Void Common` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/959343347175129128/unknown.png" width="100"/> | Adrenaline Sprout | Increase regen while in combat. Corrupts all Cautious Slugs. | `Void Common` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/955206275296288798/ZealotryEmbraceOutline.png" width="100"/> | Zealotry Embrace | Deal more damage to enemies with barely any debuffs inflicted. Corrupts all Death Marks. | `Void Uncommon` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/967541141660647464/texIconsTemplate.png" width="100"/> | Deficient Clepsydra | Chance to duplicate damage over times. Corrupts all Abundant Hourglass. | `Void Uncommon` |
 ---|---|---|
-Broken Clock | Turn back the clock 10 seconds for yourself | `Equipment` |
-Wildlife Camera | Take a photo of an enemy, and spawn them as an ally later | `Equipment` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/BrokenClock.png" width="100"/> | Broken Clock | Turn back the clock 10 seconds for yourself. | `Equipment` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/WLCam.png" width="100"/> | Wildlife Camera | Take a photo of an enemy, and spawn them as an ally later. | `Equipment` |
 
 # Other
 If you have suggestions or questions, feel free to message `Bubbet#2639` or `GEMO#0176` on Discord.
@@ -33,23 +40,26 @@ Patience is key~
 
 - Special Thanks to..
   - `GEMO#0176` for making all the newer item models
-  - `SOM#0001` for doing most of the icons
+  - `SOM#0001` for doing most of the icon templates
+  - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
-* v1.7.0 Mod Changes :
+* v1.7.0 Mod Changes, Expansion Barrier Update :
   * Added Deficient Clepsydra, Void Tier 2, Chance to duplicate dot procs, Consumes all Abundant Hourglass.
-  * Made Jellied soles collect damage even if you're already immune to fall damage.
+  * Made Jellied Soles collect damage even if you're already immune to fall damage.
   * Added config to disable scaling functions in the pickup text.
-  * Made jellied soles not overuse the buffered damage.
+  * Made Jellied Soles not overuse the buffered damage.
+  * Added several new barrier items!
+  * New expansion def and new icon.
 
 * v1.6.7 Mod Changes :
-  * Fixed void scrap on consume last stack mode giving infinite items in printers
+  * Fixed Void Scrap on consume last stack mode giving infinite items in printers
   
 * v1.6.6 Mod Changes :
-  * Fixed equipments throwing a nre
+  * Fixed Equipments throwing a NRE
   
 * v1.6.5 Mod Changes :
-  * Rebuilt the mod so the item tiers are properly assigned, thanks hopoo
+  * Rebuilt the mod so the item tiers are properly assigned, thanks Hopoo
   
 * v1.6.4 Mod Changes :
   * Fixed jellied soles hit ground sound not having attenuation
