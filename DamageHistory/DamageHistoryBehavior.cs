@@ -50,7 +50,7 @@ namespace DamageHistory
             {
                 history.Clear();
                 var master = healthComponent.body.master;
-                if (master) // TODO replace this with a master.onBodyStart subscription
+                if (master && !healthComponent.wasAlive)
                     if (StaticHistory.ContainsKey(master))
                         StaticHistory.Remove(master);
             }
@@ -105,8 +105,9 @@ namespace DamageHistory
         public void OnDeathStart()
         {
             var what = healthComponent.body.master;
-            if (!StaticHistory.ContainsKey(what))
-                StaticHistory.Add(what, history);
+            if (what)
+                if (!StaticHistory.ContainsKey(what))
+                    StaticHistory.Add(what, history);
         }
     }
     

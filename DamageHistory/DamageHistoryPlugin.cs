@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Security;
+using System.Security.Permissions;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -7,6 +9,10 @@ using HG.Reflection;
 using RoR2;
 using RoR2.UI;
 
+#pragma warning disable CS0618 // Type or member is obsolete
+[assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
+#pragma warning restore CS0618 // Type or member is obsolete
+[module: UnverifiableCode]
 //[assembly: SearchableAttribute.OptInAttribute]
 namespace DamageHistory
 {

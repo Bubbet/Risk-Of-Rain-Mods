@@ -87,6 +87,8 @@ namespace DamageHistory
             var visible = !DamageHistoryPlugin.mustHoldTab.Value || DamageHistoryPlugin.mustHoldTab.Value && Input.GetKeyDown(KeyCode.Tab);
             if (historyBehavior != null && visible)
             {
+                if (_hud.localUserViewer == null)
+                    return;
                 var master = _hud.localUserViewer.cachedMaster;
                 if (master != historyBehavior.healthComponent.body.master && DamageHistoryBehavior.StaticHistory.ContainsKey(master))
                     _textMesh.SetText(BuildString(historyBehavior.history, who: historyBehavior.healthComponent.body.GetUserName()).Append("Your ").Append(BuildString(DamageHistoryBehavior.StaticHistory[master], who: master.playerCharacterMasterController.GetDisplayName())).ToString());
