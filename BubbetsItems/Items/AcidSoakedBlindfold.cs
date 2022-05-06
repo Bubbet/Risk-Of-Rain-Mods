@@ -48,18 +48,20 @@ namespace BubbetsItems.Items
 
 				}
 			);
-			AddDisplayRules(VanillaIDRS.Huntress, 
-				new ItemDisplayRule
-				{
-					childName = "Head",
-					localPos = new Vector3(0.00019F, 0.20214F, -0.03606F),
-					localAngles = new Vector3(287.774F, 199.0562F, 149.1596F),
-					localScale = new Vector3(15.20139F, 18.35448F, 15.20139F)
-
-					childName = "Head",
-					localPos = new Vector3(-0.00071F, 0.10571F, -0.02957F),
-					localAngles = new Vector3(280.0173F, 181.7912F, 178.092F),
-					localScale = new Vector3(15.24168F, 21.07032F, 24.06534F)
+			AddDisplayRules(VanillaIDRS.Huntress, new []{
+					new ItemDisplayRule
+					{
+						childName = "Head",
+						localPos = new Vector3(0.00019F, 0.20214F, -0.03606F),
+						localAngles = new Vector3(287.774F, 199.0562F, 149.1596F),
+						localScale = new Vector3(15.20139F, 18.35448F, 15.20139F)
+					}, new ItemDisplayRule
+					{
+						childName = "Head",
+						localPos = new Vector3(-0.00071F, 0.10571F, -0.02957F),
+						localAngles = new Vector3(280.0173F, 181.7912F, 178.092F),
+						localScale = new Vector3(15.24168F, 21.07032F, 24.06534F)
+					}
 				}
 			);
 			AddDisplayRules(VanillaIDRS.Bandit, 
