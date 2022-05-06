@@ -203,7 +203,7 @@ namespace BubbetsItems
         }
 
         protected virtual void FillItemDisplayRules()
-        { //*TODO remove method body, as this is just debug placement rules
+        { /*TODO remove method body, as this is just debug placement rules
             foreach (var key in IDRHelper.enumToBodyObjName.Keys)
             {
                 AddDisplayRules(key, new ItemDisplayRule()

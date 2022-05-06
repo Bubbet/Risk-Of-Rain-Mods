@@ -10,7 +10,7 @@ namespace BubbetsItems
 	[CreateAssetMenu(menuName = "BubbetsItems/ContentPackProvider")]
 	public class BubsItemsContentPackProvider : SerializableContentPack
 	{
-		public ExpansionDef[] expansionDefs = Array.Empty<ExpansionDef>();
+		public ExpansionDef[] expansionDefs = {};
 		public ItemRelationshipType[] itemRelationshipTypes = {};
 		public ItemRelationshipProvider[] itemRelationshipProviders = {};
 

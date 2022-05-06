@@ -52,15 +52,17 @@ namespace BubbetsItems.Items
 					new ItemDisplayRule
 					{
 						childName = "Head",
-						localPos = new Vector3(0.00019F, 0.20214F, -0.03606F),
-						localAngles = new Vector3(287.774F, 199.0562F, 149.1596F),
-						localScale = new Vector3(15.20139F, 18.35448F, 15.20139F)
+						localPos = new Vector3(-0.00958F, 0.23236F, -0.02778F),
+						localAngles = new Vector3(76.92337F, 17.39646F, 181.9102F),
+						localScale = new Vector3(15.20139F, 17.55989F, 15.20139F),
+						followerPrefab = (ItemDef as BubItemDef)?.displayModelPrefab
 					}, new ItemDisplayRule
 					{
 						childName = "Head",
-						localPos = new Vector3(-0.00071F, 0.10571F, -0.02957F),
+						localPos = new Vector3(-0.00078F, 0.12612F, -0.01766F),
 						localAngles = new Vector3(280.0173F, 181.7912F, 178.092F),
-						localScale = new Vector3(15.24168F, 21.07032F, 24.06534F)
+						localScale = new Vector3(15.24168F, 21.07032F, 14.96789F),
+						followerPrefab = (ItemDef as BubItemDef)?.displayModelPrefab
 					}
 				}
 			);
