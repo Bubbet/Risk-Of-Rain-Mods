@@ -161,5 +161,91 @@ namespace BubbetsItems.Items
 
 			return velocity + wishDir * accelspeed;
 		}
+		protected override void FillItemDisplayRules()
+		{
+			base.FillItemDisplayRules();
+			AddDisplayRules(VanillaIDRS.Engineer,
+				new ItemDisplayRule
+				{
+					childName = "Chest",
+					localPos = new Vector3(0F, 0F, 0F),
+					localAngles = new Vector3(0F, 0F, 0F),
+					localScale = new Vector3(0.99442F, 0.99442F, 0.99442F)
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Commando,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Huntress,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Bandit,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Mult,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Artificer,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Mercenary,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Rex,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Loader,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Acrid,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.Captain,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.RailGunner,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+			AddDisplayRules(VanillaIDRS.VoidFiend,
+				new ItemDisplayRule
+				{
+
+				}
+			);
+		}
 	}
 }
