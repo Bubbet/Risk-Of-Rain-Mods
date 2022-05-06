@@ -7,17 +7,20 @@
 
     <ItemGroup>
         <PackageReference Include="KingEnderBrine-InLobbyConfig" Version="1.4.0" />
-        <PackageReference Include="R2API" Version="4.2.1" />
-        <PackageReference Include="RiskOfRain2" Version="1.0.6" />
+        <PackageReference Include="R2API" Version="4.3.21" />
         <PackageReference Include="BepInEx.Core" Version="5.4.19" />
+        <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.3.1-r.0" />
+        <PackageReference Include="RoR2-BetterAPI" Version="4.0.2" />
         <PackageReference Include="ThinkInvis-TILER2" Version="6.3.0" />
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
-        <PackageReference Include="RoR2-BetterAPI" Version="2.0.2" />
     </ItemGroup>
 
     <ItemGroup>
       <Reference Include="R2API, Version=2.0.0.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\Libs\R2API.dll</HintPath>
+      </Reference>
+      <Reference Include="SimpleJSON, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <HintPath>..\Libs\SimpleJSON-nstrip.dll</HintPath>
       </Reference>
     </ItemGroup>
 

@@ -1,6 +1,8 @@
 #nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using BepInEx;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -8,6 +10,7 @@ using RoR2;
 using RoR2.ContentManagement;
 using RoR2.UI;
 using RoR2.UI.LogBook;
+using UnityEngine;
 
 namespace WhatAmILookingAt
 {
@@ -19,6 +22,15 @@ namespace WhatAmILookingAt
 		{
 			try
 			{
+				foreach (var def in WhatAmILookingAtPlugin.skinDefMap)
+				{
+					if (Language.GetString(def.Key.nameToken) == __instance.titleText)
+					{
+						__result += "\n\n" + Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", WhatAmILookingAtPlugin.TextColor!.Value, def.Value.Name);
+						return;
+					}
+				}
+
 				var identifier = WhatAmILookingAtPlugin.FindItem(__instance, __result); // WhatAmILookingAtPlugin.GetIdentifier();
 				if (identifier == null) return;
 
@@ -45,10 +57,14 @@ namespace WhatAmILookingAt
 		{
 			foreach (var provider in contentPackProviders)
 			{
-				if (WhatAmILookingAtPlugin.GetPluginFromAssembly(provider.GetType().Assembly, out var plugin))
+				var assembly = provider.GetType().Assembly;
+				if (WhatAmILookingAtPlugin.GetPluginFromAssembly(assembly, out var plugin))
 				{
 					if (!WhatAmILookingAtPlugin.ContentPackToBepinPluginMap.ContainsKey(provider.identifier))
+					{
 						WhatAmILookingAtPlugin.ContentPackToBepinPluginMap.Add(provider.identifier, plugin!);
+						WhatAmILookingAtPlugin.BepinPluginToAssemblyMap.Add(plugin!, assembly);
+					}
 					else
 						WhatAmILookingAtPlugin.Log!.LogWarning("Key already exists for " + provider.identifier);
 				}
@@ -74,6 +90,17 @@ namespace WhatAmILookingAt
 			c.Emit(OpCodes.Dup);
 			c.Index += 2;
 			c.EmitDelegate<Func<EquipmentDef, string, string>>((def, str) => str  + "\n" + WhatAmILookingAtPlugin.GetModString(WhatAmILookingAtPlugin.GetIdentifier(def) ?? "Unknown"));
+		}
+
+		//[HarmonyPostfix, HarmonyPatch(typeof(SkinDef), MethodType.Constructor)]
+		[HarmonyPostfix, HarmonyPatch(typeof(ScriptableObject), nameof(ScriptableObject.CreateInstance), typeof(Type))]
+		public static void SkinDefConstructor(ref object __result)
+		{
+			if (__result is not SkinDef def) return;
+			var trace = new StackTrace();
+			var frame = new StackFrame(3);
+			if (WhatAmILookingAtPlugin.GetPluginFromAssembly(frame.GetMethod().DeclaringType.Assembly, out var plugin))
+				WhatAmILookingAtPlugin.skinDefMap[def] = plugin!;
 		}
 	}
 }
