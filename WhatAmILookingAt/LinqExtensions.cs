@@ -35,5 +35,17 @@ namespace WhatAmILookingAt
 				return false;
 			} 
 		}
+
+		public static void SafeAdd<T, T2>(this Dictionary<T, T2> dict, T key, T2 value, bool replace = false)
+		{
+			if (!dict.ContainsKey(key))
+			{
+				dict.Add(key, value);
+			}
+			else if (replace)
+			{
+				dict[key] = value;
+			}
+		}
 	}
 }

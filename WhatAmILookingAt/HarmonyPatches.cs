@@ -63,7 +63,7 @@ namespace WhatAmILookingAt
 					if (!WhatAmILookingAtPlugin.ContentPackToBepinPluginMap.ContainsKey(provider.identifier))
 					{
 						WhatAmILookingAtPlugin.ContentPackToBepinPluginMap.Add(provider.identifier, plugin!);
-						WhatAmILookingAtPlugin.BepinPluginToAssemblyMap.Add(plugin!, assembly);
+						WhatAmILookingAtPlugin.BepinPluginToAssemblyMap.SafeAdd(plugin!, assembly);
 					}
 					else
 						WhatAmILookingAtPlugin.Log!.LogWarning("Key already exists for " + provider.identifier);

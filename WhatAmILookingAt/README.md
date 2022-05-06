@@ -61,3 +61,6 @@
 - Use child locator to position waila in world
 - Add half support for modded skins, any more support would be nearly impossible.
 - Try to get the name from manifest so it matches what is shown in r2modman.
+
+1.6.1
+- Fix nre when a assembly has multiple plugins

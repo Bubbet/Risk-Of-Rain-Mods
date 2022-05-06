@@ -20,7 +20,7 @@ namespace WhatAmILookingAt
 			if (WhatAmILookingAtPlugin.GetPluginFromAssembly(assembly, out var plugin))
 			{
 				o = plugin;
-				WhatAmILookingAtPlugin.BepinPluginToAssemblyMap.Add(plugin!, assembly);
+				WhatAmILookingAtPlugin.BepinPluginToAssemblyMap.SafeAdd(plugin!, assembly);
 				return true;
 			}
 
@@ -39,7 +39,7 @@ namespace WhatAmILookingAt
 			if (WhatAmILookingAtPlugin.GetPluginFromAssembly(assembly, out var plugin))
 			{
 				o = plugin;
-				WhatAmILookingAtPlugin.BepinPluginToAssemblyMap.Add(plugin!, assembly);
+				WhatAmILookingAtPlugin.BepinPluginToAssemblyMap.SafeAdd(plugin!, assembly);
 				return true;
 			}
 

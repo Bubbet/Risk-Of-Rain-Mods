@@ -26,7 +26,7 @@ using Path = RoR2.Path;
 namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc version if they only add networked objects
 {
 	// needs to be prefixed with aaaa so it loads before all the mods that require r2api
-	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.6.0")]
+	[BepInPlugin("aaaa.bubbet.whatamilookingat", "What Am I Looking At", "1.6.1")]
 	[BepInDependency("com.bepis.r2api", BepInDependency.DependencyFlags.SoftDependency)]
 	//[BepInDependency("com.ThinkInvisible.TILER2", BepInDependency.DependencyFlags.SoftDependency)]
 	[BepInDependency("com.xoxfaby.BetterAPI", BepInDependency.DependencyFlags.SoftDependency)]
