@@ -15,7 +15,7 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("CLAYCATALYST_NAME","Clay Catalyst");
-			AddToken("CLAYCATALYST_DESC", "Release a " + "{0}m barrier effect ".Style(StyleEnum.Health) + "during the Teleporter event, " + "multiplying barrier decay ".Style(StyleEnum.Health) + "on all nearby allies for " + "{1:0%}".Style(StyleEnum.Health) + ".");
+			AddToken("CLAYCATALYST_DESC", "Release a " + "{0}m barrier effect ".Style(StyleEnum.Heal) + "during the Teleporter event, " + "multiplying barrier decay ".Style(StyleEnum.Heal) + "on all nearby allies for " + "{1:0%}".Style(StyleEnum.Heal) + ".");
 			AddToken("CLAYCATALYST_PICKUP", "Slow down barrier decay nearby the Teleporter event and 'Holdout Zones' such as the Void Fields.");
 			AddToken("CLAYCATALYST_LORE","");
 		}

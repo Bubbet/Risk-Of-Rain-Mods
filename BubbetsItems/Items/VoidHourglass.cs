@@ -14,7 +14,7 @@ namespace BubbetsItems.Items
 			//AddToken("VOIDHOURGLASS_DESC", "The duration of your inflicted Damage Over Times are multiplied by {0}. " + "Corrupts all Abundant Hourglasses.".Style(StyleEnum.Void));
 			//AddToken("VOIDHOURGLASS_PICKUP", "Duration of inflicted debuffs are extended.");
 			
-			AddToken("VOIDHOURGLASS_DESC", "{0:0%} chance to duplicate " + "damage over time".Style(StyleEnum.Damage) + "inflictons. " + "Corrupts all Abundant Hourglasses".Style(StyleEnum.Void) + ".");
+			AddToken("VOIDHOURGLASS_DESC", "{0:0%} chance to duplicate " + "damage over time ".Style(StyleEnum.Damage) + "inflictons. " + "Corrupts all Abundant Hourglasses".Style(StyleEnum.Void) + ".");
 			AddToken("VOIDHOURGLASS_PICKUP", "Chance to duplicate damage over times.");
             
 			AddToken("VOIDHOURGLASS_LORE", "");

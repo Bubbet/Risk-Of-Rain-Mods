@@ -17,7 +17,7 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("GEMCARAPACE_NAME", "Gem Carapace");
-			AddToken("GEMCARAPACE_DESC", "{1} seconds after getting hurt, gain a" + "{0:0%} temporary barrier".Style(StyleEnum.Health) + ". Triggers up to {2} times.");
+			AddToken("GEMCARAPACE_DESC", "{1} seconds after getting hurt, gain a " + "{0:0%} temporary barrier".Style(StyleEnum.Heal) + ". Triggers up to {2} times.");
 			AddToken("GEMCARAPACE_PICKUP", "Receive a delayed temporary barrier after taking damage.");
 			AddToken("GEMCARAPACE_LORE", "");
 		}

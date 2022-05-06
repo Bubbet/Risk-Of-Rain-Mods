@@ -11,7 +11,7 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("VOIDSLUG_NAME", "Adrenaline Sprout");
-			AddToken("VOIDSLUG_DESC", "Gain "+"{0} regen".Style(StyleEnum.Heal)+" per missing "+"health".Style(StyleEnum.Health)+". When in "+"danger".Style(StyleEnum.Health)+"." + " Corrupts all Cautious Slug.".Style(StyleEnum.Void));
+			AddToken("VOIDSLUG_DESC", "Gain "+ "{0:0.00} regen".Style(StyleEnum.Heal)+" per missing "+"health".Style(StyleEnum.Health)+". When in "+"danger".Style(StyleEnum.Health)+"." + " Corrupts all Cautious Slug.".Style(StyleEnum.Void));
 			AddToken("VOIDSLUG_PICKUP", "Gain "+"regen".Style(StyleEnum.Heal)+" for missing "+"health".Style(StyleEnum.Health)+". When in "+"danger".Style(StyleEnum.Health)+".");
 			AddToken("VOIDSLUG_LORE", "");
 		}
