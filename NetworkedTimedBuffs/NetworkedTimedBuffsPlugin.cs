@@ -17,7 +17,7 @@ using UnityEngine.Networking;
 
 namespace NetworkedTimedBuffs
 {
-	[BepInPlugin("bubbet.networkedtimedbuffs", "Networked Timed Buffs", "1.0.0")]
+	[BepInPlugin("bubbet.networkedtimedbuffs", "Networked Timed Buffs", "1.0.1")]
 	[BepInDependency(R2API.R2API.PluginGUID)]
 	[R2APISubmoduleDependency(nameof(NetworkingAPI))]
 	public class NetworkedTimedBuffsPlugin : BaseUnityPlugin
