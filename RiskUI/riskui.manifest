@@ -1,0 +1,278 @@
+ManifestFileVersion: 0
+CRC: 3453715056
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 6dd6e49cc8e23a01722bd041ce0ab331
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 3a66505140e38a8f84b7f4e75c04bd77
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 49
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 877486143, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 463222144, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 8a8695521f0d02e499659fee002a26c2, type: 3}
+- Class: 114
+  Script: {fileID: 1172715997, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2a4db7a114972834c8e4117be1d82ba3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2da0c512f12947e489f739169773d7ca, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3312d7739989d2b4e91e6319e9a96d76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1aa08ab6e0800fa44ae55d278d1423e3, type: 3}
+- Class: 114
+  Script: {fileID: 708136152, guid: e161fae64b898bc22624d03ed611378f, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
+- Class: 114
+  Script: {fileID: -464087749, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1698535915, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1407764973, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -337221655, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -798650217, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 535236639, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1154994686, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -226763392, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 527445169, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -2086124775, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 108432452, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -561638353, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -2062448218, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1616264595, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1399639110, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1655364978, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1358442537, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 637974714, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1467844994, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 649313124, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -2089090934, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 89469222, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -146705984, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1591462259, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1132840554, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1889711748, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -2137800543, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -384645413, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -966267668, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -630047940, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -573374155, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1693071685, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 224405951, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -103623725, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1213012214, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -2139312213, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -1175615446, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -432102721, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1638520407, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -56772195, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 402010724, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1630124647, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1833123084, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1083105628, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 354667520, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 755410421, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1873157448, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 269839908, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+- Class: 114
+  Script: {fileID: -745384217, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: -1468595796, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: -121293455, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: -660353803, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: 927084362, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: -474541677, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: 237348783, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: -1753663027, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: 1023940606, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: 1681914417, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: 1943367140, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: 208657911, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
+  Script: {fileID: 208657911, guid: 296f27627645a344ca0ae31c1d69a7c1, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 223
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+- Class: 225
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/FunnyUIMeme/Assets/Sprites/checkboxUnCheckedWhite.png
+- Assets/FunnyUIMeme/Assets/HudParts/MaterialMonsterItemInventory.prefab
+- Assets/FunnyUIMeme/Assets/HudParts/SkillIconRoot.prefab
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/README.txt
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Sunny (More Difficulties).png
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Pluviculture (ConfigurableDifficulty).png
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/Montserrat-Italic-VariableFont_wght.ttf
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-ExtraLight.ttf
+- Assets/FunnyUIMeme/Assets/Sprites/HitMarker.png
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-BlackItalic.ttf
+- Assets/FunnyUIMeme/Assets/Sprites/Bold_Circle.png
+- Assets/FunnyUIMeme/Assets/Sprites/ringBelow.png
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Deluge (UntitledDifficultyMod).png
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-ExtraBoldItalic.ttf
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Monsoon.png
+- Assets/FunnyUIMeme/Assets/MaterialClassicRunInfoHudPanel.prefab
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Super Typhoon (Starstorm 2).png
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-ExtraLightItalic.ttf
+- Assets/TextMesh Pro/Fonts/LiberationSans.ttf
+- Assets/FunnyUIMeme/Assets/CurrencyIcons/Money.png
+- Assets/FunnyUIMeme/Assets/HudParts/HealthBarSub.prefab
+- Assets/FunnyUIMeme/Assets/Sprites/checkboxCheckedWhite.png
+- Assets/FunnyUIMeme/Assets/Sprites/whitepixel.png
+- Assets/FunnyUIMeme/Assets/Sprites/CircleInner.png
+- Assets/FunnyUIMeme/Assets/CurrencyIcons/Lunar_Coin.png
+- Assets/FunnyUIMeme/Assets/MaterialHealthbarStyle.asset
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Rainstorm.png
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-Thin.ttf
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/ThunderStorm (More Difficulties).png
+- Assets/FunnyUIMeme/Assets/Sprites/circle.png
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-Medium
+  SDF.asset
+- Assets/FunnyUIMeme/Assets/Sprites/ringTop.png
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Charybdis (UntitledDifficultyMod).png
+- Packages/com.unity.textmeshpro/Editor Resources/Gizmos/TMP - Input Field Icon.psd
+- Assets/FunnyUIMeme/Assets/HudParts/MaterialChatbox.prefab
+- Assets/FunnyUIMeme/Assets/Sprites/CircleCentered.png
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-Medium.ttf
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Armageddon (More Difficulties).png
+- Packages/com.unity.textmeshpro/Editor Resources/Gizmos/TMP - Font Asset Icon.psd
+- Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF.asset
+- Assets/FunnyUIMeme/Assets/CurrencyIcons/MoneyContainer.prefab
+- Assets/FunnyUIMeme/Assets/HudParts/MaterialAllyCard.prefab
+- Assets/FunnyUIMeme/Assets/MaterialNonCenti.asset
+- Assets/FunnyUIMeme/Assets/Simulacrum/MaterialDefaultWaveUI.prefab
+- Assets/FunnyUIMeme/Assets/HudParts/MaterialArtifactStatusIcon.prefab
+- Assets/FunnyUIMeme/Assets/Simulacrum/MaterialSimulacrum.prefab
+- Assets/FunnyUIMeme/Assets/HudParts/MaterialObjectiveStrip.prefab
+- Assets/FunnyUIMeme/Assets/Sprites/Shift.png
+- Assets/FunnyUIMeme/Assets/RiskUI.prefab
+- Assets/FunnyUIMeme/Assets/HudParts/MaterialBuffIcon.prefab
+- Assets/FunnyUIMeme/Assets/HudParts/ItemIcon.prefab
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-Italic.ttf
+- Assets/FunnyUIMeme/Assets/MaterialCenti.asset
+- Assets/FunnyUIMeme/Assets/Sprites/CircleOuter.png
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-Medium
+  SDF 1.asset
+- Assets/FunnyUIMeme/Assets/HudParts/EquipIcon.prefab
+- Assets/FunnyUIMeme/Assets/Backups/MaterialAllyCardBackup.prefab
+- Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Inferno (Inferno).png
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/Montserrat-VariableFont_wght.ttf
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Typhoon (Starstorm 2).png
+- Assets/FunnyUIMeme/Assets/MaterialTimerStringFormatter.asset
+- Assets/TextMesh Pro/Shaders/TMP_SDF.shader
+- Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-Regular.ttf
+- Packages/com.unity.textmeshpro/Editor Resources/Gizmos/TMP - Text Component Icon.psd
+- Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/static/Montserrat-MediumItalic.ttf
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Drizzle.png
+- Assets/FunnyUIMeme/Assets/Sprites/Tab.png
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Calypso (More Difficulties).png
+- Assets/FunnyUIMeme/Assets/HudParts/StripContainer.prefab
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Tempest (More Difficulties).png
+- Assets/FunnyUIMeme/Assets/DifficultyIcons/Tropical Storm (Tropical Storm).png
+- Assets/FunnyUIMeme/Assets/CurrencyIcons/Void_Coin.png
+Dependencies: []
