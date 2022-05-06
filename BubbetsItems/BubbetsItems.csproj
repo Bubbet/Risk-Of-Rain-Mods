@@ -14,8 +14,4 @@
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
         <PackageReference Include="CoreCLR-NCalc" Version="2.2.101" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Exclude="Icons" />
-    </ItemGroup>
 </Project>

@@ -1,30 +1,30 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BubbetsItems", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\BubbetsItems\BubbetsItems.csproj", "{B06DB6A1-E752-4CBE-A0F2-403BCC4257A7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BubbetsItems", "BubbetsItems\BubbetsItems.csproj", "{B06DB6A1-E752-4CBE-A0F2-403BCC4257A7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DamageHistory", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\DamageHistory\DamageHistory.csproj", "{471331DD-BF32-46DA-9FAA-E1502DEFC085}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DamageHistory", "DamageHistory\DamageHistory.csproj", "{471331DD-BF32-46DA-9FAA-E1502DEFC085}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullPrefabSkins", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\FullPrefabSkins\FullPrefabSkins.csproj", "{E08E4B04-8F1F-4D3C-B3B9-8DEFFBA5FF97}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FullPrefabSkins", "FullPrefabSkins\FullPrefabSkins.csproj", "{E08E4B04-8F1F-4D3C-B3B9-8DEFFBA5FF97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaItemsGUI", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\MetaItemsGUI\MetaItemsGUI.csproj", "{6AE70E88-5897-4C6B-AEF1-E51157FCEFC6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MetaItemsGUI", "MetaItemsGUI\MetaItemsGUI.csproj", "{6AE70E88-5897-4C6B-AEF1-E51157FCEFC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkedTimedBuffs", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\NetworkedTimedBuffs\NetworkedTimedBuffs.csproj", "{0E3C90AC-2B90-424B-B816-AE06482803AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkedTimedBuffs", "NetworkedTimedBuffs\NetworkedTimedBuffs.csproj", "{0E3C90AC-2B90-424B-B816-AE06482803AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoStopTransform", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\NoStopTransform\NoStopTransform.csproj", "{1674C98E-5572-4B6C-B564-B4B0E24E6F68}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoStopTransform", "NoStopTransform\NoStopTransform.csproj", "{1674C98E-5572-4B6C-B564-B4B0E24E6F68}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotEnoughFriends", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\NotEnoughFriends\NotEnoughFriends.csproj", "{CF69BAF9-8290-438A-A712-65B04D421BC6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotEnoughFriends", "NotEnoughFriends\NotEnoughFriends.csproj", "{CF69BAF9-8290-438A-A712-65B04D421BC6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlyYourDamageNumbers", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\OnlyYourDamageNumbers\OnlyYourDamageNumbers.csproj", "{683B4957-E5F4-4BC7-A34D-DEA71E9A8A99}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlyYourDamageNumbers", "OnlyYourDamageNumbers\OnlyYourDamageNumbers.csproj", "{683B4957-E5F4-4BC7-A34D-DEA71E9A8A99}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickupDiscoveryFix", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\PickupDiscoveryFix\PickupDiscoveryFix.csproj", "{94740100-D84D-4E60-A896-8071C0DBFB12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PickupDiscoveryFix", "PickupDiscoveryFix\PickupDiscoveryFix.csproj", "{94740100-D84D-4E60-A896-8071C0DBFB12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RampingEgo", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\RampingEgo\RampingEgo.csproj", "{926694E7-D138-4399-A72F-ED183FC9EEB4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RampingEgo", "RampingEgo\RampingEgo.csproj", "{926694E7-D138-4399-A72F-ED183FC9EEB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiskUI", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\RiskUI\RiskUI.csproj", "{88670D89-5EF3-48B5-AECE-710BA1A5E3A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RiskUI", "RiskUI\RiskUI.csproj", "{88670D89-5EF3-48B5-AECE-710BA1A5E3A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkipIntroCutscene", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\SkipIntroCutscene\SkipIntroCutscene.csproj", "{06585C04-7850-46E2-B137-297836950141}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkipIntroCutscene", "SkipIntroCutscene\SkipIntroCutscene.csproj", "{06585C04-7850-46E2-B137-297836950141}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatAmILookingAt", "..\..\..\..\yes\Dev\Programming\C#\Risk Of Rain Mods\WhatAmILookingAt\WhatAmILookingAt.csproj", "{B7385865-8F0E-4A09-9AF8-FE08E6EFA115}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhatAmILookingAt", "WhatAmILookingAt\WhatAmILookingAt.csproj", "{B7385865-8F0E-4A09-9AF8-FE08E6EFA115}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
