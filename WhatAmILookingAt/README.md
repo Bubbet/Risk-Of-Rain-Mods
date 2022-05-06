@@ -56,3 +56,8 @@
 1.5.0
 - Log book support
 - Log book for items and equipment
+
+1.6.0
+- Use child locator to position waila in world
+- Add half support for modded skins, any more support would be nearly impossible.
+- Try to get the name from manifest so it matches what is shown in r2modman.

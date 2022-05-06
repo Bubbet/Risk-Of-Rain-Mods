@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security;
@@ -13,6 +14,9 @@ using HarmonyLib;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.UI;
+using SimpleJSON;
+using UnityEngine;
+using Path = RoR2.Path;
 
 #pragma warning disable CS0618 // Type or member is obsolete
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
@@ -59,7 +63,8 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 		/// ItemDef, EquipmentDef, etc to Content Pack Identifier
 		/// </summary>
 		public static readonly Dictionary<object, string?> IdentifierMap = new Dictionary<object, string?>();
-		private static readonly List<string> UnknownIdentifiers = new List<string>(); 
+		private static readonly List<string> UnknownIdentifiers = new List<string>();
+		public static readonly Dictionary<SkinDef, BepInPlugin> skinDefMap = new();
 
 
 		public static List<HUD> HUDs = new List<HUD>();
@@ -80,6 +85,11 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 			{
 				ExternalAPICompat.PatchTiler2(harm);
 			}*/
+
+			//var createInstance = typeof(ScriptableObject).GetMethod("CreateInstance", new[] {typeof(Type)});
+			//if(createInstance != null)
+				//harm.Patch(createInstance, null, new HarmonyMethod(typeof(HarmonyPatches).GetMethod(nameof(HarmonyPatches.SkinDefConstructor), BindingFlags.Public | BindingFlags.Static)));
+			
 
 			RoR2Application.onLoad += ExtraTokens;
 			TextColor = Config.Bind("General", "Text Color", "#0055FF", "Color of the text displaying what mod something is from.");
@@ -106,6 +116,38 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 			Language.english.SetStringByToken("BUB_WAILA_TOOLTIP_UNKNOWN", "<color={0}>From Unknown (Report To Mod Author)</color>");
 		}
 
+		private static Dictionary<Assembly, string> manifestNameMap = new();
+		public static string? TryGetManifestName(Assembly assembly)
+		{
+			if (manifestNameMap.ContainsKey(assembly)) return manifestNameMap[assembly];
+			var path = System.IO.Path.GetDirectoryName(assembly.Location);
+			try
+			{
+				var fpath = path;
+				var mpath = System.IO.Path.Combine(fpath, "manifest.json");
+				while (!File.Exists(mpath))
+				{
+					fpath = Directory.GetParent(fpath).ToString();
+					mpath = System.IO.Path.Combine(fpath, "manifest.json");
+				}
+				var file = File.OpenText(mpath);
+
+				var jsonNode = JSON.Parse(file!.ReadToEnd());
+				var desc = jsonNode["name"].Value;
+				manifestNameMap[assembly] = desc;
+				return desc;
+			}
+			catch (Exception)
+			{
+				// ignored
+			}
+			return null;
+		}
+		private static string? TryGetManifestName(BepInPlugin plugin)
+		{
+			return BepinPluginToAssemblyMap.TryGetValue(plugin, out var assembly) ? TryGetManifestName(assembly) : null;
+		}
+		
 		/// <summary>
 		/// Get the text that goes at the bottom of the tooltip from a contentpack identifier.
 		/// </summary>
@@ -130,15 +172,19 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 				{
 					if (BetterAPIEnabled && ExternalAPICompat.GetPluginFromBetterAPI(identifier, out var plugin))
 					{
-						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", TextColor!.Value, plugin!.Name);
+						var name = TryGetManifestName(plugin!) ?? plugin.Name;
+						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", TextColor!.Value, name);
 					}
 					else if (R2APIEnabled && ExternalAPICompat.GetPluginFromR2API(identifier, out var pluginr2))
 					{
-						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", TextColor!.Value, pluginr2!.Name);
+						var name = TryGetManifestName(pluginr2!) ?? pluginr2.Name;
+						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", TextColor!.Value, name);
 					}
 					else if (ContentPackToBepinPluginMap.ContainsKey(identifier))
 					{
-						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", TextColor!.Value, ContentPackToBepinPluginMap[identifier].Name);
+						var pluginc = ContentPackToBepinPluginMap[identifier];
+						var name = TryGetManifestName(pluginc) ?? pluginc.Name;
+						str = Language.GetStringFormatted("BUB_WAILA_TOOLTIP_MOD", TextColor!.Value, name);
 					}
 					else
 					{
@@ -157,6 +203,7 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 
 			return str;
 		}
+
 		private static void GenerateChecks()
 		{
 			WhatAmILookingAtBodyChecks.Register(ref BodyChecks);
@@ -184,6 +231,8 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 		public static event StringTest? TitleChecks;
 		/// <summary> Body Text to ItemDef, EquipmentDef, etc </summary>
 		public static readonly Dictionary<string, string?> BodyTextMap = new Dictionary<string, string?>();
+
+		public static Dictionary<BepInPlugin, Assembly> BepinPluginToAssemblyMap = new();
 
 		/// <summary>
 		/// Check the body text, last resort.

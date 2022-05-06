@@ -23,9 +23,11 @@ namespace WhatAmILookingAt
 		private void BuildHud()
 		{
 			var uiContainer = new GameObject("WailaContainer");
-			var inven = _hud.itemInventoryDisplay.transform.parent;
-			uiContainer.transform.SetParent(inven.parent);
-			uiContainer.transform.SetSiblingIndex(inven.GetSiblingIndex() + 1);
+
+			var locator = _hud.GetComponent<ChildLocator>();
+			var topCluster = locator.FindChild("TopCenterCluster");
+			uiContainer.transform.SetParent(topCluster);
+			uiContainer.transform.SetSiblingIndex(1);
 			var rect = uiContainer.AddComponent<RectTransform>();
 			var elem = uiContainer.AddComponent<LayoutElement>();
 
@@ -67,7 +69,9 @@ namespace WhatAmILookingAt
 			textMesh.text = hit.collider.gameObject.name;
 			*/
 			var controller = _hud.cameraRigController;
+			if (!controller) return;
 			var body = controller.targetBody;
+			if (!body) return;
 
 			var tab = _hud.localUserViewer?.inputPlayer != null && _hud.localUserViewer.inputPlayer.GetButton("info");
 			var shouldShow = WhatAmILookingAtPlugin.RequireTABForInWorld!.Value == WhatAmILookingAtPlugin.InWorldOptions.WhileScoreboardOpen && tab; 
