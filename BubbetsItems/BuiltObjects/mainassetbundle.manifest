@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 4148030142
+CRC: 2646515831
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8c2914ebdf1fad3b1b92f7911ff653a7
+    Hash: 5a0b35efe0c2ca162d434e9348655e50
   TypeTreeHash:
     serializedVersion: 2
     Hash: 32887dd9db0ec2bc6c89ec9c33cd96cd
@@ -121,6 +121,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/VoidHourglass/Flow Speed Noise.png
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/BuffDefSepia.asset
 - Assets/BubbetsItems/Assets/Items/EscapePlan/PlanBlank.png
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/undeadDiffuse.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Clay Catalyst/ClayCatalystController.controller
 - Assets/BubbetsItems/Assets/Items/ZealotryEmbrace/zealotryEmbraceDiffuse.png
 - Assets/BubbetsItems/Assets/Items/EscapePlan/WoodMaterial.mat
@@ -139,6 +140,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/GemCarapacePickup.prefab
 - Assets/BubbetsItems/Assets/Items/VoidJunkToScrapTier1/voidscrap.fbx
 - Assets/BubbetsItems/Assets/Items/BarrierItems/BarrierDecayDecrease/MechSnailMat.mat
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/lostNazaar.fbx
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/ceremonialProbeIcon.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/gemCarapaceNormals.png
 - Assets/BubbetsItems/Assets/Items/RepulsionPlateMk2/Belt.png
@@ -164,6 +166,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/gemCarapaceRunicEmission.png
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/CameraTexture.png
 - Assets/BubbetsItems/Assets/Items/BunnyFoot/BunnyFootPickup.prefab
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/lostNazarDiffuse.png
 - Assets/BubbetsItems/Assets/Items/AcidSoakedBlindfold/AcidSoakedBlindfoldPickup.prefab
 - Assets/BubbetsItems/Assets/Items/ZealotryEmbrace/zealotryEmbraceEmission.png
 - Assets/BubbetsItems/Assets/Items/ShiftedQuartz/ShiftedQuartzPickup.prefab
@@ -184,6 +187,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/ScintillatingJet/scintillatingJet.fbx
 - Assets/BubbetsItems/Assets/Items/Hourglass/Hourglass.fbx
 - Assets/BubbetsItems/Assets/Items/ShiftedQuartz/Materials/transparentShifted.mat
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/undeadMask.fbx
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/CarapaceBuff.png
 - Assets/BubbetsItems/Assets/LogBookGraphnew.prefab
 - Assets/BubbetsItems/Assets/Items/JelliedSoles/JelliedSolesPickup.prefab
@@ -211,6 +215,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/CeremonialProbeMat.mat
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/WLCam.png
 - Assets/BubbetsItems/Assets/Items/Hourglass/SandFluidShader.shader
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/ItemDefLostNazaar.asset
 - Assets/BubbetsItems/Assets/Items/VoidHourglass/matStone.mat
 - Assets/BubbetsItems/Assets/Items/JelliedSoles/ItemDefJelliedSoles.asset
 - Assets/BubbetsItems/Assets/Items/VoidSlug/adrenalineSproutArmature_showAction.anim
@@ -219,6 +224,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Bone Visor/BoneVisorMat.mat
 - Assets/BubbetsItems/Assets/Items/VoidHourglass/deficientClepsydra.fbx
 - Assets/BubbetsItems/Assets/Items/VoidHourglass/ItemDefVoidHourglass.asset
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/UndeadMaskMat.mat
 - Assets/BubbetsItems/Assets/Bandolier/AmmoPickupOrb.prefab
 - Assets/BubbetsItems/Assets/BubbetsVoidInactive.png
 - Assets/BubbetsItems/Assets/Items/SubmergingCistern/SubmergingCisternPickup.prefab
@@ -241,6 +247,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Bandolier/BandolierOrbMaterial.mat
 - Assets/BubbetsItems/Assets/Items/ShiftedQuartz/RadiusMaterial.mat
 - Assets/BubbetsItems/Assets/Items/BarrierItems/EternalSlug/RockMat.mat
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/ItemDefUndeadMask.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/BarrierDecayDecrease/mechSnailIcon.png
 - Assets/BubbetsItems/Assets/Items/VoidJunkToScrapTier1/ScrapBox.png
 - Assets/BubbetsItems/Assets/Items/JelliedSoles/jelliedSolesDiffuse.png
@@ -254,6 +261,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BunnyFoot/bhop.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Bone Visor/boneVisorNormal.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Clay Catalyst/ClayCatalystMat.mat
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/UndeadMaskController.controller
 - Assets/BubbetsItems/Assets/Items/Torturer/ItemDefTorturer.asset
 - Assets/BubbetsItems/Assets/Items/VoidSlug/ItemDefVoidSlug.asset
 - Assets/BubbetsItems/Assets/Items/ScintillatingJet/ScintillatingJetPickup.prefab
@@ -281,6 +289,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Equipment/BrokenClock/Clock.fbx
 - Assets/BubbetsItems/Assets/Items/BarrierItems/EternalSlug/EternalSlugPickup.prefab
 - Assets/BubbetsItems/Assets/Items/VoidJunkToScrapTier1/VoidJunkToScrapPickup.prefab
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/undeadIcon.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Bone Visor/boneVisor.prefab
 - Assets/BubbetsItems/Assets/Test.mat
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Clay Catalyst/ClayCatalystIndicator.prefab
@@ -292,6 +301,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/EquipmentDefSepiaElite.asset
 - Assets/BubbetsItems/Assets/Items/JelliedSoles/jelliedSoles.fbx
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/Camera.fbx
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/UndeadMaskPickup.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/BuffDefGemCarapaceStack.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/EternalSlug/casingNormal.png
 - Assets/BubbetsItems/Assets/Items/ScintillatingJet/ScintillatingBuffIcon.png
@@ -326,12 +336,14 @@ Assets:
 - Assets/BubbetsItems/Assets/Equipment/BrokenClock/ClockTexture.png
 - Assets/BubbetsItems/Assets/Items/EscapePlan/EscapePlanPickup.prefab
 - Assets/BubbetsItems/Assets/Items/ShiftedQuartz/IntersectionShader.shader
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/lostNazarNormal.png
 - Assets/BubbetsItems/Assets/Items/ZealotryEmbrace/ZealotryEmbraceMaterial.mat
 - Assets/BubbetsItems/Assets/Items/VoidSlug/adrenalineSproutArmature_appearIdle.anim
 - Assets/BubbetsItems/Assets/Items/ShiftedQuartz/Materials/shiftedQuartzDiffuse 1.mat
 - Assets/BubbetsItems/Assets/Items/RepulsionPlateMk2/RepulsionPlatemk2.fbx
 - Assets/BubbetsItems/Assets/Items/Hourglass/HourGlassPickup.prefab
 - Assets/BubbetsItems/Assets/Items/AcidSoakedBlindfold/AcidSoakedBlindfoldMat.mat
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/undeadMask.prefab
 - Assets/BubbetsItems/Assets/Items/SubmergingCistern/submergedCistern.fbx
 - Assets/BubbetsItems/Assets/Items/VoidJunkToScrapTier1/voidscrap.prefab
 - Assets/BubbetsItems/Assets/Items/RepulsionPlateMk2/Plate128.png
@@ -339,7 +351,9 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/VoidSlug/adrenalineSproutEmission.png
 - Assets/BubbetsItems/Assets/Items/ScintillatingJet/ItemDefScintillatingJet.asset
 - Assets/BubbetsItems/Assets/Items/EscapePlan/EscapePlan.fbx
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/undeadEmission.png
 - Assets/BubbetsItems/Assets/Items/Hourglass/SandMaterial.mat
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/undeadNormal.png
 - Assets/BubbetsItems/Assets/Equipment/BrokenClock/EquipmentDefBrokenClock.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/ceremonialProbeEmission.png
 - Assets/BubbetsItems/Assets/Items/VoidJunkToScrapTier1/VoidScrapShader.shader
@@ -348,6 +362,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/BarrierMat.mat
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/SepiaMaterial.mat
 - Assets/BubbetsItems/DistortionFlow.shader
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/lostNazarEmission.png
 - Assets/BubbetsItems/Assets/Items/VoidSlug/adrenalineSproutDiffuse.png
 - Assets/BubbetsItems/Assets/Equipment/BrokenClock/Materials/ClockTexture.mat
 - Assets/BubbetsItems/Assets/Items/VoidSlug/voidslugicon.png
@@ -361,6 +376,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/BarrierDecayDecrease/ItemDefDecreaseBarrierDecay.asset
 - Assets/BubbetsItems/Assets/Items/Hourglass/ItemDefHourglass.asset
 - Assets/BubbetsItems/Assets/Items/Torturer/TorturerPickup.prefab
+- Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/lostNazarIcon.png
 - Assets/BubbetsItems/Assets/Items/ScintillatingJet/scintillatingJetOutline.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/BuffDefGemCarapaceRefresh.asset
 - Assets/BubbetsItems/Assets/Items/RepulsionPlateMk2/RepulsionPlatePickup.prefab
