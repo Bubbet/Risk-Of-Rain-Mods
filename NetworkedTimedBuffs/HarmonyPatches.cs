@@ -62,7 +62,6 @@ namespace NetworkedTimedBuffs
 			c.Emit(OpCodes.Ldarg_0);
 			c.EmitDelegate<Action<CharacterBody>>(body =>
 			{
-				if (!body.isPlayerControlled && NetworkedTimedBuffsPlugin.onlySyncPlayers.Value) return;
 				body.UpdateBuffs(Time.fixedDeltaTime);
 			});
 			c.GotoNext(x => x.MatchCallOrCallvirt<CharacterBody>(nameof(CharacterBody.UpdateBuffs)));
