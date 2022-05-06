@@ -97,7 +97,6 @@ namespace WhatAmILookingAt
 		public static void SkinDefConstructor(ref object __result)
 		{
 			if (__result is not SkinDef def) return;
-			var trace = new StackTrace();
 			var frame = new StackFrame(3);
 			if (WhatAmILookingAtPlugin.GetPluginFromAssembly(frame.GetMethod().DeclaringType.Assembly, out var plugin))
 				WhatAmILookingAtPlugin.skinDefMap[def] = plugin!;
