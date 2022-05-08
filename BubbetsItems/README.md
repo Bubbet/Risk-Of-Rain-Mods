@@ -31,6 +31,7 @@ Icons | Items | Function | Type
 ---|---|---|
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/BrokenClock.png" width="100"/> | Broken Clock | Turn back the clock 10 seconds for yourself. | `Equipment` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/WLCam.png" width="100"/> | Wildlife Camera | Take a photo of an enemy, and spawn them as an ally later. | `Equipment` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/gyroscopicWhisk.png" width="100"/> | Gyroscopic Whisk | Spin enemies until they die. | `Equipment` |
 
 # Other
 If you have suggestions or questions, feel free to message `Bubbet#2639` or `GEMO#0176` on Discord.
@@ -44,6 +45,9 @@ Patience is key~
   - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
+* v1.7.1 Mod changes : 
+  * Added gyroscopic whisk, an equipment.
+  
 * v1.7.0 Mod Changes, Expansion Barrier Update :
   * Added Deficient Clepsydra, Void Tier 2, Chance to duplicate dot procs, Consumes all Abundant Hourglass.
   * Made Jellied Soles collect damage even if you're already immune to fall damage.
