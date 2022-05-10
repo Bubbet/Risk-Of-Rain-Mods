@@ -219,6 +219,7 @@ namespace BubbetsItems.Equipments
 
         private void ApplyKeyframe(BrokenClockKeyframe keyframe)
         {
+            if (keyframe.Equals(default)) return;
             HealthComponent.health = keyframe.Health;
             HealthComponent.barrier = keyframe.Barrier;
             HealthComponent.shield = keyframe.Shield;
@@ -285,7 +286,7 @@ namespace BubbetsItems.Equipments
         }
     }
     
-    public struct BrokenClockKeyframe// : IEquatable<BrokenClockKeyframe>
+    public struct BrokenClockKeyframe : IEquatable<BrokenClockKeyframe>
     {
         public Vector3 Position;
         public Vector3 Velocity;
@@ -354,6 +355,34 @@ namespace BubbetsItems.Equipments
             _oldDist = dist;
             return dist < 5f;  //Mathf.Min(Velocity.sqrMagnitude, 100f) + 1f;
         }*/
+        private const float TOLERANCE = 0.01f;
+        public bool Equals(BrokenClockKeyframe other)
+        {
+            return Position == other.Position && 
+                   Velocity == other.Velocity &&
+                   Math.Abs(Health - other.Health) < TOLERANCE && 
+                   Math.Abs(Shield - other.Shield) < TOLERANCE && 
+                   Math.Abs(Barrier - other.Barrier) < TOLERANCE;
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is BrokenClockKeyframe other && Equals(other);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = Position.GetHashCode();
+                hashCode = (hashCode * 397) ^ Velocity.GetHashCode();
+                hashCode = (hashCode * 397) ^ LookDir.GetHashCode();
+                hashCode = (hashCode * 397) ^ Health.GetHashCode();
+                hashCode = (hashCode * 397) ^ Shield.GetHashCode();
+                hashCode = (hashCode * 397) ^ Barrier.GetHashCode();
+                return hashCode;
+            }
+        }
     }
 
     /*

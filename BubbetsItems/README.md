@@ -28,6 +28,7 @@ Icons | Items | Function | Type
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/959343347175129128/unknown.png" width="100"/> | Adrenaline Sprout | Increase regen while in combat. Corrupts all Cautious Slugs. | `Void Common` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/955206275296288798/ZealotryEmbraceOutline.png" width="100"/> | Zealotry Embrace | Deal more damage to enemies with barely any debuffs inflicted. Corrupts all Death Marks. | `Void Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/967541141660647464/texIconsTemplate.png" width="100"/> | Deficient Clepsydra | Chance to duplicate damage over times. Corrupts all Abundant Hourglass. | `Void Uncommon` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/GEMO_SubmergedCistern.png" width="100"/> | Submerging Cistern | Heal nearby allies based on your damage. Divided over teammates in range. Corrupts all Mired Urn. | `Void Boss` |
 ---|---|---|
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/BrokenClock.png" width="100"/> | Broken Clock | Turn back the clock 10 seconds for yourself. | `Equipment` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/WLCam.png" width="100"/> | Wildlife Camera | Take a photo of an enemy, and spawn them as an ally later. | `Equipment` |
@@ -45,6 +46,13 @@ Patience is key~
   - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
+* v1.7.1 Mod changes :
+  * Actually added gyroscopic whisk.
+  * Fixed void hourglasses shader being broke
+  * Added void conversion to submerging cistern.
+  * Fixed broken clock killing you
+  * Use chunk based compression on asset bundle to reduce mod size
+  
 * v1.7.1 Mod changes : 
   * Added gyroscopic whisk, an equipment.
   

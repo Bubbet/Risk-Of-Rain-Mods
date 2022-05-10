@@ -1,21 +1,31 @@
-﻿using BepInEx.Configuration;
+﻿using System.Collections.Generic;
+using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using RoR2;
+using UnityEngine;
 
 namespace BubbetsItems.Items
 {
 	//TODO make tethering effect and item behavior, and tethering controller
 	public class SubmergingCistern : ItemBase
 	{
-		
+		private ConfigEntry<float> _dropChance;
+
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
+			_dropChance = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Submerging Cistern Drop Chance", 0.5f, "Drop chance of submerging cistern");
 			AddScalingFunction("[d] * 0.5", "Healing From Damage", "[a] = item count; [d] = damage dealt");
 			AddScalingFunction("[a] + 2", "Teammate Count");
 			AddScalingFunction("20", "Range");
 			//_range = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, "Submerging Cistern Range", 20f, "Range for the Submerging Cistern to heal within.");
 			//_amount = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, "Submerging Cistern Damage", 0.5f, "Damage percent to heal.");
+		}
+
+		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
+		{
+			base.FillVoidConversions(pairs);
+			AddVoidPairing(nameof(RoR2Content.Items.SiphonOnLowHealth));
 		}
 
 		protected override void MakeTokens()
@@ -31,6 +41,26 @@ namespace BubbetsItems.Items
 		{
 			scalingInfos[0].WorkingContext.d = 1f;
 			return base.GetFormattedDescription(inventory, token, forceHideExtended);
+		}
+
+		protected override void MakeBehaviours()
+		{
+			base.MakeBehaviours();
+			GlobalEventManager.onCharacterDeathGlobal += CharacterDeath;
+		}
+
+		private void CharacterDeath(DamageReport obj)
+		{
+			var body = obj.victimBody;
+			if (!body || !obj.attackerMaster || obj.victimBodyIndex != BodyCatalog.FindBodyIndex("ClayBossBody") || !body.isElite || !body.HasBuff(DLC1Content.Buffs.EliteVoid)) return;
+			if (Util.CheckRoll(_dropChance.Value * 100f, obj.attackerMaster))
+				PickupDropletController.CreatePickupDroplet(PickupIndex, body.transform.position, Vector3.up * 3f);
+		}
+
+		protected override void DestroyBehaviours()
+		{
+			base.DestroyBehaviours();
+			GlobalEventManager.onCharacterDeathGlobal -= CharacterDeath;
 		}
 	}
 }

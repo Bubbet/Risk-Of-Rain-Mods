@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 150529860
+CRC: 3347018335
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8b0680c771516141ae68620aa458b39c
+    Hash: c1d0585e5f4182bc6b57da7bfa6d6f99
   TypeTreeHash:
     serializedVersion: 2
     Hash: 32887dd9db0ec2bc6c89ec9c33cd96cd
@@ -149,6 +149,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/RepulsionPlateMk2/Belt.png
 - Assets/BubbetsItems/Assets/Items/ProcCoefficientIncrease/ItemDefProcCoefficientIncrease.asset
 - Assets/BubbetsItems/Assets/Items/JelliedSoles/JelliedSolesMat.mat
+- Assets/BubbetsItems/Assets/Items/VoidHourglass/DistortionFlow.shader
 - Assets/BubbetsItems/Assets/Items/RecursionBullets/recursionBullets.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/EternalSlug/CasingMat.mat
 - Assets/BubbetsItems/Assets/Items/ZealotryEmbrace/GEMO_ZealotryEmbrace.png
@@ -382,7 +383,6 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/Torturer/Torturer.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/BarrierMat.mat
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/SepiaMaterial.mat
-- Assets/BubbetsItems/DistortionFlow.shader
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/lostNazarEmission.png
 - Assets/BubbetsItems/Assets/Items/VoidSlug/adrenalineSproutDiffuse.png
 - Assets/BubbetsItems/Assets/Equipment/BrokenClock/Materials/ClockTexture.mat
