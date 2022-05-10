@@ -16,10 +16,10 @@ namespace BubbetsItems.Equipments
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
-			AddToken("BUB_GYROSCOPICWHISK_NAME", "Gyroscopic Whisk");
-			AddToken("BUB_GYROSCOPICWHISK_DESC", "Spin enemies until they fly to the sky and die.");
-			AddToken("BUB_GYROSCOPICWHISK_PICKUP", "Spin enemies until they die.");
-			AddToken("BUB_GYROSCOPICWHISK_LORE", "");
+			AddToken("GYROSCOPICWHISK_NAME", "Gyroscopic Whisk");
+			AddToken("GYROSCOPICWHISK_DESC", "Spin enemies until they fly to the sky and die.");
+			AddToken("GYROSCOPICWHISK_PICKUP", "Spin enemies until they die.");
+			AddToken("GYROSCOPICWHISK_LORE", "");
 		}
 
 		protected override void MakeConfigs()
