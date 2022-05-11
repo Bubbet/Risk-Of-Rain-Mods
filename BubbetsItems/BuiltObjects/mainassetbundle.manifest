@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3347018335
+CRC: 2845853298
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: c1d0585e5f4182bc6b57da7bfa6d6f99
+    Hash: c9c73b1036c4da084cc06f977aa07c68
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 32887dd9db0ec2bc6c89ec9c33cd96cd
+    Hash: c1886c070207f9dd34bde26b37287c47
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -88,6 +88,12 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 802575700, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: -966267668, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: -103623725, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1213012214, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: 1931460509, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 1918207524, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
@@ -99,6 +105,8 @@ ClassTypes:
   Script: {fileID: -662483879, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 1395413934, guid: da77c7bbf69f66ab2145560542327715, type: 3}
+- Class: 114
+  Script: {fileID: -806885394, guid: 67dfb1fdfb2b407222eda8e23ac8b724, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 137
@@ -257,6 +265,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/AcidSoakedBlindfold/ItemDefAcidSoakedBlindfold.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/CeremonialProbePickup.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/GemCarapaceMatCrystal.mat
+- Assets/BubbetsItems/Assets/Equipment/GyroscopicWhisk/IndicatorText.mat
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/ceremonialProbeNormal.png
 - Assets/BubbetsItems/Assets/Items/ScintillatingJet/scintillatingJetDiffuse.png
 - Assets/BubbetsItems/Assets/Bandolier/BandolierOrbMaterial.mat
@@ -406,6 +415,7 @@ Assets:
 - Assets/BubbetsItems/Assets/MainContentPack.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Bone Visor/ItemDefBoneVisor.asset
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/SepiaShader.shader
+- Assets/BubbetsItems/Assets/Equipment/GyroscopicWhisk/whiskIndicatorNoKey.png
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/WildLifeCameraPickup.prefab
 - Assets/BubbetsItems/Assets/Items/RepulsionPlateMk2/BuckleMaterial.mat
 - Assets/BubbetsItems/Assets/ExpansionDefBub.asset

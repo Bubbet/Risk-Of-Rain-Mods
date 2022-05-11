@@ -46,7 +46,12 @@ Patience is key~
   - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
-* v1.7.1 Mod changes :
+* v1.7.3 Mod changes :
+  * Fixed tokens for whisk
+  * Added incicator for whisk
+  * Added equipments to the expansion def  
+
+* v1.7.2 Mod changes :
   * Actually added gyroscopic whisk.
   * Fixed void hourglasses shader being broke
   * Added void conversion to submerging cistern.

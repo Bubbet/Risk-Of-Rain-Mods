@@ -93,11 +93,7 @@ namespace BubbetsItems.Items
             if (!inv) return duration;
             var amount = cb.inventory.GetItemCount(hourglass.ItemDef);
             if (amount <= 0) return duration;
-            //scalingFunc.Parameters["a"] = amount;
-            //var cont = new ExpressionC();
             duration *= hourglass.scalingInfos[0].ScalingFunction(amount);
-            //duration *= amount * 0.10f + 1.15f;
-            //_instance.Logger.LogError(duration);
             return duration;
         }
     }

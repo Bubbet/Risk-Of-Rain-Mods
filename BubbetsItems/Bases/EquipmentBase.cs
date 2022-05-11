@@ -266,6 +266,8 @@ namespace BubbetsItems
         {
             if (RequiresSotv)
                 EquipmentDef.requiredExpansion = SotvExpansion;
+            else
+                EquipmentDef.requiredExpansion = BubExpansion;
         }
     }
 }
