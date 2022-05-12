@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using RoR2;
@@ -19,8 +20,18 @@ namespace BubbetsItems
 
 		public static bool ReserveColor(Color color, out DamageColorIndex index)
 		{
-			index = (DamageColorIndex) DamageColor.colors.Length;
-			DamageColor.colors = DamageColor.colors.AddItem(color).ToArray();
+			try
+			{
+				index = (DamageColorIndex) DamageColor.colors.Length;
+				DamageColor.colors = DamageColor.colors.AddItem(color).ToArray();
+			}
+			catch (Exception)
+			{
+				index = DamageColorIndex.Default;
+				return false;
+			}
+
+			return true;
 		}
 	}
 }
