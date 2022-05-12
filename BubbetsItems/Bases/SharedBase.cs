@@ -29,6 +29,7 @@ namespace BubbetsItems
         public virtual void MakeRiskOfOptions()
         {
             sharedInfo.MakeRiskOfOptions();
+            ModSettingsManager.AddOption(new CheckBoxOption(Enabled, true));
         }
 
         public ConfigEntry<bool>? Enabled;

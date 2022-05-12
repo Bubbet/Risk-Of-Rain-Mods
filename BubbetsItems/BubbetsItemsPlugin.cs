@@ -6,11 +6,13 @@ using System.Security;
 using System.Security.Permissions;
 //using Aetherium; TODO readd support
 using BepInEx;
+using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using BubbetsItems.Behaviours;
 using EntityStates;
 using HarmonyLib;
+using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
 using UnityEngine;
@@ -43,6 +45,9 @@ namespace BubbetsItems
 
         public void Awake()
         {
+            if (Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions"))
+                MakeRiskOfOptions();
+            
             instance = this;
             Log = Logger;
             RoR2Application.isModded = true;
@@ -70,6 +75,22 @@ namespace BubbetsItems
             //SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
 
             //PickupTooltipFormat.Init(harm);
+        }
+
+        private void MakeRiskOfOptions()
+        {
+            RiskOfOptions.ModSettingsManager.AddOption(new GenericButtonOption("Report An Issue", "General", "If you find a bug in the mod, reporting an issue is the best way to ensure it gets fixed.","Open Link", () =>
+            {
+                Application.OpenURL("https://github.com/Bubbet/Risk-Of-Rain-Mods/issues/new");
+            }));
+            RiskOfOptions.ModSettingsManager.AddOption(new GenericButtonOption("Donate to Bubbet", "General", "Donate to the programmer of bubbet's items.","Open Link", () =>
+            {
+                Application.OpenURL("https://ko-fi.com/bubbet");
+            }));
+            RiskOfOptions.ModSettingsManager.AddOption(new GenericButtonOption("Donate to GEMO", "General", "Donate to the modeller of bubbet's items.", "Open Link", () =>
+            {
+                Application.OpenURL("https://ko-fi.com/snakeygemo/gallery");
+            }));
         }
 
         private static uint _bankID;

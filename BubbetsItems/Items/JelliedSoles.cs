@@ -4,7 +4,6 @@ using HarmonyLib;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
-using NCalc;
 using RoR2;
 using RoR2.Audio;
 using UnityEngine;
@@ -52,6 +51,7 @@ namespace BubbetsItems.Items
 		{
 			base.MakeBehaviours();
 			Inventory.onInventoryChangedGlobal += OnInvChanged;
+			ModdedDamageColors.ReserveColor(new Color(1, 0.4f, 0), out index);
 		}
 
 		protected override void DestroyBehaviours()
@@ -147,7 +147,7 @@ namespace BubbetsItems.Items
 				amount += x;
 				
 				behavior.storedDamage = Mathf.Max(0, behavior.storedDamage - y);
-				damageInfo.damageColorIndex = (DamageColorIndex) 145;
+				damageInfo.damageColorIndex = index;
 				EntitySoundManager.EmitSoundServer(hitSound.index, body.gameObject);
 
 				return amount;
@@ -158,6 +158,7 @@ namespace BubbetsItems.Items
 		private static NetworkSoundEventDef? _hitSound;
 		public static NetworkSoundEventDef hitSound => (_hitSound ??= BubbetsItemsPlugin.ContentPack.networkSoundEventDefs.Find("JelliedSolesHitSound"))!;
 		private static NetworkSoundEventDef? _hitGroundSound;
+		public static DamageColorIndex index;
 		public static NetworkSoundEventDef hitGroundSound => (_hitGroundSound ??= BubbetsItemsPlugin.ContentPack.networkSoundEventDefs.Find("JelliedSolesHitGround"))!;
 
 		private static void CollectDamage(CharacterBody body, Vector3 impactVelocity, bool weakAssKnees)
