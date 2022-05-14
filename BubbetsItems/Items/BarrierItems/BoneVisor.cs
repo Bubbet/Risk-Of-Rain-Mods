@@ -13,7 +13,7 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("BONEVISOR_NAME","Bone Visor");
-			AddToken("BONEVISOR_DESC", "Killing an enemy " + "multiplies barrier decay ".Style(StyleEnum.Heal) + "by " + "95% ".Style(StyleEnum.Heal) + "(-5% per stack)".Style(StyleEnum.Gray) + ", lasting for " + "3 ".Style(StyleEnum.Utility) + "(+2 per stack)".Style(StyleEnum.Gray) + "seconds.");
+			AddToken("BONEVISOR_DESC_SIMPLE", "Killing an enemy " + "multiplies barrier decay ".Style(StyleEnum.Heal) + "by " + "95% ".Style(StyleEnum.Heal) + "(-5% per stack)".Style(StyleEnum.Stack) + ", lasting for " + "3 ".Style(StyleEnum.Utility) + "(+2 per stack)".Style(StyleEnum.Stack) + "seconds.");
 			AddToken("BONEVISOR_PICKUP", "Killing an enemy grants a buff that slows barrier decay temporarily.");
 			AddToken("BONEVISOR_LORE","Was there a bone tribe somewhere lost here? I've found this near an ancient ruins on Mars and still haven't figured out the origins to it yet.");
 		}

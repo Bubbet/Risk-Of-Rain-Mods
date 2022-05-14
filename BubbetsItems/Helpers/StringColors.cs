@@ -37,7 +37,6 @@ namespace BubbetsItems.Helpers
             [StyleEnum.BossItem] = "<color=#FFEB04>",
             [StyleEnum.LunarItem] = "<color=#307FFF>",
             [StyleEnum.VoidItem] = "<color=#ED7FCD>",
-            [StyleEnum.Gray] = "<color=#8990A7>",
         };
 
         public static bool IsStyle(StyleEnum style) => styleStrings[style].StartsWith("<style="); //(int) style <= 6;

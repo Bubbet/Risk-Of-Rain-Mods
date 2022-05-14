@@ -10,7 +10,7 @@ namespace BubbetsItems.Items
         {
             AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_NAME", "Torturer");
             AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_PICKUP", "Heal ".Style(StyleEnum.Heal) + "from inflicted damage over time.");
-            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_DESC", "Heals ".Style(StyleEnum.Heal) + "you for " + "5% ".Style(StyleEnum.Heal) + "(+2.5% per stack) ".Style(StyleEnum.Gray) + "of damage dealt over time.");
+            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_DESC_SIMPLE", "Heals ".Style(StyleEnum.Heal) + "you for " + "5% ".Style(StyleEnum.Heal) + "(+2.5% per stack) ".Style(StyleEnum.Stack) + "of damage dealt over time.");
             AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_LORE", "Torturer");
             base.MakeTokens();
         }

@@ -24,7 +24,7 @@ namespace BubbetsItems.Items
         {
             AddToken("TIMED_BUFF_DURATION_ITEM_NAME", "Abundant Hourglass");
             AddToken("TIMED_BUFF_DURATION_ITEM_PICKUP", "Duration of " + "buffs ".Style(StyleEnum.Damage) + "are increased.");
-            AddToken("TIMED_BUFF_DURATION_ITEM_DESC", "Increases the duration of " + "buffs ".Style(StyleEnum.Damage) + "by " + "125% ".Style(StyleEnum.Utility) + "(+10% per stack)".Style(StyleEnum.Gray) + ".");
+            AddToken("TIMED_BUFF_DURATION_ITEM_DESC_SIMPLE", "Increases the duration of " + "buffs ".Style(StyleEnum.Damage) + "by " + "125% ".Style(StyleEnum.Utility) + "(+10% per stack)".Style(StyleEnum.Stack) + ".");
             AddToken("TIMED_BUFF_DURATION_ITEM_LORE", "BUB_TIMED_BUFF_DURATION_ITEM_LORE");
             base.MakeTokens();
         }
