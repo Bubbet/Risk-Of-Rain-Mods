@@ -55,7 +55,7 @@ namespace BubbetsItems
             
             if (sharedInfo.UseSimpleDescIfApplicable.Value && scalingInfos.All(x => x.IsDefault) && !string.IsNullOrEmpty(SimpleDescriptionToken))
             {
-                var ret = Language.GetString(SimpleDescriptionToken);
+                var ret = Language.GetString(sharedInfo.TokenPrefix + SimpleDescriptionToken);
                 if (sharedInfo.ItemStatsInSimpleDesc.Value)
                 {
                     ret += "\n\n" + string.Join("\n", scalingInfos.Select(x => x._name).Zip(formatArgs, (s, o) => s + ": " + o));
