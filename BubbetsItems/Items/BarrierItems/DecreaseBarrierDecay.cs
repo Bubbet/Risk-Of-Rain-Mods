@@ -11,6 +11,7 @@ namespace BubbetsItems.Items
 			base.MakeTokens();
 			AddToken("DECREASEBARRIERDECAY_NAME", "Mechanical Snail");
 			AddToken("DECREASEBARRIERDECAY_DESC", "Multiplies " + "barrier decay ".Style(StyleEnum.Heal) + "by " + "{0:0%}".Style(StyleEnum.Heal) + ".");
+			AddToken("DECREASEBARRIERDECAY_DESC_SIMPLE", "Multiplies " + "barrier decay ".Style(StyleEnum.Heal) + "by " + "83%".Style(StyleEnum.Heal) + "(scales exponentially)".Style(StyleEnum.Stack) + ".");
 			AddToken("DECREASEBARRIERDECAY_PICKUP", "Slow down barrier decay.");
 			AddToken("DECREASEBARRIERDECAY_LORE", "");
 		}
