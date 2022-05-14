@@ -72,9 +72,13 @@ The cost of purchase and production associated with Mk2 is considerably higher t
             context.p = inventory?.GetItemCount(RoR2Content.Items.ArmorPlate) ?? 0;
             context.d = 0f;
 
-            var tokenChoice = _reductionOnTrue.Value // TODO for simple
+            var tokenChoice = _reductionOnTrue.Value
                 ? "BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION"
                 : "BUB_REPULSION_ARMOR_MK2_DESC_ARMOR";
+            
+            SimpleDescriptionToken = _reductionOnTrue.Value
+                ? "BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION_SIMPLE"
+                : "BUB_REPULSION_ARMOR_MK2_DESC_ARMOR_SIMPLE";
             
             return base.GetFormattedDescription(inventory, tokenChoice, forceHideExtended);
         }

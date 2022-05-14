@@ -22,6 +22,7 @@ namespace BubbetsItems.Items
             AddToken("ESCAPE_PLAN_NAME", "Escape Plan");
             AddToken("ESCAPE_PLAN_DESC", "Move up to " + "{0:0%} faster".Style(StyleEnum.Utility) + ". Increases the closer you are to " + "death".Style(StyleEnum.Death) + ".");
             AddToken("ESCAPE_PLAN_DESC_SIMPLE", "Gain " + "75%".Style(StyleEnum.Utility) + "(+10% per stack) ".Style(StyleEnum.Stack) + "movement speed, " + "scales with " + "decreasing health".Style(StyleEnum.Death) + ".");
+            SimpleDescriptionToken = "ESCAPE_PLAN_DESC_SIMPLE"; 
             AddToken("ESCAPE_PLAN_PICKUP", "Increases " + "movement speed ".Style(StyleEnum.Utility) + "the closer you are to death.");
             AddToken("ESCAPE_PLAN_LORE", "Escape Plan");
             base.MakeTokens();
