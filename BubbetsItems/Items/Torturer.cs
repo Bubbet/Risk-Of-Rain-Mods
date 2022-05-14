@@ -9,7 +9,7 @@ namespace BubbetsItems.Items
         protected override void MakeTokens()
         {
             AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_NAME", "Torturer");
-            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_DESC", "Heal ".Style(StyleEnum.Heal) + "for " + "{0:1%} ".Style(StyleEnum.Heal) + "of damage over time you inflict.");
+            AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_DESC", "Heal ".Style(StyleEnum.Heal) + "for " + "{0:0.#%} ".Style(StyleEnum.Heal) + "of damage over time you inflict.");
             AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_DESC_SIMPLE", "Heals ".Style(StyleEnum.Heal) + "you for " + "5% ".Style(StyleEnum.Heal) + "(+2.5% per stack) ".Style(StyleEnum.Stack) + "of damage dealt over time.");
             SimpleDescriptionToken = "HEAL_FROM_DOT_INFLICTED_ITEM_DESC_SIMPLE";
             AddToken("HEAL_FROM_DOT_INFLICTED_ITEM_PICKUP", "Heal ".Style(StyleEnum.Heal) + "from inflicted damage over time.");

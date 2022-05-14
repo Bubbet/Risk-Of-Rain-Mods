@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.RegularExpressions;
 using BepInEx.Configuration;
 using HarmonyLib;
 using InLobbyConfig.Fields;
@@ -44,6 +45,7 @@ namespace BubbetsItems
             scalingInfos.Add(new ScalingInfo(sharedInfo.ConfigFile, defaultValue, name, new StackFrame(1).GetMethod().DeclaringType, desc, oldDefault));
         }
 
+        private static Regex formatArgParams = new Regex(@"({\d:?.*?})+", RegexOptions.Compiled);
         public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
         {
             // ReSharper disable twice Unity.NoNullPropagation
@@ -58,7 +60,25 @@ namespace BubbetsItems
                 var ret = Language.GetString(sharedInfo.TokenPrefix + SimpleDescriptionToken);
                 if (sharedInfo.ItemStatsInSimpleDesc.Value)
                 {
-                    ret += "\n\n" + string.Join("\n", scalingInfos.Select(x => x._name).Zip(formatArgs, (s, o) => s + ": " + o));
+                    var para = new List<string>();
+
+                    ret += "\n\n";
+                    
+                    // Holy fuck i hate regex in c#
+                    foreach (Capture matchGroupCapture in formatArgParams.Match(Language.GetString(token ?? ItemDef.descriptionToken)).Groups[0].Captures)
+                    {
+                        var val = matchGroupCapture.Value;
+                        if (!string.IsNullOrEmpty(val))
+                            para.Add(val);
+                    }
+
+                    foreach (var param in para)
+                    {
+                        if (int.TryParse(param[1].ToString(), out var i))
+                            ret += "\n" + scalingInfos[i]._name + ": " + param;
+                    }
+
+                    ret = string.Format(ret, formatArgs);
                 }
 
                 return ret;
