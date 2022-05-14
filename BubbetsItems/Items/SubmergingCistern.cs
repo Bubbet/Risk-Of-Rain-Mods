@@ -10,6 +10,7 @@ namespace BubbetsItems.Items
 	public class SubmergingCistern : ItemBase
 	{
 		private ConfigEntry<float> _dropChance;
+		public ConfigEntry<bool> ignoreHealNova;
 
 		protected override void MakeConfigs()
 		{
@@ -18,6 +19,8 @@ namespace BubbetsItems.Items
 			AddScalingFunction("[d] * 0.5", "Healing From Damage", "[a] = item count; [d] = damage dealt");
 			AddScalingFunction("[a] + 2", "Teammate Count");
 			AddScalingFunction("20", "Range");
+			ignoreHealNova = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General,
+				"SubmergingCistern Dont Proc HealNova", true, "Disable procs of N'kuhana's Opinion");
 			//_range = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, "Submerging Cistern Range", 20f, "Range for the Submerging Cistern to heal within.");
 			//_amount = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, "Submerging Cistern Damage", 0.5f, "Damage percent to heal.");
 		}

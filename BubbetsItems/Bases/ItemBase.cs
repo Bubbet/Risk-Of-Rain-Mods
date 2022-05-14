@@ -37,6 +37,7 @@ namespace BubbetsItems
 
         public List<ScalingInfo> scalingInfos = new();
         public VoidPairing? voidPairing;
+        protected string SimpleDescriptionToken;
 
         protected void AddScalingFunction(string defaultValue, string name, string? desc = null, string? oldDefault = null)
         {
@@ -49,11 +50,27 @@ namespace BubbetsItems
 
             if (scalingInfos.Count <= 0) return Language.GetString(ItemDef.descriptionToken);
 
-            var formatArgs = scalingInfos.Select(info => info.ScalingFunction(inventory?.GetItemCount(ItemDef))).Cast<object>().ToArray();
-            var ret = Language.GetStringFormatted(token ?? ItemDef.descriptionToken, formatArgs);
-            if (sharedInfo.ExpandedTooltips.Value && !forceHideExtended)
-                ret += "\n\nTooltip updates automatically with these fully configurable Scaling Functions:\n" + string.Join("\n", scalingInfos.Select(info => info.ToString()));
-            return ret;
+            var formatArgs = scalingInfos.Select(info => info.ScalingFunction(inventory?.GetItemCount(ItemDef)))
+                .Cast<object>().ToArray();
+            
+            if (sharedInfo.UseSimpleDescIfApplicable.Value && scalingInfos.All(x => x.IsDefault) && !string.IsNullOrEmpty(SimpleDescriptionToken))
+            {
+                var ret = Language.GetString(SimpleDescriptionToken);
+                if (sharedInfo.ItemStatsInSimpleDesc.Value)
+                {
+                    ret += "\n\n" + string.Join("\n", scalingInfos.Select(x => x._name).Zip(formatArgs, (s, o) => s + ": " + o));
+                }
+
+                return ret;
+            }
+            else
+            {
+                var ret = Language.GetStringFormatted(token ?? ItemDef.descriptionToken, formatArgs);
+                if (sharedInfo.ExpandedTooltips.Value && !forceHideExtended)
+                    ret += "\n\nTooltip updates automatically with these fully configurable Scaling Functions:\n" +
+                           string.Join("\n", scalingInfos.Select(info => info.ToString()));
+                return ret;
+            }
         }
 
         public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
@@ -180,14 +197,18 @@ namespace BubbetsItems
             private readonly ConfigEntry<string> _configEntry;
             private Func<ExpressionContext, float> _function;
             private string _oldValue;
-            private readonly string _name;
+            public readonly string _name;
             private readonly ExpressionContext _defaultContext;
             public readonly ExpressionContext WorkingContext;
+            private string _defaultValue;
+
             public string Value
             {
                 get => _configEntry.Value;
                 set => _configEntry.Value = value;
             }
+
+            public bool IsDefault => _configEntry.Value == _defaultValue;
 
             public ScalingInfo(ConfigFile configFile, string defaultValue, string name, Type callingType, string? desc = null, string? oldDefault = null)
             {
@@ -196,6 +217,7 @@ namespace BubbetsItems
                 WorkingContext = new ExpressionContext();
 
                 _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, callingType.Name + "_" + name, defaultValue,   callingType.Name + "; Scaling function for item. ;" + _description, oldDefault);
+                _defaultValue = defaultValue;
                 _oldValue = _configEntry.Value;
                 _function = new Expression(_oldValue).ToLambda<ExpressionContext, float>();
                 _configEntry.SettingChanged += EntryChanged;

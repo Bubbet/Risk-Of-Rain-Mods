@@ -1,4 +1,5 @@
-﻿using RoR2;
+﻿using System;
+using RoR2;
 using UnityEngine;
 
 namespace BubbetsItems
@@ -7,7 +8,12 @@ namespace BubbetsItems
 	public class BubEquipmentDef : EquipmentDef
 	{
 		public GameObject displayModelPrefab;
-		
+
+		private void OnValidate()
+		{
+			canDrop = true;
+		}
+
 		[ContextMenu("Bub Auto Populate Tokens")]
 		public new void AutoPopulateTokens()
 		{

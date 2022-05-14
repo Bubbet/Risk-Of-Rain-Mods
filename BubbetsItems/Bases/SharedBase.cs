@@ -259,7 +259,9 @@ namespace BubbetsItems
             public readonly ManualLogSource Logger;
             public readonly string TokenPrefix;
             private bool _riskOfOptionsMade;
-            
+            public readonly ConfigEntry<bool> UseSimpleDescIfApplicable;
+            public readonly ConfigEntry<bool> ItemStatsInSimpleDesc;
+
             public SharedInfo(ManualLogSource manualLogSource, ConfigFile configFile, Harmony? harmony, string tokenPrefix)
             {
                 Logger = manualLogSource;
@@ -270,6 +272,8 @@ namespace BubbetsItems
                 ExpandedTooltips = configFile.Bind(ConfigCategoriesEnum.General, "Expanded Tooltips", true, "Enables the scaling function in the tooltip.");
                 DescInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Description In Pickup", true, "Used the description in the pickup for my items.");
                 ForceHideScalingInfoInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Disable Scaling Info In Pickup", true, "Should the scaling infos be hidden from pickups.");
+                UseSimpleDescIfApplicable = configFile.Bind(ConfigCategoriesEnum.General, "Use Simple Descriptions If Applicable", true, "Should the description be closer to vanilla if you haven't changed the scaling function.");
+                ItemStatsInSimpleDesc = configFile.Bind(ConfigCategoriesEnum.General, "Show Item Stats For Simple Desc", true, "Display the solved value under the simple description.");
             }
 
             public void MakeRiskOfOptions()
@@ -278,6 +282,8 @@ namespace BubbetsItems
                 ModSettingsManager.AddOption(new CheckBoxOption(ExpandedTooltips));
                 ModSettingsManager.AddOption(new CheckBoxOption(DescInPickup));
                 ModSettingsManager.AddOption(new CheckBoxOption(ForceHideScalingInfoInPickup));
+                ModSettingsManager.AddOption(new CheckBoxOption(UseSimpleDescIfApplicable));
+                ModSettingsManager.AddOption(new CheckBoxOption(ItemStatsInSimpleDesc));
                 _riskOfOptionsMade = true;
             }
         }

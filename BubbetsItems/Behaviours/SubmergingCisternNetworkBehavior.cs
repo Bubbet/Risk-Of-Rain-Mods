@@ -62,7 +62,7 @@ namespace BubbetsItems.Behaviours
 			var teammateCount = Mathf.FloorToInt(info1.ScalingFunction(amount));
 			var info2 = inst.scalingInfos[2];
 			var range = info2.ScalingFunction(amount);
-			HealNearby(healing, teammateCount, range);
+			HealNearby(healing, teammateCount, range, inst.ignoreHealNova.Value);
 		}
 
 		public void SearchForTargets(ref List<HurtBox> dest)
@@ -82,7 +82,7 @@ namespace BubbetsItems.Behaviours
 			sphereSearch.ClearCandidates();
 		}
 
-		private void HealNearby(float amount, int teammateCount, float range)
+		private void HealNearby(float amount, int teammateCount, float range, bool addProcMaskForHealNova)
 		{
 			radius = range;
 			//var test = inst.scalingInfos[0].ScalingFunction(amount);
@@ -100,6 +100,8 @@ namespace BubbetsItems.Behaviours
 
 			var pmask = new ProcChainMask();
 			pmask.AddProc(ProcType.HealOnHit);
+			if (addProcMaskForHealNova)
+				pmask.AddProc(ProcType.HealNova);
 			var i = 0;
 			var list3 = CollectionPool<Transform, List<Transform>>.RentCollection();
 			foreach (var hurtBox in list)
