@@ -25,7 +25,8 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 namespace MaterialHud
 {
 	[BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
-	[BepInPlugin("bubbet.riskui", "Risk UI", "1.0.0")]
+	[BepInPlugin("bubbet.riskui", "Risk UI", "1.3.0")]
+	[BepInDependency("com.Dragonyck.Synergies", BepInDependency.DependencyFlags.SoftDependency)]
 	public class RiskUIPlugin : BaseUnityPlugin
 	{
 		public AssetBundle assetBundle;
@@ -76,6 +77,8 @@ namespace MaterialHud
 			if (RiskOfOptionsEnabled)
 				MakeRiskofOptions();
 
+			if (Chainloader.PluginInfos.ContainsKey("com.Dragonyck.Synergies") && Chainloader.PluginInfos["com.Dragonyck.Synergies"].Metadata.Version <= new Version("2.0.3"))
+				DisableSynergies();
 			
 			VoidColor = ConfigHelper.Bind("Recoloring Player HealthBar", "Void Color", (Color) new Color32(181, 100, 189, 255), "Color of void, Void Fiends health bar.");
 			InfusionColor = ConfigHelper.Bind("Recoloring Player HealthBar", "Infusion Color", (Color) new Color32(221, 44, 38, 255), "Color of infusion.");
@@ -107,6 +110,11 @@ namespace MaterialHud
 			
 		}
 
+		private void DisableSynergies()
+		{
+			new PatchClassProcessor(harm, typeof(DisableSynergies)).Patch();
+		}
+
 		private void EnabledChanged()
 		{
 			if (Enabled.Value)
@@ -124,9 +132,18 @@ namespace MaterialHud
 
 		private void MakeRiskofOptions()
 		{
-			if (!icon || description == "") return;
-			ModSettingsManager.SetModDescription(description);
-			ModSettingsManager.SetModIcon(icon);
+			if(icon)
+				ModSettingsManager.SetModIcon(icon);
+			if(description != null)
+				ModSettingsManager.SetModDescription(description);
+			ModSettingsManager.AddOption(new GenericButtonOption("Report An Issue", "General", "If you find a bug in the mod, reporting an issue is the best way to ensure it gets fixed.","Open Link", () =>
+			{
+				Application.OpenURL("https://github.com/Bubbet/Risk-Of-Rain-Mods/issues/new");
+			}));
+			ModSettingsManager.AddOption(new GenericButtonOption("Donate to Bubbet", "General", "Donate to the programmer of RiskUI.","Open Link", () =>
+			{
+				Application.OpenURL("https://ko-fi.com/bubbet");
+			}));
 		}
 
 		[SystemInitializer]
@@ -142,6 +159,8 @@ namespace MaterialHud
 		{
 			ConfigManager.StatsDisplayPanelBackground.Value = false;
 			ConfigManager.DPSMeterWindowBackground.Value = false;
+			ConfigManager.ConfigFileStatsDisplay.Save();
+			ConfigManager.ConfigFileDPSMeter.Save();
 		}
 
 		public static GameObject CreateHud()

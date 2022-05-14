@@ -45,6 +45,12 @@ namespace MaterialHud
 						max = (int) riskOfOptionsExtra
 					}));
 					break;
+				case ConfigEntry<float> entry:
+					ModSettingsManager.AddOption(new SliderOption(entry, new SliderConfig
+					{
+						max = (float) riskOfOptionsExtra
+					}));
+					break;
 				case ConfigEntry<Color> entry:
 					ModSettingsManager.AddOption(new ColorOption(entry));
 					break;

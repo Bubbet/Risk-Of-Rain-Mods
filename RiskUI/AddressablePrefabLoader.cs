@@ -9,6 +9,11 @@ namespace MaterialHud
 		public string Address;
 		public bool defaultActiveState = true;
 
+		private void OnValidate()
+		{
+			Awake();
+		}
+
 		private void Awake()
 		{
 			var obj = Addressables.LoadAssetAsync<GameObject>(Address).WaitForCompletion();

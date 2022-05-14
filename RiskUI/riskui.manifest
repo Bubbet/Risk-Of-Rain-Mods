@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3453715056
+CRC: 2113881656
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 6dd6e49cc8e23a01722bd041ce0ab331
+    Hash: 1da439ed624b48974aafea35e3ff88c3
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 3a66505140e38a8f84b7f4e75c04bd77
+    Hash: bb08a80ed6c1fdfa4043a38dd3910eac
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -160,6 +160,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: -745384217, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
 - Class: 114
+  Script: {fileID: 1755112185, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
   Script: {fileID: -1468595796, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
 - Class: 114
   Script: {fileID: -121293455, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
@@ -182,7 +184,11 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 208657911, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
 - Class: 114
+  Script: {fileID: 1681300032, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
+- Class: 114
   Script: {fileID: 208657911, guid: 296f27627645a344ca0ae31c1d69a7c1, type: 3}
+- Class: 114
+  Script: {fileID: -55326007, guid: 78dbee4fe9b74cc498ebbcd917887769, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 128
@@ -261,6 +267,7 @@ Assets:
 - Assets/TextMesh Pro/Resources/Fonts & Materials/LiberationSans SDF - Fallback.asset
 - Assets/FunnyUIMeme/Assets/DifficultyIcons/Inferno (Inferno).png
 - Assets/TextMesh Pro/Resources/Fonts & Materials/Montserrat/Montserrat-VariableFont_wght.ttf
+- Assets/FunnyUIMeme/Assets/MaterialHealthbarStyleMinion.asset
 - Assets/FunnyUIMeme/Assets/DifficultyIcons/Typhoon (Starstorm 2).png
 - Assets/FunnyUIMeme/Assets/MaterialTimerStringFormatter.asset
 - Assets/TextMesh Pro/Shaders/TMP_SDF.shader

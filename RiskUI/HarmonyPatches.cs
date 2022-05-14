@@ -61,6 +61,7 @@ namespace MaterialHud
 			if (!uiRoot) return true;
 			switch (__instance.nameToken)
 			{
+				case "ECLIPSE_GAMEMODE_NAME":
 				case "GAMEMODE_CLASSIC_RUN_NAME":
 					__instance.uiInstance = GameObject.Instantiate(RiskUIPlugin.CreateClassicRunHud(), uiRoot);
 					__result = __instance.uiInstance;
@@ -114,7 +115,7 @@ namespace MaterialHud
 			c.EmitDelegate<Func<GameObject>>(RiskUIPlugin.CreateAllyCard);
 		}
 
-		[HarmonyILManipulator, HarmonyPatch(typeof(VoidSurvivorController), nameof(VoidSurvivorController.OnEnable))]
+		//[HarmonyILManipulator, HarmonyPatch(typeof(VoidSurvivorController), nameof(VoidSurvivorController.OnEnable))]
 		public static void MoveVoidSurvivorController(ILContext il)
 		{
 			var c = new ILCursor(il);

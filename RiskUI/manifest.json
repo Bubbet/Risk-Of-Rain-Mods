@@ -4,7 +4,7 @@
 	"website_url":"https://github.com/Bubbet",
 	"displayName":"Risk UI",
 
-	"version_number": "1.0.0",
+	"version_number": "1.2.0",
 	"description": "The first hud replacement mod. IMPORTANT: if using better ui, disable the dps meter background and the stats display background. Also the mod has optional risk of options support.",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.9"

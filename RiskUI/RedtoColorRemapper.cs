@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using BepInEx.Configuration;
 using RoR2.UI;
 using TMPro;
@@ -13,77 +14,98 @@ namespace MaterialHud
 	{
 		public string whichBar = "Player HealthBar";
 		public HealthBar healthBar;
-		private readonly Dictionary<string, ConfigEntry<Color>> entries = new();
-		private readonly Dictionary<string, Action<Color>> updateFunctions = new();
+		private readonly Dictionary<string, HealthBarConfig> entries = new();
+		
 		public void Awake()
 		{
 			var style = healthBar.style;
-			SetupConfig("Trailing Under", "When hurt the bit that is slow to catch up.", style.trailingUnderHealthBarStyle.baseColor, color => style.trailingUnderHealthBarStyle.baseColor = color);
-			SetupConfig("Instant Health", "From medkits, etc.", style.instantHealthBarStyle.baseColor, color => style.instantHealthBarStyle.baseColor = color);
-			SetupConfig("Trailing Over", "The general color of the healthbar.", style.trailingOverHealthBarStyle.baseColor, color => style.trailingOverHealthBarStyle.baseColor = color);
-			SetupConfig("Shield", "Shield", style.shieldBarStyle.baseColor, color => style.shieldBarStyle.baseColor = color);
-			SetupConfig("Curse", "?", style.curseBarStyle.baseColor, color => style.curseBarStyle.baseColor = color);
-			SetupConfig("Barrier", "Barrier", style.barrierBarStyle.baseColor, color => style.barrierBarStyle.baseColor = color);
-			SetupConfig("Flash", "?", style.flashBarStyle.baseColor, color => style.flashBarStyle.baseColor = color);
-			SetupConfig("Cull", "?", style.cullBarStyle.baseColor, color => style.cullBarStyle.baseColor = color);
-			SetupConfig("Low Health Over", "Color for delicate watches and things like that.", style.lowHealthOverStyle.baseColor, color => style.lowHealthOverStyle.baseColor = color);
+			SetupConfig("Trailing Under", "When hurt the bit that is slow to catch up.", style, "trailingUnderHealthBarStyle");
+			SetupConfig("Instant Health", "From medkits, etc.", style, "instantHealthBarStyle");
+			SetupConfig("Trailing Over", "The general color of the healthbar.", style, "trailingOverHealthBarStyle");
+			SetupConfig("Shield", "Shield", style, "shieldBarStyle");
+			SetupConfig("Curse", "?", style, "curseBarStyle");
+			SetupConfig("Barrier", "Barrier", style, "barrierBarStyle");
+			SetupConfig("Flash", "?", style, "flashBarStyle");
+			SetupConfig("Cull", "?", style, "cullBarStyle");
+			SetupConfig("Low Health Over", "Color for delicate watches and things like that.", style, "lowHealthOverStyle");
+			OnEnable();
 		}
 
 		private void OnEnable()
 		{
 			foreach (var entry in entries)
 			{
-				OnSettingChanged(entry.Value, null);
+				entry.Value.ConfigChanged(null, null);
 			}
 		}
 
-
-		public readonly List<string> Rainbows = new();
-		private void SetupConfig(string key, string desc, Color baseColor, Action<Color> changed)
+		
+		private void SetupConfig(string key, string desc, HealthBarStyle style, string field)
 		{
 			var entryKey = "Recoloring " + whichBar + key;
-			entries[entryKey] = ConfigHelper.Bind("Recoloring " + whichBar, key, baseColor, desc);
-			entries[entryKey].SettingChanged += OnSettingChanged;
-			updateFunctions[entryKey] = changed;
-			//if (ColorUtility.TryParseHtmlString(entries[entryKey].Value.Trim(), out var color))
-				//updateFunctions[entryKey](color);
+			var config = new HealthBarConfig("Recoloring " + whichBar, key, desc, field, style);
+			entries[entryKey] = config;
 		}
 
 		private void OnDestroy()
 		{
 			foreach (var entry in entries)
 			{
-				entry.Value.SettingChanged -= OnSettingChanged;
+				entry.Value.Destroy();
 			}
-		}
-
-		private void OnSettingChanged(object sender, EventArgs e)
-		{
-			var config = sender as ConfigEntryBase;
-			var entryKey = config.Definition.Section + config.Definition.Key;
-			var entry = entries[entryKey];
-			
-			if (entry.Value == Color.clear)
-			{
-				if (!Rainbows.Contains(entryKey))
-					Rainbows.Add(entryKey);
-			}
-			else if (Rainbows.Contains(entryKey))
-			{
-				Rainbows.Remove(entryKey);
-			}
-
-			//if (!ColorUtility.TryParseHtmlString(entry.Value.Trim(), out var color)) return;
-			updateFunctions[entryKey](entry.Value);
 		}
 
 		private void Update()
 		{
-			if (!Rainbows.Any()) return;
 			var color = Color.HSVToRGB(Mathf.Sin(Time.time) * 0.5f + 0.5f, 1, 1);
-			foreach (var rainbow in Rainbows)
+			foreach (var rainbow in entries)
 			{
-				updateFunctions[rainbow](color);
+				rainbow.Value.Update(color);
+			}
+		}
+
+		public class HealthBarConfig
+		{
+			private static readonly Type StyleType = typeof(HealthBarStyle);
+			public HealthBarStyle style;
+			private readonly FieldInfo _fieldInfo;
+			private ConfigEntry<Color> _configValue;
+			private bool rainbow;
+
+			public Color Color
+			{
+				get => ((HealthBarStyle.BarStyle) _fieldInfo.GetValue(style)).baseColor;
+				set
+				{
+					var sty = (HealthBarStyle.BarStyle) _fieldInfo.GetValue(style);
+					sty.baseColor = value;
+					_fieldInfo.SetValue(style, sty);
+				}
+			}
+
+			public HealthBarConfig(string category, string key, string desc, string field, HealthBarStyle styleIn)
+			{
+				style = styleIn;
+				_fieldInfo = StyleType.GetField(field, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+				_configValue = ConfigHelper.Bind(category, key, Color, desc);
+				_configValue.SettingChanged += ConfigChanged;
+			}
+
+			public void Destroy()
+			{
+				_configValue.SettingChanged -= ConfigChanged;
+			}
+
+			public void ConfigChanged(object sender, EventArgs e)
+			{
+				rainbow = _configValue.Value == Color.clear;
+				Color = _configValue.Value;
+			}
+
+			public void Update(Color color)
+			{
+				if (rainbow)
+					Color = color;
 			}
 		}
 	}
