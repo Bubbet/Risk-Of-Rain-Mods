@@ -16,7 +16,7 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("BUNNYFOOT_NAME", "Bunny Foot");
-			AddToken("BUNNYFOOT_DESC", "You gain the ability to bunny hop. Air control: {0}, Jump control: {3}");
+			AddToken("BUNNYFOOT_DESC", "Gain the ability to bunny hop, increasing air control by" + "150% ".Style(StyleEnum.Utility) + "(+150% per stack) ".Style(StyleEnum.Gray) + "and jump control by " + "50% ".Style(StyleEnum.Utility) + "(+50% per stack)".Style(StyleEnum.Gray) + ".");
 			AddToken("BUNNYFOOT_PICKUP", "Your little feets start quivering.");
 			AddToken("BUNNYFOOT_LORE", "haha source go brrrr");
 		}
