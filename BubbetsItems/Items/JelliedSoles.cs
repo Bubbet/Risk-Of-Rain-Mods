@@ -30,8 +30,7 @@ namespace BubbetsItems.Items
 		{
 			base.MakeConfigs();
 			AddScalingFunction("Min([a] * 0.15, 1)", "Reduction");
-			AddScalingFunction("[s] * [d] * [a] * 0.1", "Damage Add", desc: "[a] = amount; [s] = result from damage amount remove; [d] = level scaled damage over base damage; [h] = the enemies combined health before the damage", oldDefault: "[s] * [d]");
-			AddScalingFunction("Min([s] * [d] * [a] * 0.1, Max([h] - [c], 0))/([d] * [a] * 0.1)", "Damage Amount Remove", desc: "[a] = amount; [s] = stored damage; [d] = level scaled damage over base damage; [h] = the enemies combined health before the damage; [c] = damage from the current attack");
+			AddScalingFunction("[s] * [d] * [a] * 0.1", "Damage Add", desc: "[a] = amount; [s] = stored damage; [d] = level scaled damage over base damage; [h] = the enemies combined health before the damage", oldDefault: "[s] * [d] * [a] * 0.1");
 		}
 
 		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
@@ -130,24 +129,27 @@ namespace BubbetsItems.Items
 				var behavior = inv.GetComponent<JelliedSolesBehavior>();
 				if (behavior.storedDamage <= 0) return amount;
 				
-				
-				var info2 = instance.scalingInfos[2];
-				info2.WorkingContext.d = body.damage / body.baseDamage;
-				info2.WorkingContext.s = behavior.storedDamage;
-				info2.WorkingContext.h = hc.combinedHealth;
-				info2.WorkingContext.c = amount;
-				var y = info2.ScalingFunction(count);
-				
-				var info = instance.scalingInfos[1];
-				
-				info.WorkingContext.d = body.damage / body.baseDamage;
-				info.WorkingContext.s = y;
-				info.WorkingContext.h = hc.combinedHealth;
-				var x = info.ScalingFunction(count);
+				//[s] * [d] * [a] * 0.1
+				//Min([s] * [d] * [a] * 0.1, Max([h] - [c], 0))/([d] * [a] * 0.1)
 
-				amount += x;
+				// Initial setup
+				var info = instance.scalingInfos[1];
+				var context = info.WorkingContext;
+				context.d = body.damage / body.baseDamage;
+				context.h = hc.combinedHealth;
 				
-				behavior.storedDamage = Mathf.Max(0, behavior.storedDamage - y);
+				//Solving for maximum damage.
+				context.s = behavior.storedDamage;
+				var a = Mathf.Min(info.ScalingFunction(count), Mathf.Max(0,hc.combinedHealth - damageInfo.damage));
+				// Divide by the scaling amount
+				context.s = 1f;
+				a /= info.ScalingFunction(count);
+
+				// Get final damage amount
+				context.s = a;
+				amount += info.ScalingFunction(count);
+				
+				behavior.storedDamage = Mathf.Max(0, behavior.storedDamage - a);
 				damageInfo.damageColorIndex = index;
 				EntitySoundManager.EmitSoundServer(hitSound.index, body.gameObject);
 

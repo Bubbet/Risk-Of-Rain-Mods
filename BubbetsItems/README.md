@@ -32,7 +32,7 @@ Icons | Items | Function | Type
 ---|---|---|
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/BrokenClock.png" width="100"/> | Broken Clock | Turn back the clock 10 seconds for yourself. | `Equipment` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/WLCam.png" width="100"/> | Wildlife Camera | Take a photo of an enemy, and spawn them as an ally later. | `Equipment` |
-<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/gyroscopicWhisk.png" width="100"/> | Gyroscopic Whisk | Spin enemies until they die. | `Equipment` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/gyroscopicWhisk.png" width="100"/> | SOM's Gyroscopic Whisk | Spin enemies until they die. | `Equipment` |
 
 # Other
 If you have suggestions or questions, feel free to message `Bubbet#2639` or `GEMO#0176` on Discord.
@@ -46,6 +46,11 @@ Patience is key~
   - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
+* v1.7.4 Mod changes :
+  * Actually let soms whisk drop, and changed its name.
+  * Removed HealNova from submerging cistern by default.
+  * Fixed the tooltip for torturer.
+  
 * v1.7.3 Mod changes :
   * Fixed tokens for whisk
   * Added incicator for whisk
