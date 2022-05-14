@@ -77,8 +77,8 @@ The cost of purchase and production associated with Mk2 is considerably higher t
                 : "BUB_REPULSION_ARMOR_MK2_DESC_ARMOR";
             
             SimpleDescriptionToken = _reductionOnTrue.Value
-                ? "BUB_REPULSION_ARMOR_MK2_DESC_REDUCTION_SIMPLE"
-                : "BUB_REPULSION_ARMOR_MK2_DESC_ARMOR_SIMPLE";
+                ? "REPULSION_ARMOR_MK2_DESC_REDUCTION_SIMPLE"
+                : "REPULSION_ARMOR_MK2_DESC_ARMOR_SIMPLE";
             
             return base.GetFormattedDescription(inventory, tokenChoice, forceHideExtended);
         }
