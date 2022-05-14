@@ -10,6 +10,7 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("CEREMONIALPROBE_NAME", "Ceremonial Probe");
+			AddToken("CEREMONIALPROBE_DESC", "Falling bellow " + "{0:0%} health ".Style(StyleEnum.Health) + "causes " + "barrier decay ".Style(StyleEnum.Heal) + "to stop.");
 			AddToken("CEREMONIALPROBE_DESC_SIMPLE", "Prevents " + "barrier decay ".Style(StyleEnum.Heal) + "when you're at " + "59% health ".Style(StyleEnum.Health) + "(Increases health threshold hyperbolically per stack, caps at 100% health threshold)".Style(StyleEnum.Stack) + ".");
 			AddToken("CEREMONIALPROBE_PICKUP", "Pause barrier decay at low health.");
 			AddToken("CEREMONIALPROBE_LORE", "");

@@ -16,6 +16,7 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("ETERNALSLUG_NAME","Eternal Slug");
+			AddToken("ETERNALSLUG_DESC", "Stops " + "temporary barrier ".Style(StyleEnum.Heal) + "from decaying naturally past " + "{0:0%}".Style(StyleEnum.Heal) + ".");
 			AddToken("ETERNALSLUG_DESC_SIMPLE", "Stops " + "temporary barrier ".Style(StyleEnum.Heal) + "from decaying naturally past " + "36% ".Style(StyleEnum.Heal) + "(scales logarithmically, caps at 80%)".Style(StyleEnum.Stack) + ".");
 			AddToken("ETERNALSLUG_PICKUP", "Stops barrier decay at a certain point.");
 			AddToken("ETERNALSLUG_LORE",@"Fascinatingly, this alien species appears to have been perfectly preserved in an extra-terrestrial substance, similar to amber, yet with the smell of…. strawberries? Little Fern here certainly will live forever in this amber.”
