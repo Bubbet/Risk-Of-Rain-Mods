@@ -15,6 +15,7 @@ namespace BubbetsItems.Items
 			AddToken("SCINTILLATINGJET_PICKUP", "Reduce damage temporarily after getting hit. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ".");
 			AddToken("SCINTILLATINGJET_DESC", "Getting hit " + "increases armor ".Style(StyleEnum.Heal) + "by " + "{0} ".Style(StyleEnum.Heal) + "for {1} seconds. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ".");
 			AddToken("SCINTILLATINGJET_DESC_SIMPLE", "Getting hit " + "increases armor ".Style(StyleEnum.Heal) + "by " + "20 ".Style(StyleEnum.Heal) + "(+10 per stack) ".Style(StyleEnum.Stack) + "for 2 seconds. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ".");
+			SimpleDescriptionToken = "SCINTILLATINGJET_DESC_SIMPLE";
 			AddToken("SCINTILLATINGJET_LORE", "\"What do you mean Jet isn't a gemstone? It clearly is!\"");
 		}
 		protected override void MakeConfigs()

@@ -14,6 +14,7 @@ namespace BubbetsItems.Items
 			AddToken("ACIDSOAKEDBLINDFOLD_PICKUP", "Recruit a Blind Vermin with items.");
 			AddToken("ACIDSOAKEDBLINDFOLD_DESC", "Every {3} seconds, " + "summon a Blind Vermin".Style(StyleEnum.Utility) + " with " + "{1} ".Style(StyleEnum.Utility) + "Common".Style(StyleEnum.White) + " or " + "Uncommon".Style(StyleEnum.Green) + " items.");
 			AddToken("ACIDSOAKEDBLINDFOLD_DESC_SIMPLE", "Every 30 seconds, " + "summon a Blind Vermin".Style(StyleEnum.Utility) + " with " + "10 ".Style(StyleEnum.Utility) + "(+5 per stack) ".Style(StyleEnum.Stack) + "Common".Style(StyleEnum.White) + " or " + "Uncommon".Style(StyleEnum.Green) + " items.");
+			SimpleDescriptionToken = "ACIDSOAKEDBLINDFOLD_DESC_SIMPLE"; 
 			AddToken("ACIDSOAKEDBLINDFOLD_LORE", "What is that smell?");
 		}
 

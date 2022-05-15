@@ -24,6 +24,7 @@ namespace BubbetsItems.Items
 			AddToken("SHIFTEDQUARTZ_PICKUP", "Deal bonus damage if there aren't nearby enemies. " + "Corrupts all Focus Crystals".Style(StyleEnum.Void) + ".");
 			AddToken("SHIFTEDQUARTZ_DESC", "Increase damage dealt by " + "{1:0%} ".Style(StyleEnum.Damage) + "when there are no enemies within " + "{0}m ".Style(StyleEnum.Damage) + "of you. " + "Corrupts all Focus Crystals".Style(StyleEnum.Void) + ".");
 			AddToken("SHIFTEDQUARTZ_DESC_SIMPLE", "Increase damage dealt by " + "15% ".Style(StyleEnum.Damage) + "(+15% per stack) ".Style(StyleEnum.Stack) + "when there are no enemies within " + "18m ".Style(StyleEnum.Damage) + "of you. " + "Corrupts all Focus Crystals".Style(StyleEnum.Void) + ".");
+			SimpleDescriptionToken = "SHIFTEDQUARTZ_DESC_SIMPLE";
 			AddToken("SHIFTEDQUARTZ_LORE", "");
 		}
 		protected override void MakeConfigs()

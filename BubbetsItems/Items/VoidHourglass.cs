@@ -16,6 +16,7 @@ namespace BubbetsItems.Items
 			
 			AddToken("VOIDHOURGLASS_DESC", "{0:0%} chance to duplicate " + "damage over time ".Style(StyleEnum.Damage) + "inflictons. " + "Corrupts all Abundant Hourglasses".Style(StyleEnum.Void) + ".");
 			AddToken("VOIDHOURGLASS_DESC_SIMPLE", "30% " + "(+30% per stack) ".Style(StyleEnum.Stack) + "chance to duplicate " + "damage over time ".Style(StyleEnum.Damage) + "inflictons. " + "Corrupts all Abundant Hourglasses".Style(StyleEnum.Void) + ".");
+			SimpleDescriptionToken = "VOIDHOURGLASS_DESC_SIMPLE";
 			AddToken("VOIDHOURGLASS_PICKUP", "Chance to duplicate damage over times.");
             
 			AddToken("VOIDHOURGLASS_LORE", "");
