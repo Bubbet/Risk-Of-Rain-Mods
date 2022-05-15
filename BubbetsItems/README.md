@@ -46,24 +46,31 @@ Patience is key~
   - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
-* v1.7.4 Mod changes :
+* v1.7.5 Mod Changes :
+  * Added vanilla style tooltips, maybe now people will stop crying.
+  * If you change the scaling function or disable simple tooltips you get the old tooltip back.
+  * Buffed jellied soles alot, and removed the third useless scaling function, its done via code now.
+  * Fixed torturer incorrectly displaying 1% and not changing.
+  * Nerfed submerging cistern by changing the starting amount of teammates it can heal.
+
+* v1.7.4 Mod Changes :
   * Actually let soms whisk drop, and changed its name.
   * Removed HealNova from submerging cistern by default.
   * Fixed the tooltip for torturer.
   
-* v1.7.3 Mod changes :
+* v1.7.3 Mod Changes :
   * Fixed tokens for whisk
   * Added incicator for whisk
   * Added equipments to the expansion def  
 
-* v1.7.2 Mod changes :
+* v1.7.2 Mod Changes :
   * Actually added gyroscopic whisk.
   * Fixed void hourglasses shader being broke
   * Added void conversion to submerging cistern.
   * Fixed broken clock killing you
   * Use chunk based compression on asset bundle to reduce mod size
   
-* v1.7.1 Mod changes : 
+* v1.7.1 Mod Changes : 
   * Added gyroscopic whisk, an equipment.
   
 * v1.7.0 Mod Changes, Expansion Barrier Update :

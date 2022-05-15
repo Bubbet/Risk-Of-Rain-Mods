@@ -31,7 +31,7 @@ namespace BubbetsItems.Items
 		{
 			base.MakeConfigs();
 			AddScalingFunction("Min([a] * 0.15, 1)", "Reduction");
-			AddScalingFunction("[s] * [d] * [a] * 0.1", "Damage Add", desc: "[a] = amount; [s] = stored damage; [d] = level scaled damage over base damage; [h] = the enemies combined health before the damage", oldDefault: "[s] * [d] * [a] * 0.1");
+			AddScalingFunction("[s] * [d] * [a]", "Damage Add", desc: "[a] = amount; [s] = stored damage; [d] = level scaled damage over base damage; [h] = the enemies combined health before the damage", oldDefault: "[s] * [d] * [a] * 0.1");
 		}
 
 		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
