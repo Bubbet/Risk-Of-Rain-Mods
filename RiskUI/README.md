@@ -25,6 +25,9 @@ The mod has risk of options support, you probably want to install it.
 
 1.3.0
 - Fixed icon positioning for extra skill slots.
+- Changed descriptions for some of the configs
+- Made the ally card a little wider to help with text jumbling
+- Enabled the remaining healthbarstyles, but colored them transparent by default
 
 # Images:
 ![](https://cdn.discordapp.com/attachments/567852222419828736/972017499958829096/unknown.png)
