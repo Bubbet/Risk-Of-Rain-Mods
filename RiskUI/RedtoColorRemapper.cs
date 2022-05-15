@@ -23,10 +23,10 @@ namespace MaterialHud
 			SetupConfig("Instant Health", "From medkits, etc.", style, "instantHealthBarStyle");
 			SetupConfig("Trailing Over", "The general color of the healthbar.", style, "trailingOverHealthBarStyle");
 			SetupConfig("Shield", "Shield", style, "shieldBarStyle");
-			SetupConfig("Curse", "?", style, "curseBarStyle");
+			SetupConfig("Curse", "Curse refers to having Shaped glass / anything that temporarily lowers max HP & normally leaves you w/ the white outlined section.", style, "curseBarStyle");
 			SetupConfig("Barrier", "Barrier", style, "barrierBarStyle");
 			SetupConfig("Flash", "?", style, "flashBarStyle");
-			SetupConfig("Cull", "?", style, "cullBarStyle");
+			SetupConfig("Cull", "Cull refers to things like guillotine / freeze, and is only seen when an allied minion (turret / zoea / drone, etc..) is hit by a Glacial Elite's death effect radius. Cull can't be applied to players however.", style, "cullBarStyle");
 			SetupConfig("Low Health Over", "Color for delicate watches and things like that.", style, "lowHealthOverStyle");
 			OnEnable();
 		}
