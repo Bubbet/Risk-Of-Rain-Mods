@@ -9,6 +9,7 @@
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.4.19" />
         <PackageReference Include="KingEnderBrine-InLobbyConfig" Version="1.4.0" />
+        <PackageReference Include="Moffein-ItemStats" Version="1.1.3" />
         <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.3.1-r.0" />
         <PackageReference Include="Rune580-Risk_Of_Options" Version="2.4.2" />
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
