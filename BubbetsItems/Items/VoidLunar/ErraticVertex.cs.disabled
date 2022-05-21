@@ -1,0 +1,34 @@
+﻿using System.Collections.Generic;
+using RoR2;
+
+namespace BubbetsItems.Items.VoidLunar
+{
+	public class ErraticVertex: ItemBase
+	{
+		protected override void MakeTokens()
+		{
+			base.MakeTokens();
+			var name = GetType().Name.ToUpper();
+			SimpleDescriptionToken = name + "_DESC_SIMPLE";
+			AddToken(name + "_NAME", "Erratic Vertex");
+			AddToken(name + "_DESC", "");
+			AddToken(name + "_DESC_SIMPLE", "Creates a 16m Ward of Void in a random location nearby. Upon entry, there is a 10% (+5% per stack) for a Void Implosion to trigger. Corrupts all Mercurial Rachis.");
+			AddToken(name + "_PICKUP", "");
+			AddToken(name + "_LORE", "");
+		}
+		
+		protected override void MakeConfigs()
+		{
+			base.MakeConfigs();
+			AddScalingFunction("16", "Radius");
+			AddScalingFunction("[a] * 0.05 + 0.05","Implosion Chance");
+			
+		}
+
+		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
+		{
+			base.FillVoidConversions(pairs);
+			AddVoidPairing(nameof(RoR2Content.Items.RandomDamageZone));
+		}
+	}
+}

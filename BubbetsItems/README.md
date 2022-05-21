@@ -30,6 +30,16 @@ Icons | Items | Function | Type
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/967541141660647464/texIconsTemplate.png" width="100"/> | Deficient Clepsydra | Chance to duplicate damage over times. Corrupts all Abundant Hourglass. | `Void Uncommon` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/GEMO_SubmergedCistern.png" width="100"/> | Submerging Cistern | Heal nearby allies based on your damage. Divided over teammates in range. Corrupts all Mired Urn. | `Void Boss` |
 ---|---|---|
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/abstractedLocusIcon.png" width="100"/> | Abstracted Locus | Teleporter zone is larger, outside of the zone is void fog, being in the fog increases teleporter charge speed. Corrupts all Focused Convergences. | `Void Lunar` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/delugedCircletIcon.png" width="100"/> | Deluged Circlet | Reduce skill cooldowns from gold gained… BUT stop gold gain on hit. Corrupts all Brittle Crowns. | `Void Lunar` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/clumpedSandIcon.png" width="100"/> | Clumped Sand | Damage is dealt again at a weaker state… BUT gain negative regeneration. Corrupts all Shaped Glass. | `Void Lunar` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/deepDecentIcon.png" width="100"/> | Deep Decent | Equipments trigger more, increases equipment cooldown. Corrupts all Gestures of the Drowned. | `Void Lunar` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/hydrophilyIcon.png" width="100"/> | Hydrophily | Converts healing except regen into barrier, disables all healing while barrier is active. Corrupts all Corpseblooms. | `Void Lunar` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/imperfectionIcon.png" width="100"/> | Imperfection | Convert all your shield into health. Increase maximum shield… BUT your armor is frail. Corrupts all Transcendence. | `Void Lunar` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/orbsOfFalsityIcon.png" width="100"/> | Orbs of Falsity | Seems to do nothing... but... Corrupts all Beads of Fealty's. | `Void Lunar` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/seepingOceanIcon.png" width="100"/> | Seeping Ocean | Items and equipment have a small chance to transform into a Void Lunar item instead. Corrupts all Eulogy Zeros. | `Void Lunar` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/tarnishedIcon.png" width="100"/> | Tarnished | Convert all your shield into health. Increase maximum shield… BUT your armor is frail. Corrupts all Purity. | `Void Lunar` |
+---|---|---|
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/BrokenClock.png" width="100"/> | Broken Clock | Turn back the clock 10 seconds for yourself. | `Equipment` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/WLCam.png" width="100"/> | Wildlife Camera | Take a photo of an enemy, and spawn them as an ally later. | `Equipment` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/gyroscopicWhisk.png" width="100"/> | SOM's Gyroscopic Whisk | Spin enemies until they die. | `Equipment` |
@@ -46,6 +56,22 @@ Patience is key~
   - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
+* v1.8.0 Mod Changes - Void Lunar Update:
+  * New item tier: void lunars, obtained via a shop by the null portal in the bazaar by spending void markers (obtained via void barrels in void seeds)
+    * Abstracted Locus
+    * Deluged Circlet
+    * Clumped Sand
+    * Deep Decent
+    * Hydrophily
+    * Imperfection
+    * Orbs of Falsity
+    * Seeping Ocean
+    * Tarnished
+    
+  * Hid itemstats in pickup.
+  * Fixed jellied soles simple description.
+  * Void Items actually require the proper expansiondef now.
+  
 * v1.7.5 Mod Changes :
   * Added vanilla style tooltips, maybe now people will stop crying.
   * If you change the scaling function or disable simple tooltips you get the old tooltip back.

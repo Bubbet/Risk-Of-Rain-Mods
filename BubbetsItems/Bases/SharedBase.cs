@@ -12,6 +12,7 @@ using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.ExpansionManagement;
+using RoR2.Items;
 using UnityEngine;
 
 namespace BubbetsItems
@@ -43,50 +44,22 @@ namespace BubbetsItems
 
         public SharedInfo sharedInfo;
         
-        private static ExpansionDef? _bubExpansion;
+        
         private static ExpansionDef? _sotvExpansion;
-
-        public static ExpansionDef? BubExpansion
-        {
-            get
-            {
-                if (_bubExpansion is null)
-                {
-                    _bubExpansion = BubbetsItemsPlugin.ContentPack.expansionDefs.First(x => x.nameToken == "BUB_EXPANSION");
-                    _bubExpansion.disabledIconSprite = SotvExpansion.disabledIconSprite;
-                }
-
-                return _bubExpansion;
-            }
-        }
-
-        public static ExpansionDef? SotvExpansion
-        {
-            get
-            {
-                if (_sotvExpansion is null)
-                {
-                    _sotvExpansion = BubbetsItemsPlugin.ContentPack.expansionDefs.First(x => x.nameToken == "BUB_EXPANSION_VOID");
-                    var sotv = ExpansionCatalog.expansionDefs.First(x => x.nameToken == "DLC1_NAME");
-                    _sotvExpansion.requiredEntitlement = sotv.requiredEntitlement;
-                    _sotvExpansion.disabledIconSprite = sotv.disabledIconSprite;
-                }
-
-                return _sotvExpansion;
-            }
-        }
+        public static ExpansionDef? SotvExpansion => _sotvExpansion ??= ExpansionCatalog.expansionDefs.First(x => x.nameToken == "DLC1_NAME");
 
         //This is probably bad practice
-        public virtual bool RequiresSotv => (this as ItemBase)?.voidPairing is not null;
+        public virtual bool RequiresSotv => false;
         
         public virtual string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
         {
             return "Not Implemented";
         }
         
-        public static void Initialize(ManualLogSource manualLogSource, ConfigFile configFile, SerializableContentPack? serializableContentPack = null, Harmony? harmony = null, string tokenPrefix = "")
+        public static void Initialize(ManualLogSource manualLogSource, ConfigFile configFile, out SharedInfo info, SerializableContentPack? serializableContentPack = null, Harmony? harmony = null, string tokenPrefix = "")
         {
             var sharedInfo = new SharedInfo(manualLogSource, configFile, harmony, tokenPrefix);
+            info = sharedInfo;
 
             foreach (var type in Assembly.GetCallingAssembly().GetTypes())
             {
@@ -108,7 +81,14 @@ namespace BubbetsItems
                 if (harmony != null)
                 {
                     shared.PatchProcessor = new PatchClassProcessor(harmony, shared.GetType());
-                    shared.PatchProcessor.Patch();
+                    try
+                    {
+                        shared.PatchProcessor.Patch();
+                    }
+                    catch (Exception e)
+                    {
+                        sharedInfo.Logger.LogError(e);
+                    }
                 }
                 Instances.Add(shared);
                 InstanceDict[type] = shared;
@@ -163,7 +143,7 @@ namespace BubbetsItems
             //master.inventory.GiveItem(ItemDef.itemIndex);
         }
 
-        [SystemInitializer(typeof(ExpansionCatalog))]
+        [SystemInitializer(typeof(ContagiousItemManager))]
         public static void FillAllExpansionDefs()
         {
             foreach (var instance in Instances)
@@ -261,6 +241,8 @@ namespace BubbetsItems
             private bool _riskOfOptionsMade;
             public readonly ConfigEntry<bool> UseSimpleDescIfApplicable;
             public readonly ConfigEntry<bool> ItemStatsInSimpleDesc;
+            public ExpansionDef? Expansion;
+            public ExpansionDef? SotVExpansion;
 
             public SharedInfo(ManualLogSource manualLogSource, ConfigFile configFile, Harmony? harmony, string tokenPrefix)
             {

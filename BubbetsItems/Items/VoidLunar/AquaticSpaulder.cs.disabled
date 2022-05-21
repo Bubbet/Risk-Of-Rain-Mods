@@ -1,0 +1,33 @@
+﻿using System.Collections.Generic;
+using RoR2;
+
+namespace BubbetsItems.Items.VoidLunar
+{
+	public class AquaticSpaulder: ItemBase
+	{
+		protected override void MakeTokens()
+		{
+			base.MakeTokens();
+			var name = GetType().Name.ToUpper();
+			SimpleDescriptionToken = name + "_DESC_SIMPLE";
+			AddToken(name + "_NAME", "Aquatic Spaulder");
+			AddToken(name + "_DESC", "");
+			AddToken(name + "_DESC_SIMPLE", "Increase attack speed by 50% (+50% per stack). Increase skill cooldowns by 50% (+50% per stack). Corrupts all Light Flux Pauldrons.");
+			AddToken(name + "_PICKUP", "");
+			AddToken(name + "_LORE", "");
+		}
+		
+		protected override void MakeConfigs()
+		{
+			base.MakeConfigs();
+			AddScalingFunction("[a] * 0.5 + 1", "Attack Speed Increase");
+			AddScalingFunction("[a] * 0.5 + 1", "Cooldown Increase");
+		}
+
+		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
+		{
+			base.FillVoidConversions(pairs);
+			AddVoidPairing(nameof(DLC1Content.Items.HalfAttackSpeedHalfCooldowns));
+		}
+	}
+}

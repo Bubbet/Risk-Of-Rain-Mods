@@ -11,7 +11,6 @@ namespace BubbetsItems.Items
 		
 		private static BuffDef? _buffDef;
 		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefRecursionBullets");
-		public override bool RequiresSotv => true;
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();

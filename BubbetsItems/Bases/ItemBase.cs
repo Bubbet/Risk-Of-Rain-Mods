@@ -179,12 +179,13 @@ namespace BubbetsItems
             }
         }
 
+        public override bool RequiresSotv => voidPairing != null;
         protected override void FillRequiredExpansions()
         {
             if (RequiresSotv)
-                ItemDef.requiredExpansion = SotvExpansion;
+                ItemDef.requiredExpansion = sharedInfo.SotVExpansion ? sharedInfo.SotVExpansion : SotvExpansion;
             else
-                ItemDef.requiredExpansion = BubExpansion;
+                ItemDef.requiredExpansion = sharedInfo.Expansion;
         }
         
         [HarmonyPrefix, HarmonyPatch(typeof(ContagiousItemManager), nameof(ContagiousItemManager.Init))]
@@ -236,7 +237,7 @@ namespace BubbetsItems
                 _name = name;
                 WorkingContext = new ExpressionContext();
 
-                _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, callingType.Name + "_" + name, defaultValue,   callingType.Name + "; Scaling function for item. ;" + _description, oldDefault);
+                _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, callingType.Name + "_" + name, defaultValue,   callingType.Name + "; " + _name +"; Scaling function for item. ;" + _description, oldDefault);
                 _defaultValue = defaultValue;
                 _oldValue = _configEntry.Value;
                 _function = new Expression(_oldValue).ToLambda<ExpressionContext, float>();

@@ -265,9 +265,9 @@ namespace BubbetsItems
         protected override void FillRequiredExpansions()
         {
             if (RequiresSotv)
-                EquipmentDef.requiredExpansion = SotvExpansion;
+                EquipmentDef.requiredExpansion = sharedInfo.SotVExpansion ? sharedInfo.SotVExpansion : SotvExpansion;
             else
-                EquipmentDef.requiredExpansion = BubExpansion;
+                EquipmentDef.requiredExpansion = sharedInfo.Expansion;
         }
     }
 }

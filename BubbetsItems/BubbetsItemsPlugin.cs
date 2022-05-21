@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
@@ -15,7 +16,9 @@ using HarmonyLib;
 using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
+using RoR2.ExpansionManagement;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using Path = System.IO.Path;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
 [assembly: SearchableAttribute.OptIn]
@@ -27,12 +30,13 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.7.5")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.8.0")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     //[BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("com.Moffein.ItemStats", BepInDependency.DependencyFlags.SoftDependency)] // Required to make sure my pickup description hook runs after
     public class BubbetsItemsPlugin : BaseUnityPlugin
     {
         private const string AssetBundleName = "MainAssetBundle";
@@ -40,8 +44,46 @@ namespace BubbetsItems
         public static ContentPack ContentPack;
         public static AssetBundle AssetBundle;
         public List<SharedBase> forwardTest => SharedBase.Instances;
+
+        public static PickupIndex[] VoidLunarItems => _voidLunarItems ??= ItemCatalog.allItemDefs
+            .Where(x => x.tier == VoidLunarTier.tier)
+            .Select(x => PickupCatalog.FindPickupIndex(x.itemIndex)).ToArray();
+
         public static BubbetsItemsPlugin instance;
         public static ManualLogSource Log;
+        
+        private static ExpansionDef? _bubExpansion;
+        private static ExpansionDef? _bubSotvExpansion;
+
+        public static ExpansionDef BubExpansion
+        {
+            get
+            {
+                if (_bubExpansion is null)
+                {
+                    _bubExpansion = ContentPack.expansionDefs.First(x => x.nameToken == "BUB_EXPANSION");
+                    _bubExpansion.disabledIconSprite = BubSotvExpansion.disabledIconSprite;
+                }
+
+                return _bubExpansion;
+            }
+        }
+
+        public static ExpansionDef BubSotvExpansion
+        {
+            get
+            {
+                if (_bubSotvExpansion is null)
+                {
+                    _bubSotvExpansion = ContentPack.expansionDefs.First(x => x.nameToken == "BUB_EXPANSION_VOID");
+                    var sotv = Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC1/Common/DLC1.asset").WaitForCompletion();//ExpansionCatalog.expansionDefs.First(x => x.nameToken == "DLC1_NAME");
+                    _bubSotvExpansion.requiredEntitlement = sotv.requiredEntitlement;
+                    _bubSotvExpansion.disabledIconSprite = sotv.disabledIconSprite;
+                }
+
+                return _bubSotvExpansion;
+            }
+        }
 
         public void Awake()
         {
@@ -54,13 +96,19 @@ namespace BubbetsItems
             Conf.Init(Config);
             var harm = new Harmony(Info.Metadata.GUID);
             LoadContentPack(harm);
+            
+            VoidLunarShopController.Init();
+
             InLobbyConfigCompat.Init();
             RiskOfOptionsCompat.Init();
+            ItemStatsCompat.Init();
 
             new PatchClassProcessor(harm, typeof(HarmonyPatches)).Patch();
             new PatchClassProcessor(harm, typeof(PickupTooltipFormat)).Patch();
             new PatchClassProcessor(harm, typeof(LogBookPageScalingGraph)).Patch();
             new PatchClassProcessor(harm, typeof(ModdedDamageColors)).Patch();
+            new PatchClassProcessor(harm, typeof(ColorCatalogPatches)).Patch();
+            ColorCatalogPatches.AddNewColors();
             
             // Do not use SystemInitializers in PatchClassProcessors, because patch triggers the static constructor of SearchableAttribute breaking mods that load after
             new PatchClassProcessor(harm, typeof(EquipmentBase)).Patch();
@@ -94,6 +142,8 @@ namespace BubbetsItems
         }
 
         private static uint _bankID;
+        public static ItemTierDef VoidLunarTier;
+        private static PickupIndex[]? _voidLunarItems;
 
         //[SystemInitializer]
         public static void LoadSoundBank()
@@ -140,6 +190,7 @@ namespace BubbetsItems
             var path = Path.GetDirectoryName(Info.Location);
             AssetBundle = AssetBundle.LoadFromFile(Path.Combine(path, AssetBundleName));
             var serialContent = AssetBundle.LoadAsset<BubsItemsContentPackProvider>("MainContentPack");
+            CustomItemTierDefs.Init(serialContent);
 
             var states = new List<SerializableEntityStateType>();
             foreach (var typ in Assembly.GetCallingAssembly().GetTypes())
@@ -149,10 +200,10 @@ namespace BubbetsItems
             }
             serialContent.entityStateTypes = states.ToArray();
             
-            SharedBase.Initialize(Logger, Config, serialContent, harmony, "BUB_");
+            SharedBase.Initialize(Logger, Config, out var sharedInfo, serialContent, harmony, "BUB_");
             ContentPack = serialContent.CreateContentPack();
             SharedBase.AddContentPack(ContentPack);
-            ContentPackProvider.Initialize(Info.Metadata.GUID, ContentPack);
+            ContentPackProvider.Initialize(Info.Metadata.GUID, ContentPack, sharedInfo);
 
             if (!Conf.AmmoPickupAsOrbEnabled.Value) return;
             var go = AssetBundle.LoadAsset<GameObject>("AmmoPickupOrb");
@@ -164,6 +215,7 @@ namespace BubbetsItems
         {
             private static ContentPack contentPack;
             private static string _identifier;
+            private static SharedBase.SharedInfo info;
             public string identifier => _identifier;
 
             public IEnumerator LoadStaticContentAsync(LoadStaticContentAsyncArgs args)
@@ -185,13 +237,16 @@ namespace BubbetsItems
             {
                 args.ReportProgress(1f);
                 Log.LogInfo("Contentpack finished");
+                info.Expansion = BubExpansion;
+                info.SotVExpansion = BubSotvExpansion;
                 yield break;
             }
 
-            internal static void Initialize(string identifier, ContentPack pack)
+            internal static void Initialize(string identifier, ContentPack pack, SharedBase.SharedInfo sharedInfo)
             {
                 _identifier = identifier;
                 contentPack = pack;
+                info = sharedInfo;
                 ContentManager.collectContentPackProviders += AddCustomContent;
             }
 

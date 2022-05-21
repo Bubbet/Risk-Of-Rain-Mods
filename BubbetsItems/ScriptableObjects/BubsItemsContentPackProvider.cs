@@ -13,6 +13,7 @@ namespace BubbetsItems
 		public ExpansionDef[] expansionDefs = {};
 		public ItemRelationshipType[] itemRelationshipTypes = {};
 		public ItemRelationshipProvider[] itemRelationshipProviders = {};
+		public ItemTierDef[] itemTierDefs = {};
 
 		public override ContentPack CreateContentPack()
 		{
@@ -20,6 +21,7 @@ namespace BubbetsItems
 			content.expansionDefs.Add(expansionDefs);
 			content.itemRelationshipTypes.Add(itemRelationshipTypes);
 			content.itemRelationshipProviders.Add(itemRelationshipProviders);
+			content.itemTierDefs.Add(itemTierDefs);
 			return content;
 		}
 	}
