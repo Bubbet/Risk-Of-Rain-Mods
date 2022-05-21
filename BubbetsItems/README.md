@@ -13,7 +13,7 @@ Icons | Items | Function | Type
 <img src="https://media.discordapp.net/attachments/953688831750709278/971948105438232686/unknown.png" width="100"/> | Torturer | Heal from inflicted damage over time. | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/967538771211980820/Hourglass128.png" width="100"/> | Abundant Hourglass | Duration of buffs are increased. | `Uncommon` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/Plan128.png" width="100"/> | Escape Plan | Increases movement speed the closer you are to death. | `Uncommon` |
-<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/bhop.png" width="100"/> | Bunny Foot | Source bhopping in a item. | `Uncommon` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/bhop.png" width="100"/> | Bunny Foot | Source bhopping in a item. How to: https://www.youtube.com/watch?v=4PZYPPlYd6A | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970904553186811924/ceremonialProbeIcon.png" width="100"/> | Ceremonial Probe | Pause barrier decay at low health. | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970814203457843230/mechSnailIcon.png" width="100"/> | Mechanical Snail | Slow down barrier decay. | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970169637067169822/sluggyBoyIcon.png" width="100"/> | Eternal Slug | Stops barrier decay at a certain point. | `Uncommon` |
@@ -33,7 +33,7 @@ Icons | Items | Function | Type
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/abstractedLocusIcon.png" width="100"/> | Abstracted Locus | Teleporter zone is larger, outside of the zone is void fog, being in the fog increases teleporter charge speed. Corrupts all Focused Convergences. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/delugedCircletIcon.png" width="100"/> | Deluged Circlet | Reduce skill cooldowns from gold gained… BUT stop gold gain on hit. Corrupts all Brittle Crowns. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/clumpedSandIcon.png" width="100"/> | Clumped Sand | Damage is dealt again at a weaker state… BUT gain negative regeneration. Corrupts all Shaped Glass. | `Void Lunar` |
-<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/deepDescentIcon.png" width="100"/> | Deep Decent | Equipments trigger more, increases equipment cooldown. Corrupts all Gestures of the Drowned. | `Void Lunar` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/deepDescentIcon.png" width="100"/> | Deep Descent | Equipments trigger more, increases equipment cooldown. Corrupts all Gestures of the Drowned. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/hydrophilyIcon.png" width="100"/> | Hydrophily | Converts healing except regen into barrier, disables all healing while barrier is active. Corrupts all Corpseblooms. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/imperfectionIcon.png" width="100"/> | Imperfection | Convert all your shield into health. Increase maximum shield… BUT your armor is frail. Corrupts all Transcendence. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/orbsOfFalsityIcon.png" width="100"/> | Orbs of Falsity | Seems to do nothing... but... Corrupts all Beads of Fealty's. | `Void Lunar` |
@@ -56,6 +56,11 @@ Patience is key~
   - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
+* v1.8.2 Mod Changes:
+  * Changed orbs of falsity to use a system similar to how sacrifice modifies the spawn chance of voidcamps instead of the fucky way i was.
+  * Fixed typo in readme for deep descent.
+  * Added recycler support for lunar void item tier.
+  
 * v1.8.1 Mod Changes:
   * Updated barrier item buff icons.
   * Unhidden gem carapaces cooldown buff.
@@ -69,7 +74,7 @@ Patience is key~
     * Abstracted Locus
     * Deluged Circlet
     * Clumped Sand
-    * Deep Decent
+    * Deep Descent
     * Hydrophily
     * Imperfection
     * Orbs of Falsity

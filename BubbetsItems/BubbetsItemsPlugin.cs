@@ -102,12 +102,12 @@ namespace BubbetsItems
 
             InLobbyConfigCompat.Init();
             RiskOfOptionsCompat.Init();
-            ItemStatsCompat.Init();
 
             new PatchClassProcessor(harm, typeof(HarmonyPatches)).Patch();
             new PatchClassProcessor(harm, typeof(PickupTooltipFormat)).Patch();
             new PatchClassProcessor(harm, typeof(LogBookPageScalingGraph)).Patch();
             new PatchClassProcessor(harm, typeof(ModdedDamageColors)).Patch();
+            new PatchClassProcessor(harm, typeof(CustomItemTierDefs)).Patch();
             new PatchClassProcessor(harm, typeof(ColorCatalogPatches)).Patch();
             ColorCatalogPatches.AddNewColors();
             
@@ -125,6 +125,7 @@ namespace BubbetsItems
             //SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
 
             //PickupTooltipFormat.Init(harm);
+            ItemStatsCompat.Init();
         }
 
         private void onLoad()

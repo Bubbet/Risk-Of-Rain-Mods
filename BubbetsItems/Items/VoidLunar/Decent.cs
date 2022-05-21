@@ -15,7 +15,7 @@ namespace BubbetsItems.Items.VoidLunar
 			base.MakeTokens();
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
-			AddToken(name + "_NAME", "Deep Decent");
+			AddToken(name + "_NAME", "Deep Descent");
 			var convert = "Corrupts all Gestures of the Drowned.".Style(StyleEnum.Void);
 			AddToken(name + "_DESC", "Equipment effects " + "trigger an additional {0} times".Style(StyleEnum.Utility) + " per use. " + "Increases equipment cooldown by {1:0%}. ".Style(StyleEnum.Health) + convert);
 			AddToken(name + "_DESC_SIMPLE", "Equipment effects will " + "trigger 1 ".Style(StyleEnum.Utility) + "(+1 per stack)".Style(StyleEnum.Stack) + " more time on use.".Style(StyleEnum.Utility) + " Increases Equipment cooldown by 50%".Style(StyleEnum.Health) + " (+15% per stack)".Style(StyleEnum.Stack) + "." + convert);

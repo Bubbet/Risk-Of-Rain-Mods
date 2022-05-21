@@ -43,13 +43,25 @@ namespace BubbetsItems.Items.VoidLunar
 		protected override void MakeBehaviours()
 		{
 			base.MakeBehaviours();
-			SceneDirector.onGenerateInteractableCardSelection += GenerateInteractables;
+			//SceneDirector.onGenerateInteractableCardSelection += GenerateInteractables;
+			DirectorCardCategorySelection.calcCardWeight += GetWeight;
 		}
 
 		protected override void DestroyBehaviours()
 		{
 			base.DestroyBehaviours();
-			SceneDirector.onGenerateInteractableCardSelection -= GenerateInteractables;
+			//SceneDirector.onGenerateInteractableCardSelection -= GenerateInteractables;
+			DirectorCardCategorySelection.calcCardWeight -= GetWeight;
+		}
+
+		private void GetWeight(DirectorCard card, ref float weight)
+		{
+			if (card.spawnCard.name != "iscVoidCamp") return;
+			var inst = GetInstance<OrbOfFalsity>();
+			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst.ItemDef.itemIndex, false, false);
+			if (amount <= 0) return;
+			var a = 1 + inst.scalingInfos[0].ScalingFunction(amount);
+			weight *= a;
 		}
 
 		private void GenerateInteractables(SceneDirector director, DirectorCardCategorySelection categorySelection)
