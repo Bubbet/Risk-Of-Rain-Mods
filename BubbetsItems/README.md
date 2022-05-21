@@ -38,7 +38,7 @@ Icons | Items | Function | Type
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/imperfectionIcon.png" width="100"/> | Imperfection | Convert all your shield into health. Increase maximum shield… BUT your armor is frail. Corrupts all Transcendence. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/orbsOfFalsityIcon.png" width="100"/> | Orbs of Falsity | Seems to do nothing... but... Corrupts all Beads of Fealty's. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/seepingOceanIcon.png" width="100"/> | Seeping Ocean | Items and equipment have a small chance to transform into a Void Lunar item instead. Corrupts all Eulogy Zeros. | `Void Lunar` |
-<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/tarnishedIcon.png" width="100"/> | Tarnished | Convert all your shield into health. Increase maximum shield… BUT your armor is frail. Corrupts all Purity. | `Void Lunar` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/tarnishedIcon.png" width="100"/> | Tarnished | Gain temporary luck, then become unlucky. Corrupts all Purity. | `Void Lunar` |
 ---|---|---|
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/BrokenClock.png" width="100"/> | Broken Clock | Turn back the clock 10 seconds for yourself. | `Equipment` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/WLCam.png" width="100"/> | Wildlife Camera | Take a photo of an enemy, and spawn them as an ally later. | `Equipment` |
@@ -56,6 +56,14 @@ Patience is key~
   - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
+* v1.8.1 Mod Changes:
+  * Updated barrier item buff icons.
+  * Unhidden gem carapaces cooldown buff.
+  * Fix readme for tarnished.
+  * Fixed nre in simulacrum for orbs of falsity increasing voidseed chance.
+  * Fixed Abstracted Locus's void fog being enabled by default.
+  * Fixed itemstats compat
+
 * v1.8.0 Mod Changes - Void Lunar Update:
   * New item tier: void lunars, obtained via a shop by the null portal in the bazaar by spending void markers (obtained via void barrels in void seeds)
     * Abstracted Locus
@@ -69,8 +77,9 @@ Patience is key~
     * Tarnished
     
   * Hid itemstats in pickup.
-  * Fixed jellied soles simple description.
+  * Fixed jellied soles and recursion bullets simple description.
   * Void Items actually require the proper expansiondef now.
+  * Fixed itemstats not displaying all the scaling values.
   
 * v1.7.5 Mod Changes :
   * Added vanilla style tooltips, maybe now people will stop crying.

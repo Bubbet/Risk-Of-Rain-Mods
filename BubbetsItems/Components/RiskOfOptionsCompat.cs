@@ -7,8 +7,8 @@ namespace BubbetsItems
 		public static bool IsEnabled => Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions");
 		public static void Init()
 		{
-			if (!IsEnabled) return;
-			ModIsEnabledInit();
+			if (IsEnabled)
+				ModIsEnabledInit();
 		}
 
 		private static void ModIsEnabledInit()

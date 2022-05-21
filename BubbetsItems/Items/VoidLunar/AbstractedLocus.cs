@@ -177,7 +177,7 @@ namespace BubbetsItems.Items.VoidLunar
 			}
 		}
 
-		bool lastEnabled;
+		bool? lastEnabled;
 		public void FixedUpdate()
 		{
 			var fogEnabled = fog.safeZones.Any(x =>

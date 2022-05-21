@@ -12,8 +12,8 @@ namespace BubbetsItems
         public static bool IsEnabled => Chainloader.PluginInfos.ContainsKey("com.KingEnderBrine.InLobbyConfig");
         public static void Init()
         {
-            if (!IsEnabled) return;
-            ModIsEnabledInit();
+            if (IsEnabled)
+                ModIsEnabledInit();
         }
 
         public static void ModIsEnabledInit()

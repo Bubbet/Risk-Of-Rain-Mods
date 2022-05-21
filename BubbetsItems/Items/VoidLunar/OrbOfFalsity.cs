@@ -54,10 +54,10 @@ namespace BubbetsItems.Items.VoidLunar
 
 		private void GenerateInteractables(SceneDirector director, DirectorCardCategorySelection categorySelection)
 		{
-			var camp = categorySelection.categories.SelectMany(x => x.cards).First(x => x.spawnCard.name == "iscVoidCamp");
 			var inst = GetInstance<OrbOfFalsity>();
 			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst.ItemDef.itemIndex, false, false);
 			if (amount <= 0) return;
+			var camp = categorySelection.categories.SelectMany(x => x.cards).First(x => x.spawnCard.name == "iscVoidCamp"); // TODO fix this for simulacrum, currently its fine because you cant obtain void lunar
 			var a = Mathf.FloorToInt(1 + inst.scalingInfos[0].ScalingFunction(amount));
 			camp.spawnCard.directorCreditCost /= a;
 			camp.selectionWeight *= a;
