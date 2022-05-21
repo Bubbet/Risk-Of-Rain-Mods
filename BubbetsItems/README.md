@@ -60,6 +60,7 @@ Patience is key~
   * Changed orbs of falsity to use a system similar to how sacrifice modifies the spawn chance of voidcamps instead of the fucky way i was.
   * Fixed typo in readme for deep descent.
   * Added recycler support for lunar void item tier.
+  * Added config option to disable whisk being usable on players, off by default >:)
   
 * v1.8.1 Mod Changes:
   * Updated barrier item buff icons.

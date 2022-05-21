@@ -12,6 +12,7 @@ namespace BubbetsItems.Equipments
 	{
 		private GameObject _indicator;
 		private ConfigEntry<bool> _filterOutBosses;
+		private ConfigEntry<bool> _filterOutPlayers;
 
 		protected override void MakeTokens()
 		{
@@ -25,7 +26,8 @@ namespace BubbetsItems.Equipments
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			_filterOutBosses = sharedInfo.ConfigFile.Bind("General", "Gyroscopic Whisk Filter Bosses", true, "Should gyroscopic whisk filter out bosses.");
+			_filterOutBosses = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Gyroscopic Whisk Filter Bosses", true, "Should gyroscopic whisk filter out bosses.");
+			_filterOutPlayers = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Gyroscopic Whisk Filter Players", false, "Should gyroscopic whisk filter out players.");
 			_indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("WhiskIndicator");
 		}
 
@@ -47,7 +49,7 @@ namespace BubbetsItems.Equipments
 			if (equipmentSlot.stock <= 0) return false;
 
 			equipmentSlot.ConfigureTargetFinderForEnemies();
-			equipmentSlot.currentTarget = new EquipmentSlot.UserTargetInfo(equipmentSlot.targetFinder.GetResults().FirstOrDefault(x => x.healthComponent && !x.healthComponent.GetComponent<WhiskBehavior>() && !(_filterOutBosses.Value && x.healthComponent.body.isBoss)));
+			equipmentSlot.currentTarget = new EquipmentSlot.UserTargetInfo(equipmentSlot.targetFinder.GetResults().FirstOrDefault(x => x.healthComponent && !x.healthComponent.GetComponent<WhiskBehavior>() && !(_filterOutBosses.Value && x.healthComponent.body.isBoss) && !(_filterOutPlayers.Value && x.healthComponent.body.isPlayerControlled)));
 
 			if (!equipmentSlot.currentTarget.transformToIndicateAt) return false;
             

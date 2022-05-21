@@ -15,6 +15,8 @@ namespace BubbetsItems.Items.VoidLunar
 {
 	public class OrbOfFalsity : ItemBase
 	{
+		public static int? defaultCampCost;
+
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
@@ -59,11 +61,14 @@ namespace BubbetsItems.Items.VoidLunar
 			if (card.spawnCard.name != "iscVoidCamp") return;
 			var inst = GetInstance<OrbOfFalsity>();
 			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst.ItemDef.itemIndex, false, false);
+			defaultCampCost ??= card.spawnCard.directorCreditCost;
+			card.spawnCard.directorCreditCost = defaultCampCost.Value;
 			if (amount <= 0) return;
-			var a = 1 + inst.scalingInfos[0].ScalingFunction(amount);
-			weight *= a;
+			var a = inst.scalingInfos[0].ScalingFunction(amount);
+			weight += a;
+			card.spawnCard.directorCreditCost = Mathf.FloorToInt(defaultCampCost.Value / (1f + a));
 		}
-
+ 
 		private void GenerateInteractables(SceneDirector director, DirectorCardCategorySelection categorySelection)
 		{
 			var inst = GetInstance<OrbOfFalsity>();
