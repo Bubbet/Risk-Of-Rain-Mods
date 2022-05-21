@@ -18,7 +18,7 @@ namespace BubbetsItems.Items.VoidLunar
 			AddToken(name + "_NAME", "Imperfection");
 			var convert = "Corrupts all Transcendence.".Style(StyleEnum.Void);
 			AddToken(name + "_DESC", "Converts all but 1 shield into maximum health. Gain "+"{0:0%} shield".Style(StyleEnum.Utility) +" and " + "{1} armor. ".Style(StyleEnum.Health) + convert);
-			AddToken(name + "_DESC_SIMPLE", "Convert all but 1 shield into maximum health. Gain"+" 25% shield".Style(StyleEnum.Utility)+" (+25% per stack)".Style(StyleEnum.Stack) +" and -25 armor".Style(StyleEnum.Health) + " (-25 per stack). ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_DESC_SIMPLE", "Convert all but 1 shield into maximum health. Gain"+" 25% shield".Style(StyleEnum.Utility)+" (+25% per stack)".Style(StyleEnum.Stack) +" and " + "-25 armor".Style(StyleEnum.Health) + " (-25 per stack). ".Style(StyleEnum.Stack) + convert);
 			AddToken(name + "_PICKUP", "Convert all your shield into health. "+"Increase maximum shield…".Style(StyleEnum.Utility) +" BUT your armor is frail. ".Style(StyleEnum.Health) + convert);
 			AddToken(name + "_LORE", "");
 		}
