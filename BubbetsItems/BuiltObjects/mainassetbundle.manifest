@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 636573497
+CRC: 2303043116
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d842d719bd1a6da082fdcd2e50af1703
+    Hash: ed4f842b7f8e2771305e0c46f1b55532
   TypeTreeHash:
     serializedVersion: 2
     Hash: ad59cacb899d6caf9e90220064f04085
@@ -320,6 +320,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/VoidLunar/SeepingOcean/SeepingOceanMat.mat
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/CeremonialProbeMat.mat
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/WLCam.png
+- Assets/BubbetsItems/Assets/Items/VoidLunar/Tarnished/texBuffTemporaryLuckIcon.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Shop/voidPod.fbx
 - Assets/BubbetsItems/Assets/Items/Regularitems/Hourglass/SandFluidShader.shader
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/ItemDefLostNazaar.asset
@@ -515,6 +516,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/undeadNormal.png
 - Assets/BubbetsItems/Assets/Equipment/BrokenClock/EquipmentDefBrokenClock.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/ceremonialProbeEmission.png
+- Assets/BubbetsItems/Assets/Items/VoidLunar/Circlet/textBuffNoMoney-SuckACockIcon.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Decent/deepDescent.fbx
 - Assets/BubbetsItems/Assets/Items/VoidLunar/SeepingOcean/seepingOcean.prefab
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Hydrophily/hydrophily.prefab

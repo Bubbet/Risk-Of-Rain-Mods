@@ -10,6 +10,7 @@ using BepInEx;
 using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using BetterUI;
 using BubbetsItems.Behaviours;
 using EntityStates;
 using HarmonyLib;
@@ -116,6 +117,7 @@ namespace BubbetsItems
 
             new PatchClassProcessor(harm, typeof(ExtraHealthBarSegments)).Patch();
 
+            RoR2Application.onLoad += onLoad;
             //NotSystemInitializer.Hook(harm);
 
             //Fucking bepinex pack constantly changing and now loading too late for searchableAttributes scan.
@@ -123,6 +125,17 @@ namespace BubbetsItems
             //SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
 
             //PickupTooltipFormat.Init(harm);
+        }
+
+        private void onLoad()
+        {
+            if (Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterUI"))
+                AddItemTierToBetterUI();
+        }
+
+        private void AddItemTierToBetterUI()
+        {
+            ItemSorting.tierMap.Add(VoidLunarTier.tier, 3);
         }
 
         private void MakeRiskOfOptions()
