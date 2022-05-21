@@ -65,7 +65,8 @@ namespace BubbetsItems
                     ret += "\n\n";
                     
                     // Holy fuck i hate regex in c#
-                    foreach (Capture matchGroupCapture in formatArgParams.Match(Language.GetString(token ?? ItemDef.descriptionToken)).Groups[0].Captures)
+                    var match = formatArgParams.Matches(Language.GetString(token ?? ItemDef.descriptionToken));
+                    foreach (Match matchGroupCapture in match)
                     {
                         var val = matchGroupCapture.Value;
                         if (!string.IsNullOrEmpty(val))

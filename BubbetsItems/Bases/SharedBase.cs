@@ -37,6 +37,7 @@ namespace BubbetsItems
         public static readonly List<SharedBase> Instances = new List<SharedBase>();
         public static readonly Dictionary<PickupIndex, SharedBase> PickupIndexes = new Dictionary<PickupIndex, SharedBase>();
         private static readonly Dictionary<Type, SharedBase> InstanceDict = new();
+        private static List<SharedInfo> SharedInfos = new();
         public PickupIndex PickupIndex;
         
         protected PatchClassProcessor? PatchProcessor;
@@ -55,11 +56,12 @@ namespace BubbetsItems
         {
             return "Not Implemented";
         }
-        
+
         public static void Initialize(ManualLogSource manualLogSource, ConfigFile configFile, out SharedInfo info, SerializableContentPack? serializableContentPack = null, Harmony? harmony = null, string tokenPrefix = "")
         {
             var sharedInfo = new SharedInfo(manualLogSource, configFile, harmony, tokenPrefix);
             info = sharedInfo;
+            SharedInfos.Add(sharedInfo);
 
             foreach (var type in Assembly.GetCallingAssembly().GetTypes())
             {
@@ -90,6 +92,8 @@ namespace BubbetsItems
                         sharedInfo.Logger.LogError(e);
                     }
                 }
+
+                sharedInfo.Instances.Add(shared);
                 Instances.Add(shared);
                 InstanceDict[type] = shared;
                 if(serializableContentPack)
@@ -105,6 +109,19 @@ namespace BubbetsItems
         {
             InstanceDict.TryGetValue(typeof(T), out var t);
             return t as T;
+        }
+
+        public static void ResetConfigs()
+        {
+            foreach (var sharedInfo in SharedInfos)
+            {
+                sharedInfo.ConfigFile.Clear();
+                sharedInfo.ConfigFile.Save();
+            }
+            foreach (var sharedBase in Instances)
+            {
+                sharedBase.MakeConfigs();
+            }
         }
 
         [SystemInitializer(typeof(EquipmentCatalog), typeof(PickupCatalog))]
@@ -243,6 +260,7 @@ namespace BubbetsItems
             public readonly ConfigEntry<bool> ItemStatsInSimpleDesc;
             public ExpansionDef? Expansion;
             public ExpansionDef? SotVExpansion;
+            public List<SharedBase> Instances = new();
 
             public SharedInfo(ManualLogSource manualLogSource, ConfigFile configFile, Harmony? harmony, string tokenPrefix)
             {
