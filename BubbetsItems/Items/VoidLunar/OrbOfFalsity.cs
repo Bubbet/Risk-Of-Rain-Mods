@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BubbetsItems.Helpers;
 using EntityStates;
 using EntityStates.Interactables.MSObelisk;
 using HarmonyLib;
@@ -20,9 +21,10 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Orbs of Falsity");
-			AddToken(name + "_DESC", "");
-			AddToken(name + "_DESC_SIMPLE", "Seems to do nothing... but... Void Seeds spawn 50% (+15% per stack) more often. Corrupts all Beads of Fealty's.");
-			AddToken(name + "_PICKUP", "Seems to do nothing... but... Corrupts all Beads of Fealty's.");
+			var convert = "Corrupts all Beads of Fealty's.".Style(StyleEnum.Void);
+			AddToken(name + "_DESC", "Seems to do nothing... but... " + "Void Seeds spawn {0:0%} more. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_DESC_SIMPLE", "Seems to do nothing... but... " +"Void Seeds spawn 50% ".Style(StyleEnum.Health) +"(+15% per stack)".Style(StyleEnum.Stack) +" more often. " + convert);
+			AddToken(name + "_PICKUP", "Seems to do nothing... but... " + convert);
 			AddToken(name + "_LORE", "");
 		}
 

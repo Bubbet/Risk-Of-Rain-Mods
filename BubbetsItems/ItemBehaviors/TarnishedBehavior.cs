@@ -47,7 +47,7 @@ namespace BubbetsItems.ItemBehaviors
 			if (body.GetBuffCount(Tarnished.BuffDef) <= 0)
 			{
 				var inst = SharedBase.GetInstance<Tarnished>()!.scalingInfos[1].ScalingFunction(stack);
-				luckDifference = -Mathf.FloorToInt(inst);
+				luckDifference = Mathf.FloorToInt(inst);
 				unLuckApplied = true;
 				//if(NetworkServer.active && !body.HasBuff(Tarnished.BuffDef))
 					//body.AddBuff(Tarnished.BuffDef);

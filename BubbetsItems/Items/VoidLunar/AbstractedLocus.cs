@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using RiskOfOptions;
 using RiskOfOptions.Options;
@@ -22,9 +23,10 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Abstracted Locus");
-			AddToken(name + "_DESC", "");
-			AddToken(name + "_DESC_SIMPLE", "Teleporter zone is 50% (+20% per stack) bigger. Outside of the teleporter radius is filled with Void Fog. Staying in the Void Fog charges the teleporters 60% (+60% per stack) faster. Corrupts all Focused Convergences.");
-			AddToken(name + "_PICKUP", "Teleporter zone is larger, outside of the zone is void fog, being in the fog increases teleporter charge speed. Corrupts all Focused Convergences.");
+			var convert = "Corrupts all Focused Convergences.".Style(StyleEnum.Void);
+			AddToken(name + "_DESC", "Teleporter zone is " + "{0:0%} larger.".Style(StyleEnum.Utility) + " Outside of the teleporter radius is filled with "+"Void Fog.".Style(StyleEnum.Void)+" Staying in the "+"Fog".Style(StyleEnum.Void)+" charges the teleporter "+ "{1:0%} faster".Style(StyleEnum.Utility) + " per player outside. " + convert);
+			AddToken(name + "_DESC_SIMPLE", "Teleporter zone is " + "50% ".Style(StyleEnum.Utility) + "(+20% per stack)".Style(StyleEnum.Stack) +" bigger.".Style(StyleEnum.Utility) + " Outside of the teleporter radius is filled with " + "Void Fog.".Style(StyleEnum.Void) + " Staying in the " + "Void Fog".Style(StyleEnum.Void) + " charges the teleporters " + "60% ".Style(StyleEnum.Utility) + "(+60% per stack) ".Style(StyleEnum.Stack) + "faster. ".Style(StyleEnum.Utility) + convert);
+			AddToken(name + "_PICKUP", "Teleporter zone is " + "larger".Style(StyleEnum.Utility) + ", outside of the zone is " + "void fog".Style(StyleEnum.Void) + ", being in the " + "fog".Style(StyleEnum.Void) + " increases teleporter charge speed. ".Style(StyleEnum.Utility) + convert);
 			AddToken(name + "_LORE", "");
 		}
 
@@ -34,6 +36,14 @@ namespace BubbetsItems.Items.VoidLunar
 			AddScalingFunction("[r] * ([a] * 0.2 + 1.3)", "Teleporter Radius", desc: "[a] = item count; [r] = current radius;");
 			AddScalingFunction("[r] * ([a] * 0.6 * Max(0, [p]) + 1)", "Void Fog Charge Increase", desc: "[a] = item count; [p] = outside players; [r] = charging rate");
 			disableEnemyDamageInArena = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Abstracted Locus Disable Enemy Damage In Arena", false, "Should the void fog hurt the enemies in the Void Fields.");
+		}
+
+		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
+		{
+			scalingInfos[0].WorkingContext.r = 1;
+			scalingInfos[1].WorkingContext.p = 1;
+			scalingInfos[1].WorkingContext.r = 1;
+			return base.GetFormattedDescription(inventory, token, forceHideExtended);
 		}
 
 		public override void MakeRiskOfOptions()

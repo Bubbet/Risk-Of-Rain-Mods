@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -15,9 +16,10 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Imperfection");
-			AddToken(name + "_DESC", "");
-			AddToken(name + "_DESC_SIMPLE", "Convert all but 1 shield into maximum health. Gain 25% shield (+25% per stack) and -25 armor (-25 per stack). Corrupts all Transcendence.");
-			AddToken(name + "_PICKUP", "Convert all your shield into health. Increase maximum shield… BUT your armor is frail. Corrupts all Transcendence.");
+			var convert = "Corrupts all Transcendence.".Style(StyleEnum.Void);
+			AddToken(name + "_DESC", "Converts all but 1 shield into maximum health. Gain "+"{0:0%} shield".Style(StyleEnum.Utility) +" and " + "{1} armor. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_DESC_SIMPLE", "Convert all but 1 shield into maximum health. Gain"+" 25% shield".Style(StyleEnum.Utility)+" (+25% per stack)".Style(StyleEnum.Stack) +" and -25 armor".Style(StyleEnum.Health) + " (-25 per stack). ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_PICKUP", "Convert all your shield into health. "+"Increase maximum shield…".Style(StyleEnum.Utility) +" BUT your armor is frail. ".Style(StyleEnum.Health) + convert);
 			AddToken(name + "_LORE", "");
 		}
 
@@ -25,7 +27,7 @@ namespace BubbetsItems.Items.VoidLunar
 		{
 			base.MakeConfigs();
 			AddScalingFunction("0.25 * [a]", "Shield Gain");
-			AddScalingFunction("25 * [a]", "Armor Reduction");
+			AddScalingFunction("-25 * [a]", "Armor Add");
 		}
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
@@ -46,7 +48,7 @@ namespace BubbetsItems.Items.VoidLunar
 			__instance.maxShield *= 1 + inst.scalingInfos[0].ScalingFunction(amount);
 			__instance.maxHealth += __instance.maxShield - 1;
 			__instance.maxShield = 1;
-			__instance.armor -= inst.scalingInfos[1].ScalingFunction(amount);
+			__instance.armor += inst.scalingInfos[1].ScalingFunction(amount);
 		}
 		
 		[HarmonyILManipulator, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]

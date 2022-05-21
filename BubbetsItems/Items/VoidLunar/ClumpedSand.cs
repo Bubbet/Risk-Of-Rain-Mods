@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
 
@@ -12,9 +13,10 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Clumped Sand");
-			AddToken(name + "_DESC", "");
-			AddToken(name + "_DESC_SIMPLE", "All attacks hit 1 (+1 per stack) more times for 50% base damage. Your health regeneration is now -3/s (-3/s per stack). Corrupts all Shaped Glass.");
-			AddToken(name + "_PICKUP", "Damage is dealt again at a weaker state… BUT gain negative regeneration. Corrupts all Shaped Glass.");
+			var convert = "Corrupts all Shaped Glass.".Style(StyleEnum.Void);
+			AddToken(name + "_DESC", "All attacks " + "hit {0} more times".Style(StyleEnum.Utility) + " for "+"{2:0%} damage. ".Style(StyleEnum.Damage) + "{1} hp/s to your regen. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_DESC_SIMPLE", "All attacks " + "hit 1 ".Style(StyleEnum.Utility) + "(+1 per stack)".Style(StyleEnum.Stack) +" more times".Style(StyleEnum.Utility) + " for " + "50% base damage.".Style(StyleEnum.Damage) + " Your health regeneration is now -3/s".Style(StyleEnum.Health)+" (-3/s per stack). ".Style(StyleEnum.Stack) + convert);
+			AddToken(name + "_PICKUP", "Damage is dealt again at a ".Style(StyleEnum.Utility) + "weaker state… ".Style(StyleEnum.Damage) + "BUT gain negative regeneration. ".Style(StyleEnum.Health) + convert);
 			AddToken(name + "_LORE", "");
 		}
 
@@ -22,7 +24,8 @@ namespace BubbetsItems.Items.VoidLunar
 		{
 			base.MakeConfigs();
 			AddScalingFunction("[a]", "Attack Hit Count");
-			AddScalingFunction("3 * [a]", "Regen Remove");
+			AddScalingFunction("-3 * [a]", "Regen Add");
+			AddScalingFunction("0.5", "Damage Mult");
 		}
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
@@ -46,6 +49,7 @@ namespace BubbetsItems.Items.VoidLunar
 				var inst = GetInstance<ClumpedSand>();
 				var amount = inv.GetItemCount(inst.ItemDef);
 				if (amount <= 0) return;
+				damageInfo.damage *= inst.scalingInfos[2].ScalingFunction(amount);
 				mostRecentInfo = damageInfo;
 				for (var i = 0; i < inst.scalingInfos[0].ScalingFunction(amount); i++)
 				{
@@ -64,7 +68,7 @@ namespace BubbetsItems.Items.VoidLunar
 			var inst = GetInstance<ClumpedSand>();
 			var amount = inv.GetItemCount(inst.ItemDef);
 			if (amount <= 0) return;
-			__instance.regen -= inst.scalingInfos[1].ScalingFunction(amount);
+			__instance.regen += inst.scalingInfos[1].ScalingFunction(amount);
 		}
 	}
 }

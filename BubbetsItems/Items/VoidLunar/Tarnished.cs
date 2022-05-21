@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BubbetsItems.Helpers;
 using BubbetsItems.ItemBehaviors;
 using HarmonyLib;
 using RoR2;
@@ -15,9 +16,10 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Tarnished");
-			AddToken(name + "_DESC", "");
-			AddToken(name + "_DESC_SIMPLE", "All random effects are rolled +1 time for a favorable outcome. Only favorable 50 times (+50 per stack) per stage. When inactive, all random effects are rolled +1(+1 per stack) for an unfavorable outcome. Corrupts all Purity.");
-			AddToken(name + "_PICKUP", "Convert all your shield into health. Increase maximum shield… BUT your armor is frail. Corrupts all Purity.");
+			var convert = "Corrupts all Purity.".Style(StyleEnum.Void);
+			AddToken(name + "_DESC", "Gain "+"1 Luck".Style(StyleEnum.Utility) +" for " + "{0} favorable rolls per stage.".Style(StyleEnum.Utility) +" Once out of favorable rolls, gain {1} luck. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_DESC_SIMPLE", "All random effects are rolled "+"+1 time for a favorable outcome.".Style(StyleEnum.Utility) +" Only favorable 50 times ".Style(StyleEnum.Health) +"(+50 per stack)".Style(StyleEnum.Stack) +" per stage. When inactive, all random effects are rolled +1".Style(StyleEnum.Health) +" (+1 per stack)".Style(StyleEnum.Stack) +" for an unfavorable outcome. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_PICKUP", "Gain temporary luck, " + "then become unlucky.".Style(StyleEnum.Health) + convert);
 			AddToken(name + "_LORE", "");
 		}
 
@@ -25,7 +27,7 @@ namespace BubbetsItems.Items.VoidLunar
 		{
 			base.MakeConfigs();
 			AddScalingFunction("[a] * 50", "Rolls Per Stage");
-			AddScalingFunction("[a] * 1", "Unfavorable Rolls");
+			AddScalingFunction("[a] * -1", "Unfavorable Rolls");
 		}
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)

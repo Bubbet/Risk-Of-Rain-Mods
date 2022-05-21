@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using BubbetsItems.Helpers;
 using BubbetsItems.ItemBehaviors;
 using HarmonyLib;
 using RoR2;
@@ -13,9 +14,10 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Deluged Circlet");
-			AddToken(name + "_DESC", "");
-			AddToken(name + "_DESC_SIMPLE", "Decrease skill cooldowns by 1%(+1% per stack) of gold gained. Stop all gold gain temporarily for 5 (+5 per stack) seconds. Corrupts all Brittle Crowns.");
-			AddToken(name + "_PICKUP", "Reduce skill cooldowns from gold gained… BUT stop gold gain on hit. Corrupts all Brittle Crowns.");
+			var convert = "Corrupts all Brittle Crowns.".Style(StyleEnum.Void);
+			AddToken(name + "_DESC", "Decrease " + "skill cooldowns by {0:0%}".Style(StyleEnum.Utility) + " of gold gained. "+"Stop all gold gain for {1} seconds upon being hit. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_DESC_SIMPLE", "Decrease " + "skill cooldowns by 1% ".Style(StyleEnum.Utility) +"(+1% per stack)".Style(StyleEnum.Stack) + " of gold gained. "+"Stop all gold gain temporarily for 5 ".Style(StyleEnum.Health) +"(+5 per stack)".Style(StyleEnum.Stack) +" seconds upon being hit. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_PICKUP", "Reduce "+"skill cooldowns".Style(StyleEnum.Utility) +" from gold gained… "+ "BUT stop gold gain on hit. ".Style(StyleEnum.Health) + convert);
 			AddToken(name + "_LORE", "");
 		}
 
@@ -24,6 +26,12 @@ namespace BubbetsItems.Items.VoidLunar
 			base.MakeConfigs();
 			AddScalingFunction("[m] * 0.01 * [a]", "Recharge Reduction", "[a] = item count; [m] = money earned");
 			AddScalingFunction("5 * [a]", "No Gold Debuff Duration");
+		}
+
+		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
+		{
+			scalingInfos[0].WorkingContext.m = 1;
+			return base.GetFormattedDescription(inventory, token, forceHideExtended);
 		}
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)

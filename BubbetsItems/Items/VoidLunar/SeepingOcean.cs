@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
 using RoR2.Items;
@@ -14,9 +15,10 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Seeping Ocean");
-			AddToken(name + "_DESC", "");
-			AddToken(name + "_DESC_SIMPLE", "Items have a 1% (+1% per stack) chance to become a Void Lunar item instead. Corrupts all Eulogy Zeros.");
-			AddToken(name + "_PICKUP", "Items and equipment have a small chance to transform into a Void Lunar item instead. Corrupts all Eulogy Zeros.");
+			var convert = "Corrupts all Eulogy Zeros.".Style(StyleEnum.Void);
+			AddToken(name + "_DESC", "Items have a "+"{0:0%} chance".Style(StyleEnum.Utility) + " to become " + "Void Lunar".Style(StyleEnum.VoidLunar) +" items instead. " + convert);
+			AddToken(name + "_DESC_SIMPLE", "Items have a "+"1% ".Style(StyleEnum.Utility) +"(+1% per stack)".Style(StyleEnum.Stack) +" chance to become a " + "Void Lunar".Style(StyleEnum.VoidLunar) +" item instead. " + convert);
+			AddToken(name + "_PICKUP", "Items and equipment have a "+"small chance".Style(StyleEnum.Utility) +" to transform into a "+"Void Lunar ".Style(StyleEnum.VoidLunar) +"item instead. " + convert);
 			AddToken(name + "_LORE", "");
 		}
 
