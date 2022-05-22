@@ -81,7 +81,6 @@ namespace BubbetsItems.Items.VoidLunar
 
 		private void Awake()
 		{
-			if (!NetworkServer.active) return;
 			inst = SharedBase.GetInstance<AbstractedLocus>()!;
 			holdoutZoneController = GetComponent<HoldoutZoneController>();
 
@@ -90,8 +89,11 @@ namespace BubbetsItems.Items.VoidLunar
 			if (parent == null)
 			{
 				var asset = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("AbstractedLocusFog");
-				parent = Instantiate(asset);
-				NetworkServer.Spawn(parent);
+				if (NetworkServer.active)
+				{
+					parent = Instantiate(asset);
+					NetworkServer.Spawn(parent);
+				}
 			}
 			
 			fogController = parent.GetComponent<FogDamageController>();

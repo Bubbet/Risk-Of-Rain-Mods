@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -28,6 +29,12 @@ namespace BubbetsItems.Items.VoidLunar
 			base.MakeConfigs();
 			AddScalingFunction("[a]", "Equipment Activation Amount");
 			AddScalingFunction("0.35 + 0.15 * [a]", "Equipment Cooldown");
+		}
+
+		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
+		{
+			base.FillVoidConversions(pairs);
+			AddVoidPairing(nameof(RoR2Content.Items.AutoCastEquipment));
 		}
 
 		[HarmonyPostfix, HarmonyPatch(typeof(Inventory), nameof(Inventory.CalculateEquipmentCooldownScale))]
