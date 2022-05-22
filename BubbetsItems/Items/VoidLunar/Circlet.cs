@@ -15,22 +15,23 @@ namespace BubbetsItems.Items.VoidLunar
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Deluged Circlet");
 			var convert = "Corrupts all Brittle Crowns.".Style(StyleEnum.Void);
-			AddToken(name + "_DESC", "Decrease " + "skill cooldowns by {0:0%}".Style(StyleEnum.Utility) + " of gold gained. "+"Stop all gold gain for {1} seconds upon being hit. ".Style(StyleEnum.Health) + convert);
-			AddToken(name + "_DESC_SIMPLE", "Reduces " + "skill cooldowns".Style(StyleEnum.Utilit) + "by " + "1% ".Style(StyleEnum.Utility) + "(+1% per stack)".Style(StyleEnum.Stack) + " of gold gained. " + "Temporarily stops any gold from being gained for 5 ".Style(StyleEnum.Health) +"(+5 per stack)".Style(StyleEnum.Stack) +" seconds upon being hit ".Style(StyleEnum.Health) + ". " + convert);
-			AddToken(name + "_PICKUP", "Reduce "+"skill cooldowns".Style(StyleEnum.Utility) +" from gold gained… "+ "BUT stop gold gain on hit. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_DESC", "Decrease " + "skill cooldowns by {0:0.##%}".Style(StyleEnum.Utility) + " of gold gained. "+"Stop all gold gain for {1} seconds upon being hit. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_DESC_SIMPLE", "For every " + "10 ".Style(StyleEnum.Utility) + "(-50% per stack)".Style(StyleEnum.Stack) + " gold gained reduce skill cooldowns by 1 second. " + "Temporarily stops any gold from being gained for 5 ".Style(StyleEnum.Health) +"(+5 per stack)".Style(StyleEnum.Stack) +" seconds upon being hit. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_PICKUP", "Reduce " + "skill cooldowns".Style(StyleEnum.Utility) +" from gold gained… " + "BUT stop gold gain on hit. ".Style(StyleEnum.Health) + convert);
 			AddToken(name + "_LORE", "");
 		}
 
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("[m] * 0.01 * [a]", "Recharge Reduction", "[a] = item count; [m] = money earned");
+			AddScalingFunction("([m] / [d]) / (10 / [a]) ", "Recharge Reduction", "[a] = item count; [m] = money earned; [d] = run difficulty coefficient", "[m] * 0.01 * [a]");
 			AddScalingFunction("5 * [a]", "No Gold Debuff Duration");
 		}
 
 		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
 		{
 			scalingInfos[0].WorkingContext.m = 1;
+			scalingInfos[0].WorkingContext.d = 1;
 			return base.GetFormattedDescription(inventory, token, forceHideExtended);
 		}
 
@@ -84,6 +85,7 @@ namespace BubbetsItems.Items.VoidLunar
 
 			var info = inst.scalingInfos[0];
 			info.WorkingContext.m = change;
+			info.WorkingContext.d = Run.instance.difficultyCoefficient;
 			var reduction = info.ScalingFunction(amount);
 
 			var locator = body.skillLocator;

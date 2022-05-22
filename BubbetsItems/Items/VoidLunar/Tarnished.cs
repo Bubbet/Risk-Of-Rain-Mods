@@ -39,7 +39,18 @@ namespace BubbetsItems.Items.VoidLunar
 		private static BuffDef? _buffDef;
 		public static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefTarnished");
 
-		[HarmonyPostfix, HarmonyPatch(typeof(Util), nameof(Util.CheckRoll), new[]{typeof(float), typeof(float), typeof(CharacterMaster)})]
+		[HarmonyPrefix, HarmonyPatch(typeof(Util), nameof(Util.CheckRoll), typeof(float), typeof(float), typeof(CharacterMaster))]
+		public static void UpdateRollsPre(float percentChance, float luck = 0f, CharacterMaster effectOriginMaster = null)
+		{
+			if (!NetworkServer.active) return;
+			if (!effectOriginMaster) return;
+			var body = effectOriginMaster.GetBody();
+			if (!body) return;
+			if (!body.wasLucky) return;
+			body.wasLucky = false;
+		}
+
+		[HarmonyPostfix, HarmonyPatch(typeof(Util), nameof(Util.CheckRoll), typeof(float), typeof(float), typeof(CharacterMaster))]
 		public static void UpdateRolls(bool __result, float percentChance, float luck = 0f, CharacterMaster effectOriginMaster = null)
 		{
 			if (!NetworkServer.active) return;
@@ -47,6 +58,7 @@ namespace BubbetsItems.Items.VoidLunar
 			if (!effectOriginMaster) return;
 			var body = effectOriginMaster.GetBody();
 			if (!body) return;
+			if (!body.wasLucky) return;
 			var inv = effectOriginMaster.inventory;
 			if (!inv) return;
 			var inst = GetInstance<Tarnished>();

@@ -56,6 +56,14 @@ Patience is key~
   - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
+* v1.8.3 Mod Changes:
+  * Fixed some simple tokens.
+  * Fixed deep descent not having its void pairing.
+  * Fixed the void lunar shop not working in multiplayer.
+  * Fixed Abstracted Locus not working properly in multiplayer.
+  * Added void marker obtain method similar to lunar coins.
+  * Made tarnished only remove a stack when you got lucky, and not only on a successful proc.
+
 * v1.8.2 Mod Changes:
   * Changed orbs of falsity to use a system similar to how sacrifice modifies the spawn chance of voidcamps instead of the fucky way i was.
   * Fixed typo in readme for deep descent.
