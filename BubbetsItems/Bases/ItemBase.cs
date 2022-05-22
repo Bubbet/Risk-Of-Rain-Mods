@@ -62,7 +62,7 @@ namespace BubbetsItems
                 {
                     var para = new List<string>();
 
-                    ret += "\n\n";
+                    ret += "\n";
                     
                     // Holy fuck i hate regex in c#
                     var match = formatArgParams.Matches(Language.GetString(token ?? ItemDef.descriptionToken));
