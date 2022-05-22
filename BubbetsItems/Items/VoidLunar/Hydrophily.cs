@@ -19,7 +19,7 @@ namespace BubbetsItems.Items.VoidLunar
 			AddToken(name + "_NAME", "Hydrophily");
 			var convert = "Corrupts all Corpseblooms.".Style(StyleEnum.Void);
 			AddToken(name + "_DESC", "{0:0%} of healing ".Style(StyleEnum.Heal) +"except regen is converted to "+"barrier. ".Style(StyleEnum.Utility) +"While barrier is active health cannot be healed. ".Style(StyleEnum.Health) + convert);
-			AddToken(name + "_DESC_SIMPLE", "100%".Style(StyleEnum.Heal) + " (+100% per stack)".Style(StyleEnum.Stack) + " of healing ".Style(StyleEnum.Heal) + "except regen converges into " + "temporary barriers. ".Style(StyleEnum.Utility) + " While barrier is active health cannot be healed. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_DESC_SIMPLE", "Ignoring regen, " + "convert " + "100%".Style(StyleEnum.Heal) + " (+100% per stack)".Style(StyleEnum.Stack) + " of healing ".Style(StyleEnum.Heal) + "into " + "temporary barriers".Style(StyleEnum.Utility) + "." + " Cannot heal while barrier is active".Style(StyleEnum.Health) + ". " + convert);
 			AddToken(name + "_PICKUP", "Converts "+"healing ".Style(StyleEnum.Heal) +"into barrier, ".Style(StyleEnum.Utility) + "disables all healing while barrier is active. ".Style(StyleEnum.Health) + convert);
 			AddToken(name + "_LORE", "");
 		}
