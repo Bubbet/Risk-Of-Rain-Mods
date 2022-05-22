@@ -22,7 +22,7 @@ namespace BubbetsItems.Items
 			base.MakeTokens();
 			AddToken("JELLIEDSOLES_NAME", "Jellied Soles");
 			AddToken("JELLIEDSOLES_DESC", "Reduces " + "fall damage ".Style(StyleEnum.Utility) + "by " + "{0:0%}".Style(StyleEnum.Utility) + ". Converts that reduction ({1}) into your next attack.");
-			AddToken("JELLIEDSOLES_DESC_SIMPLE", "Reduces " + "fall damage ".Style(StyleEnum.Utility) + "by " + "15% ".Style(StyleEnum.Utility) + "and converts " + "100% ".Style(StyleEnum.Utility) + "(+100% per stack) ".Style(StyleEnum.Stack) + "removed damage to your next attack. Scales by level.");
+			AddToken("JELLIEDSOLES_DESC_SIMPLE", "Reduces " + "fall damage ".Style(StyleEnum.Utility) + "by " + "15% ".Style(StyleEnum.Utility) + "(+15% per stack) ".Style(StyleEnum.Stack) + "and converts " + "100% ".Style(StyleEnum.Utility) + "(+100% per stack) ".Style(StyleEnum.Stack) + "removed damage to your next attack. Scales by level.");
 			SimpleDescriptionToken = "JELLIEDSOLES_DESC_SIMPLE";
 			AddToken("JELLIEDSOLES_PICKUP", "Reduces " + "fall damage.".Style(StyleEnum.Utility) + " Converts that reduction into your next attack.");
 			AddToken("JELLIEDSOLES_LORE", "");
