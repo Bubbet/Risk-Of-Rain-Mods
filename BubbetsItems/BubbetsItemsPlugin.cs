@@ -117,9 +117,6 @@ namespace BubbetsItems
 
             new PatchClassProcessor(harm, typeof(ExtraHealthBarSegments)).Patch();
 
-            VoidEquipmentManager.Init();
-            new PatchClassProcessor(harm, typeof(VoidEquipmentManager)).Patch();
-
             RoR2Application.onLoad += onLoad;
             //NotSystemInitializer.Hook(harm);
             

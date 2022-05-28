@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 1116799698
+CRC: 3165114355
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: db1a9fd14d5db83d11b7f81b81368c60
+    Hash: 798d183b5765c4dfc58c2355feec99e0
   TypeTreeHash:
     serializedVersion: 2
-    Hash: dd94bf943bda0c1ad402a9672474239f
+    Hash: ad59cacb899d6caf9e90220064f04085
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -44,13 +44,7 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 969251441, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
-  Script: {fileID: 511512695, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
-- Class: 114
   Script: {fileID: 488236779, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
-- Class: 114
-  Script: {fileID: 816898038, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
-- Class: 114
-  Script: {fileID: 952828898, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 1985007777, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
@@ -58,7 +52,7 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 927084362, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
-  Script: {fileID: 2059275355, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
+  Script: {fileID: 511512695, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 1929002847, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
@@ -72,27 +66,15 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 209865009, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
-  Script: {fileID: -682955206, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
-- Class: 114
   Script: {fileID: -1977327981, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
-- Class: 114
-  Script: {fileID: -220116769, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
   Script: {fileID: -1474783733, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
   Script: {fileID: 1684185445, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
-  Script: {fileID: -1628234578, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
-- Class: 114
-  Script: {fileID: -1936068530, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
-- Class: 114
   Script: {fileID: -1813521643, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
-  Script: {fileID: -1468236989, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
-- Class: 114
   Script: {fileID: 253497799, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
-- Class: 114
-  Script: {fileID: 419433389, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
   Script: {fileID: -1783169300, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
@@ -144,6 +126,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: -1448861057, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: 952828898, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: -565067572, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 451251496, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
@@ -152,9 +136,23 @@ ClassTypes:
 - Class: 114
   Script: {fileID: -662483879, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: 816898038, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: 1395413934, guid: da77c7bbf69f66ab2145560542327715, type: 3}
 - Class: 114
   Script: {fileID: -806885394, guid: 67dfb1fdfb2b407222eda8e23ac8b724, type: 3}
+- Class: 114
+  Script: {fileID: 419433389, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
+- Class: 114
+  Script: {fileID: -1936068530, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
+- Class: 114
+  Script: {fileID: -220116769, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
+- Class: 114
+  Script: {fileID: -1468236989, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
+- Class: 114
+  Script: {fileID: 2059275355, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
+- Class: 114
+  Script: {fileID: -1628234578, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 135
@@ -526,7 +524,6 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/StarSigil/starSigil.fbx
 - Assets/BubbetsItems/Assets/Items/Regularitems/JelliedSoles/JelliedSolesHitGround.asset
 - Assets/BubbetsItems/Assets/Items/Regularitems/Torturer/Torturer.prefab
-- Assets/BubbetsItems/Assets/Equipment/EquipmentDefTestVoid.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/BarrierMat.mat
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/SepiaMaterial.mat
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/lostNazarEmission.png

@@ -80,7 +80,7 @@ namespace BubbetsItems.Items.VoidLunar
 				var inst = GetInstance<Imperfect>();
 				var amount = inv.GetItemCount(inst.ItemDef);
 				if (amount <= 0) return armor;
-				armor += inst.scalingInfos[1].ScalingFunction(amount);
+				armor -= inst.scalingInfos[1].ScalingFunction(amount);
 				return armor;
 			});
 		}
