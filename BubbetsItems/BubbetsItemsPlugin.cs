@@ -31,7 +31,7 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.8.3")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.8.4")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     //[BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
@@ -117,9 +117,12 @@ namespace BubbetsItems
 
             new PatchClassProcessor(harm, typeof(ExtraHealthBarSegments)).Patch();
 
+            VoidEquipmentManager.Init();
+            new PatchClassProcessor(harm, typeof(VoidEquipmentManager)).Patch();
+
             RoR2Application.onLoad += onLoad;
             //NotSystemInitializer.Hook(harm);
-
+            
             //Fucking bepinex pack constantly changing and now loading too late for searchableAttributes scan.
             //it changed again and no longer needs this
             //SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
@@ -127,6 +130,7 @@ namespace BubbetsItems
             //PickupTooltipFormat.Init(harm);
             ItemStatsCompat.Init();
         }
+
 
         private void onLoad()
         {
