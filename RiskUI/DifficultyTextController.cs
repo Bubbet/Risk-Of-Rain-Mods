@@ -18,6 +18,7 @@ namespace MaterialHud
 		public RedToColorRemapperIndividual ringBehindRecolorer;
 		public RedToColorRemapperIndividual timerTextRecolorer;
 		public RedToColorRemapperIndividual timerCentiTextRecolorer;
+		public TextMeshProUGUI monsterLevel;
 		public float levelsPerSegment = 3;
 		private int _previousSegment = -1;
 		private ConfigEntry<bool> _textRecolor;
@@ -25,6 +26,7 @@ namespace MaterialHud
 		private ConfigEntry<bool> _ringRecolor;
 		private ConfigEntry<bool> _timerRecolor;
 		private ConfigEntry<bool> _timerCentiRecolor;
+		private ConfigEntry<bool> _monsterLevelEnabled;
 
 		public static readonly Color[] DifficultyColors = {
 			new(73f / 255f, 242f / 255f, 217f / 255f), 	//Easy: 49F2D9
@@ -45,17 +47,26 @@ namespace MaterialHud
 			_ringRecolor = ConfigHelper.Bind("General", "Difficulty Upper Ring Colored Per Difficulty", false, "Should the difficulty upper ring be recolored based on current difficulty.");
 			_timerRecolor = ConfigHelper.Bind("General", "Timer Text Colored Per Difficulty", false, "Should the timer text be recolored based on current difficulty.");
 			_timerCentiRecolor = ConfigHelper.Bind("General", "Centisecond Timer Text Colored Per Difficulty", false, "Should the timer centisecond text be recolored based on current difficulty.");
+			_monsterLevelEnabled = ConfigHelper.Bind("General", "Monster Level Text Enable", false, "Should the monster level text be displayed.");
 			_textRecolor.SettingChanged += TextColorerChanged;
 			_ringLowerRecolor.SettingChanged += RingLowerColorerChanged;
 			_ringRecolor.SettingChanged += RingColorerChanged;
 			_timerRecolor.SettingChanged += TimerColorerChanged;
 			_timerCentiRecolor.SettingChanged += CentiColorerChanged;
+			_monsterLevelEnabled.SettingChanged += MonsterLevelChanged;
 			TextColorerChanged(null, null);
 			RingLowerColorerChanged(null, null);
 			RingColorerChanged(null, null);
 			TimerColorerChanged(null, null);
 			CentiColorerChanged(null, null);
+			MonsterLevelChanged(null, null);
 		}
+
+		private void MonsterLevelChanged(object sender, EventArgs e)
+		{
+			monsterLevel.gameObject.SetActive(_monsterLevelEnabled.Value);
+		}
+
 		private void OnDestroy()
 		{
 			_textRecolor.SettingChanged -= TextColorerChanged;
@@ -104,6 +115,9 @@ namespace MaterialHud
 			if (floored >= segmentTokens.Length)
 				remains = 1f;
 
+			if(_monsterLevelEnabled.Value)
+				monsterLevel.text = Language.GetStringFormatted("AMBIENT_LEVEL_DISPLAY_FORMAT", ambient);
+			
 			var token = Math.Min(segmentTokens.Length - 1, floored);
 			if (token != _previousSegment)
 			{

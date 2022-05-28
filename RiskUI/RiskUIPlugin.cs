@@ -25,7 +25,7 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 namespace MaterialHud
 {
 	[BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
-	[BepInPlugin("bubbet.riskui", "Risk UI", "1.3.0")]
+	[BepInPlugin("bubbet.riskui", "Risk UI", "1.3.1")]
 	[BepInDependency("com.Dragonyck.Synergies", BepInDependency.DependencyFlags.SoftDependency)]
 	public class RiskUIPlugin : BaseUnityPlugin
 	{
