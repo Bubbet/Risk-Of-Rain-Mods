@@ -18,10 +18,7 @@ namespace BubbetsItems.Equipments
 		
 		public override EquipmentActivationState PerformEquipment(EquipmentSlot equipmentSlot)
 		{
-			Chat.SendBroadcastChat(new Chat.SimpleChatMessage
-			{
-				baseToken = "The equipment was activated."
-			});
+			Chat.SendBroadcastChat(new Chat.SimpleChatMessage {baseToken = "The equipment was activated."});
 			return EquipmentActivationState.ConsumeStock;
 		}
 	}
