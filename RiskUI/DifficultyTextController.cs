@@ -116,7 +116,7 @@ namespace MaterialHud
 				remains = 1f;
 
 			if(_monsterLevelEnabled.Value)
-				monsterLevel.text = Language.GetStringFormatted("AMBIENT_LEVEL_DISPLAY_FORMAT", ambient);
+				monsterLevel.text = Language.GetStringFormatted("AMBIENT_LEVEL_DISPLAY_FORMAT", ambient + 1f);
 			
 			var token = Math.Min(segmentTokens.Length - 1, floored);
 			if (token != _previousSegment)
