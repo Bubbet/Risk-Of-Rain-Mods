@@ -88,13 +88,13 @@ namespace BubbetsItems
 
         public void Awake()
         {
+            Conf.Init(Config);
             if (Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions"))
                 MakeRiskOfOptions();
             
             instance = this;
             Log = Logger;
             RoR2Application.isModded = true;
-            Conf.Init(Config);
             var harm = new Harmony(Info.Metadata.GUID);
             LoadContentPack(harm);
             
@@ -155,6 +155,7 @@ namespace BubbetsItems
             {
                 Application.OpenURL("https://ko-fi.com/snakeygemo/gallery");
             }));
+            Conf.MakeRiskOfOptions();
         }
 
         private static uint _bankID;
@@ -193,11 +194,18 @@ namespace BubbetsItems
         public static class Conf
         {
             public static ConfigEntry<bool> AmmoPickupAsOrbEnabled;
+            public static ConfigEntry<bool> VoidCoinShareOnPickup;
             //public static bool RequiresR2Api;
 
             internal static void Init(ConfigFile configFile)
             {
                 AmmoPickupAsOrbEnabled = configFile.Bind(ConfigCategoriesEnum.DisableModParts, "Ammo Pickup As Orb", true,  "Should the Ammo Pickup as an orb be enabled.");
+                VoidCoinShareOnPickup = configFile.Bind(ConfigCategoriesEnum.General, "Share Void Coin On Pickup", false, "Should void coins share on pickup.");
+            }
+
+            internal static void MakeRiskOfOptions()
+            {
+                RiskOfOptions.ModSettingsManager.AddOption(new CheckBoxOption(VoidCoinShareOnPickup));
             }
         }
 

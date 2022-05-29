@@ -44,6 +44,17 @@ namespace BubbetsItems
 			if(!Chainloader.PluginInfos.ContainsKey("com.Anreol.ReleasedFromTheVoid")) EnableVoidCoins();
 		}
 
+		[HarmonyPostfix, HarmonyPatch(typeof(VoidCoinDef), nameof(VoidCoinDef.GrantPickup))]
+		public static void ShareOnPickup(VoidCoinDef __instance, ref PickupDef.GrantContext context)
+		{
+			if (!BubbetsItemsPlugin.Conf.VoidCoinShareOnPickup.Value) return;
+			foreach (var master in CharacterMaster.readOnlyInstancesList)
+			{
+				if (master == context.body.master) continue;
+				master.GiveVoidCoins(__instance.coinValue);
+			}
+		}
+
 		[HarmonyPrefix, HarmonyPatch(typeof(ArenaMissionController), nameof(ArenaMissionController.EndRound))]
 		public static void DropCoinInFields(ArenaMissionController __instance)
 		{

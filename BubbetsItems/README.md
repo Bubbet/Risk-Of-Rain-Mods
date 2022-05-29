@@ -59,6 +59,7 @@ Patience is key~
 * v1.8.5 Mod Changes:
   * Added guarenteed way to obtain void coins, doing void fields.
   * Fixed expansions not disabling the items from appearing in chests.
+  * Add config to share void coin on pickup, disabled by default.
   
 * v1.8.4 Mod Changes:
   * Made more token changes.
