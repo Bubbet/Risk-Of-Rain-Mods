@@ -46,6 +46,7 @@ Icons | Items | Function | Type
 
 # Other
 If you have suggestions or questions, feel free to message `Bubbet#2639` or `GEMO#0176` on Discord.
+If you have any feedback or questions regarding the item stats of any of the items, you can contact `Conq#1738` through the modding discord.
 
 Mod is still being continuously worked on!
 Patience is key~
@@ -54,6 +55,7 @@ Patience is key~
   - `GEMO#0176` for making all the newer item models
   - `SOM#0001` for doing most of the icon templates
   - `Neon Sky#7293` for the beautiful item concepts
+  - `Conq#1738` for the item stats descriptions
 
 # Changelog
 * v1.8.3 Mod Changes:
