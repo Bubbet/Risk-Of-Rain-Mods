@@ -222,6 +222,7 @@ namespace BubbetsItems
             var name = GetType().Name;
             foreach (var equipmentDef in serializableContentPack.equipmentDefs)
             {
+                if (equipmentDef is null) continue;
                 if (MatchName(equipmentDef.name, name)) EquipmentDef = equipmentDef;
             }
             if (EquipmentDef == null)

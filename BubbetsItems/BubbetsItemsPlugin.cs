@@ -115,6 +115,7 @@ namespace BubbetsItems
             new PatchClassProcessor(harm, typeof(EquipmentBase)).Patch();
             new PatchClassProcessor(harm, typeof(ItemBase)).Patch(); // Only used for filling void items.
 
+            new PatchClassProcessor(harm, typeof(VoidLunarShopController)).Patch();
             new PatchClassProcessor(harm, typeof(ExtraHealthBarSegments)).Patch();
 
             RoR2Application.onLoad += onLoad;

@@ -56,6 +56,10 @@ Patience is key~
   - `Neon Sky#7293` for the beautiful item concepts
 
 # Changelog
+* v1.8.5 Mod Changes:
+  * Added guarenteed way to obtain void coins, doing void fields.
+  * Fixed expansions not disabling the items from appearing in chests.
+  
 * v1.8.4 Mod Changes:
   * Made more token changes.
   * Inverted the effect of imperfection in code.
