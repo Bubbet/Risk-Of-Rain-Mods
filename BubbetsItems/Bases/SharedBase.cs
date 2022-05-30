@@ -14,6 +14,7 @@ using RoR2.ContentManagement;
 using RoR2.ExpansionManagement;
 using RoR2.Items;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace BubbetsItems
 {
@@ -47,7 +48,7 @@ namespace BubbetsItems
         
         
         private static ExpansionDef? _sotvExpansion;
-        public static ExpansionDef? SotvExpansion => _sotvExpansion ??= ExpansionCatalog.expansionDefs.First(x => x.nameToken == "DLC1_NAME");
+        public static ExpansionDef? SotvExpansion => _sotvExpansion ??= Addressables.LoadAssetAsync<ExpansionDef>("RoR2/DLC1/Common/DLC1.asset").WaitForCompletion();
 
         //This is probably bad practice
         public virtual bool RequiresSotv => false;
@@ -103,7 +104,7 @@ namespace BubbetsItems
             if (!serializableContentPack) return;
             serializableContentPack!.itemDefs = serializableContentPack.itemDefs.Where(x => ItemBase.Items.Any(y => MatchName(x.name, y.GetType().Name))).ToArray();
             var eliteEquipments = serializableContentPack.eliteDefs.Select(x => x.eliteEquipmentDef);
-            serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs.Where(x => EquipmentBase.Equipments.Any(y => MatchName(x.name, y.GetType().Name))).Union(eliteEquipments).ToArray();
+            serializableContentPack.equipmentDefs = serializableContentPack.equipmentDefs.Where(x => EquipmentBase.Equipments.Any(y => x is not null && MatchName(x.name, y.GetType().Name))).Union(eliteEquipments).ToArray();
         }
         public static T? GetInstance<T>() where T : SharedBase
         {
@@ -160,12 +161,19 @@ namespace BubbetsItems
             //master.inventory.GiveItem(ItemDef.itemIndex);
         }
 
-        [SystemInitializer(typeof(ContagiousItemManager))]
+        [SystemInitializer]
         public static void FillAllExpansionDefs()
         {
             foreach (var instance in Instances)
             {
-                instance.FillRequiredExpansions();
+                try
+                {
+                    instance.FillRequiredExpansions();
+                }
+                catch (Exception e)
+                {
+                    instance.sharedInfo.Logger.LogError(e);
+                }
             }
         }
 

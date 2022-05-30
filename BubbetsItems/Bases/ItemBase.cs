@@ -183,6 +183,9 @@ namespace BubbetsItems
         public override bool RequiresSotv => voidPairing != null;
         protected override void FillRequiredExpansions()
         {
+            var pairs = new List<ItemDef.Pair>();
+            FillVoidConversions(pairs);
+
             if (RequiresSotv)
                 ItemDef.requiredExpansion = sharedInfo.SotVExpansion ? sharedInfo.SotVExpansion : SotvExpansion;
             else
@@ -193,11 +196,22 @@ namespace BubbetsItems
         public static void FillVoidItems()
         {
             var pairs = new List<ItemDef.Pair>();
+            /*
             foreach (var itemBase in Items)
             {
                 itemBase.FillVoidConversions(pairs);
             }
-
+             */
+            
+            foreach (var itemBase in Items)
+            {
+                itemBase.voidPairing?.SettingChanged();
+            }
+            
+            // ContagiousItemManager.originalToTransformed
+            // ContagiousItemManager.itemsToCheck
+            // ArrayUtils.ArrayAppend<ContagiousItemManager.TransformationInfo>(ref ContagiousItemManager._transformationInfos, transformationInfo);
+            
             ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = ItemCatalog
                 .itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].AddRangeToArray(pairs.ToArray());
         }
@@ -292,10 +306,10 @@ namespace BubbetsItems
                 Parent = parent;
                 configEntry = parent.sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + parent.GetType().Name, defaultValue, "Valid values: " + ValidEntries, oldDefault);
                 configEntry.SettingChanged += (_, _) => SettingChanged();
-                SettingChanged();
+                //SettingChanged();
             }
 
-            private void SettingChanged()
+            public void SettingChanged()
             {
                 var pairs = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].Where(x => x.itemDef2 != Parent.ItemDef);
                 var newPairs = from str in configEntry.Value.Split(' ') select ItemCatalog.FindItemIndex(str) into index where index != ItemIndex.None select new ItemDef.Pair {itemDef1 = ItemCatalog.GetItemDef(index), itemDef2 = Parent.ItemDef};

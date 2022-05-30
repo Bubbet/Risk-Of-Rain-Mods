@@ -31,7 +31,7 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.8.3")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.8.4")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     //[BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
@@ -88,13 +88,13 @@ namespace BubbetsItems
 
         public void Awake()
         {
+            Conf.Init(Config);
             if (Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions"))
                 MakeRiskOfOptions();
             
             instance = this;
             Log = Logger;
             RoR2Application.isModded = true;
-            Conf.Init(Config);
             var harm = new Harmony(Info.Metadata.GUID);
             LoadContentPack(harm);
             
@@ -115,11 +115,12 @@ namespace BubbetsItems
             new PatchClassProcessor(harm, typeof(EquipmentBase)).Patch();
             new PatchClassProcessor(harm, typeof(ItemBase)).Patch(); // Only used for filling void items.
 
+            new PatchClassProcessor(harm, typeof(VoidLunarShopController)).Patch();
             new PatchClassProcessor(harm, typeof(ExtraHealthBarSegments)).Patch();
 
             RoR2Application.onLoad += onLoad;
             //NotSystemInitializer.Hook(harm);
-
+            
             //Fucking bepinex pack constantly changing and now loading too late for searchableAttributes scan.
             //it changed again and no longer needs this
             //SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
@@ -127,6 +128,7 @@ namespace BubbetsItems
             //PickupTooltipFormat.Init(harm);
             ItemStatsCompat.Init();
         }
+
 
         private void onLoad()
         {
@@ -153,6 +155,7 @@ namespace BubbetsItems
             {
                 Application.OpenURL("https://ko-fi.com/snakeygemo/gallery");
             }));
+            Conf.MakeRiskOfOptions();
         }
 
         private static uint _bankID;
@@ -191,11 +194,18 @@ namespace BubbetsItems
         public static class Conf
         {
             public static ConfigEntry<bool> AmmoPickupAsOrbEnabled;
+            public static ConfigEntry<bool> VoidCoinShareOnPickup;
             //public static bool RequiresR2Api;
 
             internal static void Init(ConfigFile configFile)
             {
                 AmmoPickupAsOrbEnabled = configFile.Bind(ConfigCategoriesEnum.DisableModParts, "Ammo Pickup As Orb", true,  "Should the Ammo Pickup as an orb be enabled.");
+                VoidCoinShareOnPickup = configFile.Bind(ConfigCategoriesEnum.General, "Share Void Coin On Pickup", false, "Should void coins share on pickup.");
+            }
+
+            internal static void MakeRiskOfOptions()
+            {
+                RiskOfOptions.ModSettingsManager.AddOption(new CheckBoxOption(VoidCoinShareOnPickup));
             }
         }
 

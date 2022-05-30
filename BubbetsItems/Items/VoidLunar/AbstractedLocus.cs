@@ -146,8 +146,7 @@ namespace BubbetsItems.Items.VoidLunar
 			var charging = HoldoutZoneController.CountPlayersInRadius(holdoutZoneController, transform.position, holdoutZoneController.currentRadius * holdoutZoneController.currentRadius, holdoutZoneController.chargingTeam);
 			var outside = living - charging;
 			
-			if (!holdoutZoneController.isAnyoneCharging)
-				rate = Mathf.Pow((float)outside / living, holdoutZoneController.playerCountScaling) / holdoutZoneController.baseChargeDuration;
+			rate += Mathf.Pow((float)outside / living, holdoutZoneController.playerCountScaling) / holdoutZoneController.baseChargeDuration;
 			
 			var info = inst.scalingInfos[1];
 			var context = info.WorkingContext;

@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 
 namespace BubbetsItems
 {
+	[HarmonyPatch]
 	public static class VoidLunarShopController
 	{
 		//Only exists on server context
@@ -41,6 +42,43 @@ namespace BubbetsItems
 			Language.english.SetStringByToken("BUB_VOIDLUNARSHOP_REROLL_CONTEXT", "Refresh Shop");
 			
 			if(!Chainloader.PluginInfos.ContainsKey("com.Anreol.ReleasedFromTheVoid")) EnableVoidCoins();
+		}
+
+		[HarmonyPostfix, HarmonyPatch(typeof(VoidCoinDef), nameof(VoidCoinDef.GrantPickup))]
+		public static void ShareOnPickup(VoidCoinDef __instance, ref PickupDef.GrantContext context)
+		{
+			if (!BubbetsItemsPlugin.Conf.VoidCoinShareOnPickup.Value) return;
+			foreach (var master in CharacterMaster.readOnlyInstancesList)
+			{
+				if (master == context.body.master) continue;
+				master.GiveVoidCoins(__instance.coinValue);
+			}
+		}
+
+		[HarmonyPrefix, HarmonyPatch(typeof(ArenaMissionController), nameof(ArenaMissionController.EndRound))]
+		public static void DropCoinInFields(ArenaMissionController __instance)
+		{
+			if (!Run.instance.IsExpansionEnabled(BubbetsItemsPlugin.BubSotvExpansion)) return;
+			var participatingPlayerCount = Run.instance.participatingPlayerCount;
+			if (participatingPlayerCount == 0 || !__instance.rewardSpawnPosition) return;
+			
+			var num2 = participatingPlayerCount;
+			var angle = 360f / num2;
+			var vector = Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up) * (Vector3.up * 40f + Vector3.forward * 5f);
+			var rotation = Quaternion.AngleAxis(angle, Vector3.up);
+			var l = 0;
+			while (l < num2)
+			{
+				var position = __instance.rewardSpawnPosition.transform.position;
+				PickupDropletController.CreatePickupDroplet(new GenericPickupController.CreatePickupInfo
+				{
+					position = position,
+					rotation = Quaternion.identity,
+					pickupIndex = PickupCatalog.FindPickupIndex(DLC1Content.MiscPickups.VoidCoin.miscPickupIndex)
+				}, position, vector);
+				l++;
+				vector = rotation * vector;
+			}
 		}
 
 		public static void SceneLoaded(Stage stage)

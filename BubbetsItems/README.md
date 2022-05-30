@@ -58,6 +58,16 @@ Patience is key~
   - `Conq#1738` for the item stats descriptions
 
 # Changelog
+* v1.8.5 Mod Changes:
+  * Added guarenteed way to obtain void coins, doing void fields.
+  * Fixed expansions not disabling the items from appearing in chests.
+  * Add config to share void coin on pickup, disabled by default.
+  
+* v1.8.4 Mod Changes:
+  * Made more token changes.
+  * Inverted the effect of imperfection in code.
+  * Fixed hopoo breaking my shit because they dont know what overloads are. (AddDot got a new parameter and they didnt make a overload so the previous method signature is not found.)
+  
 * v1.8.3 Mod Changes:
   * Fixed some simple tokens.
   * Fixed deep descent not having its void pairing.
