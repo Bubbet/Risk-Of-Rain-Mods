@@ -73,6 +73,8 @@ namespace BubbetsItems
                             para.Add(val);
                     }
 
+                    para = para.OrderBy(x => x[1]).ToList();
+
                     foreach (var param in para)
                     {
                         if (int.TryParse(param[1].ToString(), out var i))

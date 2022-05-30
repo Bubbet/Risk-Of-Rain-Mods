@@ -62,8 +62,9 @@ namespace BubbetsItems
 			var participatingPlayerCount = Run.instance.participatingPlayerCount;
 			if (participatingPlayerCount == 0 || !__instance.rewardSpawnPosition) return;
 			
-			var num2 = participatingPlayerCount;
+			var num2 = participatingPlayerCount * Mathf.Floor(__instance.currentRound / 9f + 1f);
 			var angle = 360f / num2;
+			angle += angle * 0.5f;
 			var vector = Quaternion.AngleAxis(Random.Range(0, 360), Vector3.up) * (Vector3.up * 40f + Vector3.forward * 5f);
 			var rotation = Quaternion.AngleAxis(angle, Vector3.up);
 			var l = 0;

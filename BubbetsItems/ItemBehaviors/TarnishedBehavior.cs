@@ -95,8 +95,9 @@ namespace BubbetsItems.ItemBehaviors
 
 		private void OnDisable()
 		{
-			body.master.luck -= luckDifference;
-			if(invSub)
+			if (body && body.master)
+				body.master.luck -= luckDifference;
+			if(invSub && body && body.inventory)
 				body.inventory.onInventoryChanged -= InvChanged;
 		}
 	}

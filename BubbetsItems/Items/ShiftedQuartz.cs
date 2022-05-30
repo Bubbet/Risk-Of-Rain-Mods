@@ -7,6 +7,9 @@ using HarmonyLib;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using RiskOfOptions;
+using RiskOfOptions.OptionConfigs;
+using RiskOfOptions.Options;
 using RoR2;
 using UnityEngine;
 
@@ -38,6 +41,14 @@ namespace BubbetsItems.Items
 			visualTransparency = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Shifted quartz inside transparency",
 				0.15f, "The transparency of the dome when enemies are inside it.");
 		}
+
+		public override void MakeRiskOfOptions()
+		{
+			base.MakeRiskOfOptions();
+			ModSettingsManager.AddOption(new CheckBoxOption(visualOnlyForAuthority));
+			ModSettingsManager.AddOption(new SliderOption(visualTransparency, new SliderConfig {min = 0, max = 1, formatString = "{0:0.00%}"}));
+		}
+
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
 			AddVoidPairing("NearbyDamageBonus");

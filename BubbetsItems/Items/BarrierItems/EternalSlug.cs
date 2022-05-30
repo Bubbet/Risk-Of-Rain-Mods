@@ -107,16 +107,17 @@ namespace BubbetsItems.Items.BarrierItems
 				sinfo.WorkingContext.h = hc.health;
 				sinfo.WorkingContext.b = hc.fullBarrier;
 				sinfo.WorkingContext.p = 0f;
-				barPos = sinfo.ScalingFunction(amount) / hc.fullHealth;
+				barPos = sinfo.ScalingFunction(amount) / hc.fullCombinedHealth;
 				enabled = true;
 			}
 
-			public override void UpdateInfo(ref HealthBar.BarInfo info)
+			public override void UpdateInfo(ref HealthBar.BarInfo info, HealthComponent.HealthBarValues healthBarValues)
 			{
 				info.enabled = enabled;
-				info.normalizedXMin = barPos;
-				info.normalizedXMax = barPos + 0.005f;
-				base.UpdateInfo(ref info);
+				var curse = 1f - healthBarValues.curseFraction;
+				info.normalizedXMin = barPos * curse;
+				info.normalizedXMax = barPos * curse + 0.005f;
+				base.UpdateInfo(ref info, healthBarValues);
 			}
 		}
 	}
