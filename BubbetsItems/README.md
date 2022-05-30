@@ -15,7 +15,7 @@ Icons | Items | Function | Type
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/Plan128.png" width="100"/> | Escape Plan | Gain 75% movement speed, increases with decreasing health. | `Uncommon` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/bhop.png" width="100"/> | Bunny Foot | Gain the ability to bunny hop, increasing air control by 150% and jump control by 50%. How to: https://www.youtube.com/watch?v=4PZYPPlYd6A | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970904553186811924/ceremonialProbeIcon.png" width="100"/> | Ceremonial Probe | Prevents barrier decay when you're at 59% health. | `Uncommon` |
-<img src="https://cdn.discordapp.com/attachments/953688831750709278/970814203457843230/mechSnailIcon.png" width="100"/> | Mechanical Snail | Multiplies barrier decay by 83%. | `Uncommon` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/970814203457843230/mechSnailIcon.png" width="100"/> | Mechanical Snail | Decreases barrier decay by 83%. | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970169637067169822/sluggyBoyIcon.png" width="100"/> | Eternal Slug | Stops temporary barrier from decaying naturally past 36%. | `Uncommon` |
 ---|---|---|
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/Plate128.png" width="100"/> | Repulsion Armor Mk2 | Two modes in config. Reduce all incoming damage by 20. Cannot be reduced below 1. / Increase armor by 20. Scales with the amount of Repulsion Armor Plates you have. | `Legendary` |
@@ -58,9 +58,6 @@ Patience is key~
   - `Conq#1738` for the item stats descriptions
 
 # Changelog
-* v1.8.4 Mod Changes:
-  * Fixed two simple tokens.
-
 * v1.8.3 Mod Changes:
   * Fixed some simple tokens.
   * Fixed deep descent not having its void pairing.
