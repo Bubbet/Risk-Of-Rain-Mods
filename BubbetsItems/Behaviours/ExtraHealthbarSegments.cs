@@ -115,7 +115,7 @@ namespace BubbetsItems.Behaviours
 
 			public abstract HealthBarStyle.BarStyle GetStyle();
 
-			public virtual void UpdateInfo(ref HealthBar.BarInfo info)
+			public virtual void UpdateInfo(ref HealthBar.BarInfo info, HealthComponent.HealthBarValues healthBarValues)
 			{
 				if (cachedStyle == null) cachedStyle = GetStyle();
 				var style = cachedStyle.Value;
@@ -158,13 +158,15 @@ namespace BubbetsItems.Behaviours
 			}
 			public void UpdateInfo()
 			{
+				if (!healthBar || !healthBar.source) return;
+				var healthBarValues = healthBar.source.GetHealthBarValues();
 				foreach (var barInfo in barInfos)
 				{
 					if(barInfo.tracker == null)
 						barInfo.tracker = this;
 					if(barInfo.bar == null) // I cant do this in the init because it loses its reference somehow
 						barInfo.bar = healthBar;
-					barInfo.UpdateInfo(ref barInfo.info);
+					barInfo.UpdateInfo(ref barInfo.info, healthBarValues);
 				}
 			}
 			public void ApplyBar(ref int i)

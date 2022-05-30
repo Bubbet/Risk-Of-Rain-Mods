@@ -44,9 +44,11 @@ namespace BubbetsItems.Items
 				x => x.MatchLdcI4(1),
 				x => x.MatchLdcI4(1)
 			);
-			c.Index--;
-			c.Remove();
-			c.Emit(OpCodes.Ldc_I4_0);
+			//c.Index--;
+			//c.Remove();
+			//c.Emit(OpCodes.Ldc_I4_0);
+			c.Emit(OpCodes.Ldarg_0);
+			c.EmitDelegate<Func<bool, ProjectileGrappleController.GripState, bool>>((b, grip) => (!grip.owner.characterBody || grip.owner.characterBody.inventory.GetItemCount(GetInstance<BunnyFoot>().ItemDef) <= 0) && b);
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(GenericCharacterMain), nameof(GenericCharacterMain.ApplyJumpVelocity))]

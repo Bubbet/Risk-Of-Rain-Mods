@@ -58,6 +58,14 @@ Patience is key~
   - `Conq#1738` for the item stats descriptions
 
 # Changelog
+* v1.8.6 Mod Changes:
+  * Finally fixed loaders momentum when not having a bunny foot.
+  * Added Item Lost Seers Tragedy, Void Tier 3, Corrupts Acid Soaked Blindfold.
+  * Fixed itemstats being out of order in some cases(like shifted quartz).
+  * Fixed Eternal Slugs healthbar indicator positioning being broke with shields or curse.
+  * Fixed nre in tarnished when removing it in some cases.
+  * Added risk of options support for shifted quartz.
+  
 * v1.8.5 Mod Changes:
   * Added guarenteed way to obtain void coins, doing void fields.
   * Fixed expansions not disabling the items from appearing in chests.
