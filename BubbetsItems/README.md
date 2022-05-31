@@ -15,7 +15,7 @@ Icons | Items | Function | Type
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/Plan128.png" width="100"/> | Escape Plan | Gain 75% movement speed, increases with decreasing health. | `Uncommon` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/bhop.png" width="100"/> | Bunny Foot | Gain the ability to bunny hop, increasing air control by 150% and jump control by 50%. How to: https://www.youtube.com/watch?v=4PZYPPlYd6A | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970904553186811924/ceremonialProbeIcon.png" width="100"/> | Ceremonial Probe | Prevents barrier decay when you're at 59% health. | `Uncommon` |
-<img src="https://cdn.discordapp.com/attachments/953688831750709278/970814203457843230/mechSnailIcon.png" width="100"/> | Mechanical Snail | Decreases barrier decay by 83%. | `Uncommon` |
+<img src="https://cdn.discordapp.com/attachments/953688831750709278/970814203457843230/mechSnailIcon.png" width="100"/> | Mechanical Snail | Multiplies barrier decay by 83%. | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970169637067169822/sluggyBoyIcon.png" width="100"/> | Eternal Slug | Stops temporary barrier from decaying naturally past 36%. | `Uncommon` |
 ---|---|---|
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/Plate128.png" width="100"/> | Repulsion Armor Mk2 | Two modes in config. Reduce all incoming damage by 20. Cannot be reduced below 1. / Increase armor by 20. Scales with the amount of Repulsion Armor Plates you have. | `Legendary` |
@@ -28,7 +28,7 @@ Icons | Items | Function | Type
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/959343347175129128/unknown.png" width="100"/> | Adrenaline Sprout | Gain 0.03 regen per missing health while in danger. Corrupts all Cautious Slugs. | `Void Common` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/955206275296288798/ZealotryEmbraceOutline.png" width="100"/> | Zealotry Embrace | Deal 25% more damage on enemies with less than 3 debuffs. Corrupts all Death Marks. | `Void Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/967541141660647464/texIconsTemplate.png" width="100"/> | Deficient Clepsydra | 30% chance to duplicate damager over time inflictions. Corrupts all Abundant Hourglasses. | `Void Uncommon` |
-<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/lostSeersTragedyIcon.png" width="100"/> | Lost Seers Tragedy | Corrupts all Acid Soaked Blindfold. | `Void Rare` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/lostSeersTragedyIcon.png" width="100"/> | Lost Seers Tragedy | Killing an enemy spawns a Barnacle with 3 Void Common items. Limited to 1 Barnacle. Corrupts all Acid Soaked Blindfold. | `Void Rare` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/GEMO_SubmergedCistern.png" width="100"/> | Submerging Cistern | While in combat, the nearest allies wihin 20m of you will be 'tethered'. Dealing damage will heal tethered allies for 50% of damage dealt. Healing is divided among allies. Corrupts all Mired Urns. | `Void Boss` |
 ---|---|---|
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/abstractedLocusIcon.png" width="100"/> | Abstracted Locus | Teleporter zone is 50% bigger. Outside of the teleporter radius is filled with Void Fog. Staying in the Void Fog charges the teleporters 60% faster. Corrupts all Focused Convergences. | `Void Lunar` |
@@ -47,7 +47,7 @@ Icons | Items | Function | Type
 
 # Other
 If you have suggestions or questions, feel free to message `Bubbet#2639` or `GEMO#0176` on Discord.
-If you have any feedback or questions regarding the item stats of any of the items, you can contact `Conq#1738` through the modding discord.
+If you have any feedback or questions regarding item stats for any items, contact `Conq#1738` through the modding discord.
 
 Mod is still being continuously worked on!
 Patience is key~
@@ -71,7 +71,7 @@ Patience is key~
   * Added guarenteed way to obtain void coins, doing void fields.
   * Fixed expansions not disabling the items from appearing in chests.
   * Add config to share void coin on pickup, disabled by default.
-  * More token changes.
+  * Fixed another simple token.
   
 * v1.8.4 Mod Changes:
   * Made more token changes.

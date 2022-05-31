@@ -18,9 +18,9 @@ namespace BubbetsItems.Items
 			// Where III is located in ACIDSOAKEDBLINDFOLD_DESC, create a new config for spawn time please
 			base.MakeTokens();
 			AddToken("VOIDBLINDFOLD_NAME", "Lost Seers Tragedy");
-			AddToken("VOIDBLINDFOLD_PICKUP", ""); // TODO the rest of these tokens need to exist
+			AddToken("VOIDBLINDFOLD_PICKUP", "Spawn a Barnacle with items onkill."); // TODO the rest of these tokens need to exist
 			AddToken("VOIDBLINDFOLD_DESC", "Every {2} seconds, " + "summon a Blind Vermin".Style(StyleEnum.Utility) + " with " + "{1} ".Style(StyleEnum.Utility) + "Common".Style(StyleEnum.White) + " or " + "Uncommon".Style(StyleEnum.Green) + " items.");
-			AddToken("VOIDBLINDFOLD_DESC_SIMPLE", "Every 30 seconds, " + "summon a Blind Vermin".Style(StyleEnum.Utility) + " with " + "10 ".Style(StyleEnum.Utility) + "(+5 per stack) ".Style(StyleEnum.Stack) + "Common".Style(StyleEnum.White) + " or " + "Uncommon".Style(StyleEnum.Green) + " items.");
+			AddToken("VOIDBLINDFOLD_DESC_SIMPLE", "Killing an enemy " + "spawns a".Style(StyleEnum.Utility) + " Barnacle ".Style(StyleEnum.Void) + "with " + "3 ".Style(StyleEnum.Utility) + "(+3 per stack) ".Style(StyleEnum.Stack) + "Void Common ".Style(StyleEnum.VoidItem) + "items. " + "Limited to " + "1 ".Style(StyleEnum.Utility) + "(+1 per stack) ".Style(StyleEnum.Stack) "Barnacles".Style(StyleEnum.Void) + ". " + "Corrupts all Acid Soaked Blindfolds".Style(StyleEnum.Void) + ".");
 			SimpleDescriptionToken = "VOIDBLINDFOLD_DESC_SIMPLE"; 
 			AddToken("VOIDBLINDFOLD_LORE", "What is that smell?");
 		}
