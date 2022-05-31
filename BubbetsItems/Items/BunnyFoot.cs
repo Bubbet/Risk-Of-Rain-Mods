@@ -166,9 +166,170 @@ namespace BubbetsItems.Items
 
 			return velocity + wishDir * accelspeed;
 		}
-		/*protected override void FillItemDisplayRules()
+		protected override void FillItemDisplayRules()
 		{
 			base.FillItemDisplayRules();
+
+			var def = new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(0.12805F, 0.27567F, 0.09413F),
+				localAngles = new Vector3(304.4732F, 6.59901F, 343.9665F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F)
+			};
+			
+			AddDisplayRules(ModdedIDRS.NemesisEnforcer, new ItemDisplayRule()
+			{
+				childName = "Hammer",
+				localPos = new Vector3(0F, 0.01133F, -0.0109F),
+				localAngles = new Vector3(301.6936F, 180F, 180F),
+				localScale = new Vector3(0.015F, 0.015F, 0.015F),
+			});
+			AddDisplayRules(ModdedIDRS.Nemmando, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(0.00132F, 0.00189F, -0.00017F),
+				localAngles = new Vector3(304.4732F, 6.59901F, 343.9665F),
+				localScale = new Vector3(0.00473F, 0.00473F, 0.00473F),
+			});
+			AddDisplayRules(VanillaIDRS.Commando, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(0.10964F, 0.2722F, 0.07702F),
+				localAngles = new Vector3(297.8961F, 337.7542F, 3.62604F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F),
+			});
+			AddDisplayRules(VanillaIDRS.Huntress, def);
+			AddDisplayRules(VanillaIDRS.Bandit, new ItemDisplayRule()
+			{
+				childName = "ThighR",
+				localPos = new Vector3(-0.10279F, 0.35127F, 0.05551F),
+				localAngles = new Vector3(327.1544F, 5.32863F, 5.95733F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F),
+			});
+			AddDisplayRules(VanillaIDRS.Mult, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(0.04776F, 1.88373F, 1.01038F),
+				localAngles = new Vector3(333.9735F, 281.9487F, 357.2159F),
+				localScale = new Vector3(2.37168F, 2.37168F, 2.37168F),
+			});
+			AddDisplayRules(ModdedIDRS.Executioner, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(-0.00189F, 0.00099F, -0.00019F),
+				localAngles = new Vector3(286.0008F, 198.6392F, 327.8065F),
+				localScale = new Vector3(0.00436F, 0.00436F, 0.00436F),
+			});
+			AddDisplayRules(ModdedIDRS.Enforcer, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(0.11708F, 0.24051F, 0.17615F),
+				localAngles = new Vector3(324.415F, 293.5852F, 355.0646F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F),
+			});
+			AddDisplayRules(VanillaIDRS.Engineer, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(0.16015F, 0.27443F, 0.0233F),
+				localAngles = new Vector3(304.4732F, 6.59901F, 343.9665F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F),
+			});
+			AddDisplayRules(VanillaIDRS.Artificer, def);
+			AddDisplayRules(VanillaIDRS.Mercenary, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(0.17358F, 0.26745F, 0.04173F),
+				localAngles = new Vector3(304.4732F, 6.59901F, 343.9665F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F),
+			});
+			AddDisplayRules(ModdedIDRS.Paladin, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(-0.18165F, 0.3724F, -0.19136F),
+				localAngles = new Vector3(294.1706F, 158.5404F, 344.7267F),
+				localScale = new Vector3(0.53494F, 0.53494F, 0.53494F),
+			});
+			AddDisplayRules(VanillaIDRS.Rex, new ItemDisplayRule()
+			{
+				childName = "PlatformBase",
+				localPos = new Vector3(-0.68795F, -0.12907F, 0.03073F),
+				localAngles = new Vector3(64.63686F, 352.9881F, 178.495F),
+				localScale = new Vector3(0.67997F, 0.67997F, 0.67997F),
+			});
+			AddDisplayRules(VanillaIDRS.Loader, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(0.15646F, 0.28357F, 0.1099F),
+				localAngles = new Vector3(304.4732F, 6.59901F, 343.9665F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F),
+			});
+			AddDisplayRules(VanillaIDRS.Acrid, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(1.2091F, 0.51674F, 0.01721F),
+				localAngles = new Vector3(304.4732F, 6.59901F, 343.9665F),
+				localScale = new Vector3(3.07934F, 3.07934F, 3.07934F),
+			});
+			AddDisplayRules(VanillaIDRS.Captain, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(0.1283F, 0.24574F, 0.0152F),
+				localAngles = new Vector3(304.4732F, 6.59901F, 343.9665F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F),
+			});
+			/*
+			AddDisplayRules(ModdedIDRS.ReinSniper, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(-0.13938F, -0.19064F, 0.00388F),
+				localAngles = new Vector3(87.36492F, 337.0182F, 144.9593F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F),
+			});
+			*/
+			AddDisplayRules(VanillaIDRS.Heretic, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(0.28362F, 0.29826F, -0.07479F),
+				localAngles = new Vector3(358.4014F, 83.00351F, 56.10048F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F),
+			});
+			AddDisplayRules(ModdedIDRS.Miner, new ItemDisplayRule()
+			{
+				childName = "LegL",
+				localPos = new Vector3(-0.00001F, 0.00156F, 0.00128F),
+				localAngles = new Vector3(313.4082F, 274.817F, 356.2425F),
+				localScale = new Vector3(0.00398F, 0.00398F, 0.00398F),
+			});
+			AddDisplayRules(ModdedIDRS.CHEF, new ItemDisplayRule()
+			{
+				childName = "LeftLeg",
+				localPos = new Vector3(-0.00232F, -0.00503F, 0.00649F),
+				localAngles = new Vector3(340F, 180F, 0F),
+				localScale = new Vector3(0.01294F, 0.01294F, 0.01294F),
+			});
+			AddDisplayRules(ModdedIDRS.Hand, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(-0.52056F, 1.72429F, -0.37539F),
+				localAngles = new Vector3(348.6181F, 178.1265F, 2.98409F),
+				localScale = new Vector3(2.59279F, 2.59279F, 2.59279F),
+			});
+			AddDisplayRules(ModdedIDRS.BanditReloaded, new ItemDisplayRule()
+			{
+				childName = "ThighR",
+				localPos = new Vector3(0.00024F, 0.27766F, 0.14929F),
+				localAngles = new Vector3(326.1603F, 45.63481F, 355.6136F),
+				localScale = new Vector3(0.4149F, 0.4149F, 0.4149F),
+			});
+			AddDisplayRules(VanillaIDRS.Scavenger, new ItemDisplayRule()
+			{
+				childName = "ThighL",
+				localPos = new Vector3(2.51467F, 0.74224F, 0.46471F),
+				localAngles = new Vector3(302.574F, 340.1447F, 21.65013F),
+				localScale = new Vector3(3.77607F, 3.77607F, 3.77607F),
+			});
+			/*
 			AddDisplayRules(VanillaIDRS.Engineer,
 				new ItemDisplayRule
 				{
@@ -251,6 +412,7 @@ namespace BubbetsItems.Items
 		
 				}
 			);
-		}//*/
+			//*/
+		}
 	}
 }

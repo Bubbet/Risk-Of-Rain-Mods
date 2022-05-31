@@ -66,6 +66,7 @@ Patience is key~
   * Fixed Eternal Slugs healthbar indicator positioning being broke with shields or curse.
   * Fixed nre in tarnished when removing it in some cases.
   * Added risk of options support for shifted quartz.
+  * Added old idrs for bunny foot.
   
 * v1.8.5 Mod Changes:
   * Added guarenteed way to obtain void coins, doing void fields.

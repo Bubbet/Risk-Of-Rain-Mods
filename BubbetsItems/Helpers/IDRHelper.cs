@@ -22,6 +22,7 @@ namespace BubbetsItems
 		EngineerTurret,
 		EngineerWalkerTurret,
 		EngineerBeamTurret,
+		Heretic
 	}
 	
 	public enum ModdedIDRS
@@ -66,6 +67,9 @@ namespace BubbetsItems
 		Deku,
 		Soldier,
 		Arbiter,
+		Nemmando,
+		Executioner,
+		Hand
 	}
 	public static class IDRHelper
 	{
@@ -88,6 +92,7 @@ namespace BubbetsItems
 			[VanillaIDRS.EngineerWalkerTurret] 	= "EngiWalkerTurretBody",
 			[VanillaIDRS.EngineerBeamTurret] 	= "EngiBeamTurretBody",
 			[VanillaIDRS.VoidFiend] 			= "VoidSurvivorBody",
+			[VanillaIDRS.Heretic]				= "HereticBody",
 		};
 		public static Dictionary<ModdedIDRS, string> moddedEnumToBodyObjName = new()
 		{
@@ -130,7 +135,10 @@ namespace BubbetsItems
 			[ModdedIDRS.Wisp] 					= "WarframeWispBody",
 			[ModdedIDRS.Deku] 					= "DekuBody",
 			[ModdedIDRS.Soldier] 				= "TF2SollyBody",
-			[ModdedIDRS.Arbiter] 				= "ArbiterBody"
+			[ModdedIDRS.Arbiter] 				= "ArbiterBody",
+			[ModdedIDRS.Nemmando]				= "NemmandoBody",
+			[ModdedIDRS.Executioner]			= "ExecutionerBody",
+			[ModdedIDRS.Hand]					= "HANDOverclockedBody",
 		};
 
 		public static Dictionary<VanillaIDRS, ItemDisplayRuleSet> bodyReference = new();
