@@ -15,8 +15,8 @@ namespace BubbetsItems.Items.VoidLunar
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Deluged Circlet");
 			var convert = "Corrupts all Brittle Crowns.".Style(StyleEnum.Void);
-			AddToken(name + "_DESC", "Decrease " + "skill cooldowns by {0:0.##%}".Style(StyleEnum.Utility) + " of gold gained. "+"Stop all gold gain for {1} seconds upon being hit. ".Style(StyleEnum.Health) + convert);
-			AddToken(name + "_DESC_SIMPLE", "Every " + "10 ".Style(StyleEnum.Utility) + "(-50% per stack)".Style(StyleEnum.Stack) + " gold".Style(StyleEnum.Utility) + " earned" + " reduces skill cooldowns by 1 second".Style(StyleEnum.Utility) + ". " + "Temporarily stops any gold from being gained for 5 ".Style(StyleEnum.Health) +"(+5 per stack)".Style(StyleEnum.Stack) +" seconds upon being hit. ".Style(StyleEnum.Health) + convert);
+			AddToken(name + "_DESC", "Decrease " + "skill cooldowns by {0:0.##%}".Style(StyleEnum.Utility) + " of gold gained. "+"Stop all gold gain for {1} seconds upon being hit. ".Style(StyleEnum.Health));
+			AddToken(name + "_DESC_SIMPLE", "Every " + "10 ".Style(StyleEnum.Utility) + "(-50% per stack)".Style(StyleEnum.Stack) + " gold".Style(StyleEnum.Utility) + " earned" + " reduces skill cooldowns by 1 second".Style(StyleEnum.Utility) + ". " + "Temporarily stops any gold from being gained for 5 ".Style(StyleEnum.Health) +"(+5 per stack)".Style(StyleEnum.Stack) +" seconds upon being hit. ".Style(StyleEnum.Health));
 			AddToken(name + "_PICKUP", "Reduce " + "skill cooldowns".Style(StyleEnum.Utility) +" from gold gained… " + "BUT stop gold gain on hit. ".Style(StyleEnum.Health) + convert);
 			AddToken(name + "_LORE", "");
 		}

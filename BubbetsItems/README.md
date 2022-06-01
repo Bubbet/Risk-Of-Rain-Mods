@@ -67,6 +67,7 @@ Patience is key~
   * Fixed nre in tarnished when removing it in some cases.
   * Added risk of options support for shifted quartz.
   * Added old idrs for bunny foot.
+  * Automatically fill description corruption from configs.
   
 * v1.8.5 Mod Changes:
   * Added guarenteed way to obtain void coins, doing void fields.

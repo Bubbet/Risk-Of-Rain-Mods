@@ -17,8 +17,8 @@ namespace BubbetsItems.Items.VoidLunar
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Tarnished");
 			var convert = "Corrupts all Purity.".Style(StyleEnum.Void);
-			AddToken(name + "_DESC", "Gain "+"1 Luck".Style(StyleEnum.Utility) +" for " + "{0} favorable rolls per stage.".Style(StyleEnum.Utility) +" Once out of favorable rolls, gain {1} luck. ".Style(StyleEnum.Health) + convert);
-			AddToken(name + "_DESC_SIMPLE", "While active, all random effects are rolled " + "+1 time for a favorable outcome".Style(StyleEnum.Utility) + ". " + "Only stays active for 50 ".Style(StyleEnum.Health) + "(+50 per stack) ".Style(StyleEnum.Stack) + "rolls per stage".Style(StyleEnum.Health) + ". " + "When inactive, all random effects are rolled " + "+1 ".Style(StyleEnum.Health) + "(+1 per stack) ".Style(StyleEnum.Stack) + "times for an unfavorable outcome".Style(StyleEnum.Health) + ". " + convert);
+			AddToken(name + "_DESC", "Gain "+"1 Luck".Style(StyleEnum.Utility) +" for " + "{0} favorable rolls per stage.".Style(StyleEnum.Utility) +" Once out of favorable rolls, gain {1} luck. ".Style(StyleEnum.Health));
+			AddToken(name + "_DESC_SIMPLE", "While active, all random effects are rolled " + "+1 time for a favorable outcome".Style(StyleEnum.Utility) + ". " + "Only stays active for 50 ".Style(StyleEnum.Health) + "(+50 per stack) ".Style(StyleEnum.Stack) + "rolls per stage".Style(StyleEnum.Health) + ". " + "When inactive, all random effects are rolled " + "+1 ".Style(StyleEnum.Health) + "(+1 per stack) ".Style(StyleEnum.Stack) + "times for an unfavorable outcome".Style(StyleEnum.Health) + ". ");
 			AddToken(name + "_PICKUP", "Gain temporary luck, " + "then become unlucky.".Style(StyleEnum.Health) + convert);
 			AddToken(name + "_LORE", "");
 		}

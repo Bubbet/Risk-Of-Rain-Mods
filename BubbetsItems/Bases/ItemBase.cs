@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
 using BepInEx.Configuration;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using InLobbyConfig.Fields;
 using NCalc;
@@ -54,7 +55,20 @@ namespace BubbetsItems
 
             var formatArgs = scalingInfos.Select(info => info.ScalingFunction(inventory?.GetItemCount(ItemDef)))
                 .Cast<object>().ToArray();
-            
+
+            var corruption = "";
+            if (voidPairing != null)
+            {
+                corruption = "Corrupts all " + string.Join(", ", voidPairing.itemDefs.Select(x =>
+                {
+                    var str = Language.GetString(x.nameToken);
+                    if (Language.currentLanguage == Language.english)
+                        str += "s";
+                    return str;
+                })) + ".";
+                corruption = corruption.Style(StyleEnum.Void);
+            }
+
             if (sharedInfo.UseSimpleDescIfApplicable.Value && scalingInfos.All(x => x.IsDefault) && !string.IsNullOrEmpty(SimpleDescriptionToken))
             {
                 var ret = Language.GetString(sharedInfo.TokenPrefix + SimpleDescriptionToken);
@@ -62,6 +76,8 @@ namespace BubbetsItems
                 {
                     var para = new List<string>();
 
+                    ret += corruption;
+                    
                     ret += "\n";
                     
                     // Holy fuck i hate regex in c#
@@ -72,6 +88,7 @@ namespace BubbetsItems
                         if (!string.IsNullOrEmpty(val))
                             para.Add(val);
                     }
+                    
 
                     para = para.OrderBy(x => x[1]).ToList();
 
@@ -88,7 +105,7 @@ namespace BubbetsItems
             }
             else
             {
-                var ret = Language.GetStringFormatted(token ?? ItemDef.descriptionToken, formatArgs);
+                var ret = Language.GetStringFormatted(token ?? ItemDef.descriptionToken, formatArgs) + corruption;
                 if (sharedInfo.ExpandedTooltips.Value && !forceHideExtended)
                     ret += "\n\nTooltip updates automatically with these fully configurable Scaling Functions:\n" +
                            string.Join("\n", scalingInfos.Select(info => info.ToString()));
@@ -302,6 +319,7 @@ namespace BubbetsItems
             public static string ValidEntries = string.Join(" ", ItemCatalog.itemNames);
             private ConfigEntry<string> configEntry;
             private ItemBase Parent;
+            public ItemDef[] itemDefs;
 
             public VoidPairing(string defaultValue, ItemBase parent, string? oldDefault = null)
             {
@@ -314,7 +332,8 @@ namespace BubbetsItems
             public void SettingChanged()
             {
                 var pairs = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].Where(x => x.itemDef2 != Parent.ItemDef);
-                var newPairs = from str in configEntry.Value.Split(' ') select ItemCatalog.FindItemIndex(str) into index where index != ItemIndex.None select new ItemDef.Pair {itemDef1 = ItemCatalog.GetItemDef(index), itemDef2 = Parent.ItemDef};
+                itemDefs = configEntry.Value.Split(' ').Select(str => ItemCatalog.FindItemIndex(str)).Where(index => index != ItemIndex.None).Select(index => ItemCatalog.GetItemDef(index)).ToArray();
+                var newPairs = from def in itemDefs select new ItemDef.Pair {itemDef1 = def, itemDef2 = Parent.ItemDef};
                 ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = pairs.Union(newPairs).ToArray();
             }
         }

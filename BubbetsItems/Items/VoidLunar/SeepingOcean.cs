@@ -16,8 +16,8 @@ namespace BubbetsItems.Items.VoidLunar
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Seeping Ocean");
 			var convert = "Corrupts all Eulogy Zeros.".Style(StyleEnum.Void);
-			AddToken(name + "_DESC", "Items have a "+"{0:0%} chance".Style(StyleEnum.Utility) + " to become " + "Void Lunar".Style(StyleEnum.VoidLunar) +" items instead. " + convert);
-			AddToken(name + "_DESC_SIMPLE", "Items have a "+"1% ".Style(StyleEnum.Utility) +"(+1% per stack)".Style(StyleEnum.Stack) +" chance to become a " + "Void Lunar".Style(StyleEnum.VoidLunar) +" item instead. " + "Unaffected by luck".Style(StyleEnum.Utility) + ". " + convert);
+			AddToken(name + "_DESC", "Items have a "+"{0:0%} chance".Style(StyleEnum.Utility) + " to become " + "Void Lunar".Style(StyleEnum.VoidLunar) +" items instead. ");
+			AddToken(name + "_DESC_SIMPLE", "Items have a "+"1% ".Style(StyleEnum.Utility) +"(+1% per stack)".Style(StyleEnum.Stack) +" chance to become a " + "Void Lunar".Style(StyleEnum.VoidLunar) +" item instead. " + "Unaffected by luck".Style(StyleEnum.Utility) + ". ");
 			AddToken(name + "_PICKUP", "Items and equipment have a "+"small chance".Style(StyleEnum.Utility) +" to transform into a "+"Void Lunar ".Style(StyleEnum.VoidLunar) +"item instead. " + convert);
 			AddToken(name + "_LORE", "");
 		}

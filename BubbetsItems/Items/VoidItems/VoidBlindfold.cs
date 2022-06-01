@@ -7,7 +7,6 @@ using RiskOfOptions.Options;
 using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.Events;
 
 namespace BubbetsItems.Items
 {
@@ -19,8 +18,8 @@ namespace BubbetsItems.Items
 			AddToken("VOIDBLINDFOLD_NAME", "Lost Seers Tragedy");
 			var corrupt = "Corrupts all Acid Soaked Blindfolds.".Style(StyleEnum.Void);
 			AddToken("VOIDBLINDFOLD_PICKUP", "Spawn a Barnacle with items on-kill." + corrupt);
-			AddToken("VOIDBLINDFOLD_DESC", "Killing an enemy " + "spawns a".Style(StyleEnum.Utility) + " Barnacle ".Style(StyleEnum.Void) + "with " + "{1} ".Style(StyleEnum.Utility) + "Void Common ".Style(StyleEnum.VoidItem) + "items. " + "Limited to " + "{0} ".Style(StyleEnum.Utility) + "Barnacles".Style(StyleEnum.Void) + ". " + corrupt);
-			AddToken("VOIDBLINDFOLD_DESC_SIMPLE", "Killing an enemy " + "spawns a".Style(StyleEnum.Utility) + " Barnacle ".Style(StyleEnum.Void) + "with " + "3 ".Style(StyleEnum.Utility) + "(+3 per stack) ".Style(StyleEnum.Stack) + "Void Common ".Style(StyleEnum.VoidItem) + "items. " + "Limited to " + "1 ".Style(StyleEnum.Utility) + "(+1 per stack) ".Style(StyleEnum.Stack) + "Barnacles".Style(StyleEnum.Void) + ". " + corrupt);
+			AddToken("VOIDBLINDFOLD_DESC", "Killing an enemy " + "spawns a".Style(StyleEnum.Utility) + " Barnacle ".Style(StyleEnum.Void) + "with " + "{1} ".Style(StyleEnum.Utility) + "Void Common ".Style(StyleEnum.VoidItem) + "items. " + "Limited to " + "{0} ".Style(StyleEnum.Utility) + "Barnacles".Style(StyleEnum.Void) + ". ");
+			AddToken("VOIDBLINDFOLD_DESC_SIMPLE", "Killing an enemy " + "spawns a".Style(StyleEnum.Utility) + " Barnacle ".Style(StyleEnum.Void) + "with " + "3 ".Style(StyleEnum.Utility) + "(+3 per stack) ".Style(StyleEnum.Stack) + "Void Common ".Style(StyleEnum.VoidItem) + "items. " + "Limited to " + "1 ".Style(StyleEnum.Utility) + "(+1 per stack) ".Style(StyleEnum.Stack) + "Barnacles".Style(StyleEnum.Void) + ". ");
 			SimpleDescriptionToken = "VOIDBLINDFOLD_DESC_SIMPLE"; 
 			AddToken("VOIDBLINDFOLD_LORE", "");
 		}

@@ -12,7 +12,7 @@ namespace BubbetsItems.Items.VoidLunar
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Unwilling Lunate");
 			AddToken(name + "_DESC", "");
-			AddToken(name + "_DESC_SIMPLE", "Interactables spawn 50% (+50% per stack) more. Voidtouched Enemies have a 4% (+4% per stack) chance to replace an item drop. Drones have a 4% (+4% per stack) chance to become Voidtouched. Corrupts all Defiant Gouge.");
+			AddToken(name + "_DESC_SIMPLE", "Interactables spawn 50% (+50% per stack) more. Voidtouched Enemies have a 4% (+4% per stack) chance to replace an item drop. Drones have a 4% (+4% per stack) chance to become Voidtouched. ");
 			AddToken(name + "_PICKUP", "");
 			AddToken(name + "_LORE", "");
 		}

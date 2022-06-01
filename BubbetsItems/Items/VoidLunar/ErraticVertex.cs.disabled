@@ -12,7 +12,7 @@ namespace BubbetsItems.Items.VoidLunar
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Erratic Vertex");
 			AddToken(name + "_DESC", "");
-			AddToken(name + "_DESC_SIMPLE", "Creates a 16m Ward of Void in a random location nearby. Upon entry, there is a 10% (+5% per stack) for a Void Implosion to trigger. Corrupts all Mercurial Rachis.");
+			AddToken(name + "_DESC_SIMPLE", "Creates a 16m Ward of Void in a random location nearby. Upon entry, there is a 10% (+5% per stack) for a Void Implosion to trigger. ");
 			AddToken(name + "_PICKUP", "");
 			AddToken(name + "_LORE", "");
 		}
