@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1116799698
+CRC: 710007
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: db1a9fd14d5db83d11b7f81b81368c60
+    Hash: ef449fc3b5f384be428edca4934bf392
   TypeTreeHash:
     serializedVersion: 2
     Hash: dd94bf943bda0c1ad402a9672474239f
@@ -196,6 +196,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/Regularitems/ScintillatingJet/scintillatingJet.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/EternalSlug/sluggyBoyIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/EscapePlan/ItemDefEscapePlan.asset
+- Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/seerTragedyEmission.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Clay Catalyst/BuffDefClayCatalyst.asset
 - Assets/BubbetsItems/Assets/Items/VoidLunar/ClumpedSand/sandDiffuse.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/AcidSoakedBlindfold/acidSoakedBlindfoldRender-1.png
@@ -212,6 +213,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/VoidLunar/SeepingOcean/liquidTexture.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/ceremonialProbe.fbx
 - Assets/BubbetsItems/Assets/Items/VoidLunar/SeepingOcean/SeepingOceanGlassMat.mat
+- Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/ItemDefVoidBlindfold.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/GemCarapacePickup.prefab
 - Assets/BubbetsItems/Assets/Items/VoidLunar/SeepingOcean/liquidNormal.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidJunkToScrapTier1/voidscrap.fbx
@@ -235,6 +237,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/Regularitems/ZealotryEmbrace/GEMO_ZealotryEmbrace.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidSlug/adrenalineSproutArmature_itemDisplayPose.anim
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Bone Visor/boneVisor.fbx
+- Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/lostSeersTragedyDisplay.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Clay Catalyst/clayCatalystIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/Torturer/TorturerMaterial.mat
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/RenderIcon.png
@@ -259,6 +262,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/Regularitems/ZealotryEmbrace/zealotryEmbraceEmission.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Circlet/circletDiffuse.png
 - Assets/BubbetsItems/Assets/Equipment/GyroscopicWhisk/whiskNormal.png
+- Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/lostSeersTragedy.fbx
 - Assets/BubbetsItems/Assets/Items/VoidLunar/AbstractedLocus/LocusMat.mat
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Tarnished/tarnishedIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/ShiftedQuartz/ShiftedQuartzPickup.prefab
@@ -286,6 +290,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/Regularitems/ScintillatingJet/scintillatingJet.fbx
 - Assets/BubbetsItems/Assets/Items/Regularitems/Hourglass/Hourglass.fbx
 - Assets/BubbetsItems/Assets/Items/Regularitems/ShiftedQuartz/Materials/transparentShifted.mat
+- Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/lostSeersTragedyDisplay.fbx
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/undeadMask.fbx
 - Assets/BubbetsItems/Assets/Equipment/GyroscopicWhisk/WhiskIndicator.prefab
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Circlet/BuffDefCirclet.asset
@@ -308,6 +313,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Equipment/GyroscopicWhisk/gyroscopicWhisk.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/AbstractedLocus/AbstractedLocusFog.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/shieldDiffuse.png
+- Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/seerTragedyNormal.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/NoCullStandardShader.shader
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Clay Catalyst/clayCatalystNormal.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/ShiftedQuartz/shiftedQuartzDiffuse.png
@@ -486,6 +492,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Clay Catalyst/ClayCatalystTeleporter.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/EternalSlug/sluggyBoySecondComing.fbx
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidSlug/Void Slug Pickup.controller
+- Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/seerTragedyDiffuse.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidScrapTier3/ItemDefVoidScrapTier3.asset
 - Assets/BubbetsItems/Assets/Items/Regularitems/JelliedSoles/JelliedSolesHitSound.asset
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Decent/deepDescent.prefab
@@ -528,6 +535,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/Regularitems/Torturer/Torturer.prefab
 - Assets/BubbetsItems/Assets/Equipment/EquipmentDefTestVoid.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/BarrierMat.mat
+- Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/VoidBlindfoldPickup.prefab
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/SepiaMaterial.mat
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/lostNazarEmission.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/AbstractedLocus/abstractedLocusIcon.png
@@ -551,6 +559,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/lostNazarIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/ScintillatingJet/scintillatingJetOutline.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/BuffDefGemCarapaceRefresh.asset
+- Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/lostSeersTragedyIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/RepulsionPlateMk2/RepulsionPlatePickup.prefab
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidJunkToScrapTier1/vortex.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Shop/LunarVoidShop.prefab
@@ -563,4 +572,5 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/Regularitems/RepulsionPlateMk2/BuckleMaterial.mat
 - Assets/BubbetsItems/Assets/ExpansionDefBub.asset
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Tarnished/TarnishedMat.mat
+- Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/VoidBlindfoldMat.mat
 Dependencies: []
