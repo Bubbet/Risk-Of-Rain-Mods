@@ -41,17 +41,18 @@ namespace BubbetsItems
             {
                 //if (!string.IsNullOrEmpty(__instance.overrideBodyText)) return true;
 
+                var s = __result;
                 var item = ItemBase.Items.FirstOrDefault(x =>
                 {
                     if (x.ItemDef == null) // This is a really bad way of doing this
                         BubbetsItemsPlugin.Log.LogWarning($"ItemDef is null for {x} in tooltipProvider, this will throw errors.");
-                    return __instance.bodyToken == x.ItemDef.descriptionToken || __instance.bodyToken == x.ItemDef.pickupToken;
+                    return __instance.bodyToken == x.ItemDef.descriptionToken || __instance.bodyToken == x.ItemDef.pickupToken || __instance.titleToken == x.ItemDef.nameToken || Language.GetString(x.ItemDef.descriptionToken) == s;
                 });
                 var equipment = EquipmentBase.Equipments.FirstOrDefault(x =>
                 {
                     if (x.EquipmentDef == null)
                         BubbetsItemsPlugin.Log.LogWarning($"EquipmentDef is null for {x} in tooltipProvider, this will throw errors.");
-                    return __instance.bodyToken == x.EquipmentDef.descriptionToken || __instance.bodyToken == x.EquipmentDef.pickupToken;
+                    return __instance.bodyToken == x.EquipmentDef.descriptionToken || __instance.bodyToken == x.EquipmentDef.pickupToken || __instance.titleToken == x.EquipmentDef.nameToken || Language.GetString(x.EquipmentDef.descriptionToken) == s;
                 });
                 var titleEquipment = EquipmentBase.Equipments.FirstOrDefault(x =>
                 {
