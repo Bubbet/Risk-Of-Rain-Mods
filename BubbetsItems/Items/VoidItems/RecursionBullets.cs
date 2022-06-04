@@ -15,7 +15,9 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("RECURSIONBULLETS_NAME", "Recursion Bullets");
-			AddToken("RECURSIONBULLETS_PICKUP", "Attacking bosses increases attack speed. " + " Corrupts all Armor-Piercing Rounds".Style(StyleEnum.Void) + ".");
+			var convert = "Corrupts all Armor-Piercing Rounds".Style(StyleEnum.Void) + ".";
+			AddToken("RECURSIONBULLETS_CONVERT", convert);
+			AddToken("RECURSIONBULLETS_PICKUP", "Attacking bosses increases attack speed. " + convert);
 			AddToken("RECURSIONBULLETS_DESC", "Attacking bosses increases " + "attack speed ".Style(StyleEnum.Damage) + "by " + "{0:0%}".Style(StyleEnum.Damage) + ". Maximum cap of " + "{1:0%} attack speed".Style(StyleEnum.Damage) + ". " );
 			AddToken("RECURSIONBULLETS_DESC_SIMPLE", "Attacking bosses increases " + "attack speed ".Style(StyleEnum.Damage) + "by " + "5% ".Style(StyleEnum.Damage) + ", capping at " + "10% ".Style(StyleEnum.Damage) + "(+10% per stack) ".Style(StyleEnum.Stack) + "attack speed".Style(StyleEnum.Damage) + ". ");
 			SimpleDescriptionToken = "RECURSIONBULLETS_DESC_SIMPLE";

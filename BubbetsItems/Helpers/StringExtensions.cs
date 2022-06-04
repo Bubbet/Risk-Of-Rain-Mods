@@ -2,7 +2,7 @@
 
 namespace BubbetsItems.Helpers
 {
-    public static class StringColors
+    public static class StringExtensions
     {
         public static readonly Dictionary<StyleEnum, string> styleStrings = new Dictionary<StyleEnum, string>()
         {
@@ -54,6 +54,21 @@ namespace BubbetsItems.Helpers
         public static string Style(this string contents, StyleEnum style)
         {
             return Style(style, contents);
+        }
+        
+        public static string Sub(this string contents, int start, int end)
+        {
+            if (start < 0) start = contents.Length + start;
+            if (end < 0) end = contents.Length + end;
+            
+            return contents.Substring(start, end - start);
+        }
+
+        public static string Sub(this string contents, int end)
+        {
+            var start = end;
+            if (end < 0) start = contents.Length + start;
+            return contents.Substring(start);
         }
     }
 

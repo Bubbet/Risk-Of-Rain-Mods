@@ -59,14 +59,21 @@ namespace BubbetsItems
             var corruption = "";
             if (voidPairing != null)
             {
-                corruption = "Corrupts all " + string.Join(", ", voidPairing.itemDefs.Select(x =>
+                if (!voidPairing.IsDefault)
                 {
-                    var str = Language.GetString(x.nameToken);
-                    if (Language.currentLanguage == Language.english)
-                        str += "s";
-                    return str;
-                })) + ".";
-                corruption = corruption.Style(StyleEnum.Void);
+                    corruption = "Corrupts all " + string.Join(", ", voidPairing.itemDefs.Select(x =>
+                    {
+                        var str = Language.GetString(x.nameToken);
+                        if (Language.currentLanguage == Language.english)
+                            str += "s";
+                        return str;
+                    })) + ".";
+                    corruption = corruption.Style(StyleEnum.Void);
+                }
+                else
+                {
+                    corruption = Language.GetString(ItemDef.nameToken.Sub(0, -"_NAME".Length) + "_CONVERT");
+                }
             }
 
             if (sharedInfo.UseSimpleDescIfApplicable.Value && scalingInfos.All(x => x.IsDefault) && !string.IsNullOrEmpty(SimpleDescriptionToken))
@@ -324,10 +331,13 @@ namespace BubbetsItems
             private ConfigEntry<string> configEntry;
             private ItemBase Parent;
             public ItemDef[] itemDefs;
+            private string _default;
+            public bool IsDefault => _default == configEntry.Value;
 
             public VoidPairing(string defaultValue, ItemBase parent, string? oldDefault = null)
             {
                 Parent = parent;
+                _default = defaultValue;
                 configEntry = parent.sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + parent.GetType().Name, defaultValue, "Valid values: " + ValidEntries, oldDefault);
                 configEntry.SettingChanged += (_, _) => SettingChanged();
                 //SettingChanged();
