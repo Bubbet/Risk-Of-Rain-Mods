@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-//using Aetherium;
+using Aetherium;
 using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
@@ -15,10 +15,11 @@ namespace BubbetsItems.Items
     public class Hourglass : ItemBase
     {
         private MethodInfo _aetheriumOrig;
+        private MethodInfo _aetheriumOrig1;
         private ConfigEntry<string> buffBlacklist;
 
         private IEnumerable<BuffDef> buffDefBlacklist;
-        //private static bool AetheriumEnabled => Chainloader.PluginInfos.ContainsKey(AetheriumPlugin.ModGuid);
+        private static bool AetheriumEnabled => Chainloader.PluginInfos.ContainsKey(AetheriumPlugin.ModGuid);
 
         protected override void MakeTokens()
         {
@@ -50,7 +51,7 @@ namespace BubbetsItems.Items
             buffDefBlacklist = from str in buffBlacklist.Value.Split(' ') select BuffCatalog.FindBuffIndex(str) into index where index != BuffIndex.None select BuffCatalog.GetBuffDef(index);
         }
 
-        /*
+        //*
         protected override void MakeBehaviours()
         {
             base.MakeBehaviours();
@@ -60,16 +61,18 @@ namespace BubbetsItems.Items
         
         private void PatchAetherium() // This needs to be its own function because for some reason typeof() was being called at the start of the function and it was throwing file not found exception
         {
-            _aetheriumOrig = typeof(AetheriumPlugin).Assembly.GetType("Aetherium.Utils.ItemHelpers").GetMethod("RefreshTimedBuffs", new[] {typeof(CharacterBody), typeof(BuffDef), typeof(float), typeof(float)});
-            Harmony.Patch(_aetheriumOrig, new HarmonyMethod(GetType().GetMethod("AetheriumTimedBuffHook")));
+            _aetheriumOrig1 = typeof(AetheriumPlugin).Assembly.GetType("Aetherium.Utils.ItemHelpers").GetMethod("RefreshTimedBuffs", new[] {typeof(CharacterBody), typeof(BuffDef), typeof(float)})!;
+            _aetheriumOrig = typeof(AetheriumPlugin).Assembly.GetType("Aetherium.Utils.ItemHelpers").GetMethod("RefreshTimedBuffs", new[] {typeof(CharacterBody), typeof(BuffDef), typeof(float), typeof(float)})!;
+            sharedInfo.Harmony?.Patch(_aetheriumOrig1, new HarmonyMethod(GetType().GetMethod("AetheriumTimedBuffHook1")));
+            sharedInfo.Harmony?.Patch(_aetheriumOrig, new HarmonyMethod(GetType().GetMethod("AetheriumTimedBuffHook")));
         }
 
         protected override void DestroyBehaviours()
         {
             base.DestroyBehaviours();
             if (!AetheriumEnabled) return;
-            Harmony.Unpatch(_aetheriumOrig, HarmonyPatchType.Prefix);
-        }*/
+            sharedInfo.Harmony?.Unpatch(_aetheriumOrig, HarmonyPatchType.Prefix);
+        }//*/
 
         
         // ReSharper disable once InconsistentNaming
@@ -81,9 +84,14 @@ namespace BubbetsItems.Items
         }
         
         // Hooked in awake
-        public static void AetheriumTimedBuffHook(CharacterBody body, BuffDef buffDef, ref float taperStart)
+        public static void AetheriumTimedBuffHook1(CharacterBody body, BuffDef buffDef, ref float duration)
+        {
+            duration = DoDurationPatch(body, buffDef, duration);
+        }
+        public static void AetheriumTimedBuffHook(CharacterBody body, BuffDef buffDef, ref float taperStart, ref float taperDuration)
         {
             taperStart = DoDurationPatch(body, buffDef, taperStart);
+            taperDuration = DoDurationPatch(body, buffDef, taperDuration);
         }
 
         private static float DoDurationPatch(CharacterBody cb, BuffDef def, float duration)

@@ -147,23 +147,27 @@ namespace BubbetsItems
         
         public override void AddDisplayRules(VanillaIDRS which, ItemDisplayRule[] displayRules)
         {
-            var rules = IDRHelper.GetRuleSet(which).keyAssetRuleGroups;
+            var set = IDRHelper.GetRuleSet(which);
+            var rules = set?.keyAssetRuleGroups;
+            if (rules is null) return;
             rules = rules.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
             {
                 displayRuleGroup = new DisplayRuleGroup {rules = displayRules},
                 keyAsset = ItemDef
             }).ToArray();
-            IDRHelper.GetRuleSet(which).keyAssetRuleGroups = rules;
+            set!.keyAssetRuleGroups = rules;
         }
         public override void AddDisplayRules(ModdedIDRS which, ItemDisplayRule[] displayRules)
         {
-            var rules = IDRHelper.GetRuleSet(which).keyAssetRuleGroups;
+            var set = IDRHelper.GetRuleSet(which);
+            var rules = set?.keyAssetRuleGroups;
+            if (rules is null) return;
             rules = rules.AddItem(new ItemDisplayRuleSet.KeyAssetRuleGroup
             {
                 displayRuleGroup = new DisplayRuleGroup {rules = displayRules},
                 keyAsset = ItemDef
             }).ToArray();
-            IDRHelper.GetRuleSet(which).keyAssetRuleGroups = rules;
+            set!.keyAssetRuleGroups = rules;
         }
         
 

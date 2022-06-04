@@ -1,5 +1,8 @@
 ﻿using System.Collections.Generic;
+using Rewired;
 using RoR2;
+using UnityEngine;
+using Logger = UnityEngine.Logger;
 
 namespace BubbetsItems
 {
@@ -144,21 +147,26 @@ namespace BubbetsItems
 		public static Dictionary<VanillaIDRS, ItemDisplayRuleSet> bodyReference = new();
 		public static Dictionary<ModdedIDRS, ItemDisplayRuleSet> moddedBodyReference = new();
 
-		public static ItemDisplayRuleSet GetRuleSet(ModdedIDRS which)
+		public static ItemDisplayRuleSet? GetRuleSet(ModdedIDRS which)
 		{
 			if (moddedBodyReference.ContainsKey(which)) return moddedBodyReference[which];
 
 			var body = BodyCatalog.FindBodyPrefab(moddedEnumToBodyObjName[which]);
 			if (!body) return null;
 			moddedBodyReference.Add(which, body.GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet);
-
+			
 			return moddedBodyReference[which];
 		}
-		public static ItemDisplayRuleSet GetRuleSet(VanillaIDRS which)
+		public static ItemDisplayRuleSet? GetRuleSet(VanillaIDRS which)
 		{
 			if (bodyReference.ContainsKey(which)) return bodyReference[which];
 
 			var body = BodyCatalog.FindBodyPrefab(enumToBodyObjName[which]);
+			if (!body)
+			{
+				Debug.Log("Missing body for vanilla survivor: " + which);
+				return null;
+			}
 			bodyReference.Add(which, body.GetComponent<ModelLocator>().modelTransform.GetComponent<CharacterModel>().itemDisplayRuleSet);
 
 			return bodyReference[which];
