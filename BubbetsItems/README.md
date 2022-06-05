@@ -57,8 +57,19 @@ Patience is key~
   - `SOM#0001` for doing most of the icon templates
   - `Neon Sky#7293` for the beautiful item concepts
   - `Conq#1738` for the item stats descriptions
-
+  
 # Changelog
+* v1.8.7 Mod Changes:
+  * Added default string for void conversions.
+  * Added risk of options support for scintillating jet stackable.
+  * Added more items to void scraps conversion default.
+  * Added config option for void coin drop rate from enemies, only updates between run starts.
+    * Mult is updated live.
+  * Added config option to disable void coins dropping from voidbarrels, requires restart.
+  * Added config option to disable void coins from void fields.
+  * Tweaked warning about idrs to be slightly less annoying.
+  * Made the default check for scalinginfos trim whitespace so its more forgiving.
+  
 * v1.8.6 Mod Changes:
   * Finally fixed loaders momentum when not having a bunny foot.
   * Added Item Lost Seers Tragedy, Void Tier 3, Corrupts Acid Soaked Blindfold.
@@ -68,6 +79,7 @@ Patience is key~
   * Added risk of options support for shifted quartz.
   * Added old idrs for bunny foot.
   * Automatically fill description corruption from configs.
+  * Re-enabled Aetherium support.
   
 * v1.8.5 Mod Changes:
   * Added guarenteed way to obtain void coins, doing void fields.

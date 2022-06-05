@@ -32,10 +32,7 @@ namespace BubbetsItems.Items
 		}
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
-			// TODO
-			// MysticsItems_LimitedArmorBroken DRUMSTICKCONSUMED ITEM_CARTRIDGECONSUMED ITEM_SINGULARITYCONSUMED ITEM_BROKEN_MESS
-			// ConsumedGlassShield_ItemDef TreasureCacheConsumed TreasureCacheVoidConsumed
-			AddVoidPairing("FragileDamageBonusConsumed HealingPotionConsumed ExtraLifeVoidConsumed ExtraLifeConsumed");
+			AddVoidPairing("FragileDamageBonusConsumed HealingPotionConsumed ExtraLifeVoidConsumed ExtraLifeConsumed MysticsItems_LimitedArmorBroken DRUMSTICKCONSUMED ITEM_CARTRIDGECONSUMED ITEM_SINGULARITYCONSUMED ITEM_BROKEN_MESS ConsumedGlassShield_ItemDef TreasureCacheConsumed TreasureCacheVoidConsumed", oldDefault: "FragileDamageBonusConsumed HealingPotionConsumed ExtraLifeVoidConsumed ExtraLifeConsumed");
 		}
 		[HarmonyPostfix, HarmonyPatch(typeof(CostTypeCatalog), nameof(CostTypeCatalog.Init))]
 		public static void FixBuying()

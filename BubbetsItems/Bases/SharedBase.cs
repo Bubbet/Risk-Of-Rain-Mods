@@ -186,15 +186,16 @@ namespace BubbetsItems
 
                 // TODO hide this
                 object? inst = (instance as ItemBase)?.ItemDef;
-                inst ??= (instance as EquipmentBase)?.EquipmentDef; 
-                
+                inst ??= (instance as EquipmentBase)?.EquipmentDef;
+
+                var noDisplayRules = new List<string>();
                 foreach (var key in IDRHelper.enumToBodyObjName.Keys)
                 {
                     var ruleset = IDRHelper.GetRuleSet(key);
                     if (ruleset == null) continue;
                     var idrs = ruleset.keyAssetRuleGroups.FirstOrDefault(x => ReferenceEquals(x.keyAsset, inst));
                     if (!ReferenceEquals(idrs.keyAsset, inst))
-                        instance.sharedInfo.Logger.LogWarning($"{instance.GetType().Name} has no item display rules for {key}");
+                        noDisplayRules.Add(key.ToString());
                 }
                 
                 foreach (var key in IDRHelper.moddedEnumToBodyObjName.Keys)
@@ -203,8 +204,9 @@ namespace BubbetsItems
                     if (ruleset == null) continue;
                     var idrs = ruleset.keyAssetRuleGroups.FirstOrDefault(x => ReferenceEquals(x.keyAsset, inst));
                     if (!ReferenceEquals(idrs.keyAsset, inst))
-                        instance.sharedInfo.Logger.LogWarning($"{instance.GetType().Name} has no item display rules for {key}");
+                        noDisplayRules.Add(key.ToString());
                 }
+                instance.sharedInfo.Logger.LogWarning($"{instance.GetType().Name} has no item display rules for {string.Join(", ", noDisplayRules)}");
             }
         }
 

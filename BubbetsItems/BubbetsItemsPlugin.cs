@@ -14,6 +14,7 @@ using BetterUI;
 using BubbetsItems.Behaviours;
 using EntityStates;
 using HarmonyLib;
+using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
@@ -31,7 +32,7 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.8.6")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.8.7")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     [BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
@@ -195,17 +196,29 @@ namespace BubbetsItems
         {
             public static ConfigEntry<bool> AmmoPickupAsOrbEnabled;
             public static ConfigEntry<bool> VoidCoinShareOnPickup;
+            public static ConfigEntry<float> VoidCoinDropChanceStart;
+            public static ConfigEntry<float> VoidCoinDropChanceMult;
+            public static ConfigEntry<bool> VoidCoinBarrelDrop;
+            public static ConfigEntry<bool> VoidCoinVoidFields;
             //public static bool RequiresR2Api;
 
             internal static void Init(ConfigFile configFile)
             {
                 AmmoPickupAsOrbEnabled = configFile.Bind(ConfigCategoriesEnum.DisableModParts, "Ammo Pickup As Orb", true,  "Should the Ammo Pickup as an orb be enabled.");
                 VoidCoinShareOnPickup = configFile.Bind(ConfigCategoriesEnum.General, "Share Void Coin On Pickup", false, "Should void coins share on pickup.");
+                VoidCoinDropChanceStart = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop Chance", 30f, "Not used if using Released from the void. Starting drop chance of void coins from void guys.");
+                VoidCoinDropChanceMult = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop Chance Mult", 0.5f, "Not used if using Released from the void. Drop chance multiplier to chance upon getting coin.");
+                VoidCoinBarrelDrop = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop From Void Barrel", true, "Not used if using Released from the void. Should the void coin drop from barrels.");
+                VoidCoinVoidFields = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop From Void Fields", true, "Should the void coin drop from void fields.");
             }
 
             internal static void MakeRiskOfOptions()
             {
                 RiskOfOptions.ModSettingsManager.AddOption(new CheckBoxOption(VoidCoinShareOnPickup));
+                RiskOfOptions.ModSettingsManager.AddOption(new SliderOption(VoidCoinDropChanceStart));
+                RiskOfOptions.ModSettingsManager.AddOption(new SliderOption(VoidCoinDropChanceMult, new SliderConfig {min = 0, max = 1, formatString = "{0:0.##%}"}));
+                RiskOfOptions.ModSettingsManager.AddOption(new CheckBoxOption(VoidCoinBarrelDrop, true));
+                RiskOfOptions.ModSettingsManager.AddOption(new CheckBoxOption(VoidCoinVoidFields));
             }
         }
 

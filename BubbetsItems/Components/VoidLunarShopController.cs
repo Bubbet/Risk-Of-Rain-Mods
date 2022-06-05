@@ -59,6 +59,7 @@ namespace BubbetsItems
 		public static void DropCoinInFields(ArenaMissionController __instance)
 		{
 			if (!Run.instance.IsExpansionEnabled(BubbetsItemsPlugin.BubSotvExpansion)) return;
+			if (!BubbetsItemsPlugin.Conf.VoidCoinVoidFields.Value) return;
 			var participatingPlayerCount = Run.instance.participatingPlayerCount;
 			if (participatingPlayerCount == 0 || !__instance.rewardSpawnPosition) return;
 			
@@ -135,11 +136,14 @@ namespace BubbetsItems
 		
 		public static void EnableVoidCoins()
 		{
-			voidCoinTable = Addressables.LoadAssetAsync<ExplicitPickupDropTable>("RoR2/DLC1/Common/DropTables/dtVoidCoin.asset").WaitForCompletion();
-			voidBarrelSpawncard = Addressables.LoadAssetAsync<InteractableSpawnCard>("RoR2/DLC1/VoidCoinBarrel/iscVoidCoinBarrel.asset").WaitForCompletion();
-			voidBarrelSpawncard.prefab.GetComponent<ModelLocator>().gameObject.AddComponent<ChestBehavior>().dropTable = voidCoinTable;
-			voidBarrelSpawncard.directorCreditCost = 7;
-			
+			if (BubbetsItemsPlugin.Conf.VoidCoinBarrelDrop.Value)
+			{
+				voidCoinTable = Addressables.LoadAssetAsync<ExplicitPickupDropTable>("RoR2/DLC1/Common/DropTables/dtVoidCoin.asset").WaitForCompletion();
+				voidBarrelSpawncard = Addressables.LoadAssetAsync<InteractableSpawnCard>("RoR2/DLC1/VoidCoinBarrel/iscVoidCoinBarrel.asset").WaitForCompletion();
+				voidBarrelSpawncard.prefab.GetComponent<ModelLocator>().gameObject.AddComponent<ChestBehavior>().dropTable = voidCoinTable;
+				voidBarrelSpawncard.directorCreditCost = 7;
+			}
+
 			Run.onRunStartGlobal += _ => { voidCoinChances.Clear(); };
 			GlobalEventManager.onCharacterDeathGlobal += delegate(DamageReport damageReport)
 			{
@@ -152,7 +156,7 @@ namespace BubbetsItems
 						characterMaster = characterMaster.minionOwnership.ownerMaster;
 					}
 					PlayerCharacterMasterController component = characterMaster.GetComponent<PlayerCharacterMasterController>();
-					var chance = 50f;
+					var chance = BubbetsItemsPlugin.Conf.VoidCoinDropChanceStart.Value;
 					
 					if (voidCoinChances.TryGetValue(component, out var chanceg))
 						chance = chanceg;
@@ -162,7 +166,7 @@ namespace BubbetsItems
 					if (!component || !Util.CheckRoll(chance)) return;
 					
 					PickupDropletController.CreatePickupDroplet(PickupCatalog.FindPickupIndex(DLC1Content.MiscPickups.VoidCoin.miscPickupIndex), damageReport.victim.transform.position, Vector3.up * 10f);
-					voidCoinChances[component] = chance * 0.5f;
+					voidCoinChances[component] = chance *  BubbetsItemsPlugin.Conf.VoidCoinDropChanceMult.Value;
 				}
 			};
 		}

@@ -274,7 +274,7 @@ namespace BubbetsItems
                 set => _configEntry.Value = value;
             }
 
-            public bool IsDefault => _configEntry.Value == _defaultValue;
+            public bool IsDefault => _configEntry.Value.Trim() == _defaultValue.Trim();
 
             public ScalingInfo(ConfigFile configFile, string defaultValue, string name, Type callingType, string? desc = null, string? oldDefault = null)
             {
@@ -332,7 +332,7 @@ namespace BubbetsItems
             private ItemBase Parent;
             public ItemDef[] itemDefs;
             private string _default;
-            public bool IsDefault => _default == configEntry.Value;
+            public bool IsDefault => _default.Trim() == configEntry.Value.Trim();
 
             public VoidPairing(string defaultValue, ItemBase parent, string? oldDefault = null)
             {
@@ -419,9 +419,9 @@ namespace BubbetsItems
             }
         }
 
-        public void AddVoidPairing(string defaultValue)
+        public void AddVoidPairing(string defaultValue, string? oldDefault = null)
         {
-            voidPairing = new VoidPairing(defaultValue, this);
+            voidPairing = new VoidPairing(defaultValue, this, oldDefault);
         }
     }
 }
