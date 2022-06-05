@@ -6,6 +6,7 @@ using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
 using R2API.Networking;
+using R2API.Networking.Interfaces;
 using R2API.Utils;
 using RoR2;
 using UnityEngine.Networking;
@@ -17,7 +18,7 @@ using UnityEngine.Networking;
 
 namespace NetworkedTimedBuffs
 {
-	[BepInPlugin("bubbet.networkedtimedbuffs", "Networked Timed Buffs", "1.0.1")]
+	[BepInPlugin("bubbet.networkedtimedbuffs", "Networked Timed Buffs", "1.0.2")]
 	[BepInDependency(R2API.R2API.PluginGUID)]
 	[R2APISubmoduleDependency(nameof(NetworkingAPI))]
 	public class NetworkedTimedBuffsPlugin : BaseUnityPlugin
@@ -64,6 +65,13 @@ namespace NetworkedTimedBuffs
 				null,null,null,null,new HarmonyMethod(patchesType.GetMethod(nameof(HarmonyPatches.DefaultBehaviour), flags)));
 			harm.Patch(bodyType.GetMethodCached("<AddTimedBuff>g__RefreshStacks|32_1"),
 				null,null,null,null,new HarmonyMethod(patchesType.GetMethod(nameof(HarmonyPatches.RefreshStacks), flags)));
+		}
+		
+		public static void UpdateTimer(CharacterBody body, int index, float duration)
+		{
+			if (!NetworkServer.active) return;
+			if (!body.isPlayerControlled && NetworkedTimedBuffsPlugin.onlySyncPlayers.Value) return;
+			new SyncTimedBuffUpdate(body.networkIdentity.netId, index, duration).Send(NetworkDestination.Clients);
 		}
 	}
 

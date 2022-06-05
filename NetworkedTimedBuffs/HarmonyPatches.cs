@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using HarmonyLib;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -52,7 +51,7 @@ namespace NetworkedTimedBuffs
 
 		private static void UpdateTimer(float duration, int index, CharacterBody body)
 		{
-			UpdateTimer(body, index, duration);
+			NetworkedTimedBuffsPlugin.UpdateTimer(body, index, duration);
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.FixedUpdate))]
@@ -95,8 +94,7 @@ namespace NetworkedTimedBuffs
 			});
 		}
 
-		[HarmonyILManipulator,
-		 HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.AddTimedBuff), typeof(BuffDef), typeof(float))]
+		[HarmonyILManipulator, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.AddTimedBuff), typeof(BuffDef), typeof(float))]
 		public static void AddTimedBuffRefresh2(ILContext il)
 		{
 			var c = new ILCursor(il);
@@ -140,14 +138,7 @@ namespace NetworkedTimedBuffs
 			c.Emit(OpCodes.Ldloc, indexloc);
 			c.Emit(OpCodes.Ldarg, durationarg);
 			
-			c.EmitDelegate<Action<CharacterBody, int, float>>(UpdateTimer);
-		}
-
-		private static void UpdateTimer(CharacterBody body, int index, float duration)
-		{
-			if (!NetworkServer.active) return;
-			if (!body.isPlayerControlled && NetworkedTimedBuffsPlugin.onlySyncPlayers.Value) return;
-			new SyncTimedBuffUpdate(body.networkIdentity.netId, index, duration).Send(NetworkDestination.Clients);
+			c.EmitDelegate<Action<CharacterBody, int, float>>(NetworkedTimedBuffsPlugin.UpdateTimer);
 		}
 
 		public static void TimedBuffAdd(List<CharacterBody.TimedBuff> __instance, CharacterBody.TimedBuff item)

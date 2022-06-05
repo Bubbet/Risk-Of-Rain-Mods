@@ -4,7 +4,7 @@
 	"website_url":"https://github.com/Bubbet",
 	"displayName":"Networked Timed Buffs",
 
-	"version_number": "1.0.1",
+	"version_number": "1.0.2",
 	"description": "Networks the timed buffs, so clients are aware of the timers.",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.1902",
