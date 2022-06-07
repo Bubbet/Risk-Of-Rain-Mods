@@ -133,6 +133,7 @@ namespace BubbetsItems
 
         private void onLoad()
         {
+            ConfigCategories.Init();
             if (Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterUI"))
                 AddItemTierToBetterUI();
         }

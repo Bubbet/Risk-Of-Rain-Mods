@@ -37,7 +37,7 @@ namespace BubbetsItems.Items
 			AddScalingFunction("[a] * 0.15", "Damage", oldDefault: "[a] * 0.2");
 			visualOnlyForAuthority = sharedInfo.ConfigFile!.Bind(ConfigCategoriesEnum.General,
 				"Shifted quartz visual only for authority", false,
-				"Should shifted quartz visual effect only show for the player who has the item");
+				"Should shifted quartz visual effect only show for the player who has the item", networked: false);
 			visualTransparency = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Shifted quartz inside transparency",
 				0.15f, "The transparency of the dome when enemies are inside it.");
 		}

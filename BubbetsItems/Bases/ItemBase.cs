@@ -383,40 +383,50 @@ namespace BubbetsItems
             public float y;
             public float z;
 
-            public int RoundToInt(float x)
-            {
-                return Mathf.RoundToInt(x);
-            }
-
-            public float Log(float x)
-            {
-                return Mathf.Log(x);
-            }
-
-            public float Pow(float x, float y)
-            {
-                return Mathf.Pow(x, y);
-            }
-
-            public float Sin(float x)
-            {
-                return Mathf.Sin(x);
-            }
-            
-            public float Tan(float x)
-            {
-                return Mathf.Tan(x);
-            }
-
-            public float Max(float x, float y)
-            {
-                return Mathf.Max(x, y);
-            }
-
-            public float Min(float x, float y)
-            {
-                return Mathf.Min(x, y);
-            }
+            public float Epsilon = Mathf.Epsilon;
+            public float Infinity = Mathf.Infinity;
+            public float Deg2Rad = Mathf.Deg2Rad;
+            public float NegativeInfinity = Mathf.NegativeInfinity;
+            public float PI = Mathf.PI;
+            public float Rad2Deg = Mathf.Rad2Deg;
+            public float Abs(float x) => Mathf.Abs(x);
+            public float Acos(float x) => Mathf.Acos(x);
+            public float Asin(float x) => Mathf.Asin(x);
+            public float Atan(float x) => Mathf.Atan(x);
+            public float Atan2(float x, float y) => Mathf.Atan2(x, y);
+            public float Ceil(float x) => Mathf.Ceil(x);
+            public float Clamp(float a, float x, float y) => Mathf.Clamp(a, x, y);
+            public float Clamp01(float x) => Mathf.Clamp01(x);
+            public float Cos(float x) => Mathf.Cos(x);
+            public float Exp(float x) => Mathf.Exp(x);
+            public float Floor(float x) => Mathf.Floor(x);
+            public float Gamma(float x, float y, float z) => Mathf.Gamma(x, y, z);
+            public float Lerp(float x, float y, float z) => Mathf.Lerp(x, y, z);
+            public float Log(float x) => Mathf.Log(x);
+            public float Log(float x, float y) => Mathf.Log(x, y);
+            public float Log10(float x) => Mathf.Log10(x);
+            public float Max(float x, float y) => Mathf.Max(x, y);
+            public float Min(float x, float y) => Mathf.Min(x, y);
+            public float Pow(float x, float y) => Mathf.Pow(x, y);
+            public float Repeat(float x, float y) => Mathf.Repeat(x, y);
+            public float Round(float x) => Mathf.Round(x);
+            public float Sign(float x) => Mathf.Sign(x);
+            public float Sin(float x) => Mathf.Sin(x);
+            public float Sqrt(float x) => Mathf.Sqrt(x);
+            public float Tan(float x) => Mathf.Tan(x);
+            public float DeltaAngle(float x, float y) => Mathf.DeltaAngle(x, y);
+            public float InverseLerp(float x, float y, float z) => Mathf.InverseLerp(x, y, z);
+            public float LerpAngle(float x, float y, float z) => Mathf.LerpAngle(x, y, z);
+            public float LerpUnclamped(float x, float y, float z) => Mathf.LerpUnclamped(x, y, z);
+            public float MoveTowards(float x, float y, float z) => Mathf.MoveTowards(x, y, z);
+            public float PerlinNoise(float x, float y) => Mathf.PerlinNoise(x, y);
+            public float PingPong(float x, float y) => Mathf.PingPong(x, y);
+            //public float SmoothDamp(float x, float y, ref float z, float w, float m, float d) => Mathf.SmoothDamp(x, y, ref z, w, m, d);
+            public float SmoothStep(float x, float y, float z) => Mathf.SmoothStep(x, y, z);
+            public float MoveTowardsAngle(float x, float y, float z) => Mathf.MoveTowardsAngle(x, y, z);
+            //public float SmoothDampAngle(float x, float y, ref float z, float w, float m) => Mathf.SmoothDampAngle(x, y, ref z, w, m);
+            public float GammaToLinearSpace(float x) => Mathf.GammaToLinearSpace(x);
+            public float LinearToGammaSpace(float x) => Mathf.LinearToGammaSpace(x);
         }
 
         public void AddVoidPairing(string defaultValue, string? oldDefault = null)

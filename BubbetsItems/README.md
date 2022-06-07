@@ -69,6 +69,8 @@ Patience is key~
   * Added config option to disable void coins from void fields.
   * Tweaked warning about idrs to be slightly less annoying.
   * Made the default check for scalinginfos trim whitespace so its more forgiving.
+  * Added all the methods from Mathf to expression context so they can be used in scaling infos.
+  * Added networking of configs, without saving to disk.
   
 * v1.8.6 Mod Changes:
   * Finally fixed loaders momentum when not having a bunny foot.
