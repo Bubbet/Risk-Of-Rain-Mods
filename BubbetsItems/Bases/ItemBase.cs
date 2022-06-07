@@ -353,6 +353,7 @@ namespace BubbetsItems
         }
         
         [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "ParameterHidesMember")]
         public class ExpressionContext
         {
             // yes this is terrible but im not smart enough to figure out another way.
