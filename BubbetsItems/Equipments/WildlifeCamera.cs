@@ -13,7 +13,6 @@ namespace BubbetsItems.Equipments
 {
     public class WildlifeCamera : EquipmentBase
     {
-        private ConfigEntry<float> _cooldown;
         private ConfigEntry<bool> _filterOutBosses;
         private GameObject _indicator;
         
@@ -77,7 +76,6 @@ Luckily they seem friendly enough");
         protected override void MakeConfigs()
         {
             base.MakeConfigs();
-            _cooldown = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Wildlife Camera Cooldown", 25f, "Cooldown for wildlife camera equipment.");
             _filterOutBosses = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Wildlife Camera Can Do Bosses", false, "Can the camera capture bosses.");
             _indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("CameraIndicator"); // TODO make risk of options
         }
@@ -86,20 +84,9 @@ Luckily they seem friendly enough");
         public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
             base.MakeInLobbyConfig(scalingFunctions);
-            var cool = new FloatConfigField(_cooldown.Definition.Key, () => _cooldown.Value, newValue => {
-                _cooldown.Value = newValue;
-                EquipmentDef.cooldown = newValue;
-            });
 
             var general = scalingFunctions[ConfigCategoriesEnum.General];
             general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(_filterOutBosses));
-            general.Add(cool);
-        }
-
-        protected override void PostEquipmentDef()
-        {
-            base.PostEquipmentDef();
-            EquipmentDef.cooldown = _cooldown.Value;
         }
 
         [HarmonyPostfix, HarmonyPatch(typeof(CharacterModel), nameof(CharacterModel.UpdateOverlays))]

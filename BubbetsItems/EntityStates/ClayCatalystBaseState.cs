@@ -18,7 +18,6 @@ namespace BubbetsItems.EntityStates
 		public override void OnEnter()
 		{
 			base.OnEnter();
-			Debug.Log("ClayCatalyst OnEnter");
 			Transform parent = transform.parent;
 			if (parent)
 			{

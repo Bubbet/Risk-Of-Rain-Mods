@@ -16,8 +16,9 @@ namespace BubbetsItems.Items.VoidLunar
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Seeping Ocean");
 			var convert = "Corrupts all Eulogy Zeros.".Style(StyleEnum.Void);
+			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "Items have a "+"{0:0%} chance".Style(StyleEnum.Utility) + " to become " + "Void Lunar".Style(StyleEnum.VoidLunar) +" items instead. ");
-			AddToken(name + "_DESC_SIMPLE", "Items have a "+"1% ".Style(StyleEnum.Utility) +"(+1% per stack)".Style(StyleEnum.Stack) +" chance to become a " + "Void Lunar".Style(StyleEnum.VoidLunar) +" item instead. " + "Unaffected by luck".Style(StyleEnum.Utility) + ". ");
+			AddToken(name + "_DESC_SIMPLE", "Items have a "+"4% ".Style(StyleEnum.Utility) +"(+4% per stack)".Style(StyleEnum.Stack) +" chance to become a " + "Void Lunar".Style(StyleEnum.VoidLunar) +" item instead. " + "Unaffected by luck".Style(StyleEnum.Utility) + ". ");
 			AddToken(name + "_PICKUP", "Items and equipment have a "+"small chance".Style(StyleEnum.Utility) +" to transform into a "+"Void Lunar ".Style(StyleEnum.VoidLunar) +"item instead. " + convert);
 			AddToken(name + "_LORE", "");
 		}
@@ -25,7 +26,7 @@ namespace BubbetsItems.Items.VoidLunar
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("[a] * 0.01", "Void Lunar Chance");
+			AddScalingFunction("[a] * 0.04", "Void Lunar Chance", oldDefault:"[a] * 0.01");
 		}
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)

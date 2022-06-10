@@ -11,6 +11,7 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Unwilling Lunate");
+			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "");
 			AddToken(name + "_DESC_SIMPLE", "Interactables spawn 50% (+50% per stack) more. Voidtouched Enemies have a 4% (+4% per stack) chance to replace an item drop. Drones have a 4% (+4% per stack) chance to become Voidtouched. ");
 			AddToken(name + "_PICKUP", "");

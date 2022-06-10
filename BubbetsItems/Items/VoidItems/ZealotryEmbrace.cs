@@ -20,7 +20,9 @@ namespace BubbetsItems.Items
 			base.MakeTokens();
 
 			AddToken("ZEALOTRYEMBRACE_NAME", "Zealotry Embrace");
-			AddToken("ZEALOTRYEMBRACE_PICKUP", "Deal more damage to enemies with barely any debuffs inflicted." + " Corrupts all Death Marks".Style(StyleEnum.Void) + ".");
+			var convert = "Corrupts all Death Marks".Style(StyleEnum.Void) + ".";
+			AddToken("ZEALOTRYEMBRACE_CONVERT", convert);
+			AddToken("ZEALOTRYEMBRACE_PICKUP", "Deal more damage to enemies with barely any debuffs inflicted. " + convert);
 			AddToken("ZEALOTRYEMBRACE_DESC", "Deal " + "{0:0%} more damage ".Style(StyleEnum.Damage) + "on enemies with less than " + "{1} ".Style(StyleEnum.Damage) + "debuffs. ");
 			AddToken("ZEALOTRYEMBRACE_DESC_SIMPLE", "Deal " + "25% more damage ".Style(StyleEnum.Damage) + "on enemies with less than " + "3 ".Style(StyleEnum.Damage) + "(+1 per stack) ".Style(StyleEnum.Stack) + "debuffs. ");
 			SimpleDescriptionToken = "ZEALOTRYEMBRACE_DESC_SIMPLE";

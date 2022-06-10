@@ -15,7 +15,6 @@ namespace BubbetsItems.Equipments
 {
     public class BrokenClock : EquipmentBase
     {
-        private ConfigEntry<float> cooldown;
         public static ConfigEntry<float> duration;
         public static ConfigEntry<float> interval;
 
@@ -69,8 +68,6 @@ namespace BubbetsItems.Equipments
         protected override void MakeConfigs()
         {
             base.MakeConfigs();
-            cooldown = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Cooldown", 60f, "Broken Clock equipment cooldown.", 5f);
-            cooldown.SettingChanged += (_, _) => ConfigUpdate();
             duration = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Buffer Duration", 10f, "Duration of time to store in the broken clock.");
             duration.SettingChanged += (_, _) => ConfigUpdate();
             interval = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Broken Clock Keyframe Interval", 0.25f, "How often to capture a keyframe and store it. Also determines the size of the stack in conjunction with the duration. duration/interval = size size takes memory so try to keep it small enough.");
@@ -81,7 +78,7 @@ namespace BubbetsItems.Equipments
         private void ConfigUpdate()
         {
             if (EquipmentDef != null)
-                EquipmentDef.cooldown = cooldown.Value;
+                EquipmentDef.cooldown = Cooldown.Value;
             BrokenClockBehaviour.stackDuration = duration.Value;
             BrokenClockBehaviour.keyframeInterval = interval.Value;
         }
@@ -98,8 +95,7 @@ namespace BubbetsItems.Equipments
             base.MakeInLobbyConfig(scalingFunctions);
 
             var general = scalingFunctions[ConfigCategoriesEnum.General];
-
-            general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(cooldown));
+            
             general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(duration));
             general.Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(interval));
         }

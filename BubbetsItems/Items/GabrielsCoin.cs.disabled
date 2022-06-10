@@ -42,8 +42,6 @@ namespace BubbetsItems.Items
 			GlobalEventManager.onServerDamageDealt -= DamageDealt;
 		}
 
-		private static readonly MethodInfo? MemberwiseCloneRef = typeof(object).GetMethod(nameof(MemberwiseClone), BindingFlags.Instance | BindingFlags.NonPublic);
-
 		private void DamageDealt(DamageReport damageInfo)
 		{
 			if (!damageInfo.attacker) return;

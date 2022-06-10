@@ -14,7 +14,8 @@ namespace BubbetsItems
 	{
 		General,
 		BalancingFunctions,
-		DisableModParts
+		DisableModParts,
+		EquipmentCooldowns,
 	}
 
 	public static class ConfigCategories
@@ -22,7 +23,8 @@ namespace BubbetsItems
 		public static readonly string[] Categories = {
 			"General",
 			"Balancing Functions",
-			"Disable Mod Parts"
+			"Disable Mod Parts",
+			"Equipment Cooldowns"
 		};
 
 		public static ConfigEntry<T> Bind<T>(this ConfigFile file, ConfigCategoriesEnum which, string key, T defaultValue, string description, T? oldDefault = default, bool networked = true)
@@ -85,7 +87,8 @@ namespace BubbetsItems
 		{
 			try
 			{
-				if (NetworkServer.active) return;
+				if (!NetworkServer.active) return;
+				if (networkuser.connectionToClient == null) return; // escape your own user connecting
 				networkuser.connectionToClient.Send(MsgType + 1, new ConfigSyncAll());
 			}
 			catch (Exception f)

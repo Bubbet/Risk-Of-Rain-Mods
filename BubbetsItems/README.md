@@ -71,6 +71,13 @@ Patience is key~
   * Made the default check for scalinginfos trim whitespace so its more forgiving.
   * Added all the methods from Mathf to expression context so they can be used in scaling infos.
   * Added networking of configs, without saving to disk.
+  * Made the void lunar shop terminals easier to ping.
+  * Changed abstracted locus to strong void fog.
+  * Removed limit of items for team in abstracted locus.
+  * Increased chance for seeping ocean to 4%.
+  * Fixed obliterating.
+  * Made deep decent not consume extra fuel cells / be limited by charges.  
+  * Added volume slider config option for effect sounds.
   
 * v1.8.6 Mod Changes:
   * Finally fixed loaders momentum when not having a bunny foot.

@@ -24,6 +24,7 @@ namespace BubbetsItems.Items.VoidLunar
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Orbs of Falsity");
 			var convert = "Corrupts all Beads of Fealty's.".Style(StyleEnum.Void);
+			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "Seems to do nothing... but... " + "Void Seeds spawn {0:0%} more. ".Style(StyleEnum.Health));
 			AddToken(name + "_DESC_SIMPLE", "Seems to do nothing... but... " +"Void Seeds spawn 50% ".Style(StyleEnum.Health) +"(+15% per stack)".Style(StyleEnum.Stack) +" more often. ");
 			AddToken(name + "_PICKUP", "Seems to do nothing... but... " + convert);
@@ -85,8 +86,9 @@ namespace BubbetsItems.Items.VoidLunar
 		{
 			var inst = GetInstance<OrbOfFalsity>();
 
-			if (!CharacterMaster.readOnlyInstancesList.Any(t => t.inventory.GetItemCount(inst.ItemDef) > 0)) return true;
-			
+			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst.ItemDef.itemIndex, false, false);
+			if (amount <= 0) return true;
+
 			__instance.outer.SetNextState(new TransitionToVoidStage());
 			
 			return false;

@@ -24,7 +24,9 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("SHIFTEDQUARTZ_NAME", "Shifted Quartz");
-			AddToken("SHIFTEDQUARTZ_PICKUP", "Deal bonus damage if there aren't nearby enemies. " + "Corrupts all Focus Crystals".Style(StyleEnum.Void) + ".");
+			var convert = "Corrupts all Focus Crystals.".Style(StyleEnum.Void);
+			AddToken("SHIFTEDQUARTZ_CONVERT", convert);
+			AddToken("SHIFTEDQUARTZ_PICKUP", "Deal bonus damage if there aren't nearby enemies. " + "Corrupts all Focus Crystals".Style(StyleEnum.Void) + ". " + convert);
 			AddToken("SHIFTEDQUARTZ_DESC", "Increase damage dealt by " + "{1:0%} ".Style(StyleEnum.Damage) + "when there are no enemies within " + "{0}m ".Style(StyleEnum.Damage) + "of you. ");
 			AddToken("SHIFTEDQUARTZ_DESC_SIMPLE", "Increase damage dealt by " + "15% ".Style(StyleEnum.Damage) + "(+15% per stack) ".Style(StyleEnum.Stack) + "when there are no enemies within " + "18m ".Style(StyleEnum.Damage) + "of you. ");
 			SimpleDescriptionToken = "SHIFTEDQUARTZ_DESC_SIMPLE";
@@ -39,7 +41,7 @@ namespace BubbetsItems.Items
 				"Shifted quartz visual only for authority", false,
 				"Should shifted quartz visual effect only show for the player who has the item", networked: false);
 			visualTransparency = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Shifted quartz inside transparency",
-				0.15f, "The transparency of the dome when enemies are inside it.");
+				0.15f, "The transparency of the dome when enemies are inside it.", networked: false);
 		}
 
 		public override void MakeRiskOfOptions()

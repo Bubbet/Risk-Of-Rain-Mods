@@ -34,6 +34,7 @@ namespace BubbetsItems
             ModSettingsManager.AddOption(new CheckBoxOption(Enabled, true));
         }
 
+        public static readonly MethodInfo? MemberwiseCloneRef = typeof(object).GetMethod(nameof(MemberwiseClone), BindingFlags.Instance | BindingFlags.NonPublic);
         public ConfigEntry<bool>? Enabled;
         public static readonly List<SharedBase> Instances = new List<SharedBase>();
         public static readonly Dictionary<PickupIndex, SharedBase> PickupIndexes = new Dictionary<PickupIndex, SharedBase>();
@@ -279,11 +280,11 @@ namespace BubbetsItems
                 Harmony = harmony;
                 TokenPrefix = tokenPrefix;
                 
-                ExpandedTooltips = configFile.Bind(ConfigCategoriesEnum.General, "Expanded Tooltips", true, "Enables the scaling function in the tooltip.");
-                DescInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Description In Pickup", true, "Used the description in the pickup for my items.");
-                ForceHideScalingInfoInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Disable Scaling Info In Pickup", true, "Should the scaling infos be hidden from pickups.");
-                UseSimpleDescIfApplicable = configFile.Bind(ConfigCategoriesEnum.General, "Use Simple Descriptions If Applicable", true, "Should the description be closer to vanilla if you haven't changed the scaling function.");
-                ItemStatsInSimpleDesc = configFile.Bind(ConfigCategoriesEnum.General, "Show Item Stats For Simple Desc", true, "Display the solved value under the simple description.");
+                ExpandedTooltips = configFile.Bind(ConfigCategoriesEnum.General, "Expanded Tooltips", true, "Enables the scaling function in the tooltip.", networked: false);
+                DescInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Description In Pickup", true, "Used the description in the pickup for my items.", networked: false);
+                ForceHideScalingInfoInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Disable Scaling Info In Pickup", true, "Should the scaling infos be hidden from pickups.", networked: false);
+                UseSimpleDescIfApplicable = configFile.Bind(ConfigCategoriesEnum.General, "Use Simple Descriptions If Applicable", true, "Should the description be closer to vanilla if you haven't changed the scaling function.", networked: false);
+                ItemStatsInSimpleDesc = configFile.Bind(ConfigCategoriesEnum.General, "Show Item Stats For Simple Desc", true, "Display the solved value under the simple description.", networked: false);
             }
 
             public void MakeRiskOfOptions()

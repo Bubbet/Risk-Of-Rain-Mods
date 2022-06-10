@@ -11,6 +11,7 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Erratic Vertex");
+			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "");
 			AddToken(name + "_DESC_SIMPLE", "Creates a 16m Ward of Void in a random location nearby. Upon entry, there is a 10% (+5% per stack) for a Void Implosion to trigger. ");
 			AddToken(name + "_PICKUP", "");

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using BepInEx.Configuration;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using RiskOfOptions;
+using RiskOfOptions.OptionConfigs;
+using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.ExpansionManagement;
@@ -18,6 +22,20 @@ namespace BubbetsItems
         {
             var name = GetType().Name;
             Enabled = sharedInfo.ConfigFile.Bind("Disable Equipments", name, true, "Should this equipment be enabled.");
+            Cooldown = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.EquipmentCooldowns, name, EquipmentDef ? EquipmentDef.cooldown : 15f, "Cooldown for this equipment.");
+            Cooldown.SettingChanged += CooldownChanged;
+        }
+
+        private void CooldownChanged(object sender, EventArgs e)
+        {
+            EquipmentDef.cooldown = Cooldown.Value;
+        }
+
+        public override void MakeRiskOfOptions()
+        {
+            base.MakeRiskOfOptions();
+            var config = new SliderConfig() { min = 0, max = 80};
+            ModSettingsManager.AddOption(new SliderOption(Cooldown, config));
         }
 
         public virtual void AuthorityEquipmentPress(EquipmentSlot equipmentSlot) {}
@@ -30,11 +48,16 @@ namespace BubbetsItems
         public virtual void OnUnEquip(Inventory inventory, EquipmentState newEquipmentState) {}
         public virtual void OnEquip(Inventory inventory, EquipmentState? oldEquipmentState) {}
         public virtual bool UpdateTargets(EquipmentSlot equipmentSlot) { return false; }
-        protected virtual void PostEquipmentDef() {}
+
+        protected virtual void PostEquipmentDef()
+        {
+            EquipmentDef.cooldown = Cooldown.Value;
+        }
         
         public EquipmentDef EquipmentDef;
         
         private static IEnumerable<EquipmentBase> _equipments;
+        internal ConfigEntry<float> Cooldown;
         public static IEnumerable<EquipmentBase> Equipments => _equipments ??= Instances.OfType<EquipmentBase>();
 
         public enum EquipmentActivationState

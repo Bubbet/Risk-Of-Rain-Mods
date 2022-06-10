@@ -5,6 +5,7 @@ using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using RiskOfOptions;
+using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
 using RoR2;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace BubbetsItems.Items.VoidLunar
 	public class AbstractedLocus : ItemBase
 	{
 		public static ConfigEntry<bool> disableEnemyDamageInArena;
+		public static ConfigEntry<int> itemLimit;
 
 		protected override void MakeTokens()
 		{
@@ -24,6 +26,7 @@ namespace BubbetsItems.Items.VoidLunar
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Abstracted Locus");
 			var convert = "Corrupts all Focused Convergences.".Style(StyleEnum.Void);
+			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "Teleporter zone is " + "{0:0%} larger.".Style(StyleEnum.Utility) + " Outside of the teleporter radius is filled with "+"Void Fog.".Style(StyleEnum.Void)+" Staying in the "+"Fog".Style(StyleEnum.Void)+" charges the teleporter "+ "{1:0%} faster".Style(StyleEnum.Utility) + " per player outside. ");
 			AddToken(name + "_DESC_SIMPLE", "Teleporter zone is " + "50% ".Style(StyleEnum.Utility) + "(+20% per stack)".Style(StyleEnum.Stack) +" bigger.".Style(StyleEnum.Utility) + " Outside of the teleporter radius is filled with " + "Void Fog.".Style(StyleEnum.Void) + " Staying in the " + "Void Fog".Style(StyleEnum.Void) + " charges the teleporters " + "60% ".Style(StyleEnum.Utility) + "(+60% per stack) ".Style(StyleEnum.Stack) + "faster. ".Style(StyleEnum.Utility));
 			AddToken(name + "_PICKUP", "Teleporter zone is " + "larger".Style(StyleEnum.Utility) + ", outside of the zone is " + "void fog".Style(StyleEnum.Void) + ", being in the " + "fog".Style(StyleEnum.Void) + " increases teleporter charge speed. ".Style(StyleEnum.Utility) + convert);
@@ -36,6 +39,7 @@ namespace BubbetsItems.Items.VoidLunar
 			AddScalingFunction("[r] * ([a] * 0.2 + 1.3)", "Teleporter Radius", desc: "[a] = item count; [r] = current radius;");
 			AddScalingFunction("[r] * ([a] * 0.6 * Max(0, [p]) + 1)", "Void Fog Charge Increase", desc: "[a] = item count; [p] = outside players; [r] = charging rate");
 			disableEnemyDamageInArena = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Abstracted Locus Disable Enemy Damage In Arena", false, "Should the void fog hurt the enemies in the Void Fields.");
+			itemLimit = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Abstracted Locus Item Limit", -1, "Limit of locus amongst team, -1 is infinite.");
 		}
 
 		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
@@ -50,6 +54,7 @@ namespace BubbetsItems.Items.VoidLunar
 		{
 			base.MakeRiskOfOptions();
 			ModSettingsManager.AddOption(new CheckBoxOption(disableEnemyDamageInArena));
+			ModSettingsManager.AddOption(new IntSliderOption(itemLimit, new IntSliderConfig {min = -1, max = 40}));
 		}
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
@@ -120,7 +125,12 @@ namespace BubbetsItems.Items.VoidLunar
 			{
 				amount = 0;
 			}
-			amount = Mathf.Min(amount, 3); // TODO replace 3 with configurable cap
+
+			if (AbstractedLocus.itemLimit.Value > -1)
+			{
+				amount = Mathf.Min(amount, AbstractedLocus.itemLimit.Value);
+			}
+
 			var target = (float) amount > 0f ? 1f : 0f;
 			var num = Mathf.MoveTowards(currentValue, target, 5f * Time.fixedDeltaTime); // TODO replace 5 with configurable cap
 			if (currentValue <= 0f && num > 0f)
@@ -168,7 +178,7 @@ namespace BubbetsItems.Items.VoidLunar
 		public void Awake()
 		{
 			fog = GetComponent<FogDamageController>();
-			fog.dangerBuffDef = RoR2Content.Buffs.VoidFogMild;
+			fog.dangerBuffDef = RoR2Content.Buffs.VoidFogStrong;
 
 			if (AbstractedLocus.disableEnemyDamageInArena.Value && SceneManager.GetActiveScene().name == "arena")
 			{

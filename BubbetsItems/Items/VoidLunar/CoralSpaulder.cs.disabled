@@ -11,6 +11,7 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Coral Spaulder");
+			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "");
 			AddToken(name + "_DESC_SIMPLE", "50% (+25% per stack) to block incoming damage. Unaffected by luck. Reduce maximum health by 50% (+50% per stack).");
 			AddToken(name + "_PICKUP", "");

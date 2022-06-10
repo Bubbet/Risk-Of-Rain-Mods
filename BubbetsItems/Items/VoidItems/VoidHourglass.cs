@@ -13,11 +13,12 @@ namespace BubbetsItems.Items
 			AddToken("VOIDHOURGLASS_NAME", "Deficient Clepsydra");
 			//AddToken("VOIDHOURGLASS_DESC", "The duration of your inflicted Damage Over Times are multiplied by {0}. " + "Corrupts all Abundant Hourglasses.".Style(StyleEnum.Void));
 			//AddToken("VOIDHOURGLASS_PICKUP", "Duration of inflicted debuffs are extended.");
-			
+			var convert = "Corrupts all Abundant Hourglasses".Style(StyleEnum.Void);
+			AddToken("VOIDHOURGLASS_CONVERT", convert);
 			AddToken("VOIDHOURGLASS_DESC", "{0:0%} chance to duplicate " + "damage over time ".Style(StyleEnum.Damage) + "inflictons. ");
 			AddToken("VOIDHOURGLASS_DESC_SIMPLE", "30% " + "(+30% per stack) ".Style(StyleEnum.Stack) + "chance to duplicate " + "damage over time ".Style(StyleEnum.Damage) + "inflictons. ");
 			SimpleDescriptionToken = "VOIDHOURGLASS_DESC_SIMPLE";
-			AddToken("VOIDHOURGLASS_PICKUP", "Chance to duplicate damage over times.");
+			AddToken("VOIDHOURGLASS_PICKUP", "Chance to duplicate damage over times. " + convert);
             
 			AddToken("VOIDHOURGLASS_LORE", "");
 		}

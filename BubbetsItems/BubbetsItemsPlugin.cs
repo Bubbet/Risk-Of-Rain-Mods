@@ -180,6 +180,8 @@ namespace BubbetsItems
             {
                 Log.LogError(e);
             }
+            
+            AkSoundEngine.SetRTPCValue("Volume_Effects", Conf.EffectVolume.Value);
         }
 
         [SystemInitializer]
@@ -201,16 +203,19 @@ namespace BubbetsItems
             public static ConfigEntry<float> VoidCoinDropChanceMult;
             public static ConfigEntry<bool> VoidCoinBarrelDrop;
             public static ConfigEntry<bool> VoidCoinVoidFields;
+            public static ConfigEntry<float> EffectVolume;
             //public static bool RequiresR2Api;
 
             internal static void Init(ConfigFile configFile)
             {
                 AmmoPickupAsOrbEnabled = configFile.Bind(ConfigCategoriesEnum.DisableModParts, "Ammo Pickup As Orb", true,  "Should the Ammo Pickup as an orb be enabled.");
                 VoidCoinShareOnPickup = configFile.Bind(ConfigCategoriesEnum.General, "Share Void Coin On Pickup", false, "Should void coins share on pickup.");
-                VoidCoinDropChanceStart = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop Chance", 30f, "Not used if using Released from the void. Starting drop chance of void coins from void guys.");
+                VoidCoinDropChanceStart = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop Chance", 10f, "Not used if using Released from the void. Starting drop chance of void coins from void guys.");
                 VoidCoinDropChanceMult = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop Chance Mult", 0.5f, "Not used if using Released from the void. Drop chance multiplier to chance upon getting coin.");
                 VoidCoinBarrelDrop = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop From Void Barrel", true, "Not used if using Released from the void. Should the void coin drop from barrels.");
                 VoidCoinVoidFields = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop From Void Fields", true, "Should the void coin drop from void fields.");
+                EffectVolume = configFile.Bind(ConfigCategoriesEnum.General, "Effect Volume", 50f, "Volume of the sound effects in my mod.", networked: false);
+                EffectVolume.SettingChanged += (_, _) => AkSoundEngine.SetRTPCValue("Volume_Effects", EffectVolume.Value);
             }
 
             internal static void MakeRiskOfOptions()
@@ -220,6 +225,7 @@ namespace BubbetsItems
                 RiskOfOptions.ModSettingsManager.AddOption(new SliderOption(VoidCoinDropChanceMult, new SliderConfig {min = 0, max = 1, formatString = "{0:0.##%}"}));
                 RiskOfOptions.ModSettingsManager.AddOption(new CheckBoxOption(VoidCoinBarrelDrop, true));
                 RiskOfOptions.ModSettingsManager.AddOption(new CheckBoxOption(VoidCoinVoidFields));
+                RiskOfOptions.ModSettingsManager.AddOption(new SliderOption(EffectVolume));
             }
         }
 
