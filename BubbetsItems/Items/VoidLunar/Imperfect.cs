@@ -16,7 +16,7 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Imperfection");
-			var convert = "Corrupts all Transcendence".Style(StyleEnum.VoidLunar) + ".";
+			var convert = "Converts all Transcendence".Style(StyleEnum.VoidLunar) + ".";
 			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "Converts all but 1 shield into maximum health. Gain "+"{0:0%} shield".Style(StyleEnum.Utility) +" and " + "{1} armor. ".Style(StyleEnum.Health));
 			AddToken(name + "_DESC_SIMPLE", "Converts all current " + "shield".Style(StyleEnum.Utility) + " into " + "maximum health".Style(StyleEnum.Health) + ". Reduce " + "armor".Style(StyleEnum.Health) + " by " + "-25".Style(StyleEnum.Health) + " (-25 per stack)".Style(StyleEnum.Stack) + " but gain an additional " + "25% shield".Style(StyleEnum.Utility) + " (+25% per stack)".Style(StyleEnum.Stack) + ". ");

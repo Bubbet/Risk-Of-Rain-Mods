@@ -13,7 +13,7 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Clumped Sand");
-			var convert = "Corrupts all Shaped Glass".Style(StyleEnum.VoidLunar) + ".";
+			var convert = "Converts all Shaped Glass".Style(StyleEnum.VoidLunar) + ".";
 			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "All attacks " + "hit {0} more times".Style(StyleEnum.Utility) + " for "+"{2:0%} damage. ".Style(StyleEnum.Damage) + "{1} hp/s to your regen. ".Style(StyleEnum.Health));
 			AddToken(name + "_DESC_SIMPLE", "All attacks will " + "hit for an additional 1 ".Style(StyleEnum.Utility) + "(+1 per stack)".Style(StyleEnum.Stack) +" times".Style(StyleEnum.Utility) + " for " + "50% base damage".Style(StyleEnum.Damage) + ", but" + " reduces health regeneration by -3/s".Style(StyleEnum.Health) + " (-3/s per stack)".Style(StyleEnum.Stack) + ". ");

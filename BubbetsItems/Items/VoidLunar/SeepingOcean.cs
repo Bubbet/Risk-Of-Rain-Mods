@@ -15,7 +15,7 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Seeping Ocean");
-			var convert = "Corrupts all Eulogy Zeros".Style(StyleEnum.Void) + ".";
+			var convert = "Converts all Eulogy Zeros".Style(StyleEnum.Void) + ".";
 			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "Items have a "+"{0:0%} chance".Style(StyleEnum.Utility) + " to become " + "Void Lunar".Style(StyleEnum.VoidLunar) +" items instead. ");
 			AddToken(name + "_DESC_SIMPLE", "Items have a "+"4% ".Style(StyleEnum.Utility) +"(+4% per stack)".Style(StyleEnum.Stack) +" chance to become a " + "Void Lunar".Style(StyleEnum.VoidLunar) +" item instead. " + "Unaffected by luck".Style(StyleEnum.Utility) + ". ");
