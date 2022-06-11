@@ -83,18 +83,20 @@ namespace BubbetsItems
         [HarmonyPrefix, HarmonyPatch(typeof(EquipmentSlot), nameof(EquipmentSlot.InvokeRpcRpcOnClientEquipmentActivationRecieved))]
         public static bool NetReceive(NetworkBehaviour obj, NetworkReader reader) // 2.5
         {
+            EquipmentActivationState state = EquipmentActivationState.ConsumeStock;
             try
             {
-                var state = (EquipmentActivationState) reader.ReadByte();
-                var __instance = (EquipmentSlot) obj;
-                var equipmentDef = EquipmentCatalog.GetEquipmentDef(__instance.equipmentIndex);
-                var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef == equipmentDef);
-                if (equipment != null)
-                {
-                    equipment.PerformClientAction(__instance, state);
-                    return false;
-                }
+                state = (EquipmentActivationState) reader.ReadByte();
             } catch (IndexOutOfRangeException){}
+
+            var __instance = (EquipmentSlot) obj;
+            var equipmentDef = EquipmentCatalog.GetEquipmentDef(__instance.equipmentIndex);
+            var equipment = Equipments.FirstOrDefault(x => x.EquipmentDef == equipmentDef);
+            if (equipment != null)
+            {
+                equipment.PerformClientAction(__instance, state);
+                return false;
+            }
 
             return true;
         }
@@ -122,7 +124,7 @@ namespace BubbetsItems
             {
                 var state = equipment.PerformEquipment(__instance);
                 __result = state == EquipmentActivationState.ConsumeStock;
-                if (state != EquipmentActivationState.DidNothing && NetworkServer.active)
+                if (state != EquipmentActivationState.ConsumeStock && NetworkServer.active)
                 {
                     NetworkWriter networkWriter = new();
                     networkWriter.StartMessage(2); // 2 being rpc
