@@ -10,12 +10,13 @@ using MonoMod.Cil;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
+using Idle = EntityStates.Idle;
 
 namespace BubbetsItems.Items.VoidLunar
 {
 	public class OrbOfFalsity : ItemBase
 	{
-		public static int? defaultCampCost;
+		public static int? DefaultCampCost;
 
 		protected override void MakeTokens()
 		{
@@ -61,19 +62,19 @@ namespace BubbetsItems.Items.VoidLunar
 		{
 			if (card.spawnCard.name != "iscVoidCamp") return;
 			var inst = GetInstance<OrbOfFalsity>();
-			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst.ItemDef.itemIndex, false, false);
-			defaultCampCost ??= card.spawnCard.directorCreditCost;
-			card.spawnCard.directorCreditCost = defaultCampCost.Value;
+			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst!.ItemDef.itemIndex, false, false);
+			DefaultCampCost ??= card.spawnCard.directorCreditCost;
+			card.spawnCard.directorCreditCost = DefaultCampCost.Value;
 			if (amount <= 0) return;
 			var a = inst.scalingInfos[0].ScalingFunction(amount);
 			weight += a;
-			card.spawnCard.directorCreditCost = Mathf.FloorToInt(defaultCampCost.Value / (1f + a));
+			card.spawnCard.directorCreditCost = Mathf.FloorToInt(DefaultCampCost.Value / (1f + a));
 		}
  
 		private void GenerateInteractables(SceneDirector director, DirectorCardCategorySelection categorySelection)
 		{
 			var inst = GetInstance<OrbOfFalsity>();
-			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst.ItemDef.itemIndex, false, false);
+			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst!.ItemDef.itemIndex, false, false);
 			if (amount <= 0) return;
 			var camp = categorySelection.categories.SelectMany(x => x.cards).First(x => x.spawnCard.name == "iscVoidCamp"); // TODO fix this for simulacrum, currently its fine because you cant obtain void lunar
 			var a = Mathf.FloorToInt(1 + inst.scalingInfos[0].ScalingFunction(amount));
@@ -81,12 +82,38 @@ namespace BubbetsItems.Items.VoidLunar
 			camp.selectionWeight *= a;
 		}
 
+		[HarmonyILManipulator,
+		 HarmonyPatch(typeof(SceneExitController), nameof(SceneExitController.SetState))]
+		public static void WarpToTwipTwip(ILContext il)
+		{
+			var c = new ILCursor(il);
+			c.GotoNext(x => x.MatchLdfld<SceneExitController>(nameof(SceneExitController.destinationScene)));
+			c.GotoNext(MoveType.After, x => x.MatchLdfld<SceneExitController>(nameof(SceneExitController.destinationScene)));
+			c.EmitDelegate<Func<SceneDef, SceneDef>>(def =>
+			{
+				if (def.baseSceneName != "voidoutro") return def;
+				var inst = GetInstance<OrbOfFalsity>();
+				var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst!.ItemDef.itemIndex, false, false);
+				return amount <= 0 ? def : SceneCatalog.GetSceneDefFromSceneName("limbo");
+			});
+		}
+
+		[HarmonyPrefix, HarmonyPatch(typeof(EventFunctions), nameof(EventFunctions.BeginEnding))]
+		public static bool StopEnding(GameEndingDef gameEndingDef)
+		{
+			if (gameEndingDef != DLC1Content.GameEndings.VoidEnding) return true;
+			var inst = GetInstance<OrbOfFalsity>();
+			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst!.ItemDef.itemIndex, false, false);
+			return amount <= 0;
+		}
+
 		[HarmonyPrefix, HarmonyPatch(typeof(EndingGame), nameof(EndingGame.DoFinalAction))]
+		// ReSharper disable once InconsistentNaming
 		public static bool SwapExit(EndingGame __instance)
 		{
 			var inst = GetInstance<OrbOfFalsity>();
 
-			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst.ItemDef.itemIndex, false, false);
+			var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst!.ItemDef.itemIndex, false, false);
 			if (amount <= 0) return true;
 
 			__instance.outer.SetNextState(new TransitionToVoidStage());
@@ -104,7 +131,7 @@ namespace BubbetsItems.Items.VoidLunar
 			{
 				if (spawner.spawnMessageToken != "PORTAL_VOID_OPEN") return f;
 				var inst = GetInstance<OrbOfFalsity>();
-				var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst.ItemDef.itemIndex, false, false);
+				var amount = Util.GetItemCountForTeam(TeamIndex.Player, inst!.ItemDef.itemIndex, false, false);
 				if (amount <= 0) return f;
 				return f + inst.scalingInfos[0].ScalingFunction(amount);
 			});
