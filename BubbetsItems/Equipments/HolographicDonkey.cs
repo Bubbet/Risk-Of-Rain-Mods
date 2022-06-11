@@ -60,6 +60,13 @@ namespace BubbetsItems.Equipments
 		public static ConfigEntry<float> duration;
 		public static ConfigEntry<float> range;
 		public static GameObject projectile => _projectile ??= BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("HolographicDonkeyProjectile");
+		
+		public override void PerformClientAction(EquipmentSlot equipmentSlot, EquipmentActivationState state)
+		{
+			if (state == EquipmentActivationState.ConsumeStock)
+				Util.PlaySound("Play_DeployDonkey", equipmentSlot.gameObject);
+		}
+
 
 		public override EquipmentActivationState PerformEquipment(EquipmentSlot equipmentSlot)
 		{
@@ -78,7 +85,6 @@ namespace BubbetsItems.Equipments
 					rotation = Quaternion.LookRotation(ray.direction),
 				}
 			);
-			Util.PlaySound("Play_DeployDonkey", equipmentSlot.gameObject);
 			return EquipmentActivationState.ConsumeStock;
 		}
 	}
@@ -112,18 +118,17 @@ namespace BubbetsItems.Equipments
 				ownerBody = owner.GetComponent<CharacterBody>();
 			}
 
-			if (NetworkServer.active)
-			{
-				DeployToOwner();
-			}
-
 			if (ownerBody)
 			{
 				var body = GetComponent<CharacterBody>();
 				body.teamComponent.teamIndex = teamIndex;
 				body.hurtBoxGroup = GetComponent<HurtBoxGroup>();
 				body.mainHurtBox = body.hurtBoxGroup.mainHurtBox;
+				body.inventory = GetComponent<Inventory>();
 			}
+			
+			if (!NetworkServer.active) return;
+			DeployToOwner();
 
 			var mask = TeamMask.AllExcept(ownerBody.teamComponent.teamIndex);
 			mask.AddTeam(TeamIndex.Neutral);
@@ -139,7 +144,7 @@ namespace BubbetsItems.Equipments
 
 		private void Update()
 		{
-			if (justStuck && impact.stuckTransform)
+			if (NetworkServer.active && justStuck && impact.stuckTransform)
 			{
 				justStuck = false;
 				stuckTo = impact.stuckBody;
@@ -159,33 +164,36 @@ namespace BubbetsItems.Equipments
 			if (watch > interval)
 			{
 				watch -= interval;
-				search.searchOrigin = transform.position;
-				search.RefreshCandidates();
-				var results = search.GetResults();
-				foreach (var hurtBox in results)
+				if (NetworkServer.active)
 				{
-					if(!hurtBox) continue;
-					var hc = hurtBox.healthComponent;
-					if(!hc) continue;
-					var body = hc.body;
-					if(!body) continue;
-					var master = body.master;
-					if(!master) continue;
-					var ais = master.aiComponents;
-					if(!ais.Any()) continue;
-					foreach (var ai in ais)
+					search.searchOrigin = transform.position;
+					search.RefreshCandidates();
+					var results = search.GetResults();
+					foreach (var hurtBox in results)
 					{
-						if (stuckTo && stuckTo.master != master && HolographicDonkey.TargetAttachedTo.Value)
+						if (!hurtBox) continue;
+						var hc = hurtBox.healthComponent;
+						if (!hc) continue;
+						var body = hc.body;
+						if (!body) continue;
+						var master = body.master;
+						if (!master) continue;
+						var ais = master.aiComponents;
+						if (!ais.Any()) continue;
+						foreach (var ai in ais)
 						{
-							ai.currentEnemy.gameObject = stuckTo.gameObject;
-							ai.customTarget.gameObject = stuckTo.gameObject;
-						}
-						else
-						{
-							ai.currentEnemy.gameObject = gameObject;
-							ai.customTarget.gameObject = gameObject;
-							//ai.skillDriverUpdateTimer = 2f;
-							//ai.targetRefreshTimer = 2f;
+							if (stuckTo && stuckTo.master != master && HolographicDonkey.TargetAttachedTo.Value)
+							{
+								ai.currentEnemy.gameObject = stuckTo.gameObject;
+								ai.customTarget.gameObject = stuckTo.gameObject;
+							}
+							else
+							{
+								ai.currentEnemy.gameObject = gameObject;
+								ai.customTarget.gameObject = gameObject;
+								//ai.skillDriverUpdateTimer = 2f;
+								//ai.targetRefreshTimer = 2f;
+							}
 						}
 					}
 				}
@@ -220,9 +228,27 @@ namespace BubbetsItems.Equipments
 		{
 			if (stuckTo && stuckTo.healthComponent)
 			{
+				/*
 				var damageInfo = (DamageInfo) SharedBase.MemberwiseCloneRef?.Invoke(damageReport.damageInfo, new object[]{})!;
 				damageInfo.inflictor = damageInfo.attacker;
 				damageInfo.attacker = ownerBody.gameObject;
+				*/
+				var damageInfo = new DamageInfo
+				{
+					attacker = ownerBody.gameObject,
+					crit = damageReport.damageInfo.crit,
+					damage = damageReport.damageInfo.damage,
+					force = damageReport.damageInfo.force,
+					inflictor = damageReport.damageInfo.attacker,
+					position = damageReport.damageInfo.position,
+					rejected = damageReport.damageInfo.rejected,
+					damageType = damageReport.damageInfo.damageType,
+					dotIndex = damageReport.damageInfo.dotIndex,
+					procCoefficient = damageReport.damageInfo.procCoefficient,
+					canRejectForce = damageReport.damageInfo.canRejectForce,
+					damageColorIndex = damageReport.damageInfo.damageColorIndex,
+					procChainMask = damageReport.damageInfo.procChainMask
+				};
 				stuckTo.healthComponent.TakeDamage(damageInfo);
 			}
 		}
