@@ -235,7 +235,7 @@ namespace BubbetsItems
             
             foreach (var itemBase in Items)
             {
-                itemBase.voidPairing?.SettingChanged();
+                itemBase.voidPairing?.PostItemCatalog();
             }
             
             // ContagiousItemManager.originalToTransformed
@@ -332,14 +332,14 @@ namespace BubbetsItems
             private ItemBase Parent;
             public ItemDef[] itemDefs;
             private string _default;
+            private string? _oldDefault;
             public bool IsDefault => _default.Trim() == configEntry.Value.Trim();
 
             public VoidPairing(string defaultValue, ItemBase parent, string? oldDefault = null)
             {
                 Parent = parent;
                 _default = defaultValue;
-                configEntry = parent.sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + parent.GetType().Name, defaultValue, "Valid values: " + ValidEntries, oldDefault);
-                configEntry.SettingChanged += (_, _) => SettingChanged();
+                _oldDefault = oldDefault;
                 //SettingChanged();
             }
 
@@ -349,6 +349,17 @@ namespace BubbetsItems
                 itemDefs = configEntry.Value.Split(' ').Select(str => ItemCatalog.FindItemIndex(str)).Where(index => index != ItemIndex.None).Select(index => ItemCatalog.GetItemDef(index)).ToArray();
                 var newPairs = from def in itemDefs select new ItemDef.Pair {itemDef1 = def, itemDef2 = Parent.ItemDef};
                 ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem] = pairs.Union(newPairs).ToArray();
+            }
+
+            public void PostItemCatalog()
+            {
+                if (string.IsNullOrWhiteSpace(ValidEntries))
+                    ValidEntries = string.Join(" ", ItemCatalog.itemNames);
+                
+                configEntry = Parent.sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + Parent.GetType().Name, _default, "Valid values: " + ValidEntries, _oldDefault);
+                configEntry.SettingChanged += (_, _) => SettingChanged();
+                
+                SettingChanged();
             }
         }
         
