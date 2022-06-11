@@ -25,7 +25,7 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Abstracted Locus");
-			var convert = "Corrupts all Focused Convergences.".Style(StyleEnum.Void);
+			var convert = "Corrupts all Focused Convergences".Style(StyleEnum.VoidLunar) + ".";
 			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "Teleporter zone is " + "{0:0%} larger.".Style(StyleEnum.Utility) + " Outside of the teleporter radius is filled with "+"Void Fog.".Style(StyleEnum.Void)+" Staying in the "+"Fog".Style(StyleEnum.Void)+" charges the teleporter "+ "{1:0%} faster".Style(StyleEnum.Utility) + " per player outside. ");
 			AddToken(name + "_DESC_SIMPLE", "Teleporter zone is " + "50% ".Style(StyleEnum.Utility) + "(+20% per stack)".Style(StyleEnum.Stack) +" bigger.".Style(StyleEnum.Utility) + " Outside of the teleporter radius is filled with " + "Void Fog.".Style(StyleEnum.Void) + " Staying in the " + "Void Fog".Style(StyleEnum.Void) + " charges the teleporters " + "60% ".Style(StyleEnum.Utility) + "(+60% per stack) ".Style(StyleEnum.Stack) + "faster. ".Style(StyleEnum.Utility));

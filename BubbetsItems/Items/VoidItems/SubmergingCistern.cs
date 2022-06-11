@@ -35,7 +35,7 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("SUBMERGINGCISTERN_NAME", "Submerging Cistern");
-			var convert = "Corrupts all Mired Urns.".Style(StyleEnum.Void);
+			var convert = "Corrupts all Mired Urns".Style(StyleEnum.Void) + ".";
 			AddToken("SUBMERGINGCISTERN_NAME", convert);
 			AddToken("SUBMERGINGCISTERN_DESC", "While in combat, the nearest {1} allies within " + "{2}m ".Style(StyleEnum.Utility) + "of you will be 'tethered'. Dealing damage will " + "heal ".Style(StyleEnum.Heal) + "tethered allies for " + "{0:0%} ".Style(StyleEnum.Utility) + "of damage dealth. " + "Healing ".Style(StyleEnum.Heal) + "is divided among allies. ");
 			AddToken("SUBMERGINGCISTERN_DESC_SIMPLE", "While in combat, the nearest 1 " + "(+1 per stack) ".Style(StyleEnum.Stack) + "allies within " + "20m ".Style(StyleEnum.Utility) + "of you will be 'tethered'. Dealing damage will " + "heal ".Style(StyleEnum.Heal) + "tethered allies for " + "50% ".Style(StyleEnum.Utility) + "of damage dealt. " + "Healing ".Style(StyleEnum.Heal) + "is divided among allies. ");
