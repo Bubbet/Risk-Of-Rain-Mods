@@ -178,7 +178,7 @@ namespace BubbetsItems.Items.VoidLunar
 		public void Awake()
 		{
 			fog = GetComponent<FogDamageController>();
-			fog.dangerBuffDef = RoR2Content.Buffs.VoidFogStrong;
+			fog.dangerBuffDef = RoR2Content.Buffs.VoidFogMild;
 
 			if (AbstractedLocus.disableEnemyDamageInArena.Value && SceneManager.GetActiveScene().name == "arena")
 			{
