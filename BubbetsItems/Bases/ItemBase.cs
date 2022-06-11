@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
@@ -30,6 +31,8 @@ namespace BubbetsItems
         {
             var name = GetType().Name;
             Enabled = sharedInfo.ConfigFile.Bind("Disable Items", name, true, "Should this item be enabled.");
+            var pairs = new List<ItemDef.Pair>();
+            FillVoidConversions(pairs);
         }
 
         public ItemDef ItemDef;
@@ -213,9 +216,6 @@ namespace BubbetsItems
         public override bool RequiresSotv => voidPairing != null;
         protected override void FillRequiredExpansions()
         {
-            var pairs = new List<ItemDef.Pair>();
-            FillVoidConversions(pairs);
-
             if (RequiresSotv)
                 ItemDef.requiredExpansion = sharedInfo.SotVExpansion ? sharedInfo.SotVExpansion : SotvExpansion;
             else
@@ -232,10 +232,13 @@ namespace BubbetsItems
                 itemBase.FillVoidConversions(pairs);
             }
              */
+            var roo = Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions");
             
             foreach (var itemBase in Items)
             {
                 itemBase.voidPairing?.PostItemCatalog();
+                if (roo)
+                    itemBase.voidPairing?.MakeRiskOfOptions();
             }
             
             // ContagiousItemManager.originalToTransformed
@@ -333,6 +336,7 @@ namespace BubbetsItems
             public ItemDef[] itemDefs;
             private string _default;
             private string? _oldDefault;
+            private bool setup;
             public bool IsDefault => _default.Trim() == configEntry.Value.Trim();
 
             public VoidPairing(string defaultValue, ItemBase parent, string? oldDefault = null)
@@ -343,7 +347,7 @@ namespace BubbetsItems
                 //SettingChanged();
             }
 
-            public void SettingChanged()
+            public void SettingChangedOld()
             {
                 var pairs = ItemCatalog.itemRelationships[DLC1Content.ItemRelationshipTypes.ContagiousItem].Where(x => x.itemDef2 != Parent.ItemDef);
                 itemDefs = configEntry.Value.Split(' ').Select(str => ItemCatalog.FindItemIndex(str)).Where(index => index != ItemIndex.None).Select(index => ItemCatalog.GetItemDef(index)).ToArray();
@@ -356,10 +360,24 @@ namespace BubbetsItems
                 if (string.IsNullOrWhiteSpace(ValidEntries))
                     ValidEntries = string.Join(" ", ItemCatalog.itemNames);
                 
-                configEntry = Parent.sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Void Conversions: " + Parent.GetType().Name, _default, "Valid values: " + ValidEntries, _oldDefault);
+                configEntry = Parent.sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.VoidConversions, Parent.GetType().Name, _default, "Valid values: " + ValidEntries, _oldDefault);
                 configEntry.SettingChanged += (_, _) => SettingChanged();
                 
                 SettingChanged();
+            }
+
+            public void SettingChanged()
+            {
+                var oldItems = itemDefs;
+                SettingChangedOld();
+                if(setup && !oldItems.SequenceEqual(itemDefs))
+                    ContagiousItemManager.InitTransformationTable();
+                setup = true;
+            }
+
+            public void MakeRiskOfOptions()
+            {
+                ModSettingsManager.AddOption(new StringInputFieldOption(configEntry));
             }
         }
         

@@ -32,9 +32,15 @@ namespace BubbetsItems.Items
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
 			base.FillVoidConversions(pairs);
-			StackableChanged();
 			AddVoidPairing(nameof(DLC1Content.Items.OutOfCombatArmor));
 		}
+
+		protected override void FillRequiredExpansions()
+		{
+			StackableChanged();
+			base.FillRequiredExpansions();
+		}
+
 		private void StackableChanged()
 		{
 			BuffDef!.canStack = stackable.Value;
