@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
@@ -23,14 +24,14 @@ namespace ZioConfigFile
 		public Dictionary<ConfigDefinition, ZioConfigEntryBase> Entries { get; } = new();
 		protected Dictionary<ConfigDefinition, string> OrphanedEntries { get; } = new();
 		public static ManualLogSource Logger { get; } = new("ZioConfigFile");
-		public static FileSystem BepinConfigFileSystem { get; } = new SubFileSystem(new PhysicalFileSystem(), Paths.ConfigPath);
+		private static readonly FileSystem InternalFileSystem = new PhysicalFileSystem();
+		public static FileSystem BepinConfigFileSystem { get; } = new SubFileSystem(InternalFileSystem, InternalFileSystem.ConvertPathFromInternal(Paths.ConfigPath));
 
 		public bool SaveOnConfigSet { get; set; } = true;
 
 		public ZioConfigFile(BepInPlugin plugin, bool saveOnInit = true) : this(BepinConfigFileSystem, plugin.Name, saveOnInit, plugin){}
-		public ZioConfigFile(FileSystem fileSystem, UPath path, bool saveOnInit) : this(fileSystem, path, saveOnInit, null) {}
-
-		public ZioConfigFile(FileSystem fileSystem, UPath path, bool saveOnInit, BepInPlugin bepInPlugin)
+		public ZioConfigFile(FileSystem fileSystem, UPath path, bool saveOnInit, BaseUnityPlugin unityPlugin) : this(fileSystem, path, saveOnInit, unityPlugin.Info.Metadata){}
+		public ZioConfigFile(FileSystem fileSystem, UPath path, bool saveOnInit, BepInPlugin bepInPlugin = (BepInPlugin) null)
 		{
 			OwnerMetadata = bepInPlugin;
 			FileSystem = fileSystem;
@@ -50,8 +51,9 @@ namespace ZioConfigFile
 		{
 			lock (_ioLock)
 			{
+				if (!FileSystem.FileExists(FilePath)) return;
 				OrphanedEntries.Clear();
-				using var stream = FileSystem.OpenFile(FilePath, FileMode.OpenOrCreate, FileAccess.Read);
+				using var stream = FileSystem.OpenFile(FilePath, FileMode.Open, FileAccess.Read);
 				using var textReader = new StreamReader(stream, Encoding.UTF8);
 				
 				if (!textReader.EndOfStream)
@@ -102,11 +104,11 @@ namespace ZioConfigFile
 			}
 		}
 
-		public void OnSettingChanged(ZioConfigEntryBase changedSetting, object valueBefore)
+		public void OnSettingChanged(ZioConfigEntryBase changedSetting, object valueBefore, bool ignoreSave)
 		{
+			if(!ignoreSave && SaveOnConfigSet) Save();
 			var events = SettingChanged?.GetInvocationList();
 			if (events is null) return;
-			if(SaveOnConfigSet) Save();
 			foreach (var target in events)
 			{
 				try
@@ -124,8 +126,8 @@ namespace ZioConfigFile
 		{
 			lock (_ioLock)
 			{
-				using var stream = FileSystem.OpenFile(FilePath, FileMode.OpenOrCreate, FileAccess.Write);
-				using var textWriter = new StreamWriter(stream, Encoding.UTF8);
+				using var memoryStream = new MemoryStream();
+				using var textWriter = new StreamWriter(memoryStream, Encoding.UTF8);
 				
 				if (OwnerMetadata != null)
 				{
@@ -147,9 +149,12 @@ namespace ZioConfigFile
 					}
 					textWriter.WriteLine();
 				}
+				textWriter.Flush();
+				using var stream = FileSystem.OpenFile(FilePath, FileMode.Create, FileAccess.Write);
+				stream.Write(memoryStream.GetBuffer(), 0, (int) memoryStream.Length);
+				stream.Close();
 			}
 		}
-
 		public bool TryGetEntry<T>(string section, string key, out ZioConfigEntry<T> entry) => TryGetEntry(new ConfigDefinition(section, key), out entry);
 
 		public bool TryGetEntry<T>(ConfigDefinition configDefinition, out ZioConfigEntry<T> entry)

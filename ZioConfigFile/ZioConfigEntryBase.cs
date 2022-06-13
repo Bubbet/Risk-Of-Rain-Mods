@@ -7,6 +7,8 @@ namespace ZioConfigFile
 {
 	public abstract class ZioConfigEntryBase
 	{
+		public bool DontSaveOnChange;
+
 		protected ZioConfigEntryBase(ConfigDefinition configDefinition, Type settingType, object defaultValue, ConfigDescription configDescription)
 		{
 			Definition = configDefinition ?? throw new ArgumentNullException(nameof(configDefinition));
@@ -37,8 +39,8 @@ namespace ZioConfigFile
 		}
 		public T ClampValue<T>(T value) => Description.AcceptableValues != null ? (T) Description.AcceptableValues.Clamp(value) : value;
 
-		public event Action<ZioConfigEntryBase, object> SettingChanged;
-		public void OnSettingChanged(ZioConfigEntryBase config, object oldValue) => SettingChanged?.Invoke(config, oldValue);
+		public event Action<ZioConfigEntryBase, object, bool> SettingChanged;
+		public void OnSettingChanged(ZioConfigEntryBase config, object oldValue) => SettingChanged?.Invoke(config, oldValue, DontSaveOnChange);
 		public void WriteDescription(StreamWriter writer)
 		{
 			if (!string.IsNullOrEmpty(Description.Description))
