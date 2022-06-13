@@ -24,7 +24,7 @@ namespace BubbetsItems.Items.VoidLunar
 			var name = GetType().Name.ToUpper();
 			SimpleDescriptionToken = name + "_DESC_SIMPLE";
 			AddToken(name + "_NAME", "Orbs of Falsity");
-			var convert = "Corrupts all Beads of Fealty's.".Style(StyleEnum.Void);
+			var convert = "Converts all Beads of Fealty's".Style(StyleEnum.Void) + ".";
 			AddToken(name + "_CONVERT", convert);
 			AddToken(name + "_DESC", "Seems to do nothing... but... " + "Void Seeds spawn {0:0%} more. ".Style(StyleEnum.Health));
 			AddToken(name + "_DESC_SIMPLE", "Seems to do nothing... but... " +"Void Seeds spawn 50% ".Style(StyleEnum.Health) +"(+15% per stack)".Style(StyleEnum.Stack) +" more often. ");

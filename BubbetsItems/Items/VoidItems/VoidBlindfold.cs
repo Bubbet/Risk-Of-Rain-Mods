@@ -16,7 +16,7 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("VOIDBLINDFOLD_NAME", "Lost Seers Tragedy");
-			var corrupt = "Corrupts all Acid Soaked Blindfolds.".Style(StyleEnum.Void);
+			var corrupt = "Corrupts all Acid Soaked Blindfolds".Style(StyleEnum.Void) + ".";
 			AddToken("VOIDBLINDFOLD_CONVERT", corrupt);
 			AddToken("VOIDBLINDFOLD_PICKUP", "Spawn a Barnacle with items on-kill." + corrupt);
 			AddToken("VOIDBLINDFOLD_DESC", "Killing an enemy " + "spawns a".Style(StyleEnum.Utility) + " Barnacle ".Style(StyleEnum.Void) + "with " + "{1} ".Style(StyleEnum.Utility) + "Void Common ".Style(StyleEnum.VoidItem) + "items. " + "Limited to " + "{0} ".Style(StyleEnum.Utility) + "Barnacles".Style(StyleEnum.Void) + ". ");
