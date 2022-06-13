@@ -59,6 +59,18 @@ Patience is key~
   - `Conq#1738` for the item stats descriptions
   
 # Changelog
+* v1.8.8 Mod Changes:
+  * Fixed holographic donkey for clients.
+  * Changed abstracted locus voidfog back to the other def.
+  * Fixed client equipment message happening multiple times for host.
+  * Made void lunar shop easier to ping.
+  * Fix void pairing descriptions.
+  * Runtime changing of void conversions via risk of options.
+    * I also moved the category so you have to set them again if you have.
+  * Made networked configs revert tp disk versions upon disconnect.
+  * Added interactable to warp back to blue portal from void lunar shop.
+  * Added convert token for cistern.
+  
 * v1.8.7 Mod Changes:
   * Added default string for void conversions.
   * Added risk of options support for scintillating jet stackable.

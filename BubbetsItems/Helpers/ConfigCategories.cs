@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
+using EntityStates.Railgunner.Backpack;
 using HarmonyLib;
 using RoR2;
 using RoR2.Networking;
@@ -16,6 +17,7 @@ namespace BubbetsItems
 		BalancingFunctions,
 		DisableModParts,
 		EquipmentCooldowns,
+		VoidConversions
 	}
 
 	public static class ConfigCategories
@@ -24,7 +26,8 @@ namespace BubbetsItems
 			"General",
 			"Balancing Functions",
 			"Disable Mod Parts",
-			"Equipment Cooldowns"
+			"Equipment Cooldowns",
+			"Void Conversions"
 		};
 
 		public static ConfigEntry<T> Bind<T>(this ConfigFile file, ConfigCategoriesEnum which, string key, T defaultValue, string description, T? oldDefault = default, bool networked = true)
@@ -68,8 +71,20 @@ namespace BubbetsItems
 		{
 			NetworkUser.onNetworkUserDiscovered += UserConnected;
 			NetworkManagerSystem.onStartClientGlobal += RegisterMessages;
+			NetworkManagerSystem.onStopClientGlobal += Disconnect;
 		}
-		
+
+		public static void Disconnect()
+		{
+			NetworkConnection connection = NetworkManagerSystem.singleton.client.connection;
+			var flag = Util.ConnectionIsLocal(connection);
+			if (!flag) return;
+			foreach (var file in configEntries.Values.Select(x => x.ConfigFile).Distinct())
+			{
+				file.Reload();
+			}
+		}
+
 		public static void RegisterMessages(NetworkClient client)
 		{
 			try

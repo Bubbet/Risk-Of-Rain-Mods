@@ -71,7 +71,7 @@ namespace BubbetsItems
                             str += "s";
                         return str;
                     })) + ".";
-                    corruption = corruption.Style(StyleEnum.Void);
+                    corruption = corruption.Style(ItemDef.tier == BubbetsItemsPlugin.VoidLunarTier.tier ? StyleEnum.VoidLunar : StyleEnum.Void);
                 }
                 else
                 {
@@ -109,6 +109,10 @@ namespace BubbetsItems
                     }
 
                     ret = string.Format(ret, formatArgs);
+                }
+                else
+                {
+                    ret += corruption;
                 }
 
                 return ret;

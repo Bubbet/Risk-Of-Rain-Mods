@@ -22,9 +22,11 @@ namespace BubbetsItems
 		private static InteractableSpawnCard voidBarrelSpawncard;
 		private static GameObject? _rerollPrefab;
 		private static GameObject? _terminalPrefab;
+		private static GameObject? _returnPrefab;
 		public static GameObject ShopPrefab => _shopPrefab ??= BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("LunarVoidShop");
 		public static GameObject RerollPrefab => _rerollPrefab ??= BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("Reroll");
 		public static GameObject TerminalPrefab => _terminalPrefab ??= BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("LunarVoidTerminal");
+		public static GameObject ReturnPrefab => _returnPrefab ??= BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("VoidShopWarpReturn");
 
 		public static void Init()
 		{
@@ -40,6 +42,7 @@ namespace BubbetsItems
 			Language.english.SetStringByToken("BUB_VOIDLUNARSHOP_CONTEXT", "Open Void Bud");
 			Language.english.SetStringByToken("BUB_VOIDLUNARSHOP_REROLL_NAME", "Slab");
 			Language.english.SetStringByToken("BUB_VOIDLUNARSHOP_REROLL_CONTEXT", "Refresh Shop");
+			Language.english.SetStringByToken("BUB_RETURN_TO_PORTALBLUE", "Return to Blue Portal");
 			
 			if(!Chainloader.PluginInfos.ContainsKey("com.Anreol.ReleasedFromTheVoid")) EnableVoidCoins();
 		}
@@ -120,6 +123,12 @@ namespace BubbetsItems
 			}
 			rerollcounter.threshold = terminals.Count;
 			NetworkServer.Spawn(reroll);
+
+			var ret = GameObject.Instantiate(ReturnPrefab);
+			ret.transform.SetParent(ShopInstance.transform);
+			ret.transform.localPosition = new Vector3(-12.0164f, 1.7473f, 11.9221f);
+			ret.transform.rotation = Quaternion.Euler(0.58f, 30.0001f, 0.58f);
+			NetworkServer.Spawn(ret);
 
 			/*NetworkServer.Spawn(ShopInstance);
 			foreach (var identity in ShopInstance.GetComponentsInChildren<NetworkIdentity>().Where(x => x != ShopInstance.GetComponent<NetworkIdentity>()))
