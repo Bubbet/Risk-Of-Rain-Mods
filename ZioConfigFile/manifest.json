@@ -1,0 +1,12 @@
+﻿{
+	"name": "ZioConfigFile",
+	"authorName":"Bubbet",
+	"website_url":"https://github.com/Bubbet",
+	"displayName":"Zio Config File",
+
+	"version_number": "1.0.0",
+	"description": "ConfigFile but it uses Zio, which means it can do steam cloud.",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.1902"
+	]
+}
