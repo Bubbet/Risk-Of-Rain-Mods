@@ -1,0 +1,14 @@
+﻿{
+	"name": "ZioRiskOfOptions",
+	"authorName":"Bubbet",
+	"website_url":"https://github.com/Bubbet",
+	"displayName":"Zio Risk Of Options",
+
+	"version_number": "1.0.0",
+	"description": "Risk of Options support for Zio Config File",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.1902",
+		"Bubbet-ZioConfigFile-1.0.0",
+		"Rune580-Risk_Of_Options-2.5.3"
+	]
+}
