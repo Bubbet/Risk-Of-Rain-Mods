@@ -6,17 +6,12 @@
 
     <ItemGroup>
         <PackageReference Include="BepInEx.Core" Version="5.4.19" />
+        <PackageReference Include="Rune580-Risk_Of_Options" Version="2.5.3" />
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\ZioConfigFile\ZioConfigFile.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Reference Include="RiskOfOptions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\..\..\..\..\yes\Dev\Programming\C#\RiskOfOptions\bin\Debug\netstandard2.0\RiskOfOptions.dll</HintPath>
-      </Reference>
     </ItemGroup>
 
 </Project>
