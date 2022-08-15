@@ -1,15 +1,19 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+using UnityEngine;
 using Zio;
 using Zio.FileSystems;
+using Debug = UnityEngine.Debug;
 
 namespace ZioConfigFile
 {
@@ -25,6 +29,9 @@ namespace ZioConfigFile
 		protected Dictionary<ConfigDefinition, string> OrphanedEntries { get; } = new();
 		public static ManualLogSource Logger { get; } = new("ZioConfigFile");
 		private static readonly FileSystem InternalFileSystem = new PhysicalFileSystem();
+		private readonly Stopwatch saveStopwatch = new();
+		private bool _waitingForSaves;
+		public int waitDuration = 1000;
 		public static FileSystem BepinConfigFileSystem { get; } = new SubFileSystem(InternalFileSystem, InternalFileSystem.ConvertPathFromInternal(Paths.ConfigPath));
 
 		public bool SaveOnConfigSet { get; set; } = true;
@@ -48,6 +55,11 @@ namespace ZioConfigFile
 		}
 
 		public void Reload()
+		{
+			InternalReload();
+		}
+		
+		protected virtual void InternalReload()
 		{
 			lock (_ioLock)
 			{
@@ -122,9 +134,14 @@ namespace ZioConfigFile
 			}
 		}
 
-		public void Save()
+		protected virtual void SaveThread()
 		{
-			lock (_ioLock)
+			while (saveStopwatch.ElapsedMilliseconds < waitDuration)
+			{
+				Task.Delay(Mathf.FloorToInt(waitDuration * 0.1f));
+			}
+
+			//lock (_ioLock)
 			{
 				using var memoryStream = new MemoryStream();
 				using var textWriter = new StreamWriter(memoryStream, Encoding.UTF8);
@@ -135,25 +152,43 @@ namespace ZioConfigFile
 					textWriter.WriteLine("## Plugin GUID: " + OwnerMetadata.GUID);
 					textWriter.WriteLine();
 				}
-
-				foreach (var pair in Entries.Select(x => new{x.Key, entry = x.Value, value = x.Value.GetSerializedValue()})
-					.Concat(OrphanedEntries.Select(x => new {x.Key, entry = (ZioConfigEntryBase) null, value = x.Value}))
-					.GroupBy(x => x.Key.Section).OrderBy(x => x.Key))
+				
+				lock (_ioLock)
 				{
-					textWriter.WriteLine("[" + pair.Key + "]");
-					foreach (var data in pair)
+					foreach (var pair in Entries.Select(x => (x.Key, x.Value, x.Value.GetSerializedValue())).Concat(OrphanedEntries.Select(x => (x.Key, (ZioConfigEntryBase) null, x.Value))).GroupBy(x => x.Key.Section).OrderBy(x => x.Key))
 					{
+						textWriter.WriteLine("[" + pair.Key + "]");
+						foreach (var data in pair)
+						{
+							textWriter.WriteLine();
+							data.Item2?.WriteDescription(textWriter);
+							textWriter.WriteLine(data.Key.Key + " = " + data.Item3);
+						}
 						textWriter.WriteLine();
-						data.entry?.WriteDescription(textWriter);
-						textWriter.WriteLine(data.Key.Key + " = " + data.value);
 					}
-					textWriter.WriteLine();
+					textWriter.Flush();
 				}
-				textWriter.Flush();
+
+				try
+				{
+					FileSystem.CreateDirectory(FilePath.GetDirectory());
+				}
+				catch (UnauthorizedAccessException e)
+				{
+					Debug.LogError(e);
+				}
+
 				using var stream = FileSystem.OpenFile(FilePath, FileMode.Create, FileAccess.Write);
 				stream.Write(memoryStream.GetBuffer(), 0, (int) memoryStream.Length);
 				stream.Close();
+				_waitingForSaves = false;
 			}
+		}
+		public void Save()
+		{
+			saveStopwatch.Restart();
+			if (!_waitingForSaves) new Thread(SaveThread).Start();
+			_waitingForSaves = true;
 		}
 		public bool TryGetEntry<T>(string section, string key, out ZioConfigEntry<T> entry) => TryGetEntry(new ConfigDefinition(section, key), out entry);
 
@@ -172,7 +207,7 @@ namespace ZioConfigFile
 			}
 		}
 		
-		public ZioConfigEntry<T> Bind<T>(ConfigDefinition configDefinition, T defaultValue, ConfigDescription configDescription = null)
+		public virtual ZioConfigEntry<T> Bind<T>(ConfigDefinition configDefinition, T defaultValue, ConfigDescription configDescription = null)
 		{
 			if (!TomlTypeConverter.CanConvert(typeof (T)))
 				throw new ArgumentException($"Type {typeof(T)} is not supported by the config system. Supported types: {string.Join(", ", TomlTypeConverter.GetSupportedTypes().Select(x => x.Name).ToArray())}");
