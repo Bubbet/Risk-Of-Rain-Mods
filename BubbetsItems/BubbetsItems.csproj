@@ -12,14 +12,20 @@
         <PackageReference Include="KomradeSpectre-Aetherium" Version="0.6.8" />
         <PackageReference Include="Moffein-ItemStats" Version="1.2.1" />
         <PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.4-r.0" />
-        <PackageReference Include="Rune580-Risk_Of_Options" Version="2.4.2" />
+        <PackageReference Include="Rune580-Risk_Of_Options" Version="2.5.3" />
         <PackageReference Include="UnityEngine.Modules" Version="2019.4.26" />
         <PackageReference Include="CoreCLR-NCalc" Version="2.2.101" />
+        <PackageReference Include="Zio" Version="0.7.3" />
     </ItemGroup>
 
     <ItemGroup>
       <Reference Include="BetterUI, Version=2.5.12.0, Culture=neutral, PublicKeyToken=null">
         <HintPath>..\Libs\BetterUI-nstrip.dll</HintPath>
       </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ZioConfigFile\ZioConfigFile.csproj" />
+      <ProjectReference Include="..\ZioRiskOfOptions\ZioRiskOfOptions.csproj" />
     </ItemGroup>
 </Project>

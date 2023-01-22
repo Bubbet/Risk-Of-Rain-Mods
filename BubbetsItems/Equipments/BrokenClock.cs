@@ -44,7 +44,8 @@ namespace BubbetsItems.Equipments
         {
             base.PerformEquipment(equipmentSlot);
             ConfigUpdate();
-            return equipmentSlot.inventory.GetComponent<BrokenClockBehaviour>().ToggleReversing(); // This only matters on the server and all the data is tracked on the authority character
+            var comp = equipmentSlot.inventory.GetComponent<BrokenClockBehaviour>();
+            return !comp ? EquipmentActivationState.DidNothing : comp.ToggleReversing();
         }
 
         public override void PerformClientAction(EquipmentSlot equipmentSlot, EquipmentActivationState state)

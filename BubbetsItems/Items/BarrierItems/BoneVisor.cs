@@ -1,4 +1,5 @@
-﻿using BubbetsItems.Helpers;
+﻿using BubbetsItems.Components;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
 
@@ -13,8 +14,8 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("BONEVISOR_NAME","Bone Visor");
-			AddToken("BONEVISOR_DESC", "Killing an enemy " + "multiplies barrier decay ".Style(StyleEnum.Heal) + "by " + "{1:0%}".Style(StyleEnum.Heal) + ", lasting for " + "{0} ".Style(StyleEnum.Utility) + "seconds.");
-			AddToken("BONEVISOR_DESC_SIMPLE", "Killing an enemy " + "multiplies barrier decay ".Style(StyleEnum.Heal) + "by " + "95% ".Style(StyleEnum.Heal) + "(+5% per stack)".Style(StyleEnum.Stack) + ", lasting for " + "3 ".Style(StyleEnum.Utility) + "(+2 per stack) ".Style(StyleEnum.Stack) + "seconds.");
+			AddToken("BONEVISOR_DESC", "Killing an enemy " + "slows barrier decay ".Style(StyleEnum.Heal) + "by " + "{1:0%}".Style(StyleEnum.Heal) + ", lasting for " + "{0} ".Style(StyleEnum.Utility) + "seconds.");
+			AddToken("BONEVISOR_DESC_SIMPLE", "Killing an enemy " + "slows barrier decay ".Style(StyleEnum.Heal) + "by " + "5% ".Style(StyleEnum.Heal) + "(+5% per stack)".Style(StyleEnum.Stack) + ", lasting for " + "3 ".Style(StyleEnum.Utility) + "(+2 per stack) ".Style(StyleEnum.Stack) + "seconds.");
 			SimpleDescriptionToken = "BONEVISOR_DESC_SIMPLE";
 			AddToken("BONEVISOR_PICKUP", "Killing an enemy grants a buff that slows barrier decay temporarily.");
 			AddToken("BONEVISOR_LORE","Was there a bone tribe somewhere lost here? I've found this near an ancient ruins on Mars and still haven't figured out the origins to it yet.");
@@ -24,7 +25,7 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeConfigs();
 			AddScalingFunction("1 + [a] * 2", "Buff Duration");
-			AddScalingFunction("1 - [b] * 0.05", "Barrier Decay", desc:"[a] = item count; [b] = buff amount; [m] = max barrier");
+			AddScalingFunction("[b] * 0.05", "Barrier Decay", desc:"[a] = item count; [b] = buff amount; [m] = max barrier", "1 - [b] * 0.05");
 		}
 
 		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
@@ -37,12 +38,14 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeBehaviours();
 			GlobalEventManager.onCharacterDeathGlobal += OnDeath;
+			CommonBodyPatches.CollectExtraStats += GetBarrierDecay;
 		}
 
 		protected override void DestroyBehaviours()
 		{
 			base.MakeBehaviours();
 			GlobalEventManager.onCharacterDeathGlobal -= OnDeath;
+			CommonBodyPatches.CollectExtraStats -= GetBarrierDecay;
 		}
 
 		private void OnDeath(DamageReport obj)
@@ -55,20 +58,22 @@ namespace BubbetsItems.Items.BarrierItems
 			if (amount <= 0) return;
 			body.AddTimedBuff(BuffDef, scalingInfos[0].ScalingFunction(amount));
 		}
-		
+
+		private void GetBarrierDecay(CommonBodyPatches.ExtraStats obj)
+		{
+			var count = obj.inventory.GetItemCount(ItemDef);
+			if (count <= 0) return;
+			var info = scalingInfos[1];
+			info.WorkingContext.b = obj.body.GetBuffCount(BuffDef);
+			info.WorkingContext.m = obj.body.maxBarrier;
+			obj.barrierDecay += info.ScalingFunction(count);
+		}
 		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
 		public static void FixBarrier(CharacterBody __instance)
 		{
 			var inv = __instance.inventory;
 			if (!inv) return;
-			var instance = GetInstance<BoneVisor>();
-			if (instance == null) return;
-			var count = inv.GetItemCount(instance.ItemDef);
-			if (count <= 0) return;
-			var info = instance.scalingInfos[1];
-			info.WorkingContext.b = __instance.GetBuffCount(BuffDef);
-			info.WorkingContext.m = __instance.maxBarrier;
-			__instance.barrierDecayRate *= info.ScalingFunction(count);
+			
 		}
 	}
 }

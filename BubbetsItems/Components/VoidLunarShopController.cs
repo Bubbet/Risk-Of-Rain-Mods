@@ -158,25 +158,24 @@ namespace BubbetsItems
 			{
 				if (!damageReport.victimBody.bodyFlags.HasFlag(CharacterBody.BodyFlags.Void) && !damageReport.victimBody.HasBuff(DLC1Content.Buffs.EliteVoid)) return;
 				CharacterMaster characterMaster = damageReport.attackerMaster;
-				if (characterMaster)
+				if (!characterMaster) return;
+				if (characterMaster.minionOwnership.ownerMaster)
 				{
-					if (characterMaster.minionOwnership.ownerMaster)
-					{
-						characterMaster = characterMaster.minionOwnership.ownerMaster;
-					}
-					PlayerCharacterMasterController component = characterMaster.GetComponent<PlayerCharacterMasterController>();
-					var chance = BubbetsItemsPlugin.Conf.VoidCoinDropChanceStart.Value;
-					
-					if (voidCoinChances.TryGetValue(component, out var chanceg))
-						chance = chanceg;
-					else
-						voidCoinChances.Add(component, chance);
-					
-					if (!component || !Util.CheckRoll(chance)) return;
-					
-					PickupDropletController.CreatePickupDroplet(PickupCatalog.FindPickupIndex(DLC1Content.MiscPickups.VoidCoin.miscPickupIndex), damageReport.victim.transform.position, Vector3.up * 10f);
-					voidCoinChances[component] = chance *  BubbetsItemsPlugin.Conf.VoidCoinDropChanceMult.Value;
+					characterMaster = characterMaster.minionOwnership.ownerMaster;
 				}
+				PlayerCharacterMasterController component = characterMaster.GetComponent<PlayerCharacterMasterController>();
+				if (!component) return; // Not a player.
+				var chance = BubbetsItemsPlugin.Conf.VoidCoinDropChanceStart.Value;
+				
+				if (voidCoinChances.TryGetValue(component, out var chanceg))
+					chance = chanceg;
+				else
+					voidCoinChances.Add(component, chance);
+					
+				if (!component || !Util.CheckRoll(chance)) return;
+					
+				PickupDropletController.CreatePickupDroplet(PickupCatalog.FindPickupIndex(DLC1Content.MiscPickups.VoidCoin.miscPickupIndex), damageReport.victim.transform.position, Vector3.up * 10f);
+				voidCoinChances[component] = chance *  BubbetsItemsPlugin.Conf.VoidCoinDropChanceMult.Value;
 			};
 		}
 	}

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
@@ -12,9 +13,10 @@ using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.ExpansionManagement;
-using RoR2.Items;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using ZioConfigFile;
+using ZioRiskOfOptions;
 
 namespace BubbetsItems
 {
@@ -181,6 +183,7 @@ namespace BubbetsItems
         [SystemInitializer(typeof(BodyCatalog))]
         public static void FillIDRS()
         {
+            return;
             foreach (var instance in Instances)
             {
                 instance.FillItemDisplayRules();
@@ -244,6 +247,7 @@ namespace BubbetsItems
         protected void AddToken(string key, string value)
         {
             Language.english.SetStringByToken(sharedInfo.TokenPrefix + key, value);
+            //sharedInfo.Logger.LogInfo($"\"{sharedInfo.TokenPrefix + key}\": \"{value}\"");
         }
         
         /* other languages get unloaded on language change, and these keys would be discarded
@@ -259,19 +263,21 @@ namespace BubbetsItems
         [SuppressMessage("ReSharper", "NotAccessedField.Global")]
         public class SharedInfo
         {
-            public readonly ConfigEntry<bool> ExpandedTooltips;
-            public readonly ConfigEntry<bool> DescInPickup;
-            public readonly ConfigEntry<bool> ForceHideScalingInfoInPickup;
+            public ZioConfigEntry<bool> ExpandedTooltips;
+            public ZioConfigEntry<bool> DescInPickup;
+            public ZioConfigEntry<bool> ForceHideScalingInfoInPickup;
+            public ZioConfigEntry<bool> UseSimpleDescIfApplicable;
+            public ZioConfigEntry<bool> ItemStatsInSimpleDesc;
             public ConfigFile ConfigFile;
             public Harmony? Harmony;
             public readonly ManualLogSource Logger;
             public readonly string TokenPrefix;
             private bool _riskOfOptionsMade;
-            public readonly ConfigEntry<bool> UseSimpleDescIfApplicable;
-            public readonly ConfigEntry<bool> ItemStatsInSimpleDesc;
             public ExpansionDef? Expansion;
             public ExpansionDef? SotVExpansion;
             public List<SharedBase> Instances = new();
+            private bool _zioRiskOfOptionsMade;
+            public ZioConfigFile.ZioConfigFile zioConfigFile;
 
             public SharedInfo(ManualLogSource manualLogSource, ConfigFile configFile, Harmony? harmony, string tokenPrefix)
             {
@@ -279,25 +285,51 @@ namespace BubbetsItems
                 ConfigFile = configFile;
                 Harmony = harmony;
                 TokenPrefix = tokenPrefix;
-                
-                ExpandedTooltips = configFile.Bind(ConfigCategoriesEnum.General, "Expanded Tooltips", true, "Enables the scaling function in the tooltip.", networked: false);
-                DescInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Description In Pickup", true, "Used the description in the pickup for my items.", networked: false);
-                ForceHideScalingInfoInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Disable Scaling Info In Pickup", true, "Should the scaling infos be hidden from pickups.", networked: false);
-                UseSimpleDescIfApplicable = configFile.Bind(ConfigCategoriesEnum.General, "Use Simple Descriptions If Applicable", true, "Should the description be closer to vanilla if you haven't changed the scaling function.", networked: false);
-                ItemStatsInSimpleDesc = configFile.Bind(ConfigCategoriesEnum.General, "Show Item Stats For Simple Desc", true, "Display the solved value under the simple description.", networked: false);
             }
 
             public void MakeRiskOfOptions()
             {
                 if (_riskOfOptionsMade) return;
-                ModSettingsManager.AddOption(new CheckBoxOption(ExpandedTooltips));
-                ModSettingsManager.AddOption(new CheckBoxOption(DescInPickup));
-                ModSettingsManager.AddOption(new CheckBoxOption(ForceHideScalingInfoInPickup));
-                ModSettingsManager.AddOption(new CheckBoxOption(UseSimpleDescIfApplicable));
-                ModSettingsManager.AddOption(new CheckBoxOption(ItemStatsInSimpleDesc));
                 _riskOfOptionsMade = true;
             }
+
+            public void MakeZioOptions(ZioConfigFile.ZioConfigFile configFile)
+            {
+                zioConfigFile = configFile;
+                ExpandedTooltips = configFile.Bind(ConfigCategoriesEnum.General, "Expanded Tooltips", true, "Enables the scaling function in the tooltip.", networked: false);
+                DescInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Description In Pickup", true, "Used the description in the pickup for my items.", networked: false);
+                ForceHideScalingInfoInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Disable Scaling Info In Pickup", true, "Should the scaling infos be hidden from pickups.", networked: false);
+                UseSimpleDescIfApplicable = configFile.Bind(ConfigCategoriesEnum.General, "Use Simple Descriptions If Applicable", true, "Should the description be closer to vanilla if you haven't changed the scaling function.", networked: false);
+                ItemStatsInSimpleDesc = configFile.Bind(ConfigCategoriesEnum.General, "Show Item Stats For Simple Desc", true, "Display the solved value under the simple description.", networked: false);
+
+                foreach (var instance in Instances)
+                {
+                    instance.MakeZioOptions();
+                }
+                
+                if (Chainloader.PluginInfos.ContainsKey("bubbet.zioriskofoptions"))
+                    MakeZioRiskOfOptions();
+            }
+
+            public void MakeZioRiskOfOptions()
+            {
+                if (_zioRiskOfOptionsMade) return;
+                _zioRiskOfOptionsMade = true;
+                ModSettingsManager.AddOption(new ZioCheckBoxOption(ExpandedTooltips));
+                ModSettingsManager.AddOption(new ZioCheckBoxOption(DescInPickup));
+                ModSettingsManager.AddOption(new ZioCheckBoxOption(ForceHideScalingInfoInPickup));
+                ModSettingsManager.AddOption(new ZioCheckBoxOption(UseSimpleDescIfApplicable));
+                ModSettingsManager.AddOption(new ZioCheckBoxOption(ItemStatsInSimpleDesc));
+
+                foreach (var instance in Instances)
+                {
+                    instance.MakeZioRiskOfOptions();
+                }
+            }
         }
+
+        public virtual void MakeZioOptions() {}
+        public virtual void MakeZioRiskOfOptions() {}
 
         public abstract void AddDisplayRules(ModdedIDRS which, ItemDisplayRule[] displayRules);
         public abstract void AddDisplayRules(VanillaIDRS which, ItemDisplayRule[] displayRules);

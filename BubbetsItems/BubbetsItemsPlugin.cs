@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security;
@@ -12,6 +13,7 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using BetterUI;
 using BubbetsItems.Behaviours;
+using BubbetsItems.Components;
 using EntityStates;
 using HarmonyLib;
 using RiskOfOptions.OptionConfigs;
@@ -23,6 +25,9 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Path = System.IO.Path;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
+using ZioConfigFile;
+using ZioRiskOfOptions;
+
 [assembly: SearchableAttribute.OptIn]
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -32,11 +37,13 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 
 namespace BubbetsItems
 {
-    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.8.8")]
+    [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.8.9")]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     [BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("bubbet.zioriskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
+    [BepInDependency("bubbet.zioconfigfile", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.Moffein.ItemStats", BepInDependency.DependencyFlags.SoftDependency)] // Required to make sure my pickup description hook runs after
     public class BubbetsItemsPlugin : BaseUnityPlugin
@@ -104,6 +111,7 @@ namespace BubbetsItems
             InLobbyConfigCompat.Init();
             RiskOfOptionsCompat.Init();
 
+            new PatchClassProcessor(harm, typeof(CommonBodyPatches)).Patch();
             new PatchClassProcessor(harm, typeof(HarmonyPatches)).Patch();
             new PatchClassProcessor(harm, typeof(PickupTooltipFormat)).Patch();
             new PatchClassProcessor(harm, typeof(LogBookPageScalingGraph)).Patch();
@@ -125,17 +133,35 @@ namespace BubbetsItems
             //Fucking bepinex pack constantly changing and now loading too late for searchableAttributes scan.
             //it changed again and no longer needs this
             //SearchableAttribute.ScanAssembly(Assembly.GetExecutingAssembly());
+            Language.collectLanguageRootFolders += list =>
+            {
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "/Language";
+                if (File.Exists(path))
+                    list.Add(path);
+            };
 
             //PickupTooltipFormat.Init(harm);
             ItemStatsCompat.Init();
         }
 
-
         private void onLoad()
         {
+            if (Chainloader.PluginInfos.ContainsKey("bubbet.zioconfigfile"))
+            {
+                ZioConfigSetup();
+            }
+
+            if (Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions"))
+                Conf.MakeRiskOfOptionsZio();
             ConfigCategories.Init();
             if (Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterUI"))
                 AddItemTierToBetterUI();
+        }
+
+        private void ZioConfigSetup()
+        {
+            zConfigFile = new ZioConfigFile.ZioConfigFile(RoR2Application.cloudStorage, "/BubbetsItems.cfg", true, this);
+            Conf.InitZio(zConfigFile); // TODO create wrapper that can handle both zio and normal.
         }
 
         private void AddItemTierToBetterUI()
@@ -163,6 +189,8 @@ namespace BubbetsItems
         private static uint _bankID;
         public static ItemTierDef VoidLunarTier;
         private static PickupIndex[]? _voidLunarItems;
+        private ZioConfigFile.ZioConfigFile zConfigFile;
+        private SharedBase.SharedInfo sharedInfo;
 
         //[SystemInitializer]
         public static void LoadSoundBank()
@@ -180,8 +208,6 @@ namespace BubbetsItems
             {
                 Log.LogError(e);
             }
-            
-            AkSoundEngine.SetRTPCValue("Volume_Effects", Conf.EffectVolume.Value);
         }
 
         [SystemInitializer]
@@ -193,6 +219,7 @@ namespace BubbetsItems
             Language.english.SetStringByToken("BUB_EXPANSION_DESC", "Adds content from 'Bubbets Items' to the game.");
             Language.english.SetStringByToken("BUB_EXPANSION_VOID", "Bubbet's Void Content");
             Language.english.SetStringByToken("BUB_EXPANSION_VOID_DESC", "Adds the void content from 'Bubbets Items' and requires 'Survivors of the Void'.");
+            Language.english.SetStringByToken("BUB_DEFAULT_CONVERT", "Corrupts all {0}.");
         }
 
         public static class Conf
@@ -203,7 +230,7 @@ namespace BubbetsItems
             public static ConfigEntry<float> VoidCoinDropChanceMult;
             public static ConfigEntry<bool> VoidCoinBarrelDrop;
             public static ConfigEntry<bool> VoidCoinVoidFields;
-            public static ConfigEntry<float> EffectVolume;
+            public static ZioConfigEntry<float> EffectVolume;
             //public static bool RequiresR2Api;
 
             internal static void Init(ConfigFile configFile)
@@ -214,8 +241,15 @@ namespace BubbetsItems
                 VoidCoinDropChanceMult = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop Chance Mult", 0.5f, "Not used if using Released from the void. Drop chance multiplier to chance upon getting coin.");
                 VoidCoinBarrelDrop = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop From Void Barrel", true, "Not used if using Released from the void. Should the void coin drop from barrels.");
                 VoidCoinVoidFields = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop From Void Fields", true, "Should the void coin drop from void fields.");
+            }
+
+            internal static void InitZio(ZioConfigFile.ZioConfigFile configFile)
+            {
                 EffectVolume = configFile.Bind(ConfigCategoriesEnum.General, "Effect Volume", 50f, "Volume of the sound effects in my mod.", networked: false);
-                EffectVolume.SettingChanged += (_, _) => AkSoundEngine.SetRTPCValue("Volume_Effects", EffectVolume.Value);
+                EffectVolume.SettingChanged += (_, _, _) => AkSoundEngine.SetRTPCValue("Volume_Effects", EffectVolume.Value);
+                AkSoundEngine.SetRTPCValue("Volume_Effects", EffectVolume.Value);
+                
+                instance.sharedInfo.MakeZioOptions(configFile);
             }
 
             internal static void MakeRiskOfOptions()
@@ -225,7 +259,11 @@ namespace BubbetsItems
                 RiskOfOptions.ModSettingsManager.AddOption(new SliderOption(VoidCoinDropChanceMult, new SliderConfig {min = 0, max = 1, formatString = "{0:0.##%}"}));
                 RiskOfOptions.ModSettingsManager.AddOption(new CheckBoxOption(VoidCoinBarrelDrop, true));
                 RiskOfOptions.ModSettingsManager.AddOption(new CheckBoxOption(VoidCoinVoidFields));
-                RiskOfOptions.ModSettingsManager.AddOption(new SliderOption(EffectVolume));
+            }
+
+            internal static void MakeRiskOfOptionsZio()
+            {
+                RiskOfOptions.ModSettingsManager.AddOption(new ZioSliderOption(EffectVolume));
             }
         }
 
@@ -244,7 +282,7 @@ namespace BubbetsItems
             }
             serialContent.entityStateTypes = states.ToArray();
             
-            SharedBase.Initialize(Logger, Config, out var sharedInfo, serialContent, harmony, "BUB_");
+            SharedBase.Initialize(Logger, Config, out sharedInfo, serialContent, harmony, "BUB_");
             ContentPack = serialContent.CreateContentPack();
             SharedBase.AddContentPack(ContentPack);
             ContentPackProvider.Initialize(Info.Metadata.GUID, ContentPack, sharedInfo);
@@ -280,7 +318,7 @@ namespace BubbetsItems
             public IEnumerator FinalizeAsync(FinalizeAsyncArgs args)
             {
                 args.ReportProgress(1f);
-                Log.LogInfo("Contentpack finished");
+            Log.LogInfo("Contentpack finished");    
                 info.Expansion = BubExpansion;
                 info.SotVExpansion = BubSotvExpansion;
                 yield break;

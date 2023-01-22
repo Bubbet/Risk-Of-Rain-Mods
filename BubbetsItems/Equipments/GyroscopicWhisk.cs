@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using BepInEx.Configuration;
 using EntityStates;
+using HarmonyLib;
 using KinematicCharacterController;
 using RoR2;
 using UnityEngine;
@@ -55,6 +56,14 @@ namespace BubbetsItems.Equipments
             
 			equipmentSlot.targetIndicator.visualizerPrefab = _indicator;
 			return true;
+		}
+
+		[HarmonyPrefix, HarmonyPatch(typeof(MapZone), nameof(MapZone.TeleportBody))]
+		public static bool KillOnOOB(CharacterBody characterBody)
+		{
+			if (!characterBody.GetComponent<WhiskBehavior>()) return true;
+			characterBody.master.TrueKill();
+			return false;
 		}
 	}
 

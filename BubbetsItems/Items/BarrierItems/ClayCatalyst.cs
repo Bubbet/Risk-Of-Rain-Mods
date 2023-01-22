@@ -29,6 +29,14 @@ namespace BubbetsItems.Items.BarrierItems
 			AddScalingFunction("1 - (1.1 - Pow(0.9, [a]))", "Barrier Decay Mult");
 		}
 
+		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
+		{
+			var master = inventory ? inventory!.GetComponent<CharacterMaster>() : null;
+			if (master) // TODO test if this even works, and do the same for void beads and locus if it does
+				scalingInfos[0].WorkingContext.a = Util.GetItemCountForTeam(master!.teamIndex, ItemDef.itemIndex, false, false);
+			return base.GetFormattedDescription(null, token, forceHideExtended);
+		}
+
 		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
 		public static void FixBarrier(CharacterBody __instance)
 		{

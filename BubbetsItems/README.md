@@ -1,15 +1,17 @@
 # Bubbet's Items
 Yet another item mod that adds all sorts of unique items, including Void Tiers. There are highly configurable item stackings in the configs too. This mod is still being worked on and will of course add more and more items. You must have `SOTV` expansion in order to access the Void tier items.
 
+The mod does support [Risk of Options](https://thunderstore.io/package/Rune580/Risk_Of_Options/), and [Zio Risk of Options](https://thunderstore.io/package/Bubbet/ZioRiskOfOptions/) (Risk of Options, except stored in the steam cloud so you dont lose changes with every profile code update)
+
 # Items Added
 
 Icons | Items | Function | Type
-|---|---:|---:|---
+---|---:|---:|---
 <img src="https://media.discordapp.net/attachments/953688831750709278/955216159270109255/GEMO_JelliedSoles.png" width="100"/> | Jellied Soles | Reduces fall damage by 15% and converts 100% removed damage to your next attack. Scales by level. | `Common` |
 <img src="https://media.discordapp.net/attachments/953688831750709278/970448356667162632/RenderIcon.png" width="100"/> | Gem Carapace | Gain an 18% temporary barrier after 1 second of taking damage. Triggers up to 1 times. | `Common` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970496618010923068/clayCatalystIcon.png" width="100"/> | Clay Catalyst | Releases a 13m barrier effect for all allies in teleporter events and holdout zones, multiplying barrier decay by 80%. | `Common` |
 <img src="https://media.discordapp.net/attachments/953688831750709278/971245392362622986/boneVisorIcon.png" width="100"/> | Bone Visor | Killing an enemy multiplies barrier decay by 95%, lasting for 3 seconds. | `Common` |
----|---|---|
+---|---|---|---
 <img src="https://media.discordapp.net/attachments/953688831750709278/971948105438232686/unknown.png" width="100"/> | Torturer | Heals you for 5% of damage dealt over time. | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/967538771211980820/Hourglass128.png" width="100"/> | Abundant Hourglass | Increases the duration of buffs by 125%. | `Uncommon` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/Plan128.png" width="100"/> | Escape Plan | Gain 75% movement speed, increases with decreasing health. | `Uncommon` |
@@ -17,10 +19,10 @@ Icons | Items | Function | Type
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970904553186811924/ceremonialProbeIcon.png" width="100"/> | Ceremonial Probe | Prevents barrier decay when you're at 59% health. | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970814203457843230/mechSnailIcon.png" width="100"/> | Mechanical Snail | Multiplies barrier decay by 83%. | `Uncommon` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/970169637067169822/sluggyBoyIcon.png" width="100"/> | Eternal Slug | Stops temporary barrier from decaying naturally past 36%. | `Uncommon` |
----|---|---|
+---|---|---|---
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/Plate128.png" width="100"/> | Repulsion Armor Mk2 | Two modes in config. Reduce all incoming damage by 20. Cannot be reduced below 1. / Increase armor by 20. Scales with the amount of Repulsion Armor Plates you have. | `Legendary` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/957570332082970624/acidSoakedBlindfoldRender-1.png" width="100"/> | Acid Soaked Blindfold | Every 30 seconds, summon a Blind Vermin with 10 Common or Uncommon items. | `Legendary` |
----|---|---|
+---|---|---|---
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/voidscrap.png" width="100"/> | Void Scrap | Prioritized when used with Common 3D Printers. Corrupts all Broken items. | `Void Common` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/955219913981718638/GEMO_shiftedQuartzRender.png" width="100"/> | Shifted Quartz | Increase damage dealt by 15% when there are no enemies within 18m of you. Corrupts all Focus Crystals. | `Void Common` |
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/955582068287488000/recursionBullets.png" width="100"/> | Recursion Bullets | Attacking bosses increases attack speed by 5%, caps at 10%. Corrupts all Armor-Piercing Rounds. | `Void Common` |
@@ -30,7 +32,7 @@ Icons | Items | Function | Type
 <img src="https://cdn.discordapp.com/attachments/953688831750709278/967541141660647464/texIconsTemplate.png" width="100"/> | Deficient Clepsydra | 30% chance to duplicate damager over time inflictions. Corrupts all Abundant Hourglasses. | `Void Uncommon` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/lostSeersTragedyIcon.png" width="100"/> | Lost Seers Tragedy | Killing an enemy spawns a Barnacle with 3 Void Common items. Corrupts all Acid Soaked Blindfold. | `Void Rare` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/GEMO_SubmergedCistern.png" width="100"/> | Submerging Cistern | While in combat, the nearest ally wihin 20m of you will be 'tethered'. Dealing damage will heal tethered allies for 50% of damage dealt. Healing is divided among allies. Corrupts all Mired Urns. | `Void Boss` |
----|---|---|
+---|---|---|---
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/abstractedLocusIcon.png" width="100"/> | Abstracted Locus | Teleporter zone is 50% bigger. Outside of the teleporter radius is filled with Void Fog. Staying in the Void Fog charges the teleporters 60% faster. Converts all Focused Convergences. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/delugedCircletIcon.png" width="100"/> | Deluged Circlet | Every 10 gold earned reduces skill cooldowns by 1 second. Temporarily stops any gold from being gained for 5 seconds upon being hit. Converts all Brittle Crowns. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/clumpedSandIcon.png" width="100"/> | Clumped Sand | All attacks will hit for an additional 1 times for 50% base damage, but reduces health rengeration by -3/s. Converts all Shaped Glass. | `Void Lunar` |
@@ -40,10 +42,11 @@ Icons | Items | Function | Type
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/orbsOfFalsityIcon.png" width="100"/> | Orbs of Falsity | Seems to do nothing... but... Void Seeds spawn 50% more often. Converts all Beads of Fealty's. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/seepingOceanIcon.png" width="100"/> | Seeping Ocean | Items have a 1% chance to become a Void Lunar item instead. Unaffected by luck. Converts all Eulogy Zeros. | `Void Lunar` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/tarnishedIcon.png" width="100"/> | Tarnished | While active, all random effects are rolled +1 time for a favorable outcome. Only stays active for 50 rolls per stage. When inactive, all random effects are rolled +1 times for an unfavorable outcome. Converts all Purity. | `Void Lunar` |
----|---|---|
+---|---|---|---
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/BrokenClock.png" width="100"/> | Broken Clock | Turn back the clock 10 seconds for yourself. | `Equipment` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/aa28dc5498a125826827b2615d80b89df96ed2f8/BubbetsItems/Icons/WLCam.png" width="100"/> | Wildlife Camera | Take a photo of an enemy, and spawn them as an ally later. | `Equipment` |
 <img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/gyroscopicWhisk.png" width="100"/> | SOM's Gyroscopic Whisk | Spin enemies until they die. | `Equipment` |
+<img src="https://raw.githubusercontent.com/Bubbet/Risk-Of-Rain-Mods/master/BubbetsItems/Icons/donkey%201.png" width="100"/> | Holographic Donkey | Force enemies to attack this decoy, or throw it on them to make them damage themselves. | `Equipment` |
 
 # Other
 If you have suggestions or questions, feel free to message `Bubbet#2639` or `GEMO#0176` on Discord.
@@ -60,6 +63,14 @@ Patience is key~
   - `Conq#1738` for the item stats descriptions
   
 # Changelog
+* v1.8.9 Mod Changes:
+  * Moved some config values into steam cloud, and made risk of options required.
+  * Fixed some nres with broken clock and wildlife camera when used due to bottled chaos.
+  * TODO make void shop return work for clients
+  * Fixed description incompatibility with synergies
+  * Added optional dependency for zioriskofoptions
+  * Made whisk kill on oob
+  
 * v1.8.8 Mod Changes:
   * Fixed holographic donkey for clients.
   * Changed abstracted locus voidfog back to the other def.

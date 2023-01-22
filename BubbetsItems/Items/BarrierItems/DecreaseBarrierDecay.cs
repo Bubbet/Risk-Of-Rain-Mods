@@ -1,4 +1,5 @@
-﻿using BubbetsItems.Helpers;
+﻿using BubbetsItems.Components;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
 
@@ -10,8 +11,8 @@ namespace BubbetsItems.Items
 		{
 			base.MakeTokens();
 			AddToken("DECREASEBARRIERDECAY_NAME", "Mechanical Snail");
-			AddToken("DECREASEBARRIERDECAY_DESC", "Multiplies " + "barrier decay ".Style(StyleEnum.Heal) + "by " + "{0:0%}".Style(StyleEnum.Heal) + ".");
-			AddToken("DECREASEBARRIERDECAY_DESC_SIMPLE", "Multiplies " + "barrier decay ".Style(StyleEnum.Heal) + "by " + "83% ".Style(StyleEnum.Heal) + "(stacks exponentially)".Style(StyleEnum.Stack) + ".");
+			AddToken("DECREASEBARRIERDECAY_DESC", "Slows " + "barrier decay ".Style(StyleEnum.Heal) + "by " + "{0:0%}".Style(StyleEnum.Heal) + ".");
+			AddToken("DECREASEBARRIERDECAY_DESC_SIMPLE", "Slows " + "barrier decay ".Style(StyleEnum.Heal) + "by " + "17% ".Style(StyleEnum.Heal) + "(stacks exponentially)".Style(StyleEnum.Stack) + ".");
 			SimpleDescriptionToken = "DECREASEBARRIERDECAY_DESC_SIMPLE";
 			AddToken("DECREASEBARRIERDECAY_PICKUP", "Slow down barrier decay.");
 			AddToken("DECREASEBARRIERDECAY_LORE", "");
@@ -20,19 +21,26 @@ namespace BubbetsItems.Items
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("1 / ([a] * 0.2 + 1)", "Barrier Decay Mult");
+			AddScalingFunction("1 - 1 / ([a] * 0.2 + 1)", "Barrier Decay Mult", oldDefault: "1 / ([a] * 0.2 + 1)");
 		}
 
-		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
-		public static void FixBarrier(CharacterBody __instance)
+		protected override void MakeBehaviours()
 		{
-			var inv = __instance.inventory;
-			if (!inv) return;
-			var instance = GetInstance<DecreaseBarrierDecay>();
-			if (instance == null) return;
-			var count = inv.GetItemCount(instance.ItemDef);
+			base.MakeBehaviours();
+			CommonBodyPatches.CollectExtraStats += GetBarrierDecay;
+		}
+
+		protected override void DestroyBehaviours()
+		{
+			base.DestroyBehaviours();
+			CommonBodyPatches.CollectExtraStats -= GetBarrierDecay;
+		}
+
+		private void GetBarrierDecay(CommonBodyPatches.ExtraStats obj)
+		{
+			var count = obj.inventory.GetItemCount(ItemDef);
 			if (count <= 0) return;
-			__instance.barrierDecayRate *= instance.scalingInfos[0].ScalingFunction(count);
+			obj.barrierDecay += scalingInfos[0].ScalingFunction(count);
 		}
 	}
 }

@@ -16,6 +16,7 @@ namespace BubbetsItems
 	public static class CustomItemTierDefs
 	{
 		public static List<ItemTierDef> recyclerTiers = new();
+		public static List<ItemTierDef> voidTiers = new();
 
 		//public static GameObject VoidLunarDroplet;
 		[HarmonyILManipulator,
@@ -33,6 +34,15 @@ namespace BubbetsItems
 					AddItemTierGroup(tier.tier, ref groups);
 				}
 			});
+		}
+
+		[HarmonyPostfix,
+		 HarmonyPatch(typeof(VoidSurvivorController), nameof(VoidSurvivorController.OnInventoryChanged))]
+		public static void AddExtraTiersToVoidSurvivor(VoidSurvivorController __instance)
+		{
+			var inv = __instance.characterBody.inventory;
+			if (!inv) return;
+			__instance.voidItemCount += voidTiers.Sum(x => inv.GetTotalItemCountOfTier(x.tier));
 		}
 
 		public static PickupIndex[] AddItemTierGroup(ItemTier tier, ref List<PickupIndex[]> groups)
@@ -125,6 +135,7 @@ namespace BubbetsItems
 			}
 
 			BubbetsItemsPlugin.VoidLunarTier = bubsItemsContentPackProvider.itemTierDefs[0];
+			voidTiers.Add(BubbetsItemsPlugin.VoidLunarTier);
 		}
 	}
 }

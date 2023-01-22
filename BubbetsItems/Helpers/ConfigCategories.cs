@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using BepInEx.Configuration;
-using EntityStates.Railgunner.Backpack;
-using HarmonyLib;
 using RoR2;
 using RoR2.Networking;
-using Unity.Audio;
 using UnityEngine.Networking;
+using ZioConfigFile;
 
 namespace BubbetsItems
 {
@@ -50,6 +48,53 @@ namespace BubbetsItems
 
 			return configEntry;
 		}
+		
+		public static ZioConfigEntry<T> Bind<T>(this ZioConfigFile.ZioConfigFile file, ConfigCategoriesEnum which, string key, T defaultValue, string description, T? oldDefault = default, bool networked = true)
+		{
+			var configEntry = file.Bind(Categories[(int) which], key, defaultValue, description);
+			var sharedEntry = file.Bind("Do Not Touch", "Config Defaults Reset", "",
+				"Stores the old defaults that have been reset so they wont be again. Its not going to break anything if you do for some reason need to touch this, its job is just to prevent the config from resetting multiple times if you change the value back to the old default.");
+			if (oldDefault != null && !sharedEntry.Value.Contains(configEntry.Definition.Key + ": " + oldDefault) && Equals(configEntry.Value, (T) oldDefault))
+			{
+				configEntry.Value = (T) configEntry.DefaultValue;
+				var entries = sharedEntry.Value.Split(new[]{";"}, StringSplitOptions.RemoveEmptyEntries).Where(x => !x.StartsWith(configEntry.Definition.Key)).ToArray();
+				sharedEntry.Value = string.Join("; ", entries) +  configEntry.Definition.Key + ": " + oldDefault + "; ";
+			}
+
+			if (networked)
+			{
+				configEntry.SettingChanged += Changed;
+				configEntriesZio[Categories[(int) which] + "_" + key] = configEntry;
+			}
+
+			return configEntry;
+		}
+
+		private static void Changed(ZioConfigEntryBase sender, object arg2, bool arg3)
+		{
+			try
+			{
+				if (!NetworkServer.active) return;
+				NetworkServer.SendToAll(MsgType, new ConfigSync(sender));
+			}
+			catch (Exception f)
+			{
+				BubbetsItemsPlugin.Log.LogError(f);
+			}
+		}
+
+		private static void Changed(ZioConfigEntryBase sender, object arg2)
+		{
+			try
+			{
+				if (!NetworkServer.active) return;
+				NetworkServer.SendToAll(MsgType, new ConfigSync(sender));
+			}
+			catch (Exception f)
+			{
+				BubbetsItemsPlugin.Log.LogError(f);
+			}
+		}
 
 		private static void Changed(object sender, EventArgs e)
 		{
@@ -65,6 +110,7 @@ namespace BubbetsItems
 		}
 
 		public static Dictionary<string, ConfigEntryBase> configEntries = new();
+		public static Dictionary<string, ZioConfigEntryBase> configEntriesZio = new();
 		private const short MsgType = 389;
 
 		public static void Init()
@@ -120,18 +166,29 @@ namespace BubbetsItems
 			public int type;
 			public ConfigEntryBase entry = null!;
 			private object? value;
+			private ZioConfigEntryBase entryZio = null!;
+			private bool zio;
 
-			public ConfigSync(ConfigEntryBase config)
+			public ConfigSync() { }
+			public ConfigSync(string key, string category, Type settingType, object defaultValue)
 			{
-				key = config.Definition.Key;
-				category = config.Definition.Section;
-				type = GetTypeFromValue(config.SettingType);
-				valueSerialized = TomlTypeConverter.ConvertToString(config.BoxedValue, config.SettingType);
+				this.key = key;
+				this.category = category;
+				type = GetTypeFromValue(settingType);
+				valueSerialized = TomlTypeConverter.ConvertToString(defaultValue, settingType);
+				value = defaultValue;
+			}
+			public ConfigSync(ConfigEntryBase config) : this(config.Definition.Key, config.Definition.Section, config.SettingType, config.BoxedValue)
+			{
 				entry = config;
-				value = config.BoxedValue;
 			}
 
-			public ConfigSync(){}
+			public ConfigSync(ZioConfigEntryBase config) : this(config.Definition.Key, config.Definition.Section, config.SettingType, config.BoxedValue)
+			{
+				entryZio = config;
+				zio = true;
+			}
+
 
 			private static int GetTypeFromValue(Type configSettingType)
 			{
@@ -161,6 +218,7 @@ namespace BubbetsItems
 				writer.Write(category);
 				writer.Write(key);
 				writer.Write(type);
+				writer.Write(zio);
 				writer.Write(valueSerialized);
 			}
 
@@ -170,8 +228,17 @@ namespace BubbetsItems
 				category = reader.ReadString();
 				key = reader.ReadString();
 				type = reader.ReadInt32();
+				zio = reader.ReadBoolean();
 				valueSerialized = reader.ReadString();
-				entry = configEntries[category + "_" + key];
+				if (zio)
+				{
+					entryZio = configEntriesZio[category + "_" + key];
+				}
+				else
+				{
+					entry = configEntries[category + "_" + key];
+				}
+
 				value = TomlTypeConverter.ConvertToValue(valueSerialized, GetValueFromType(type));
 			}
 
@@ -182,10 +249,20 @@ namespace BubbetsItems
 
 			public void TempSet()
 			{
-				var save = entry.ConfigFile.SaveOnConfigSet;
-				entry.ConfigFile.SaveOnConfigSet = false;
-				entry.BoxedValue = value;
-				entry.ConfigFile.SaveOnConfigSet = save;
+				if (zio)
+				{
+					var save = entryZio.DontSaveOnChange;
+					entryZio.DontSaveOnChange = true;
+					entryZio.BoxedValue = value;
+					entryZio.DontSaveOnChange = save;
+				}
+				else
+				{
+					var save = entry.ConfigFile.SaveOnConfigSet;
+					entry.ConfigFile.SaveOnConfigSet = false;
+					entry.BoxedValue = value;
+					entry.ConfigFile.SaveOnConfigSet = save;
+				}
 			}
 		}
 	}
@@ -200,7 +277,7 @@ namespace BubbetsItems
 
 		public ConfigSyncAll()
 		{
-			configs = ConfigCategories.configEntries.Values.Select(x => new ConfigCategories.ConfigSync(x)).ToList();
+			configs = ConfigCategories.configEntries.Values.Select(x => new ConfigCategories.ConfigSync(x)).Concat(ConfigCategories.configEntriesZio.Values.Select(x => new ConfigCategories.ConfigSync(x))).ToList();
 		}
 
 		public void TempSet()

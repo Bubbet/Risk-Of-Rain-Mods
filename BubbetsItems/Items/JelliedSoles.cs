@@ -127,7 +127,7 @@ namespace BubbetsItems.Items
 				var instance = GetInstance<JelliedSoles>();
 				var count = inv.GetItemCount(instance.ItemDef);
 				if (count <= 0) return amount;
-				var behavior = inv.GetComponent<JelliedSolesBehavior>();
+				var behavior = inv.GetComponent<JelliedSolesBehavior>(); // potential future incompat with holydll
 				if (behavior.storedDamage <= 0) return amount;
 				
 				//[s] * [d] * [a] * 0.1

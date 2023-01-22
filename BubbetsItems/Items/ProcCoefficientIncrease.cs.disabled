@@ -30,7 +30,7 @@ namespace BubbetsItems.Items
 		[HarmonyPrefix, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.TakeDamage))]
 		public static void ApplyCoefficient(HealthComponent __instance, ref DamageInfo damageInfo)
 		{
-			var count = damageInfo.attacker?.GetComponent<CharacterBody>()?.inventory?.GetItemCount(Instance.ItemDef) ?? 0;
+			var count = damageInfo.attacker?.GetComponent<CharacterBody>()?.inventory?.GetItemCount(Instance.ItemDef) ?? 0; // potential future incompat with holydll
 			if (count <= 0) return;
 			damageInfo.procCoefficient *= Instance.scalingInfos[0].ScalingFunction(count);
 		}

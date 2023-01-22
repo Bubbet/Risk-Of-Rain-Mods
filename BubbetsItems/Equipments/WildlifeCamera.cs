@@ -20,8 +20,9 @@ namespace BubbetsItems.Equipments
         private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefSepia");
 
         public override EquipmentActivationState PerformEquipment(EquipmentSlot equipmentSlot)
-        { 
-            return equipmentSlot.inventory.gameObject.GetComponent<WildLifeCameraBehaviour>().Perform();
+        {
+            var comp = equipmentSlot.inventory.gameObject.GetComponent<WildLifeCameraBehaviour>();
+            return !comp ? EquipmentActivationState.DidNothing : comp.Perform();
         }
 
         public override void PerformClientAction(EquipmentSlot equipmentSlot, EquipmentActivationState state)

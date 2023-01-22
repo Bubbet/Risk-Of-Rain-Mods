@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Reflection;
 using BubbetsItems.Helpers;
 using BubbetsItems.ItemBehaviors;
 using EntityStates;
+using EntityStates.Assassin2;
+using EntityStates.Merc;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
@@ -31,6 +34,8 @@ namespace BubbetsItems.Items
 			AddScalingFunction("0.15", "On Ground Mercy");
 			AddScalingFunction("1", "Jump velocity retention");
 			AddScalingFunction("[a] * 0.5", "Jump Control");
+			AddScalingFunction("3", "Auto Jump Requirement");
+			AddScalingFunction("0.25", "Merc Dash Exit Mult");
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(ProjectileGrappleController.GripState), nameof(ProjectileGrappleController.GripState.FixedUpdateBehavior))]
@@ -51,6 +56,39 @@ namespace BubbetsItems.Items
 			c.EmitDelegate<Func<bool, ProjectileGrappleController.GripState, bool>>((b, grip) => (!grip.owner.characterBody || grip.owner.characterBody.inventory.GetItemCount(GetInstance<BunnyFoot>().ItemDef) <= 0) && b);
 		}
 
+		[HarmonyILManipulator, HarmonyPatch(typeof(Assaulter2), nameof(Assaulter2.OnEnter)), HarmonyPatch(typeof(Assaulter2), nameof(Assaulter2.OnExit)), HarmonyPatch(typeof(FocusedAssaultDash), nameof(FocusedAssaultDash.OnExit)), HarmonyPatch(typeof(EvisDash), nameof(EvisDash.OnExit))]//, HarmonyPatch(typeof(WhirlwindBase), nameof(WhirlwindBase.FixedUpdate))]
+		public static void FixAssulter2Dash(ILContext il, MethodBase __originalMethod)
+		{
+			var c = new ILCursor(il);
+			c.GotoNext(x => x.MatchStfld<CharacterMotor>("velocity"));
+			c.Emit(OpCodes.Ldarg_0);
+			c.EmitDelegate<Func<Vector3, BaseSkillState, Vector3>>((vector3, assaulter2) =>
+			{
+				var count = assaulter2.characterBody.inventory.GetItemCount(GetInstance<BunnyFoot>()?.ItemDef);
+				if (count <= 0) return vector3;
+				if (__originalMethod.Name != "OnExit") return ((IPhysMotor) assaulter2.characterMotor).velocity;
+				var outputVelocity = (Vector3) (__originalMethod.DeclaringType?.GetField("dashVector", (BindingFlags) (-1))?.GetValue(assaulter2) ?? Vector3.zero) * (float) (__originalMethod.DeclaringType?.GetField("speedCoefficient")?.GetValue(assaulter2) ?? 0f) * assaulter2.moveSpeedStat * GetInstance<BunnyFoot>().scalingInfos[5].ScalingFunction(count);
+				var inputVelocity = ((IPhysMotor) assaulter2.characterMotor).velocity;
+				return outputVelocity.normalized * Mathf.Sqrt(Mathf.Max(inputVelocity.sqrMagnitude, outputVelocity.sqrMagnitude));
+			});
+		}
+		//[HarmonyILManipulator, HarmonyPatch(typeof(DashStrike), nameof(DashStrike.FixedUpdate))]
+		public static void FixMercDash(ILContext il)
+		{
+			var c = new ILCursor(il);
+			c.GotoNext(x => x.MatchCallOrCallvirt<CharacterMotor>("set_" + nameof(CharacterMotor.moveDirection)));
+			var index = c.Index;
+			c.GotoPrev(MoveType.After, x => x.MatchCallOrCallvirt<EntityState>("get_" + nameof(EntityState.characterMotor)));
+			c.Emit(OpCodes.Dup);
+			c.Index = index + 1; // for some reason this was emitting before the mult which is weird
+			c.EmitDelegate<Func<CharacterMotor, Vector3, Vector3>>((motor, input) =>
+			{
+				if (motor.body.inventory.GetItemCount(GetInstance<BunnyFoot>()?.ItemDef) <= 0) return input;
+				return input.normalized * Mathf.Sqrt(Mathf.Max(input.sqrMagnitude, motor.moveDirection.sqrMagnitude));
+			});
+			BubbetsItemsPlugin.Log.LogInfo(il);
+		}
+
 		[HarmonyILManipulator, HarmonyPatch(typeof(GenericCharacterMain), nameof(GenericCharacterMain.ApplyJumpVelocity))]
 		public static void FixJump(ILContext il)
 		{
@@ -58,9 +96,7 @@ namespace BubbetsItems.Items
 			var c = new ILCursor(il);
 			
 			// if (vault)
-			c.GotoNext(
-				x => x.MatchStfld<CharacterMotor>("velocity")
-			);
+			c.GotoNext(x => x.MatchStfld<CharacterMotor>("velocity"));
 			c.Emit(OpCodes.Ldarg_1);
 			c.EmitDelegate<Func<Vector3, CharacterBody, Vector3>>(DoJumpFix);
 			c.Index++;

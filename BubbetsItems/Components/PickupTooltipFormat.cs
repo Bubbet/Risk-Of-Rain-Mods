@@ -34,8 +34,8 @@ namespace BubbetsItems
             harmony.Patch(bae, null, null, null, null, new HarmonyMethod(typeof(PickupTooltipFormat).GetMethod("FixBetterUIsGarbage")));
         }*/
 
-        [HarmonyPrefix, HarmonyPatch(typeof(TooltipProvider), "get_bodyText")]
-        public static bool FixToken(TooltipProvider __instance, ref string __result)
+        [HarmonyPostfix, HarmonyPatch(typeof(TooltipProvider), "get_bodyText")]
+        public static void FixToken(TooltipProvider __instance, ref string __result)
         {
             try
             {
@@ -67,13 +67,13 @@ namespace BubbetsItems
                 if (item != null)
                 {
                     __result = item.GetFormattedDescription(inventoryDisplay?.inventory);
-                    return false;
+                    return;
                 }
 
                 if (equipment != null)
                 {
                     __result = equipment.GetFormattedDescription(inventoryDisplay?.inventory);
-                    return false;
+                    return;
                 }
 
                 if (titleEquipment != null
@@ -83,15 +83,13 @@ namespace BubbetsItems
                     __result = titleEquipment.GetFormattedDescription(inventoryDisplay?.inventory) +
                                __instance.overrideBodyText.Substring(Language
                                    .GetString(titleEquipment.EquipmentDef.descriptionToken).Length);
-                    return false;
+                    return;
                 }
             }
             catch (Exception e)
             {
                 BubbetsItemsPlugin.Log.LogError(e);
             }
-
-            return true;
         }
 
         [HarmonyILManipulator, HarmonyPatch(typeof(PageBuilder), nameof(PageBuilder.AddSimplePickup))]

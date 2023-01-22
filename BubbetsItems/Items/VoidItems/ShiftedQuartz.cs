@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using BubbetsItems.ItemBehaviors;
 using HarmonyLib;
@@ -9,16 +8,17 @@ using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using RiskOfOptions;
 using RiskOfOptions.OptionConfigs;
-using RiskOfOptions.Options;
 using RoR2;
 using UnityEngine;
+using ZioConfigFile;
+using ZioRiskOfOptions;
 
 namespace BubbetsItems.Items
 {
 	public class ShiftedQuartz : ItemBase
 	{
-		public static ConfigEntry<bool> visualOnlyForAuthority;
-		public static ConfigEntry<float> visualTransparency;
+		public static ZioConfigEntry<bool> visualOnlyForAuthority;
+		public static ZioConfigEntry<float> visualTransparency;
 
 		protected override void MakeTokens()
 		{
@@ -37,18 +37,22 @@ namespace BubbetsItems.Items
 			base.MakeConfigs();
 			AddScalingFunction("18", "Distance", oldDefault: "20");
 			AddScalingFunction("[a] * 0.15", "Damage", oldDefault: "[a] * 0.2");
-			visualOnlyForAuthority = sharedInfo.ConfigFile!.Bind(ConfigCategoriesEnum.General,
+		}
+
+		public override void MakeZioOptions()
+		{
+			visualOnlyForAuthority = sharedInfo.zioConfigFile!.Bind(ConfigCategoriesEnum.General,
 				"Shifted quartz visual only for authority", false,
 				"Should shifted quartz visual effect only show for the player who has the item", networked: false);
-			visualTransparency = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Shifted quartz inside transparency",
+			visualTransparency = sharedInfo.zioConfigFile.Bind(ConfigCategoriesEnum.General, "Shifted quartz inside transparency",
 				0.15f, "The transparency of the dome when enemies are inside it.", networked: false);
 		}
 
-		public override void MakeRiskOfOptions()
+		public override void MakeZioRiskOfOptions()
 		{
-			base.MakeRiskOfOptions();
-			ModSettingsManager.AddOption(new CheckBoxOption(visualOnlyForAuthority));
-			ModSettingsManager.AddOption(new SliderOption(visualTransparency, new SliderConfig {min = 0, max = 1, formatString = "{0:0.00%}"}));
+			base.MakeZioRiskOfOptions();
+			ModSettingsManager.AddOption(new ZioCheckBoxOption(visualOnlyForAuthority));
+			ModSettingsManager.AddOption(new ZioSliderOption(visualTransparency, new SliderConfig {min = 0, max = 1, formatString = "{0:0.00%}"}));
 		}
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)

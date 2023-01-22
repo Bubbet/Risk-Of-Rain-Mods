@@ -64,13 +64,13 @@ namespace BubbetsItems
             {
                 if (!voidPairing.IsDefault)
                 {
-                    corruption = "Corrupts all " + string.Join(", ", voidPairing.itemDefs.Select(x =>
+                    corruption = Language.GetStringFormatted("BUB_DEFAULT_CONVERT", string.Join(", ", voidPairing.itemDefs.Select(x =>
                     {
                         var str = Language.GetString(x.nameToken);
                         if (Language.currentLanguage == Language.english)
                             str += "s";
                         return str;
-                    })) + ".";
+                    })));
                     corruption = corruption.Style(ItemDef.tier == BubbetsItemsPlugin.VoidLunarTier.tier ? StyleEnum.VoidLunar : StyleEnum.Void);
                 }
                 else
@@ -229,6 +229,8 @@ namespace BubbetsItems
         [HarmonyPrefix, HarmonyPatch(typeof(ContagiousItemManager), nameof(ContagiousItemManager.Init))]
         public static void FillVoidItems()
         {
+            
+            
             var pairs = new List<ItemDef.Pair>();
             /*
             foreach (var itemBase in Items)
