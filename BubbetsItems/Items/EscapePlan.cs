@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using InLobbyConfig.Fields;
 using RoR2;
+using RoR2.ContentManagement;
 using UnityEngine;
 
 namespace BubbetsItems.Items
@@ -16,6 +18,17 @@ namespace BubbetsItems.Items
         
         private static BuffDef? _buffDef;
         private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefEscapePlan");
+        protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
+        {
+            base.FillDefsFromSerializableCP(serializableContentPack);
+            // yeahh code based content because TK keeps fucking freezing
+            var buff = ScriptableObject.CreateInstance<BuffDef>();
+            buff.canStack = true;
+            buff.name = "BuffDefEscapePlan";
+            buff.buffColor = new Color(r: 0.09344961f, g: 0.7924528f, b: 0.11563477f, a: 1);
+            buff.iconSprite = BubbetsItemsPlugin.AssetBundle.LoadAsset<Sprite>("PlanBlank");
+            serializableContentPack.buffDefs = serializableContentPack.buffDefs.AddItem(buff).ToArray();
+        }
         
         protected override void MakeTokens()
         {
@@ -32,7 +45,7 @@ namespace BubbetsItems.Items
         {
             //if (ItemEnabled.Value) RepulsionArmorPlateMk2Plugin.Conf.RequiresR2Api = true;
             base.MakeConfigs();
-            AddScalingFunction("-Log(1 - (1 - [h])) * (0.65 + 0.1 * [a])", "Movement Speed", "[a] = amount, [h] = health");
+            AddScalingFunction("-Log(1 - (1 - [h]), 2.718) * (0.65 + 0.1 * [a])", "Movement Speed", "[a] = amount, [h] = health", oldDefault:"-Log(1 - (1 - [h])) * (0.65 + 0.1 * [a])");
             Granularity = sharedInfo.ConfigFile!.Bind(ConfigCategoriesEnum.BalancingFunctions, GetType().Name + " Granularity", 25f, "Value to multiply the scaling function by before its rounded, and then value to divide the buff count by.");
             /*
             if (!Chainloader.PluginInfos.ContainsKey(R2API.R2API.PluginGUID))

@@ -189,7 +189,7 @@ namespace BubbetsItems
         {
             foreach (var pack in ContentPacks)
             {
-                if (ItemDef != null) continue;
+                if (ItemDef != null) break;
                 var name = GetType().Name;
                 foreach (var itemDef in pack.itemDefs)
                     if (MatchName(itemDef.name, name))
@@ -294,7 +294,15 @@ namespace BubbetsItems
                 _configEntry = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, callingType.Name + "_" + name, defaultValue,   callingType.Name + "; " + _name +"; Scaling function for item. ;" + _description, oldDefault);
                 _defaultValue = defaultValue;
                 _oldValue = _configEntry.Value;
-                _function = new Expression(_oldValue).ToLambda<ExpressionContext, float>();
+                try
+                {
+                    _function = new Expression(_oldValue).ToLambda<ExpressionContext, float>();
+                }
+                catch (EvaluationException)
+                {
+                    _function = new Expression(_defaultValue).ToLambda<ExpressionContext, float>();
+                }
+
                 _configEntry.SettingChanged += EntryChanged;
             }
 
@@ -330,7 +338,8 @@ namespace BubbetsItems
                 {
                     _function = new Expression(_configEntry.Value).ToLambda<ExpressionContext, float>();
                     _oldValue = _configEntry.Value;
-                } catch(EvaluationException){}
+                }
+                catch (EvaluationException) {}
             }
         }
 
@@ -438,9 +447,9 @@ namespace BubbetsItems
             public float Floor(float x) => Mathf.Floor(x);
             public float Gamma(float x, float y, float z) => Mathf.Gamma(x, y, z);
             public float Lerp(float x, float y, float z) => Mathf.Lerp(x, y, z);
-            public float Log(float x) => Mathf.Log(x);
-            public float Log(float x, float y) => Mathf.Log(x, y);
-            public float Log10(float x) => Mathf.Log10(x);
+            //public float Log(float x) => Mathf.Log(x);
+            public double Log(double x, double y) => Mathf.Log((float) x, (float) y);
+            //public float Log10(float x) => Mathf.Log10(x);
             public float Max(float x, float y) => Mathf.Max(x, y);
             public float Min(float x, float y) => Mathf.Min(x, y);
             public float Pow(float x, float y) => Mathf.Pow(x, y);

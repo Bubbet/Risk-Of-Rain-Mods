@@ -14,6 +14,9 @@ namespace BubbetsItems.EntityStates
 		private TeamIndex teamIndex;
 		private BuffWard indicator;
 		private float stopwatch;
+		private float frequency;
+		private float barrierAdd;
+		private int pulseCount;
 
 		public override void OnEnter()
 		{
@@ -32,6 +35,8 @@ namespace BubbetsItems.EntityStates
 				if (inst == null) return;
 
 				var amount = Util.GetItemCountForTeam(teamIndex, inst.ItemDef.itemIndex, false);
+				frequency = inst.scalingInfos[2].ScalingFunction(amount);
+				barrierAdd = inst.scalingInfos[3].ScalingFunction(amount);
 				radius = inst.scalingInfos[0].ScalingFunction(amount);
 			} 
 			indicator = GetComponent<BuffWard>();
@@ -41,6 +46,29 @@ namespace BubbetsItems.EntityStates
 		public override void FixedUpdate()
 		{
 			base.FixedUpdate();
+			var inst = SharedBase.GetInstance<ClayCatalyst>();
+			if (inst == null) return;
+			if (pulseCount < Mathf.FloorToInt(holdoutZone.charge / frequency))
+			{
+				foreach (var teamComponent in TeamComponent.GetTeamMembers(indicator.teamFilter.teamIndex))
+				{
+					var vector = teamComponent.transform.position - indicator.transform.position;
+					if (indicator.shape == BuffWard.BuffWardShape.VerticalTube)
+					{
+						vector.y = 0f;
+					}
+					if (vector.sqrMagnitude <= indicator.calculatedRadius * indicator.calculatedRadius)
+					{
+						var component = teamComponent.GetComponent<CharacterBody>();
+						if (component && (!indicator.requireGrounded || !component.characterMotor || component.characterMotor.isGrounded))
+						{
+							component.healthComponent.AddBarrier(barrierAdd);
+						}
+					}
+				}
+				pulseCount++;
+				// TODO add vfx and sfx
+			}
 			if (!NetworkServer.active) return;
 			if (Math.Abs(holdoutZone.charge - 1f) < 0.01f)
 			{

@@ -1,7 +1,9 @@
 ﻿using BubbetsItems.Helpers;
 using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using RoR2;
+using RoR2.ContentManagement;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -11,6 +13,16 @@ namespace BubbetsItems.Items.BarrierItems
 	{
 		private static BuffDef? _buffDef;
 		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefClayCatalyst");
+		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
+		{
+			base.FillDefsFromSerializableCP(serializableContentPack);
+			// yeahh code based content because TK keeps fucking freezing
+			var buff = ScriptableObject.CreateInstance<BuffDef>();
+			buff.name = "BuffDefClayCatalyst";
+			buff.buffColor = new Color(r: 1, g: 0.80784315f, b: 0, a: 1);
+			buff.iconSprite = BubbetsItemsPlugin.AssetBundle.LoadAsset<Sprite>("CatalystBuff");
+			serializableContentPack.buffDefs = serializableContentPack.buffDefs.AddItem(buff).ToArray();
+		}
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
@@ -27,6 +39,8 @@ namespace BubbetsItems.Items.BarrierItems
 			base.MakeConfigs();
 			AddScalingFunction("10 + 3 * [a]", "Distance From Teleporter");
 			AddScalingFunction("1 - (1.1 - Pow(0.9, [a]))", "Barrier Decay Mult");
+			AddScalingFunction("0.33", "Barrier Add Pulse Frequency");
+			AddScalingFunction("25 * [a]", "Barrier Add Amount");
 		}
 
 		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
@@ -86,13 +100,6 @@ namespace BubbetsItems.Items.BarrierItems
 		}
 
 		private static GameObject? _zoneObject;
-
-		public static GameObject ZoneObject
-		{
-			get
-			{
-				return _zoneObject ??= BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("ClayCatalystTeleporter");
-			}
-		}
+		public static GameObject ZoneObject => _zoneObject ??= BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("ClayCatalystTeleporter");
 	}
 }

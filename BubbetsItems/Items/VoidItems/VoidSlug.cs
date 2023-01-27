@@ -40,10 +40,11 @@ namespace BubbetsItems.Items
 		[HarmonyPostfix, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.Heal))]
 		private static void HealServer(HealthComponent __instance)
 		{
-			var voidSlug = GetInstance<VoidSlug>();
-			var count = __instance.body?.inventory?.GetItemCount(voidSlug.ItemDef) ?? 0;
+			if (!__instance || !__instance.body || !__instance.body.inventory) return;
+			var voidSlug = GetInstance<VoidSlug>()!;
+			var count = __instance.body.inventory.GetItemCount(voidSlug.ItemDef);
 			if (count <= 0 || __instance.missingCombinedHealth < 0.1f) return;
-			__instance.body?.RecalculateStats();
+			__instance.body.statsDirty = true;
 		}
 
 		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]

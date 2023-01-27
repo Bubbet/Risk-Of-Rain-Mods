@@ -25,8 +25,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Path = System.IO.Path;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
-using ZioConfigFile;
-using ZioRiskOfOptions;
 
 [assembly: SearchableAttribute.OptIn]
 
@@ -149,10 +147,9 @@ namespace BubbetsItems
             if (Chainloader.PluginInfos.ContainsKey("bubbet.zioconfigfile"))
             {
                 ZioConfigSetup();
+                if (Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions"))
+                    Conf.MakeRiskOfOptionsZio();
             }
-
-            if (Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions"))
-                Conf.MakeRiskOfOptionsZio();
             ConfigCategories.Init();
             if (Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterUI"))
                 AddItemTierToBetterUI();
@@ -160,8 +157,8 @@ namespace BubbetsItems
 
         private void ZioConfigSetup()
         {
-            zConfigFile = new ZioConfigFile.ZioConfigFile(RoR2Application.cloudStorage, "/BubbetsItems.cfg", true, this);
-            Conf.InitZio(zConfigFile); // TODO create wrapper that can handle both zio and normal.
+            //zConfigFile = new Z ioConfigFile.ZioConfigFile(RoR2Application.cloudStorage, "/BubbetsItems.cfg", true, this);
+            Conf.InitZio(Config); //zConfigFile); // TODO create wrapper that can handle both zio and normal.
         }
 
         private void AddItemTierToBetterUI()
@@ -189,7 +186,7 @@ namespace BubbetsItems
         private static uint _bankID;
         public static ItemTierDef VoidLunarTier;
         private static PickupIndex[]? _voidLunarItems;
-        private ZioConfigFile.ZioConfigFile zConfigFile;
+        //private ZioConfigFile.ZioConfigFile zConfigFile;
         private SharedBase.SharedInfo sharedInfo;
 
         //[SystemInitializer]
@@ -230,7 +227,7 @@ namespace BubbetsItems
             public static ConfigEntry<float> VoidCoinDropChanceMult;
             public static ConfigEntry<bool> VoidCoinBarrelDrop;
             public static ConfigEntry<bool> VoidCoinVoidFields;
-            public static ZioConfigEntry<float> EffectVolume;
+            public static ConfigEntry<float> EffectVolume;
             //public static bool RequiresR2Api;
 
             internal static void Init(ConfigFile configFile)
@@ -243,10 +240,10 @@ namespace BubbetsItems
                 VoidCoinVoidFields = configFile.Bind(ConfigCategoriesEnum.General, "Void Coin Drop From Void Fields", true, "Should the void coin drop from void fields.");
             }
 
-            internal static void InitZio(ZioConfigFile.ZioConfigFile configFile)
+            internal static void InitZio(ConfigFile configFile)
             {
                 EffectVolume = configFile.Bind(ConfigCategoriesEnum.General, "Effect Volume", 50f, "Volume of the sound effects in my mod.", networked: false);
-                EffectVolume.SettingChanged += (_, _, _) => AkSoundEngine.SetRTPCValue("Volume_Effects", EffectVolume.Value);
+                EffectVolume.SettingChanged += (_, _) => AkSoundEngine.SetRTPCValue("Volume_Effects", EffectVolume.Value);
                 AkSoundEngine.SetRTPCValue("Volume_Effects", EffectVolume.Value);
                 
                 instance.sharedInfo.MakeZioOptions(configFile);
@@ -263,7 +260,7 @@ namespace BubbetsItems
 
             internal static void MakeRiskOfOptionsZio()
             {
-                RiskOfOptions.ModSettingsManager.AddOption(new ZioSliderOption(EffectVolume));
+                RiskOfOptions.ModSettingsManager.AddOption(new SliderOption(EffectVolume));
             }
         }
 

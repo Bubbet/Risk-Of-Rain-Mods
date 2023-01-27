@@ -5,6 +5,7 @@ using HarmonyLib;
 using InLobbyConfig;
 using InLobbyConfig.Fields;
 using RoR2;
+using RoR2.ContentManagement;
 using UnityEngine;
 using UnityEngine.Networking;
 using Object = UnityEngine.Object;
@@ -18,6 +19,16 @@ namespace BubbetsItems.Equipments
         
         private static BuffDef? _buffDef;
         private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefSepia");
+
+        protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
+        {
+            base.FillDefsFromSerializableCP(serializableContentPack);
+            // yeahh code based content because TK keeps fucking freezing
+            var buff = ScriptableObject.CreateInstance<BuffDef>();
+            buff.name = "BuffDefSepia";
+            buff.eliteDef = serializableContentPack.eliteDefs[0];
+            serializableContentPack.buffDefs = serializableContentPack.buffDefs.AddItem(buff).ToArray();
+        }
 
         public override EquipmentActivationState PerformEquipment(EquipmentSlot equipmentSlot)
         {

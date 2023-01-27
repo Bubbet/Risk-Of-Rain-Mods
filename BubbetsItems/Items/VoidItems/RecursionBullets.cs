@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
+using RoR2.ContentManagement;
 using UnityEngine;
 
 namespace BubbetsItems.Items
@@ -11,6 +13,16 @@ namespace BubbetsItems.Items
 		
 		private static BuffDef? _buffDef;
 		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefRecursionBullets");
+		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
+		{
+			base.FillDefsFromSerializableCP(serializableContentPack);
+			// yeahh code based content because TK keeps fucking freezing
+			var buff = ScriptableObject.CreateInstance<BuffDef>();
+			buff.canStack = true;
+			buff.name = "BuffDefRecursionBullets";
+			buff.iconSprite = BubbetsItemsPlugin.AssetBundle.LoadAsset<Sprite>("Rec"); 
+			serializableContentPack.buffDefs = serializableContentPack.buffDefs.AddItem(buff).ToArray();
+		}
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();

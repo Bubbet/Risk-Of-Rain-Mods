@@ -53,6 +53,7 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			var body = hc.body;
 			if (!body) return previous;
+			if (body.GetBuffCount(BoneVisor.BuffDef) > 0) return previous;
 			var inv = body.inventory;
 			if (!inv) return previous;
 			var inst = GetInstance<EternalSlug>();

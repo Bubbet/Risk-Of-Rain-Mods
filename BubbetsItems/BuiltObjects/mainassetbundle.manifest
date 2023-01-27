@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2105078016
+CRC: 2575960973
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: da1d1c298a3bbb8fe818ec22828e9008
+    Hash: 639f9905537ac901f9dd5e6b9b07a299
   TypeTreeHash:
     serializedVersion: 2
-    Hash: adae8b89d599e31efb73600004b5d82c
+    Hash: 922f9df159d14919acb26a51d4ab1533
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -60,6 +60,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
 - Class: 114
+  Script: {fileID: 1684185445, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
+- Class: 114
   Script: {fileID: 927084362, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
   Script: {fileID: 678291247, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
@@ -68,11 +70,17 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 1929002847, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
+  Script: {fileID: 721989816, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
+- Class: 114
   Script: {fileID: -1111289432, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
+- Class: 114
+  Script: {fileID: -2062129808, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
   Script: {fileID: -1548970870, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
   Script: {fileID: 1085696314, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
+- Class: 114
+  Script: {fileID: -1580815867, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
   Script: {fileID: -1565516458, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
@@ -85,8 +93,6 @@ ClassTypes:
   Script: {fileID: -220116769, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
   Script: {fileID: -1474783733, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
-- Class: 114
-  Script: {fileID: 1684185445, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
   Script: {fileID: -1628234578, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
@@ -102,7 +108,7 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 419433389, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 114
-  Script: {fileID: -1783169300, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+  Script: {fileID: -2108948543, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -1845404088, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
@@ -113,6 +119,8 @@ ClassTypes:
   Script: {fileID: 924743675, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 662316482, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1788389205, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -960361785, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
@@ -131,6 +139,8 @@ ClassTypes:
   Script: {fileID: -1848410712, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: 1777312123, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
+  Script: {fileID: 1343443687, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -365436499, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
@@ -188,13 +198,11 @@ ClassTypes:
 - Class: 114
   Script: {fileID: -662483879, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: -1466055214, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: 1395413934, guid: da77c7bbf69f66ab2145560542327715, type: 3}
 - Class: 114
   Script: {fileID: -806885394, guid: 67dfb1fdfb2b407222eda8e23ac8b724, type: 3}
-- Class: 114
-  Script: {fileID: -1580815867, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
-- Class: 114
-  Script: {fileID: 721989816, guid: 7a7c6518fc4fc644c8e1557acba5410e, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 135
@@ -220,7 +228,6 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidHourglass/Flow Speed Noise.png
 - Assets/BubbetsItems/Assets/Equipment/GyroscopicWhisk/gyroscopicWhisk.prefab
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Hydrophily/HydrophilyPickup.prefab
-- Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/BuffDefSepia.asset
 - Assets/BubbetsItems/Assets/Items/Regularitems/EscapePlan/PlanBlank.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/ClumpedSand/sandNormal.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/undeadDiffuse.png
@@ -239,11 +246,9 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/EternalSlug/sluggyBoyIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/EscapePlan/ItemDefEscapePlan.asset
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/seerTragedyEmission.png
-- Assets/BubbetsItems/Assets/Items/BarrierItems/Clay Catalyst/BuffDefClayCatalyst.asset
 - Assets/BubbetsItems/Assets/Items/VoidLunar/ClumpedSand/sandDiffuse.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/AcidSoakedBlindfold/acidSoakedBlindfoldRender-1.png
 - Assets/BubbetsItems/Assets/Equipment/GyroscopicWhisk/EquipmentDefGyroscopicWhisk.asset
-- Assets/BubbetsItems/Assets/Items/Regularitems/RecursionBullets/BuffDefRecursionBullets.asset
 - Assets/BubbetsItems/Assets/Items/VoidLunar/ClumpedSand/clumpedSandIcon.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/ClumpedSand/ClumpedSandMat.mat
 - Assets/BubbetsItems/Assets/Items/Regularitems/BunnyFoot/ItemDefBunnyFoot.asset
@@ -321,7 +326,6 @@ Assets:
 - Assets/BubbetsItems/Assets/Equipment/GyroscopicWhisk/GyroscopicWhiskPickup.prefab
 - Assets/BubbetsItems/Assets/Equipment/HolographicDonkey/EquipmentDefHolographicDonkey.asset
 - Assets/BubbetsItems/Assets/Void Lunar Drop Table.asset
-- Assets/BubbetsItems/Assets/Items/BarrierItems/Bone Visor/BuffDefBoneVisor.asset
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidHourglass/stoneTexture.png
 - Assets/BubbetsItems/Assets/ExpansionDefBubVoid.asset
 - Assets/BubbetsItems/Assets/backgroundTier.png
@@ -340,19 +344,16 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/lostSeersTragedyDisplay.fbx
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/undeadMask.fbx
 - Assets/BubbetsItems/Assets/Equipment/GyroscopicWhisk/WhiskIndicator.prefab
-- Assets/BubbetsItems/Assets/Items/VoidLunar/Circlet/BuffDefCirclet.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/CarapaceBuff.png
 - Assets/BubbetsItems/Assets/LogBookGraphnew.prefab
 - Assets/BubbetsItems/Assets/Items/Regularitems/JelliedSoles/JelliedSolesPickup.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/StarSigil/Star_Effect.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/ShiftedQuartz/shiftedQuartz.fbx
 - Assets/BubbetsItems/Assets/Items/Regularitems/Torturer/Torturer128Update.png
-- Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/EliteDefSepia.asset
 - Assets/BubbetsItems/Assets/Items/VoidLunar/AbstractedLocus/AbstractedLocusPickup.prefab
 - Assets/BubbetsItems/Assets/Items/Regularitems/Hourglass/Hourglass.prefab
 - Assets/BubbetsItems/Assets/Bandolier/BandolierOrbShader.shader
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Shop/VoidShopWarpReturn.prefab
-- Assets/BubbetsItems/Assets/Items/Regularitems/EscapePlan/BuffDefEscapePlan.asset
 - Assets/BubbetsItems/Assets/Items/Regularitems/AcidSoakedBlindfold/acidSoakedBlindfold.fbx
 - Assets/BubbetsItems/Assets/Items/BarrierItems/BarrierDecayDecrease/MechanicalSnailPickup.prefab
 - Assets/BubbetsItems/Assets/Items/Regularitems/AcidSoakedBlindfold/acidSoakedBlindfoldDiffuse.png
@@ -394,10 +395,12 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidHourglass/ItemDefVoidHourglass.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/StarSigil/starSigilIcon.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Tarnished/tarnishedDiffuse.png
+- Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/ceremonialProbeBrokenIcon.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/StarSigil/Star_Light.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/UndeadMaskMat.mat
 - Assets/BubbetsItems/Assets/Bandolier/AmmoPickupOrb.prefab
 - Assets/BubbetsItems/Assets/Equipment/HolographicDonkey/New Material.mat
+- Assets/BubbetsItems/Assets/Items/BarrierItems/Bone Visor/BoneVisorShard.prefab
 - Assets/BubbetsItems/Assets/BubbetsVoidInactive.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/SubmergingCistern/SubmergingCisternPickup.prefab
 - Assets/BubbetsItems/Assets/Items/Regularitems/SubmergingCistern/CisternTransparent.mat
@@ -435,6 +438,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/ItemDefUndeadMask.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/BarrierDecayDecrease/mechSnailIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidJunkToScrapTier1/ScrapBox.png
+- Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/ItemDefBrokenCeremonialProbe.asset
 - Assets/BubbetsItems/Assets/Items/Regularitems/JelliedSoles/jelliedSolesDiffuse.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/SubmergingCistern/submergedCisternTexture.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/StarSigil/Star_Sigil_Effect.prefab
@@ -463,12 +467,10 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Bone Visor/BoneVisorPickup.prefab
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Hydrophily/hydrophily.fbx
 - Assets/BubbetsItems/Assets/Items/Regularitems/RecursionBullets/ItemDefRecursionBullets.asset
-- Assets/BubbetsItems/Assets/Items/VoidLunar/Tarnished/BuffDefTarnished.asset
 - Assets/BubbetsItems/Assets/bubbetExpansionIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/EscapePlan/Plan128.png
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/StarSigil/Materials/Star_Effect.mat
 - Assets/BubbetsItems/Assets/Items/Regularitems/AcidSoakedBlindfold/acidSoakedBlindfold.prefab
-- Assets/BubbetsItems/Assets/Items/Regularitems/ScintillatingJet/BuffDefScintillatingJet.asset
 - Assets/BubbetsItems/Assets/Items/Regularitems/ScintillatingJet/ScintillatingJetMat.mat
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidHourglass/liquidTexture.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/Circlet/CircletMat.mat
@@ -510,7 +512,6 @@ Assets:
 - Assets/BubbetsItems/Assets/Equipment/WildLifeCamera/Camera.fbx
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/UndeadMask/UndeadMaskPickup.prefab
 - Assets/BubbetsItems/Assets/Equipment/HolographicDonkey/NormalMap.png
-- Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/BuffDefGemCarapaceStack.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/EternalSlug/casingNormal.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/ScintillatingJet/ScintillatingBuffIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/BunnyFoot/foot.prefab
@@ -614,7 +615,6 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/VoidLunar/AbstractedLocus/ItemDefAbstractedLocus.asset
 - Assets/BubbetsItems/Assets/Items/BarrierItems/VoidVersions/LostNazaar/lostNazarIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/ScintillatingJet/scintillatingJetOutline.png
-- Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/BuffDefGemCarapaceRefresh.asset
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidBlindfold/lostSeersTragedyIcon.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/RepulsionPlateMk2/RepulsionPlatePickup.prefab
 - Assets/BubbetsItems/Assets/Items/Regularitems/VoidJunkToScrapTier1/vortex.png

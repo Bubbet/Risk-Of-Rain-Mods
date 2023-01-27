@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BubbetsItems.Helpers;
 using BubbetsItems.ItemBehaviors;
 using HarmonyLib;
 using RoR2;
+using RoR2.ContentManagement;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -39,6 +41,17 @@ namespace BubbetsItems.Items.VoidLunar
 
 		private static BuffDef? _buffDef;
 		public static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefTarnished");
+		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
+		{
+			base.FillDefsFromSerializableCP(serializableContentPack);
+			// yeahh code based content because TK keeps fucking freezing
+			var buff = ScriptableObject.CreateInstance<BuffDef>();
+			buff.canStack = true;
+			buff.name = "BuffDefTarnished";
+			buff.buffColor = new Color(r: 0.5254902f, g: 0, b: 0.79607844f, a: 1);
+			buff.iconSprite = BubbetsItemsPlugin.AssetBundle.LoadAsset<Sprite>("texBuffTemporaryLuckIcon");
+			serializableContentPack.buffDefs = serializableContentPack.buffDefs.AddItem(buff).ToArray();
+		}
 
 		[HarmonyPrefix, HarmonyPatch(typeof(Util), nameof(Util.CheckRoll), typeof(float), typeof(float), typeof(CharacterMaster))]
 		public static void UpdateRollsPre(float percentChance, float luck = 0f, CharacterMaster effectOriginMaster = null)

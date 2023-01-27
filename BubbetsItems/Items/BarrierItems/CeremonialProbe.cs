@@ -10,17 +10,18 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("CEREMONIALPROBE_NAME", "Ceremonial Probe");
-			AddToken("CEREMONIALPROBE_DESC", "Falling bellow " + "{0:0%} health ".Style(StyleEnum.Health) + "causes " + "barrier decay ".Style(StyleEnum.Heal) + "to stop.");
-			AddToken("CEREMONIALPROBE_DESC_SIMPLE", "Prevents " + "barrier decay ".Style(StyleEnum.Heal) + "when you're at " + "59% health ".Style(StyleEnum.Health) + "(stacks hyperbolically, caps at 100% health threshold)".Style(StyleEnum.Stack) + ".");
+			AddToken("CEREMONIALPROBE_DESC", "Falling bellow " + "{0:0%} health ".Style(StyleEnum.Health) + " consumes this item and gives you " + "{1:0%} temporary barrier. ".Style(StyleEnum.Utility) + "Regenerates next stage.");
+			AddToken("CEREMONIALPROBE_DESC_SIMPLE", "Falling bellow " + "35% health ".Style(StyleEnum.Health) + " consumes this item and gives you " + "75% temporary barrier. ".Style(StyleEnum.Utility) + "Regenerates next stage.");
 			SimpleDescriptionToken = "CEREMONIALPROBE_DESC_SIMPLE";
-			AddToken("CEREMONIALPROBE_PICKUP", "Pause barrier decay at low health.");
+			AddToken("CEREMONIALPROBE_PICKUP", "Get barrier at low health.");
 			AddToken("CEREMONIALPROBE_LORE", "");
 		}
 
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("Min(1, 1.5 - Pow(20/([a]+20), 2))", "Health threshold");
+			AddScalingFunction("0.35", "Health Threshold");
+			AddScalingFunction("0.75", "Barrier Add Percent");
 		}
 
 		protected override void MakeBehaviours()
@@ -55,9 +56,28 @@ namespace BubbetsItems.Items.BarrierItems
 			if (!inv) return;
 			var amount = inv.GetItemCount(inst.ItemDef);
 			if (amount <= 0) return;
-			if (body.healthComponent.health / body.healthComponent.fullHealth < inst.scalingInfos[0].ScalingFunction(amount))
-				body.barrierDecayRate = 0f;
+			if (body.healthComponent.combinedHealth / body.healthComponent.fullCombinedHealth <
+			    inst.scalingInfos[0].ScalingFunction(amount))
+			{
+				body.healthComponent.AddBarrier(body.healthComponent.fullCombinedHealth *
+				                                inst.scalingInfos[1].ScalingFunction(amount));
+				var broke = GetInstance<BrokenCeremonialProbe>()!.ItemDef;
+				body.inventory.RemoveItem(inst.ItemDef);
+				body.inventory.GiveItem(broke);
+				CharacterMasterNotificationQueue.SendTransformNotification(body.master, inst.ItemDef.itemIndex, broke.itemIndex, CharacterMasterNotificationQueue.TransformationType.Default);
+			}
 		}
 
+		[HarmonyPostfix, HarmonyPatch(typeof(CharacterMaster), nameof(CharacterMaster.OnServerStageBegin))]
+		public static void RegenItem(CharacterMaster __instance)
+		{
+			var broke = GetInstance<BrokenCeremonialProbe>()!.ItemDef;
+			var regular = GetInstance<CeremonialProbe>()!.ItemDef;
+			var itemCount = __instance.inventory.GetItemCount(broke);
+			if (itemCount <= 0) return;
+			__instance.inventory.RemoveItem(broke, itemCount);
+			__instance.inventory.GiveItem(regular, itemCount);
+			CharacterMasterNotificationQueue.SendTransformNotification(__instance, broke.itemIndex, regular.itemIndex, CharacterMasterNotificationQueue.TransformationType.RegeneratingScrapRegen);
+		}
 	}
 }

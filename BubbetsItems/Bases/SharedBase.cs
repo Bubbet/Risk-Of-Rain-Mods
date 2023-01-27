@@ -15,8 +15,6 @@ using RoR2.ContentManagement;
 using RoR2.ExpansionManagement;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using ZioConfigFile;
-using ZioRiskOfOptions;
 
 namespace BubbetsItems
 {
@@ -263,11 +261,11 @@ namespace BubbetsItems
         [SuppressMessage("ReSharper", "NotAccessedField.Global")]
         public class SharedInfo
         {
-            public ZioConfigEntry<bool> ExpandedTooltips;
-            public ZioConfigEntry<bool> DescInPickup;
-            public ZioConfigEntry<bool> ForceHideScalingInfoInPickup;
-            public ZioConfigEntry<bool> UseSimpleDescIfApplicable;
-            public ZioConfigEntry<bool> ItemStatsInSimpleDesc;
+            public ConfigEntry<bool> ExpandedTooltips;
+            public ConfigEntry<bool> DescInPickup;
+            public ConfigEntry<bool> ForceHideScalingInfoInPickup;
+            public ConfigEntry<bool> UseSimpleDescIfApplicable;
+            public ConfigEntry<bool> ItemStatsInSimpleDesc;
             public ConfigFile ConfigFile;
             public Harmony? Harmony;
             public readonly ManualLogSource Logger;
@@ -277,7 +275,7 @@ namespace BubbetsItems
             public ExpansionDef? SotVExpansion;
             public List<SharedBase> Instances = new();
             private bool _zioRiskOfOptionsMade;
-            public ZioConfigFile.ZioConfigFile zioConfigFile;
+            //public ZioConfigFile.ZioConfigFile zioConfigFile;
 
             public SharedInfo(ManualLogSource manualLogSource, ConfigFile configFile, Harmony? harmony, string tokenPrefix)
             {
@@ -293,9 +291,9 @@ namespace BubbetsItems
                 _riskOfOptionsMade = true;
             }
 
-            public void MakeZioOptions(ZioConfigFile.ZioConfigFile configFile)
+            public void MakeZioOptions(ConfigFile configFile)
             {
-                zioConfigFile = configFile;
+                //zioConfigFile = configFile;
                 ExpandedTooltips = configFile.Bind(ConfigCategoriesEnum.General, "Expanded Tooltips", true, "Enables the scaling function in the tooltip.", networked: false);
                 DescInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Description In Pickup", true, "Used the description in the pickup for my items.", networked: false);
                 ForceHideScalingInfoInPickup = configFile.Bind(ConfigCategoriesEnum.General, "Disable Scaling Info In Pickup", true, "Should the scaling infos be hidden from pickups.", networked: false);
@@ -315,11 +313,11 @@ namespace BubbetsItems
             {
                 if (_zioRiskOfOptionsMade) return;
                 _zioRiskOfOptionsMade = true;
-                ModSettingsManager.AddOption(new ZioCheckBoxOption(ExpandedTooltips));
-                ModSettingsManager.AddOption(new ZioCheckBoxOption(DescInPickup));
-                ModSettingsManager.AddOption(new ZioCheckBoxOption(ForceHideScalingInfoInPickup));
-                ModSettingsManager.AddOption(new ZioCheckBoxOption(UseSimpleDescIfApplicable));
-                ModSettingsManager.AddOption(new ZioCheckBoxOption(ItemStatsInSimpleDesc));
+                ModSettingsManager.AddOption(new CheckBoxOption(ExpandedTooltips));
+                ModSettingsManager.AddOption(new CheckBoxOption(DescInPickup));
+                ModSettingsManager.AddOption(new CheckBoxOption(ForceHideScalingInfoInPickup));
+                ModSettingsManager.AddOption(new CheckBoxOption(UseSimpleDescIfApplicable));
+                ModSettingsManager.AddOption(new CheckBoxOption(ItemStatsInSimpleDesc));
 
                 foreach (var instance in Instances)
                 {

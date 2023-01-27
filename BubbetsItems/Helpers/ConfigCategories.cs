@@ -5,7 +5,7 @@ using BepInEx.Configuration;
 using RoR2;
 using RoR2.Networking;
 using UnityEngine.Networking;
-using ZioConfigFile;
+//using ZioConfigFile;
 
 namespace BubbetsItems
 {
@@ -48,7 +48,7 @@ namespace BubbetsItems
 
 			return configEntry;
 		}
-		
+		/*
 		public static ZioConfigEntry<T> Bind<T>(this ZioConfigFile.ZioConfigFile file, ConfigCategoriesEnum which, string key, T defaultValue, string description, T? oldDefault = default, bool networked = true)
 		{
 			var configEntry = file.Bind(Categories[(int) which], key, defaultValue, description);
@@ -94,7 +94,7 @@ namespace BubbetsItems
 			{
 				BubbetsItemsPlugin.Log.LogError(f);
 			}
-		}
+		}*/
 
 		private static void Changed(object sender, EventArgs e)
 		{
@@ -110,7 +110,7 @@ namespace BubbetsItems
 		}
 
 		public static Dictionary<string, ConfigEntryBase> configEntries = new();
-		public static Dictionary<string, ZioConfigEntryBase> configEntriesZio = new();
+		//public static Dictionary<string, ZioConfigEntryBase> configEntriesZio = new();
 		private const short MsgType = 389;
 
 		public static void Init()
@@ -166,7 +166,7 @@ namespace BubbetsItems
 			public int type;
 			public ConfigEntryBase entry = null!;
 			private object? value;
-			private ZioConfigEntryBase entryZio = null!;
+			//private ZioConfigEntryBase entryZio = null!;
 			private bool zio;
 
 			public ConfigSync() { }
@@ -183,11 +183,12 @@ namespace BubbetsItems
 				entry = config;
 			}
 
+			/*
 			public ConfigSync(ZioConfigEntryBase config) : this(config.Definition.Key, config.Definition.Section, config.SettingType, config.BoxedValue)
 			{
 				entryZio = config;
 				zio = true;
-			}
+			}*/
 
 
 			private static int GetTypeFromValue(Type configSettingType)
@@ -232,7 +233,7 @@ namespace BubbetsItems
 				valueSerialized = reader.ReadString();
 				if (zio)
 				{
-					entryZio = configEntriesZio[category + "_" + key];
+					//entryZio = configEntriesZio[category + "_" + key];
 				}
 				else
 				{
@@ -251,10 +252,11 @@ namespace BubbetsItems
 			{
 				if (zio)
 				{
+					/*
 					var save = entryZio.DontSaveOnChange;
 					entryZio.DontSaveOnChange = true;
 					entryZio.BoxedValue = value;
-					entryZio.DontSaveOnChange = save;
+					entryZio.DontSaveOnChange = save;*/
 				}
 				else
 				{
@@ -277,7 +279,7 @@ namespace BubbetsItems
 
 		public ConfigSyncAll()
 		{
-			configs = ConfigCategories.configEntries.Values.Select(x => new ConfigCategories.ConfigSync(x)).Concat(ConfigCategories.configEntriesZio.Values.Select(x => new ConfigCategories.ConfigSync(x))).ToList();
+			configs = ConfigCategories.configEntries.Values.Select(x => new ConfigCategories.ConfigSync(x)).ToList();//.Concat(ConfigCategories.configEntriesZio.Values.Select(x => new ConfigCategories.ConfigSync(x))).ToList();
 		}
 
 		public void TempSet()

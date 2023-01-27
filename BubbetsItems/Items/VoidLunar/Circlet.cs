@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BubbetsItems.Helpers;
 using BubbetsItems.ItemBehaviors;
 using HarmonyLib;
 using RoR2;
+using RoR2.ContentManagement;
+using UnityEngine;
 
 namespace BubbetsItems.Items.VoidLunar
 {
@@ -69,6 +72,17 @@ namespace BubbetsItems.Items.VoidLunar
 
 		private static BuffDef? _buffDef;
 		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefCirclet");
+		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
+		{
+			base.FillDefsFromSerializableCP(serializableContentPack);
+			// yeahh code based content because TK keeps fucking freezing
+			var buff = ScriptableObject.CreateInstance<BuffDef>();
+			buff.isDebuff = true;
+			buff.name = "BuffDefCirclet";
+			buff.buffColor = new Color(r: 0.5254902f, g: 0, b: 0.79607844f, a: 1);
+			buff.iconSprite = BubbetsItemsPlugin.AssetBundle.LoadAsset<Sprite>("textBuffNoMoney-SuckACockIcon");
+			serializableContentPack.buffDefs = serializableContentPack.buffDefs.AddItem(buff).ToArray();
+		}
 
 		[HarmonyPrefix, HarmonyPatch(typeof(CharacterMaster), nameof(CharacterMaster.money), MethodType.Setter)]
 		public static bool DisableMoney(CharacterMaster __instance, uint value)

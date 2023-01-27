@@ -1,6 +1,8 @@
-﻿using BubbetsItems.Helpers;
+﻿using System.Linq;
+using BubbetsItems.Helpers;
 using HarmonyLib;
 using RoR2;
+using RoR2.ContentManagement;
 using UnityEngine;
 
 namespace BubbetsItems.Items.BarrierItems
@@ -12,6 +14,23 @@ namespace BubbetsItems.Items.BarrierItems
 		private static BuffDef? BuffDefStacking => _buffDefStacking ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefGemCarapaceStack");
 		private static BuffDef? _buffDefRefresh;
 		private static BuffDef? BuffDefRefresh => _buffDefRefresh ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefGemCarapaceRefresh");
+		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
+		{
+			base.FillDefsFromSerializableCP(serializableContentPack);
+			// yeahh code based content because TK keeps fucking freezing
+			var buff = ScriptableObject.CreateInstance<BuffDef>();
+			buff.isCooldown = true;
+			buff.name = "BuffDefGemCarapaceRefresh";
+			buff.buffColor = new Color(r: 1, g: 0.80784315f, b: 0, a: 1);
+			buff.iconSprite = BubbetsItemsPlugin.AssetBundle.LoadAsset<Sprite>("CarapaceBuff");
+			
+			var buff2 = ScriptableObject.CreateInstance<BuffDef>();
+			buff2.canStack = true;
+			buff2.name = "BuffDefGemCarapaceStack";
+			buff2.buffColor = new Color(r: 1, g: 0.80784315f, b: 0, a: 1);
+			buff2.iconSprite = BubbetsItemsPlugin.AssetBundle.LoadAsset<Sprite>("CarapaceBuff");
+			serializableContentPack.buffDefs = serializableContentPack.buffDefs.AddItem(buff).AddItem(buff2).ToArray();
+		}
 
 		protected override void MakeTokens()
 		{

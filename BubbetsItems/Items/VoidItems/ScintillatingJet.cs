@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using RiskOfOptions.Options;
 using RoR2;
+using RoR2.ContentManagement;
+using UnityEngine;
 
 namespace BubbetsItems.Items
 {
@@ -53,6 +56,15 @@ namespace BubbetsItems.Items
 		private ConfigEntry<bool> stackable;
 		private static BuffDef? _buffDef;
 		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefScintillatingJet");
+		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
+		{
+			base.FillDefsFromSerializableCP(serializableContentPack);
+			// yeahh code based content because TK keeps fucking freezing
+			var buff = ScriptableObject.CreateInstance<BuffDef>();
+			buff.name = "BuffDefScintillatingJet";
+			buff.iconSprite = BubbetsItemsPlugin.AssetBundle.LoadAsset<Sprite>("ScintillatingBuffIcon");
+			serializableContentPack.buffDefs = serializableContentPack.buffDefs.AddItem(buff).ToArray();
+		}
 
 		protected override void MakeBehaviours()
 		{
