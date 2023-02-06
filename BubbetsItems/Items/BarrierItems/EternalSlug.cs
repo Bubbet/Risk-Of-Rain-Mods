@@ -7,6 +7,7 @@ using MonoMod.Cil;
 using RoR2;
 using RoR2.UI;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace BubbetsItems.Items.BarrierItems
 {
@@ -49,7 +50,7 @@ namespace BubbetsItems.Items.BarrierItems
 			c.EmitDelegate<Func<float, HealthComponent, float>>(EditMinimum);
 		}
 
-		private static float EditMinimum(float previous, HealthComponent hc)
+		public static float EditMinimum(float previous, HealthComponent hc)
 		{
 			var body = hc.body;
 			if (!body) return previous;
@@ -85,9 +86,10 @@ namespace BubbetsItems.Items.BarrierItems
 				return style;
 			}
 
-			public override void CheckInventory(ref HealthBar.BarInfo info, Inventory inv)
+			public override void CheckInventory(ref HealthBar.BarInfo info, Inventory inv, CharacterBody characterBody,
+				HealthComponent healthComponent)
 			{
-				base.CheckInventory(ref info, inv);
+				base.CheckInventory(ref info, inv, characterBody, healthComponent);
 				
 				var inst = GetInstance<EternalSlug>();
 				if (inst == null) return;
@@ -97,18 +99,11 @@ namespace BubbetsItems.Items.BarrierItems
 					enabled = false;
 					return;
 				}
-				var master = inv.GetComponent<CharacterMaster>();
-				if (!master) return;
-				var body = master.GetBody();
-				if (!body) return;
-				var hc = body.healthComponent;
-				if (!hc) return;
-				
 				var sinfo = inst.scalingInfos[0];
-				sinfo.WorkingContext.h = hc.health;
-				sinfo.WorkingContext.b = hc.fullBarrier;
+				sinfo.WorkingContext.h = healthComponent.health;
+				sinfo.WorkingContext.b = healthComponent.fullBarrier;
 				sinfo.WorkingContext.p = 0f;
-				barPos = sinfo.ScalingFunction(amount) / hc.fullCombinedHealth;
+				barPos = sinfo.ScalingFunction(amount) / healthComponent.fullCombinedHealth;
 				enabled = true;
 			}
 

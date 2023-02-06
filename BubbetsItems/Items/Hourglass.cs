@@ -6,6 +6,8 @@ using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using UnityEngine.Networking;
 
@@ -16,7 +18,7 @@ namespace BubbetsItems.Items
     {
         private MethodInfo _aetheriumOrig;
         private MethodInfo _aetheriumOrig1;
-        private ConfigEntry<string> buffBlacklist;
+        public ConfigEntry<string> buffBlacklist;
 
         private IEnumerable<BuffDef> buffDefBlacklist;
         private static bool AetheriumEnabled => Chainloader.PluginInfos.ContainsKey(AetheriumPlugin.ModGuid);
@@ -45,7 +47,17 @@ namespace BubbetsItems.Items
             buffBlacklist.SettingChanged += (_, _) => SettingChanged();
             SettingChanged();
             
+            if (BubbetsItemsPlugin.riskOfOptionsEnabled)
+            {
+                MakeRiskOfOptionsLate();
+            }
+            
             base.FillRequiredExpansions();
+        }
+
+        private void MakeRiskOfOptionsLate()
+        {
+            ModSettingsManager.AddOption(new StringInputFieldOption(buffBlacklist));
         }
 
         private void SettingChanged()
@@ -96,7 +108,7 @@ namespace BubbetsItems.Items
             taperDuration = DoDurationPatch(body, buffDef, taperDuration);
         }
 
-        private static float DoDurationPatch(CharacterBody cb, BuffDef def, float duration)
+        public static float DoDurationPatch(CharacterBody cb, BuffDef def, float duration)
         {
             if (def.isDebuff) return duration;
             var hourglass = GetInstance<Hourglass>();

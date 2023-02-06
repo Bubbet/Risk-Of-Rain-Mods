@@ -3,6 +3,7 @@ using System.Linq;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
+using R2API;
 using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
@@ -32,6 +33,7 @@ namespace BubbetsItems.Items
 			stackable = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "ScintillatingJet Buff Stackable", false, "Can the buff stack.");
 			stackable.SettingChanged += (_,_) => StackableChanged();
 		}
+
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
 			base.FillVoidConversions(pairs);
@@ -55,7 +57,7 @@ namespace BubbetsItems.Items
 		}
 		private ConfigEntry<bool> stackable;
 		private static BuffDef? _buffDef;
-		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefScintillatingJet");
+		public static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefScintillatingJet");
 		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
 		{
 			base.FillDefsFromSerializableCP(serializableContentPack);
@@ -70,12 +72,14 @@ namespace BubbetsItems.Items
 		{
 			base.MakeBehaviours();
 			GlobalEventManager.onServerDamageDealt += DamageDealt;
+			RecalculateStatsAPI.GetStatCoefficients += RecalcStats;
 		}
 
 		protected override void DestroyBehaviours()
 		{
 			base.DestroyBehaviours();
 			GlobalEventManager.onServerDamageDealt -= DamageDealt;
+			RecalculateStatsAPI.GetStatCoefficients -= RecalcStats;
 		}
 
 		public override void MakeRiskOfOptions()
@@ -87,22 +91,24 @@ namespace BubbetsItems.Items
 		private void DamageDealt(DamageReport obj)
 		{
 			var body = obj.victim.body;
-			var inv = body?.inventory;
-			var count = inv?.GetItemCount(ItemDef) ?? 0;
+			if (!body) return;
+			var inv = body.inventory;
+			if (!inv) return;
+			var count = inv.GetItemCount(ItemDef);
 			if (count <= 0) return;
-			if (!stackable.Value && body!.GetBuffCount(BuffDef) > 0) return; // Make the buff not get added again if you already have it.
-			body!.AddTimedBuff(BuffDef, scalingInfos[1].ScalingFunction(count));
+			if (!stackable.Value && body.GetBuffCount(BuffDef) > 0) return; // Make the buff not get added again if you already have it.
+			body.AddTimedBuff(BuffDef, scalingInfos[1].ScalingFunction(count));
 		}
-
-		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
-		public static void RecalcStats(CharacterBody __instance)
+		
+		
+		public static void RecalcStats(CharacterBody __instance, RecalculateStatsAPI.StatHookEventArgs args)
 		{
 			if (!__instance) return;
 			if (!__instance.inventory) return;
 			var instance = GetInstance<ScintillatingJet>();
 			var info = instance.scalingInfos[0];
 			info.WorkingContext.b = __instance.GetBuffCount(BuffDef);
-			__instance.armor += info.ScalingFunction(__instance.inventory.GetItemCount(instance.ItemDef));
+			args.armorAdd += info.ScalingFunction(__instance.inventory.GetItemCount(instance.ItemDef));
 		}
 	}
 }

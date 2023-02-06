@@ -38,6 +38,7 @@ namespace BubbetsItems.Behaviours
 
 		private void DamageDealt(DamageReport obj)
 		{
+			if (!obj.attacker) return;
 			DamageDealt(obj.attacker.GetComponent<CharacterBody>(), obj.damageDealt);
 		}
 		

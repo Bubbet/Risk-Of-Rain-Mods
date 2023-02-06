@@ -1,17 +1,23 @@
-﻿using BubbetsItems.Helpers;
+﻿using BepInEx.Configuration;
+using BubbetsItems.Helpers;
 using HarmonyLib;
+using R2API;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 
 namespace BubbetsItems.Items.BarrierItems
 {
 	public class CeremonialProbe : ItemBase
 	{
+		public static ConfigEntry<bool> RegenOnStage;
+
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
 			AddToken("CEREMONIALPROBE_NAME", "Ceremonial Probe");
-			AddToken("CEREMONIALPROBE_DESC", "Falling bellow " + "{0:0%} health ".Style(StyleEnum.Health) + " consumes this item and gives you " + "{1:0%} temporary barrier. ".Style(StyleEnum.Utility) + "Regenerates next stage.");
-			AddToken("CEREMONIALPROBE_DESC_SIMPLE", "Falling bellow " + "35% health ".Style(StyleEnum.Health) + " consumes this item and gives you " + "75% temporary barrier. ".Style(StyleEnum.Utility) + "Regenerates next stage.");
+			AddToken("CEREMONIALPROBE_DESC", "Falling bellow " + "{0:0%} health ".Style(StyleEnum.Health) + " consumes this item and gives you " + "{1:0%} temporary barrier. ".Style(StyleEnum.Heal));
+			AddToken("CEREMONIALPROBE_DESC_SIMPLE", "Falling bellow " + "35% health ".Style(StyleEnum.Health) + " consumes this item and gives you " + "75% temporary barrier. ".Style(StyleEnum.Heal));
 			SimpleDescriptionToken = "CEREMONIALPROBE_DESC_SIMPLE";
 			AddToken("CEREMONIALPROBE_PICKUP", "Get barrier at low health.");
 			AddToken("CEREMONIALPROBE_LORE", "");
@@ -22,6 +28,14 @@ namespace BubbetsItems.Items.BarrierItems
 			base.MakeConfigs();
 			AddScalingFunction("0.35", "Health Threshold");
 			AddScalingFunction("0.75", "Barrier Add Percent");
+			RegenOnStage = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Ceremonial Probe Regen On Stage",
+				true, "Should ceremonial probe regenerate on stage change.");
+		}
+
+		public override void MakeRiskOfOptions()
+		{
+			base.MakeRiskOfOptions();
+			ModSettingsManager.AddOption(new CheckBoxOption(RegenOnStage));
 		}
 
 		protected override void MakeBehaviours()
@@ -40,12 +54,6 @@ namespace BubbetsItems.Items.BarrierItems
 			var body = obj.victim.body;
 			if (!body) return;
 			DoEffect(body);
-		}
-
-		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
-		public static void RecalcStats(CharacterBody __instance)
-		{
-			DoEffect(__instance);
 		}
 
 		public static void DoEffect(CharacterBody body)
@@ -71,6 +79,7 @@ namespace BubbetsItems.Items.BarrierItems
 		[HarmonyPostfix, HarmonyPatch(typeof(CharacterMaster), nameof(CharacterMaster.OnServerStageBegin))]
 		public static void RegenItem(CharacterMaster __instance)
 		{
+			if (!RegenOnStage.Value) return;
 			var broke = GetInstance<BrokenCeremonialProbe>()!.ItemDef;
 			var regular = GetInstance<CeremonialProbe>()!.ItemDef;
 			var itemCount = __instance.inventory.GetItemCount(broke);

@@ -4,6 +4,7 @@ using BubbetsItems.Helpers;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API;
 using RoR2;
 
 namespace BubbetsItems.Items.VoidLunar
@@ -51,38 +52,44 @@ namespace BubbetsItems.Items.VoidLunar
 			__instance.maxShield = 1;
 			__instance.armor += inst.scalingInfos[1].ScalingFunction(amount);
 		}
-		
+
+		protected override void MakeBehaviours()
+		{
+			base.MakeBehaviours();
+			RecalculateStatsAPI.GetStatCoefficients += RecalcStats;
+		}
+		protected override void DestroyBehaviours()
+		{
+			base.DestroyBehaviours();
+			RecalculateStatsAPI.GetStatCoefficients -= RecalcStats;
+		}
+
+		private void RecalcStats(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
+		{
+			var inv = sender.inventory;
+			if (!inv) return;
+			var inst = GetInstance<Imperfect>()!;
+			var amount = inv.GetItemCount(inst.ItemDef);
+			if (amount <= 0) return;
+			args.armorAdd += inst.scalingInfos[1].ScalingFunction(amount);
+			args.shieldMultAdd += inst.scalingInfos[0].ScalingFunction(amount);
+		}
+
 		[HarmonyILManipulator, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
 		public static void PatchIl(ILContext il)
 		{
 			var c = new ILCursor(il);
-			c.GotoNext(x => x.MatchCallOrCallvirt<CharacterBody>("set_" + nameof(CharacterBody.maxShield)));
+			c.GotoNext(MoveType.After, x => x.MatchCallOrCallvirt<CharacterBody>("set_" + nameof(CharacterBody.maxShield)));
 			c.Emit(OpCodes.Ldarg_0);
-			c.EmitDelegate<Func<float, CharacterBody, float>>((shield, cb) =>
+			c.EmitDelegate<Action<CharacterBody>>(cb =>
 			{
-				if (!cb) return shield;
 				var inv = cb.inventory;
-				if (!inv) return shield;
-				var inst = GetInstance<Imperfect>();
+				if (!inv) return;
+				var inst = GetInstance<Imperfect>()!;
 				var amount = inv.GetItemCount(inst.ItemDef);
-				if (amount <= 0) return shield;
-				shield *= 1 + inst.scalingInfos[0].ScalingFunction(amount);
-				cb.maxHealth += shield - 1;
-				shield = 1;
-				return shield;
-			});
-			c.GotoNext(x => x.MatchCallOrCallvirt<CharacterBody>("set_" + nameof(CharacterBody.armor)));
-			c.Emit(OpCodes.Ldarg_0);
-			c.EmitDelegate<Func<float, CharacterBody, float>>((armor, cb) =>
-			{
-				if (!cb) return armor;
-				var inv = cb.inventory;
-				if (!inv) return armor;
-				var inst = GetInstance<Imperfect>();
-				var amount = inv.GetItemCount(inst.ItemDef);
-				if (amount <= 0) return armor;
-				armor += inst.scalingInfos[1].ScalingFunction(amount);
-				return armor;
+				if (amount <= 0) return;
+				cb.maxHealth += cb.maxShield - 1;
+				cb.maxShield = 1;
 			});
 		}
 	}

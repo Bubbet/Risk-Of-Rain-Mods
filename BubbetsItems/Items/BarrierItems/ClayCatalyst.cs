@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using R2API;
 using RoR2;
 using RoR2.ContentManagement;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace BubbetsItems.Items.BarrierItems
 	public class ClayCatalyst : ItemBase
 	{
 		private static BuffDef? _buffDef;
-		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefClayCatalyst");
+		public static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefClayCatalyst");
 		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
 		{
 			base.FillDefsFromSerializableCP(serializableContentPack);
@@ -51,8 +52,19 @@ namespace BubbetsItems.Items.BarrierItems
 			return base.GetFormattedDescription(null, token, forceHideExtended);
 		}
 
-		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
-		public static void FixBarrier(CharacterBody __instance)
+		protected override void MakeBehaviours()
+		{
+			base.MakeBehaviours();
+			RecalculateStatsAPI.GetStatCoefficients += FixBarrier;
+		}
+
+		protected override void DestroyBehaviours()
+		{
+			base.DestroyBehaviours();
+			RecalculateStatsAPI.GetStatCoefficients -= FixBarrier;
+		}
+
+		public static void FixBarrier(CharacterBody __instance, RecalculateStatsAPI.StatHookEventArgs args)
 		{
 			var instance = GetInstance<ClayCatalyst>();
 			if (instance == null) return;

@@ -11,9 +11,9 @@ namespace BubbetsItems.Items.BarrierItems
 	{
 		//onhit get stacking buff and also timed buff(hidden) that refreshes
 		private static BuffDef? _buffDefStacking;
-		private static BuffDef? BuffDefStacking => _buffDefStacking ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefGemCarapaceStack");
+		public static BuffDef? BuffDefStacking => _buffDefStacking ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefGemCarapaceStack");
 		private static BuffDef? _buffDefRefresh;
-		private static BuffDef? BuffDefRefresh => _buffDefRefresh ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefGemCarapaceRefresh");
+		public static BuffDef? BuffDefRefresh => _buffDefRefresh ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefGemCarapaceRefresh");
 		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
 		{
 			base.FillDefsFromSerializableCP(serializableContentPack);

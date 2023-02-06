@@ -6,6 +6,9 @@ using InLobbyConfig.Fields;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using R2API;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using UnityEngine;
 
@@ -13,7 +16,7 @@ namespace BubbetsItems.Items
 {
     public class RepulsionPlateMk2 : ItemBase
     {
-        private static ConfigEntry<bool> _reductionOnTrue;
+        public static ConfigEntry<bool> _reductionOnTrue;
         private static ScalingInfo _reductionScalingConfig;
         private static ScalingInfo _armorScalingConfig;
 
@@ -60,6 +63,12 @@ The cost of purchase and production associated with Mk2 is considerably higher t
             UpdateScalingFunction();
         }
 
+        public override void MakeRiskOfOptions()
+        {
+            base.MakeRiskOfOptions();
+            ModSettingsManager.AddOption(new CheckBoxOption(_reductionOnTrue));
+        }
+
         private void UpdateScalingFunction()
         {
             scalingInfos.Clear();
@@ -100,25 +109,35 @@ The cost of purchase and production associated with Mk2 is considerably higher t
             return _reductionOnTrue.Value ? -ScalingFunction(itemCount,1) : ScalingFunction(itemCount);
         }*/
 
-        [HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
-        private static void RecalcStats(CharacterBody __instance)
+        protected override void MakeBehaviours()
+        {
+            base.MakeBehaviours();
+            RecalculateStatsAPI.GetStatCoefficients += RecalcStats;
+        }
+
+        protected override void DestroyBehaviours()
+        {
+            base.DestroyBehaviours();
+            RecalculateStatsAPI.GetStatCoefficients -= RecalcStats;
+        }
+
+        public static void RecalcStats(CharacterBody __instance, RecalculateStatsAPI.StatHookEventArgs args)
         {
             if (_reductionOnTrue.Value) return;
             var inv = __instance.inventory;
             if (!inv) return;
             var repulsionPlateMk2 = GetInstance<RepulsionPlateMk2>();
             var amount = inv.GetItemCount(repulsionPlateMk2.ItemDef);
-            if (amount > 0)
-            {
-                var plateAmount = inv.GetItemCount(RoR2Content.Items.ArmorPlate);
-                // 20 + inv.GetItemCount(RoR2Content.Items.ArmorPlate) * (4 + amount);
-                var info = repulsionPlateMk2.scalingInfos[0];
-                info.WorkingContext.p = plateAmount; 
-                __instance.armor += info.ScalingFunction(amount);
-            }
+            if (amount <= 0) return;
+            
+            var plateAmount = inv.GetItemCount(RoR2Content.Items.ArmorPlate);
+            // 20 + inv.GetItemCount(RoR2Content.Items.ArmorPlate) * (4 + amount);
+            var info = repulsionPlateMk2.scalingInfos[0];
+            info.WorkingContext.p = plateAmount; 
+            args.armorAdd += info.ScalingFunction(amount);
         }
         
-        private static bool DoMk2ArmorPlates(HealthComponent hc, ref float damage)
+        public static bool DoMk2ArmorPlates(HealthComponent hc, ref float damage)
         {
             if (hc == null) return false;
             if (hc.body == null) return false;

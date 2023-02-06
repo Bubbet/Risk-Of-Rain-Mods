@@ -165,7 +165,7 @@ namespace BubbetsItems.Items
 		public static DamageColorIndex index;
 		public static NetworkSoundEventDef hitGroundSound => (_hitGroundSound ??= BubbetsItemsPlugin.ContentPack.networkSoundEventDefs.Find("JelliedSolesHitGround"))!;
 
-		private static void CollectDamage(CharacterBody body, Vector3 impactVelocity, bool weakAssKnees)
+		public static void CollectDamage(CharacterBody body, Vector3 impactVelocity, bool weakAssKnees)
 		{
 			var damage = Mathf.Max(Mathf.Abs(impactVelocity.y) - (body.jumpPower + 20f), 0f);
 			if (damage <= 0f) return;
@@ -185,7 +185,7 @@ namespace BubbetsItems.Items
 			behavior.storedDamage += damage * frac;
 			EntitySoundManager.EmitSoundServer(hitGroundSound.index, body.gameObject);
 		}
-		private static DamageInfo UpdateDamage(HealthComponent component, DamageInfo info)
+		public static DamageInfo UpdateDamage(HealthComponent component, DamageInfo info)
 		{
 			var inv = component.body.inventory;
 			if (!inv) return info;

@@ -16,6 +16,7 @@ using BubbetsItems.Behaviours;
 using BubbetsItems.Components;
 using EntityStates;
 using HarmonyLib;
+using R2API;
 using RiskOfOptions.OptionConfigs;
 using RiskOfOptions.Options;
 using RoR2;
@@ -36,6 +37,7 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 namespace BubbetsItems
 {
     [BepInPlugin("bubbet.bubbetsitems", "Bubbets Items", "1.8.9")]
+    [BepInDependency(RecalculateStatsAPI.PluginGUID)]
     //[BepInDependency(R2API.R2API.PluginGUID, BepInDependency.DependencyFlags.SoftDependency)]//, R2API.Utils.R2APISubmoduleDependency(nameof(R2API.RecalculateStatsAPI))]
     [BepInDependency(AetheriumPlugin.ModGuid, BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("com.KingEnderBrine.InLobbyConfig", BepInDependency.DependencyFlags.SoftDependency)]
@@ -168,6 +170,7 @@ namespace BubbetsItems
 
         private void MakeRiskOfOptions()
         {
+            riskOfOptionsEnabled = true;
             RiskOfOptions.ModSettingsManager.AddOption(new GenericButtonOption("Report An Issue", "General", "If you find a bug in the mod, reporting an issue is the best way to ensure it gets fixed.","Open Link", () =>
             {
                 Application.OpenURL("https://github.com/Bubbet/Risk-Of-Rain-Mods/issues/new");
@@ -188,6 +191,7 @@ namespace BubbetsItems
         private static PickupIndex[]? _voidLunarItems;
         //private ZioConfigFile.ZioConfigFile zConfigFile;
         private SharedBase.SharedInfo sharedInfo;
+        public static bool riskOfOptionsEnabled;
 
         //[SystemInitializer]
         public static void LoadSoundBank()

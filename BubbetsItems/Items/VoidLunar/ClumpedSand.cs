@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using BubbetsItems.Helpers;
 using HarmonyLib;
+using R2API;
 using RoR2;
 
 namespace BubbetsItems.Items.VoidLunar
@@ -60,13 +61,24 @@ namespace BubbetsItems.Items.VoidLunar
 			}
 		}
 
-		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
-		public static void ReduceRegen(CharacterBody __instance)
+		protected override void MakeBehaviours()
+		{
+			base.MakeBehaviours();
+			RecalculateStatsAPI.GetStatCoefficients += ReduceRegen;
+		}
+
+		protected override void DestroyBehaviours()
+		{
+			base.DestroyBehaviours();
+			RecalculateStatsAPI.GetStatCoefficients -= ReduceRegen;
+		}
+		
+		public static void ReduceRegen(CharacterBody __instance, RecalculateStatsAPI.StatHookEventArgs args)
 		{
 			if (!__instance) return;
 			var inv = __instance.inventory;
 			if (!inv) return;
-			var inst = GetInstance<ClumpedSand>();
+			var inst = GetInstance<ClumpedSand>()!;
 			var amount = inv.GetItemCount(inst.ItemDef);
 			if (amount <= 0) return;
 			__instance.regen += inst.scalingInfos[1].ScalingFunction(amount);

@@ -32,8 +32,8 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("BONEVISOR_NAME","Bone Visor");
-			AddToken("BONEVISOR_DESC", "{3}% chance on kill to drop bone shards. Bone shards give {2}x barrier regeneration for {0} seconds.");
-			AddToken("BONEVISOR_DESC_SIMPLE", "20% chance on kill to drop bone shards. Bone shards give 1x barrier regeneration for 3 seconds."); // TODO style descs
+			AddToken("BONEVISOR_DESC", "{3:.0}% chance on kill ".Style(StyleEnum.Utility) + "to drop bone shards. Bone shards give " + "{2}x barrier regeneration per buff".Style(StyleEnum.Heal) + "that lasts {0} seconds.");
+			AddToken("BONEVISOR_DESC_SIMPLE", "20% chance on kill ".Style(StyleEnum.Utility) + "(stacks logarithmically) ".Style(StyleEnum.Stack) + "to drop bone shards. Bone shards give " + "1x barrier regeneration ".Style(StyleEnum.Heal) + "for 3 seconds.");
 			SimpleDescriptionToken = "BONEVISOR_DESC_SIMPLE";
 			AddToken("BONEVISOR_PICKUP", "Chance on kill to drop bone shards that give barrier regeneration.");
 			AddToken("BONEVISOR_LORE","Was there a bone tribe somewhere lost here? I've found this near an ancient ruins on Mars and still haven't figured out the origins to it yet.");
@@ -94,7 +94,8 @@ namespace BubbetsItems.Items.BarrierItems
 			var info = scalingInfos[2];
 			info.WorkingContext.b = buffCount;
 			info.WorkingContext.m = obj.body.maxBarrier;
-			obj.barrierDecay = -info.ScalingFunction(count);
+			obj.barrierDecayMult = 1f;
+			obj.barrierDecayAdd = -info.ScalingFunction(count);
 			obj.priority = 1;
 		}
 	}

@@ -36,7 +36,7 @@ namespace BubbetsItems
 
 		public static Dictionary<PlayerCharacterMasterController, float> voidCoinChances = new();
 
-		private static void MakeTokens()
+		public static void MakeTokens()
 		{
 			Language.english.SetStringByToken("BUB_VOIDLUNARSHOP_NAME", "Void Bud");
 			Language.english.SetStringByToken("BUB_VOIDLUNARSHOP_CONTEXT", "Open Void Bud");

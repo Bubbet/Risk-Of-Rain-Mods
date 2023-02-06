@@ -71,7 +71,7 @@ namespace BubbetsItems.Items.VoidLunar
 
 
 		private static BuffDef? _buffDef;
-		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefCirclet");
+		public static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefCirclet");
 		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
 		{
 			base.FillDefsFromSerializableCP(serializableContentPack);

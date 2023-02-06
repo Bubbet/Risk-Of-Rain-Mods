@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 2575960973
+CRC: 4086029707
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 639f9905537ac901f9dd5e6b9b07a299
+    Hash: 7c9bca76b6eb6ea461c403f8dd9a30bd
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 922f9df159d14919acb26a51d4ab1533
+    Hash: a14157f4efa0141b7502383bf9b51cb5
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -190,6 +190,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 451251496, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
+  Script: {fileID: 1391837873, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
+- Class: 114
   Script: {fileID: 306635731, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
 - Class: 114
   Script: {fileID: -315171339, guid: 951ce57ad999ac1f040a4dceb5f8b763, type: 3}
@@ -249,6 +251,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/VoidLunar/ClumpedSand/sandDiffuse.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/AcidSoakedBlindfold/acidSoakedBlindfoldRender-1.png
 - Assets/BubbetsItems/Assets/Equipment/GyroscopicWhisk/EquipmentDefGyroscopicWhisk.asset
+- Assets/BubbetsItems/Assets/Items/VoidLunar/Tarnished/SkillDefTarnished.asset
 - Assets/BubbetsItems/Assets/Items/VoidLunar/ClumpedSand/clumpedSandIcon.png
 - Assets/BubbetsItems/Assets/Items/VoidLunar/ClumpedSand/ClumpedSandMat.mat
 - Assets/BubbetsItems/Assets/Items/Regularitems/BunnyFoot/ItemDefBunnyFoot.asset

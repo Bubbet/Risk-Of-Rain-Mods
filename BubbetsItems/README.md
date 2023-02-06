@@ -70,6 +70,7 @@ Patience is key~
   * Fixed description incompatibility with synergies
   * Added optional dependency for zioriskofoptions
   * Made whisk kill on oob
+  * Added a ton of risk of options support that wasnt there and didnt test it.
   
 * v1.8.8 Mod Changes:
   * Fixed holographic donkey for clients.

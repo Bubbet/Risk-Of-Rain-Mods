@@ -6,6 +6,8 @@ using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using InLobbyConfig;
 using InLobbyConfig.Fields;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -90,7 +92,14 @@ namespace BubbetsItems.Equipments
             ConfigUpdate();
         }
 
-        
+        public override void MakeRiskOfOptions()
+        {
+            base.MakeRiskOfOptions();
+            ModSettingsManager.AddOption(new SliderOption(duration));
+            ModSettingsManager.AddOption(new SliderOption(interval));
+        }
+
+
         public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
             base.MakeInLobbyConfig(scalingFunctions);

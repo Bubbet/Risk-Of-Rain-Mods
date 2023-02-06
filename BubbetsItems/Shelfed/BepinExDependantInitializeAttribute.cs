@@ -86,7 +86,7 @@ namespace BubbetsItems
             }
         }
 
-        private static bool InitializerDependenciesMet(BepinExDependantInitializeAttribute attribute)
+        public static bool InitializerDependenciesMet(BepinExDependantInitializeAttribute attribute)
         {
             return attribute.dependencies.All(dependency => Chainloader.PluginInfos.Any(x => x.Value.Instance.GetType() == dependency));
         }

@@ -4,6 +4,9 @@ using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
 using InLobbyConfig.Fields;
+using R2API;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
 using UnityEngine;
@@ -17,7 +20,7 @@ namespace BubbetsItems.Items
         
         
         private static BuffDef? _buffDef;
-        private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefEscapePlan");
+        public static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefEscapePlan");
         protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
         {
             base.FillDefsFromSerializableCP(serializableContentPack);
@@ -55,6 +58,12 @@ namespace BubbetsItems.Items
         {
             base.MakeInLobbyConfig(scalingFunctions);
             scalingFunctions[ConfigCategoriesEnum.BalancingFunctions].Add(ConfigFieldUtilities.CreateFromBepInExConfigEntry(Granularity));
+        }
+
+        public override void MakeRiskOfOptions()
+        {
+            base.MakeRiskOfOptions();
+            ModSettingsManager.AddOption(new SliderOption(Granularity));
         }
 
         public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
@@ -106,6 +115,7 @@ namespace BubbetsItems.Items
             base.MakeBehaviours();
             GlobalEventManager.onServerDamageDealt += DamageDealt;
             //HealthComponent.onCharacterHealServer += HealServer;
+            RecalculateStatsAPI.GetStatCoefficients += RecalcStats;
         }
 
         protected override void DestroyBehaviours()
@@ -113,6 +123,7 @@ namespace BubbetsItems.Items
             base.DestroyBehaviours();
             GlobalEventManager.onServerDamageDealt -= DamageDealt;
             //HealthComponent.onCharacterHealServer -= HealServer;
+            RecalculateStatsAPI.GetStatCoefficients -= RecalcStats;
         }
 
         /*
@@ -122,7 +133,7 @@ namespace BubbetsItems.Items
         }*/
         
         [HarmonyPostfix, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.Heal))]
-        private static void HealServer(HealthComponent __instance)
+        public static void HealServer(HealthComponent __instance)
         {
             SetBuff(__instance.body);
         }
@@ -132,7 +143,7 @@ namespace BubbetsItems.Items
             if (!obj.victim || !obj.victimBody) return;
             SetBuff(obj.victimBody);
         }
-        private static void SetBuff(CharacterBody body)
+        public static void SetBuff(CharacterBody body)
         {
             var inv = body.inventory;
             if (!inv) return;
@@ -150,16 +161,10 @@ namespace BubbetsItems.Items
             body.SetBuffCount(BuffDef!.buffIndex, Mathf.RoundToInt(info.ScalingFunction(amt) * Granularity.Value ));
         }
 
-        [HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
-        private static void RecalcStats(CharacterBody __instance)
+        public static void RecalcStats(CharacterBody __instance, RecalculateStatsAPI.StatHookEventArgs args)
         {
             var amt = __instance.GetBuffCount(BuffDef);
-            if (amt > 0)
-            {
-                __instance.moveSpeed *= 1f + amt / Granularity.Value;
-            }
-
-            //SetBuff(__instance);
+            if (amt > 0) args.moveSpeedMultAdd += 1f + amt / Granularity.Value;
         }
         
             /*

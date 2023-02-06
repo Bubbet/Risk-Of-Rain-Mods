@@ -7,14 +7,16 @@ using HarmonyLib;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 
 namespace BubbetsItems.Items
 {
 	public class ZealotryEmbrace : ItemBase
 	{
-		private static ConfigEntry<bool> onlyMyDots;
-		private static ConfigEntry<bool> onlyOneDot;
+		public static ConfigEntry<bool> onlyMyDots;
+		public static ConfigEntry<bool> onlyOneDot;
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
@@ -38,6 +40,14 @@ namespace BubbetsItems.Items
 			onlyOneDot = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Zealotry Embrace: Only one dot stack", false,
 				"Should each dot stack count towards the total, else treat all stacks as one buff.");
 		}
+
+		public override void MakeRiskOfOptions()
+		{
+			base.MakeRiskOfOptions();
+			ModSettingsManager.AddOption(new CheckBoxOption(onlyMyDots));
+			ModSettingsManager.AddOption(new CheckBoxOption(onlyOneDot));
+		}
+
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
 			AddVoidPairing("DeathMark");

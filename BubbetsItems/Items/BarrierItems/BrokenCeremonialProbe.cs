@@ -41,7 +41,7 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			var count = obj.inventory.GetItemCount(ItemDef);
 			if (count <= 0) return;
-			obj.barrierDecay += scalingInfos[0].ScalingFunction(count);
+			obj.barrierDecayMult += scalingInfos[0].ScalingFunction(count);
 		}
 	}
 }

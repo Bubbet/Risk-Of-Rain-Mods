@@ -3,6 +3,8 @@ using BepInEx.Configuration;
 using EntityStates;
 using HarmonyLib;
 using KinematicCharacterController;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -30,6 +32,13 @@ namespace BubbetsItems.Equipments
 			_filterOutBosses = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Gyroscopic Whisk Filter Bosses", true, "Should gyroscopic whisk filter out bosses.");
 			_filterOutPlayers = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "Gyroscopic Whisk Filter Players", false, "Should gyroscopic whisk filter out players.");
 			_indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("WhiskIndicator");
+		}
+
+		public override void MakeRiskOfOptions()
+		{
+			base.MakeRiskOfOptions();
+			ModSettingsManager.AddOption(new CheckBoxOption(_filterOutBosses));
+			ModSettingsManager.AddOption(new CheckBoxOption(_filterOutPlayers));
 		}
 
 		public override EquipmentActivationState PerformEquipment(EquipmentSlot equipmentSlot)

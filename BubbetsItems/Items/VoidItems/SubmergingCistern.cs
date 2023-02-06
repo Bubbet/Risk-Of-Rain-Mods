@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using UnityEngine;
 
@@ -23,6 +25,13 @@ namespace BubbetsItems.Items
 				"SubmergingCistern Dont Proc HealNova", true, "Disable procs of N'kuhana's Opinion");
 			//_range = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, "Submerging Cistern Range", 20f, "Range for the Submerging Cistern to heal within.");
 			//_amount = configFile.Bind(ConfigCategoriesEnum.BalancingFunctions, "Submerging Cistern Damage", 0.5f, "Damage percent to heal.");
+		}
+
+		public override void MakeRiskOfOptions()
+		{
+			base.MakeRiskOfOptions();
+			ModSettingsManager.AddOption(new CheckBoxOption(ignoreHealNova));
+			ModSettingsManager.AddOption(new SliderOption(_dropChance));
 		}
 
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)

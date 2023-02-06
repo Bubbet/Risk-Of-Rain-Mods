@@ -39,22 +39,30 @@ namespace BubbetsItems.Components
 			}
 
 			//CollectExtraStats?.Invoke(stats);
-			if (stats.barrierDecay >= 0)
-				stats.body.barrierDecayRate *= Mathf.Max(1f - stats.barrierDecay, 0);
+			if (stats.barrierDecayMult >= 0)
+			{
+				stats.body.barrierDecayRate *= Mathf.Max(1f - stats.barrierDecayMult, 0);
+				stats.body.barrierDecayRate += stats.barrierDecayAdd;
+			}
 			else
-				stats.body.barrierDecayRate *= stats.barrierDecay;
+			{
+				stats.body.barrierDecayRate *= stats.barrierDecayMult;
+				stats.body.barrierDecayRate += stats.barrierDecayAdd;
+			}
 		}
 
 		public struct ExtraStats
 		{
 			public CharacterBody body;
 			public Inventory inventory;
-			public float barrierDecay;
+			public float barrierDecayMult;
+			public float barrierDecayAdd;
 			public int priority;
 			
 			public static ExtraStats operator +(ExtraStats stats1, ExtraStats stats2)
 			{
-				stats1.barrierDecay += stats2.barrierDecay;
+				stats1.barrierDecayMult += stats2.barrierDecayMult;
+				stats1.barrierDecayAdd += stats2.barrierDecayAdd;
 				return stats1;
 			}
 		}

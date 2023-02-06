@@ -12,7 +12,7 @@ namespace BubbetsItems
 				ModIsEnabledInit();
 		}
 
-		private static void ModIsEnabledInit()
+		public static void ModIsEnabledInit()
 		{
 			ItemStats.ItemStats.IgnoredItems.AddRange(ItemBase.Items.Select(x => x.ItemDef));
 			ItemStats.ItemStats.IgnoredEquipment.AddRange(EquipmentBase.Equipments.Select(x => x.EquipmentDef));

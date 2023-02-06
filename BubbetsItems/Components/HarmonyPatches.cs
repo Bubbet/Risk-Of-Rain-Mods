@@ -19,7 +19,7 @@ namespace BubbetsItems
             BubbetsItemsPlugin.LoadSoundBank();
         }
         [HarmonyILManipulator, HarmonyPatch(typeof(GlobalEventManager), nameof(GlobalEventManager.OnCharacterDeath))]
-        private static void AmmoPickupPatch(ILContext il)
+        public static void AmmoPickupPatch(ILContext il)
         {
             if (!BubbetsItemsPlugin.Conf.AmmoPickupAsOrbEnabled.Value) return;
             var c = new ILCursor(il);
@@ -38,7 +38,7 @@ namespace BubbetsItems
             c.Emit(OpCodes.Ldarg_1);
             c.EmitDelegate<AmmoPickupDele>(DoAmmoPickupAsOrb);
         }
-        private static void DoAmmoPickupAsOrb(DamageReport report)
+        public static void DoAmmoPickupAsOrb(DamageReport report)
         {
             OrbManager.instance.AddOrb(new AmmoPickupOrb {
                 origin = report.victim.transform.position,

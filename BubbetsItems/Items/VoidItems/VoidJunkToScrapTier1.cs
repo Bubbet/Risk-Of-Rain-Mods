@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using HarmonyLib;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using RoR2.Items;
 
@@ -10,7 +12,7 @@ namespace BubbetsItems.Items
 {
 	public class VoidJunkToScrapTier1 : ItemBase
 	{
-		private static ConfigEntry<bool>? _canConsumeLastStack;
+		public static ConfigEntry<bool>? CanConsumeLastStack;
 		private static CostTypeDef.IsAffordableDelegate? _oldCan;
 		private static CostTypeDef.PayCostDelegate? _oldCost;
 		protected override void MakeTokens()
@@ -24,11 +26,18 @@ namespace BubbetsItems.Items
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			_canConsumeLastStack = sharedInfo.ConfigFile!.Bind(ConfigCategoriesEnum.General, "Void Scrap Consume Last Stack", false, "Should the void scrap consume the last stack when being used for scrap.");
+			CanConsumeLastStack = sharedInfo.ConfigFile!.Bind(ConfigCategoriesEnum.General, "Void Scrap Consume Last Stack", false, "Should the void scrap consume the last stack when being used for scrap.");
 		}
+
+		public override void MakeRiskOfOptions()
+		{
+			base.MakeRiskOfOptions();
+			ModSettingsManager.AddOption(new CheckBoxOption(CanConsumeLastStack));
+		}
+
 		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
 		{
-			return Language.GetStringFormatted(ItemDef.descriptionToken, !_canConsumeLastStack!.Value ? "Cannot consume the last stack. " : "");
+			return Language.GetStringFormatted(ItemDef.descriptionToken, !CanConsumeLastStack!.Value ? "Cannot consume the last stack. " : "");
 		}
 		protected override void FillVoidConversions(List<ItemDef.Pair> pairs)
 		{
@@ -51,7 +60,7 @@ namespace BubbetsItems.Items
 			}
 		}
 
-		private static void PayCost(CostTypeDef typeDef, CostTypeDef.PayCostContext context)
+		public static void PayCost(CostTypeDef typeDef, CostTypeDef.PayCostContext context)
 		{
 			if (typeDef.itemTier != ItemTier.Tier1)
 			{
@@ -69,7 +78,7 @@ namespace BubbetsItems.Items
 				var normalPriority = new WeightedSelection<ItemIndex>();
 
 				var voidJunkToScrapTier1 = GetInstance<VoidJunkToScrapTier1>();
-				var voidAmount = Math.Max(0, inv.GetItemCount(voidJunkToScrapTier1!.ItemDef) - (_canConsumeLastStack!.Value ? 0 : 1));
+				var voidAmount = Math.Max(0, inv.GetItemCount(voidJunkToScrapTier1!.ItemDef) - (CanConsumeLastStack!.Value ? 0 : 1));
 				if (voidAmount > 0) highestPriority.AddChoice(voidJunkToScrapTier1.ItemDef.itemIndex, voidAmount);
 
 				foreach (var itemIndex in ItemCatalog.tier1ItemList)
@@ -102,7 +111,7 @@ namespace BubbetsItems.Items
 			}
 		}
 
-		private static bool IsAffordable(CostTypeDef typeDef, CostTypeDef.IsAffordableContext context)
+		public static bool IsAffordable(CostTypeDef typeDef, CostTypeDef.IsAffordableContext context)
 		{
 			if (_oldCan!(typeDef, context)) return true;
 			try
@@ -110,7 +119,7 @@ namespace BubbetsItems.Items
 				if (typeDef.itemTier != ItemTier.Tier1) return false;
 				var inv = context.activator.GetComponent<CharacterBody>().inventory;
 				var voidJunkToScrapTier1 = GetInstance<VoidJunkToScrapTier1>();
-				var voidAmount = Math.Max(0, inv.GetItemCount(voidJunkToScrapTier1!.ItemDef) - (_canConsumeLastStack!.Value ? 0 : 1));
+				var voidAmount = Math.Max(0, inv.GetItemCount(voidJunkToScrapTier1!.ItemDef) - (CanConsumeLastStack!.Value ? 0 : 1));
 				return inv.GetTotalItemCountOfTier(ItemTier.Tier1) + voidAmount >= context.cost;
 			}
 			catch (Exception e)
@@ -120,7 +129,7 @@ namespace BubbetsItems.Items
 			}
 		}
 
-		private static void TakeFromWeightedSelection(WeightedSelection<ItemIndex> weightedSelection, ref CostTypeDef.PayCostContext context, ref List<ItemIndex> itemsToTake)
+		public static void TakeFromWeightedSelection(WeightedSelection<ItemIndex> weightedSelection, ref CostTypeDef.PayCostContext context, ref List<ItemIndex> itemsToTake)
 		{
 			while (weightedSelection.Count > 0 && itemsToTake.Count < context.cost)
 			{

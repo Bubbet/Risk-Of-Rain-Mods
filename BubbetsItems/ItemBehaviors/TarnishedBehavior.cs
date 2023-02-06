@@ -22,20 +22,21 @@ namespace BubbetsItems.ItemBehaviors
 
 		private int _oldStack;
 		private bool invSub;
+		private double _lastLuck;
 
 		public int rolls
 		{
 			get => _rolls;
 			set
 			{
-				_rolls = value;
+				var temp = Math.Max(0, value);
 				if (NetworkServer.active)
-					if (Tarnished.BuffDef is not null)
-						body.SetBuffCount(Tarnished.BuffDef.buffIndex, rolls);
-				if (value <= 0 && !unLuckApplied)
+					body.SetBuffCount(Tarnished.BuffDef!.buffIndex, temp);
+				if (temp > _rolls || temp <= 0 && !unLuckApplied)
 				{
 					ApplyLuck();
 				}
+				_rolls = temp;
 			}
 		}
 
@@ -43,11 +44,17 @@ namespace BubbetsItems.ItemBehaviors
 		{
 			body.master.luck -= luckDifference;
 
-			
+			var inst = SharedBase.GetInstance<Tarnished>()!;
 			if (body.GetBuffCount(Tarnished.BuffDef) <= 0)
 			{
-				var inst = SharedBase.GetInstance<Tarnished>()!.scalingInfos[1].ScalingFunction(stack);
-				luckDifference = Mathf.FloorToInt(inst);
+				if (Tarnished.oldTarnished.Value)
+					luckDifference = Mathf.FloorToInt(inst.scalingInfos[1].ScalingFunction(stack));
+				else
+				{
+					luckDifference = 0;
+					if (!body.HasBuff(Tarnished.BuffDef2) && !body.HasBuff(Tarnished.BuffDef))
+						body.AddTimedBuff(Tarnished.BuffDef2, inst.scalingInfos[2].ScalingFunction(stack));
+				}
 				unLuckApplied = true;
 				//if(NetworkServer.active && !body.HasBuff(Tarnished.BuffDef))
 					//body.AddBuff(Tarnished.BuffDef);
@@ -55,7 +62,8 @@ namespace BubbetsItems.ItemBehaviors
 			else
 			{
 				unLuckApplied = false;
-				luckDifference = 1;
+				luckDifference = Mathf.RoundToInt(inst.scalingInfos[3].ScalingFunction(stack));
+				body.statsDirty = true;
 				//if(NetworkServer.active && body.HasBuff(Tarnished.BuffDef))
 					//body.RemoveBuff(Tarnished.BuffDef);
 			}
@@ -81,15 +89,17 @@ namespace BubbetsItems.ItemBehaviors
 					body.inventory.onInventoryChanged += InvChanged;
 				}
 
-				var instance = SharedBase.GetInstance<Tarnished>();
+				var instance = SharedBase.GetInstance<Tarnished>()!;
 				rolls += Mathf.FloorToInt(instance.scalingInfos[0].ScalingFunction(stack) - instance.scalingInfos[0].ScalingFunction(_oldStack));
 			}
 			ApplyLuck();
 		}
-
+		
 		private void InvChanged()
 		{
+			if (Math.Abs(body.master.luck - _lastLuck) < 0.001) return;
 			luckDifference = 0;
+			_lastLuck = body.master.luck;
 			ApplyLuck();
 		}
 

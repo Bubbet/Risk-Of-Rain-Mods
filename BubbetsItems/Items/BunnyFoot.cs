@@ -24,7 +24,7 @@ namespace BubbetsItems.Items
 			AddToken("BUNNYFOOT_DESC_SIMPLE", "Gain the ability to bunny hop, increasing air control by " + "150% ".Style(StyleEnum.Utility) + "(+150% per stack) ".Style(StyleEnum.Stack) + "and jump control by " + "50% ".Style(StyleEnum.Utility) + "(+50% per stack)".Style(StyleEnum.Stack) + ".");
 			SimpleDescriptionToken = "BUNNYFOOT_DESC_SIMPLE";
 			AddToken("BUNNYFOOT_PICKUP", "Your little feets start quivering.");
-			AddToken("BUNNYFOOT_LORE", "haha source go brrrr");
+			AddToken("BUNNYFOOT_LORE", "haha source go brrrr\n\n\n\n\n\nIf you complain about this item being bad you're just outing yourself as bad at videogames.");
 		}
 
 		protected override void MakeConfigs()
@@ -109,7 +109,7 @@ namespace BubbetsItems.Items
 			c.EmitDelegate<Func<Vector3, CharacterBody, Vector3>>(DoJumpFix);
 		}
 
-		private static Vector3 DoJumpFix(Vector3 vector, CharacterBody characterBody)
+		public static Vector3 DoJumpFix(Vector3 vector, CharacterBody characterBody)
 		{
 			/*
 			var horizontal = vector + Vector3.down * vector.y;
@@ -160,7 +160,7 @@ namespace BubbetsItems.Items
 			c.EmitDelegate<Func<Vector3, Vector3, float, float, CharacterMotor, Vector3>>(DoAirMovement);
 		}
 
-		private static Vector3 DoAirMovement(Vector3 velocity, Vector3 target, float num, float deltaTime, CharacterMotor motor)
+		public static Vector3 DoAirMovement(Vector3 velocity, Vector3 target, float num, float deltaTime, CharacterMotor motor)
 		{
 			var bunnyFoot = GetInstance<BunnyFoot>();
 			var count = motor.body?.inventory?.GetItemCount(bunnyFoot.ItemDef) ?? 0; 
@@ -178,7 +178,7 @@ namespace BubbetsItems.Items
 		}
 
 		//Ripped from sbox or gmod, i dont remember
-		private static Vector3 Accelerate(Vector3 velocity, Vector3 wishDir, float wishSpeed, float speedLimit, float acceleration, float deltaTime)
+		public static Vector3 Accelerate(Vector3 velocity, Vector3 wishDir, float wishSpeed, float speedLimit, float acceleration, float deltaTime)
 		{
 			if ( speedLimit > 0 && wishSpeed > speedLimit )
 				wishSpeed = speedLimit;

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using BubbetsItems.Helpers;
 using HarmonyLib;
+using R2API;
 using RoR2;
 
 namespace BubbetsItems.Items
@@ -38,7 +39,7 @@ namespace BubbetsItems.Items
 		
 
 		[HarmonyPostfix, HarmonyPatch(typeof(HealthComponent), nameof(HealthComponent.Heal))]
-		private static void HealServer(HealthComponent __instance)
+		public static void HealServer(HealthComponent __instance)
 		{
 			if (!__instance || !__instance.body || !__instance.body.inventory) return;
 			var voidSlug = GetInstance<VoidSlug>()!;
@@ -47,8 +48,18 @@ namespace BubbetsItems.Items
 			__instance.body.statsDirty = true;
 		}
 
-		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
-		public static void RecalcStats(CharacterBody __instance)
+		protected override void MakeBehaviours()
+		{
+			base.MakeBehaviours();
+			RecalculateStatsAPI.GetStatCoefficients += RecalcStats;
+		}
+		protected override void DestroyBehaviours()
+		{
+			base.DestroyBehaviours();
+			RecalculateStatsAPI.GetStatCoefficients -= RecalcStats;
+		}
+
+		public static void RecalcStats(CharacterBody __instance, RecalculateStatsAPI.StatHookEventArgs args)
 		{
 			var voidSlug = GetInstance<VoidSlug>();
 			var count = __instance.inventory?.GetItemCount(voidSlug.ItemDef) ?? 0;

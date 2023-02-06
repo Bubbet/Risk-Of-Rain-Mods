@@ -47,7 +47,7 @@ namespace BubbetsItems.Behaviours
 			if (!body) return;
 			var inv = body.inventory;
 			if (!inv) return;
-			tracker.CheckInventory(inv);
+			tracker.CheckInventory(inv, body, source);
 		}
 
 		[HarmonyPostfix, HarmonyPatch(typeof(HealthBar), nameof(HealthBar.UpdateBarInfos))]
@@ -112,6 +112,19 @@ namespace BubbetsItems.Behaviours
 			public HealthBar bar;
 			public HealthBar.BarInfo info;
 			public HealthBarStyle.BarStyle? cachedStyle;
+			private Image _imageReference;
+			public virtual Image ImageReference
+			{
+				get => _imageReference;
+				set
+				{
+					if (_imageReference && _imageReference != value)
+					{
+						_imageReference.material = bar.barAllocator.elementPrefab.GetComponent<Image>().material;
+					}
+					_imageReference = value;
+				}
+			}
 
 			public abstract HealthBarStyle.BarStyle GetStyle();
 
@@ -127,7 +140,7 @@ namespace BubbetsItems.Behaviours
 				info.sizeDelta = style.sizeDelta;
 			}
 
-			public virtual void CheckInventory(ref HealthBar.BarInfo info, Inventory inv) {}
+			public virtual void CheckInventory(ref HealthBar.BarInfo info, Inventory inventory, CharacterBody characterBody, HealthComponent healthComponent) {}
 			public virtual void ApplyBar(ref HealthBar.BarInfo info, Image image, ref int i)
 			{
 				image.type = info.imageType;
@@ -149,11 +162,11 @@ namespace BubbetsItems.Behaviours
 			public List<BarData> barInfos;
 			public HealthBar healthBar;
 			
-			public void CheckInventory(Inventory inv)
+			public void CheckInventory(Inventory inv, CharacterBody characterBody, HealthComponent healthComponent)
 			{
 				foreach (var barInfo in barInfos)
 				{
-					barInfo.CheckInventory(ref barInfo.info, inv);
+					barInfo.CheckInventory(ref barInfo.info, inv, characterBody, healthComponent);
 				}
 			}
 			public void UpdateInfo()
@@ -174,9 +187,14 @@ namespace BubbetsItems.Behaviours
 				foreach (var barInfo in barInfos)
 				{
 					ref var info = ref barInfo.info;
-					if (!info.enabled) continue;
+					if (!info.enabled)
+					{
+						barInfo.ImageReference = null; // Release the reference.
+						continue;
+					}
 
 					Image image = healthBar.barAllocator.elements[i];
+					barInfo.ImageReference = image;
 					barInfo.ApplyBar(ref barInfo.info, image, ref i);
 				}
 			}

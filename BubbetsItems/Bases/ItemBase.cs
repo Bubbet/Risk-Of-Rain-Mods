@@ -276,6 +276,7 @@ namespace BubbetsItems
             private readonly ExpressionContext _defaultContext;
             public readonly ExpressionContext WorkingContext;
             private string _defaultValue;
+            private bool _madeRiskOfOptions;
 
             public string Value
             {
@@ -328,7 +329,9 @@ namespace BubbetsItems
 
             public void MakeRiskOfOptions()
             {
+                if (_madeRiskOfOptions) return;
                 ModSettingsManager.AddOption(new StringInputFieldOption(_configEntry));
+                _madeRiskOfOptions = true;
             }
 
             private void EntryChanged(object sender, EventArgs e)
@@ -352,6 +355,7 @@ namespace BubbetsItems
             private string _default;
             private string? _oldDefault;
             private bool setup;
+            private bool _madeRiskOfOptions;
             public bool IsDefault => _default.Trim() == configEntry.Value.Trim();
 
             public VoidPairing(string defaultValue, ItemBase parent, string? oldDefault = null)
@@ -392,7 +396,9 @@ namespace BubbetsItems
 
             public void MakeRiskOfOptions()
             {
+                if (_madeRiskOfOptions) return;
                 ModSettingsManager.AddOption(new StringInputFieldOption(configEntry));
+                _madeRiskOfOptions = true;
             }
         }
         

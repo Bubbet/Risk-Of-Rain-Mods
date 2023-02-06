@@ -4,6 +4,8 @@ using BepInEx.Configuration;
 using HarmonyLib;
 using InLobbyConfig;
 using InLobbyConfig.Fields;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using RoR2.ContentManagement;
 using UnityEngine;
@@ -18,7 +20,7 @@ namespace BubbetsItems.Equipments
         private GameObject _indicator;
         
         private static BuffDef? _buffDef;
-        private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefSepia");
+        public static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefSepia");
 
         protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
         {
@@ -92,7 +94,13 @@ Luckily they seem friendly enough");
             _indicator = BubbetsItemsPlugin.AssetBundle.LoadAsset<GameObject>("CameraIndicator"); // TODO make risk of options
         }
 
-        
+        public override void MakeRiskOfOptions()
+        {
+            base.MakeRiskOfOptions();
+            ModSettingsManager.AddOption(new CheckBoxOption(_filterOutBosses));
+        }
+
+
         public override void MakeInLobbyConfig(Dictionary<ConfigCategoriesEnum, List<object>> scalingFunctions)
         {
             base.MakeInLobbyConfig(scalingFunctions);

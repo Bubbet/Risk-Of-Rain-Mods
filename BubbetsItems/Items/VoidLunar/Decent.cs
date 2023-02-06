@@ -82,7 +82,7 @@ namespace BubbetsItems.Items.VoidLunar
 			c.EmitDelegate<Action<EquipmentSlot>>(DuplicateExecute);
 		}
 
-		private static void DuplicateExecute(EquipmentSlot slot)
+		public static void DuplicateExecute(EquipmentSlot slot)
 		{
 			var inv = slot.inventory;
 			if (!inv) return;

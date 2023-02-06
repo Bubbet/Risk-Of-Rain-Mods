@@ -2,6 +2,7 @@
 using System.Linq;
 using BubbetsItems.Helpers;
 using HarmonyLib;
+using R2API;
 using RoR2;
 using RoR2.ContentManagement;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace BubbetsItems.Items
 	{
 		
 		private static BuffDef? _buffDef;
-		private static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefRecursionBullets");
+		public static BuffDef? BuffDef => _buffDef ??= BubbetsItemsPlugin.ContentPack.buffDefs.Find("BuffDefRecursionBullets");
 		protected override void FillDefsFromSerializableCP(SerializableContentPack serializableContentPack)
 		{
 			base.FillDefsFromSerializableCP(serializableContentPack);
@@ -50,11 +51,13 @@ namespace BubbetsItems.Items
 		{
 			base.MakeBehaviours();
 			GlobalEventManager.onServerDamageDealt += OnDamage;
+			RecalculateStatsAPI.GetStatCoefficients += RecalcStats;
 		}
 		protected override void DestroyBehaviours()
 		{
 			base.DestroyBehaviours();
 			GlobalEventManager.onServerDamageDealt -= OnDamage;
+			RecalculateStatsAPI.GetStatCoefficients -= RecalcStats;
 		}
 		private void OnDamage(DamageReport obj)
 		{
@@ -70,19 +73,20 @@ namespace BubbetsItems.Items
 			body!.AddTimedBuff(BuffDef, scalingInfos[2].ScalingFunction(amount), Mathf.FloorToInt(scalingInfos[1].ScalingFunction(amount) / scalingInfos[0].ScalingFunction(amount)));
 		}
 		
-		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
-		public static void RecalcStatsAttackSpeed(CharacterBody __instance)
+		
+		public static void RecalcStats(CharacterBody __instance, RecalculateStatsAPI.StatHookEventArgs args)
 		{
 			var inv = __instance!.inventory;
-			var recursionBullets = GetInstance<RecursionBullets>();
-			var amount = inv?.GetItemCount(recursionBullets.ItemDef) ?? 0;
+			if (!inv) return;
+			var recursionBullets = GetInstance<RecursionBullets>()!;
+			var amount = inv.GetItemCount(recursionBullets.ItemDef);
 			if (amount <= 0) return;
 			
 			var buffAmount = __instance.GetBuffCount(BuffDef);
-			var baseAttack = __instance.baseAttackSpeed + __instance.levelAttackSpeed * (__instance.level - 1f);
-			__instance.attackSpeed /= baseAttack;
-			__instance.attackSpeed *= 1f + buffAmount * recursionBullets.scalingInfos[0].ScalingFunction(amount);
-			__instance.attackSpeed *= baseAttack;
+			//var baseAttack = __instance.baseAttackSpeed + __instance.levelAttackSpeed * (__instance.level - 1f);
+			args.attackSpeedMultAdd += 1f + buffAmount * recursionBullets.scalingInfos[0].ScalingFunction(amount); 
+			//__instance.attackSpeed /= baseAttack;
+			//__instance.attackSpeed *= baseAttack;
 		}
 	}
 }
