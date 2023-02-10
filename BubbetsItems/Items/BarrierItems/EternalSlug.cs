@@ -1,5 +1,6 @@
 using BubbetsItems.Helpers;
 using System;
+using BubbetsItems.Components;
 using BubbetsItems.Behaviours;
 using HarmonyLib;
 using Mono.Cecil.Cil;
@@ -17,18 +18,26 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("ETERNALSLUG_NAME","Eternal Slug");
-			AddToken("ETERNALSLUG_DESC", "Stops " + "temporary barrier ".Style(StyleEnum.Heal) + "from decaying naturally past " + "{0:0%}".Style(StyleEnum.Heal) + ".");
-			AddToken("ETERNALSLUG_DESC_SIMPLE", "Stops " + "temporary barrier ".Style(StyleEnum.Heal) + "from decaying naturally past " + "36% ".Style(StyleEnum.Heal) + "(stacks logarithmically, caps at 80%)".Style(StyleEnum.Stack) + ".");
+			//AddToken("ETERNALSLUG_DESC", "Stops " + "temporary barrier ".Style(StyleEnum.Heal) + "from decaying naturally past " + "{0:0%}".Style(StyleEnum.Heal) + ".");
+			//AddToken("ETERNALSLUG_DESC_SIMPLE", "Stops " + "temporary barrier ".Style(StyleEnum.Heal) + "from decaying naturally past " + "36% ".Style(StyleEnum.Heal) + "(stacks logarithmically, caps at 80%)".Style(StyleEnum.Stack) + ".");
+			AddToken("ETERNALSLUG_DESC", "Prevents temporary barrier decay at a low amount, and reduces barrier decay."); //
+			AddToken("ETERNALSLUG_DESC_SIMPLE", "Prevents temporary barrier decay at 15% maxiumum health. Reduce barrier decay by 0 % (+10 % per stack)"); //
 			SimpleDescriptionToken = "ETERNALSLUG_DESC_SIMPLE";
-			AddToken("ETERNALSLUG_PICKUP", "Stops barrier decay at a certain point.");
-			AddToken("ETERNALSLUG_LORE",@"Fascinatingly, this alien species appears to have been perfectly preserved in an extra-terrestrial substance, similar to amber, yet with the smell of…. strawberries? Little Fern here certainly will live forever in this amber.”
-	- Doctor Jyemo of Archeology, Researcher aboard the UES Contact Light");
+			//AddToken("ETERNALSLUG_PICKUP", "Stops barrier decay at a certain point.");
+			AddToken("ETERNALSLUG_PICKUP", "Prevents temporary barrier decay at a low amount, and reduces barrier decay."); //
+			AddToken("ETERNALSLUG_LORE", @"As I stand here, gazing upon this mysterious world enveloped in a foreign substance, I am struck by its remarkable resemblance to the earthly material known as amber. Yet upon closer examination, it is clear that the composition of this encasing substance is vastly different, emitting an otherworldly scent that can only be described as a fusion of strawberries and the unknown. As I meticulously study this planet and its inhabitants, I have discovered a most peculiar specimen - a slug-like creature entrapped within a shell of this strange substance. In the interest of furthering our understanding of this strange world, I have chosen to designate this fascinating organism as 'Fern,' and will diligently document my findings in the hopes of unlocking the secrets of this extraterrestrial realm. - Scientist G.");
 		}
 
-		protected override void MakeConfigs()
+		/*protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
 			AddScalingFunction("(0.8 - Pow(0.7, [a] + 1.3)) * [b]", "Minimum Barrier", desc: "[a] = item count; [h] = current health; [b] = full barrier; [p] = previous minimum, probably 0");
+		}*/	
+		protected override void MakeConfigs()
+		{
+			base.MakeConfigs();
+			AddScalingFunction("((0.111 * [a])/((0.111 * [a])+1))", "Barrier Decay Scale", desc: "[a] = item count;", "(0.8 - Pow(0.7, [a] + 1.3)) * [b]");
+			AddScalingFunction("0.15", "Barrier Stop Percentage");
 		}
 
 		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
@@ -61,7 +70,7 @@ namespace BubbetsItems.Items.BarrierItems
 			if (inst == null) return previous;
 			var amount = inv.GetItemCount(inst.ItemDef);
 			if (amount <= 0) return previous;
-			var info = inst.scalingInfos[0];
+			var info = inst.scalingInfos[1];
 			info.WorkingContext.h = hc.health;
 			info.WorkingContext.b = hc.fullBarrier;
 			info.WorkingContext.p = previous;
@@ -72,6 +81,20 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeBehaviours();
 			ExtraHealthBarSegments.AddType<SlugData>();
+			CommonBodyPatches.CollectExtraStats += GetBarrierDecay;
+		}
+
+		protected override void DestroyBehaviours()
+		{
+			base.DestroyBehaviours();
+			CommonBodyPatches.CollectExtraStats -= GetBarrierDecay;
+		}
+
+		private void GetBarrierDecay(ref CommonBodyPatches.ExtraStats obj)
+		{
+			var count = obj.inventory.GetItemCount(ItemDef);
+			if (count <= 0) return;
+			obj.barrierDecayMult += scalingInfos[0].ScalingFunction(count);
 		}
 
 		public class SlugData : ExtraHealthBarSegments.BarData
@@ -99,11 +122,11 @@ namespace BubbetsItems.Items.BarrierItems
 					enabled = false;
 					return;
 				}
-				var sinfo = inst.scalingInfos[0];
+				var sinfo = inst.scalingInfos[1];
 				sinfo.WorkingContext.h = healthComponent.health;
 				sinfo.WorkingContext.b = healthComponent.fullBarrier;
 				sinfo.WorkingContext.p = 0f;
-				barPos = sinfo.ScalingFunction(amount) / healthComponent.fullCombinedHealth;
+				barPos = sinfo.ScalingFunction(amount)/* / healthComponent.fullCombinedHealth*/;
 				enabled = true;
 			}
 
