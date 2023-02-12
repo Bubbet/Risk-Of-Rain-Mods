@@ -96,10 +96,10 @@ namespace BubbetsItems.Items.VoidLunar
 		*/
 
 		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
-		public void UsedToBePatchIL(CharacterBody __instance)
+		public static void UsedToBePatchIL(CharacterBody __instance)
 		{
 			var inv = __instance.inventory;
-			if (inv && inv.GetItemCount(ItemDef) > 0 && __instance.maxShield > 1)
+			if (inv && inv.GetItemCount(GetInstance<Imperfect>().ItemDef) > 0 && __instance.maxShield > 1)
 			{
 				__instance.maxHealth += __instance.maxShield - 1;
 				__instance.maxShield = 1;
