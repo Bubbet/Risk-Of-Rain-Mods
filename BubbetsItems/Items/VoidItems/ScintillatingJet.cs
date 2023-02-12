@@ -21,14 +21,14 @@ namespace BubbetsItems.Items
 			AddToken("SCINTILLATINGJET_CONVERT", convert);
 			AddToken("SCINTILLATINGJET_PICKUP", "Reduce damage temporarily after getting hit. " + "Corrupts all Oddly-shaped Opals".Style(StyleEnum.Void) + ". " + convert);
 			AddToken("SCINTILLATINGJET_DESC", "Getting hit " + "increases armor ".Style(StyleEnum.Heal) + "by " + "{0} ".Style(StyleEnum.Heal) + "for {1} seconds. ");
-			AddToken("SCINTILLATINGJET_DESC_SIMPLE", "Getting hit " + "increases armor ".Style(StyleEnum.Heal) + "by " + "20 ".Style(StyleEnum.Heal) + "(+10 per stack) ".Style(StyleEnum.Stack) + "for 2 seconds. ");
+			AddToken("SCINTILLATINGJET_DESC_SIMPLE", "Getting hit " + "increases armor ".Style(StyleEnum.Heal) + "by " + "10 ".Style(StyleEnum.Heal) + "(+5 per stack) ".Style(StyleEnum.Stack) + "for 2 seconds.");
 			SimpleDescriptionToken = "SCINTILLATINGJET_DESC_SIMPLE";
 			AddToken("SCINTILLATINGJET_LORE", "\"What do you mean Jet isn't a gemstone? It clearly is!\"");
 		}
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("([a] * 10 + 10) * [b]", "Armor amount", "[a] = Item amount, [b] = Buff amount");
+			AddScalingFunction("([a] * 5 + 5) * [b]", "Armor amount", "[a] = Item amount, [b] = Buff amount", oldDefault: "([a] * 10 + 10) * [b]");
 			AddScalingFunction("2", "Buff Duration");
 			stackable = sharedInfo.ConfigFile.Bind(ConfigCategoriesEnum.General, "ScintillatingJet Buff Stackable", false, "Can the buff stack.");
 			stackable.SettingChanged += (_,_) => StackableChanged();

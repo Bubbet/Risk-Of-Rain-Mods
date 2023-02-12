@@ -21,7 +21,7 @@ namespace BubbetsItems.Items.BarrierItems
 			//AddToken("ETERNALSLUG_DESC", "Stops " + "temporary barrier ".Style(StyleEnum.Heal) + "from decaying naturally past " + "{0:0%}".Style(StyleEnum.Heal) + ".");
 			//AddToken("ETERNALSLUG_DESC_SIMPLE", "Stops " + "temporary barrier ".Style(StyleEnum.Heal) + "from decaying naturally past " + "36% ".Style(StyleEnum.Heal) + "(stacks logarithmically, caps at 80%)".Style(StyleEnum.Stack) + ".");
 			AddToken("ETERNALSLUG_DESC", "Prevents temporary barrier decay at a low amount, and reduces barrier decay."); //
-			AddToken("ETERNALSLUG_DESC_SIMPLE", "Prevents temporary barrier decay at 15% maxiumum health. Reduce barrier decay by 0 % (+10 % per stack)"); //
+            AddToken("ETERNALSLUG_DESC_SIMPLE", "Prevents " + "temporary barrier decay".Style(StyleEnum.Heal) + " at " + "{1:0%} maximum health".Style(StyleEnum.Heal) + ". Reduces " + "temporary barrier decay".Style(StyleEnum.Heal) + " by " + "{0:0%}".Style(StyleEnum.Heal) + "(+10% hyperbolically per stack)".Style(StyleEnum.Stack) + ".");
 			SimpleDescriptionToken = "ETERNALSLUG_DESC_SIMPLE";
 			//AddToken("ETERNALSLUG_PICKUP", "Stops barrier decay at a certain point.");
 			AddToken("ETERNALSLUG_PICKUP", "Prevents temporary barrier decay at a low amount, and reduces barrier decay."); //
@@ -74,7 +74,7 @@ namespace BubbetsItems.Items.BarrierItems
 			info.WorkingContext.h = hc.health;
 			info.WorkingContext.b = hc.fullBarrier;
 			info.WorkingContext.p = previous;
-			return info.ScalingFunction(amount);
+			return info.ScalingFunction(amount) * hc.fullCombinedHealth;
 		}
 		
 		protected override void MakeBehaviours()
@@ -126,7 +126,7 @@ namespace BubbetsItems.Items.BarrierItems
 				sinfo.WorkingContext.h = healthComponent.health;
 				sinfo.WorkingContext.b = healthComponent.fullBarrier;
 				sinfo.WorkingContext.p = 0f;
-				barPos = sinfo.ScalingFunction(amount)/* / healthComponent.fullCombinedHealth*/;
+				barPos = sinfo.ScalingFunction(amount) /*healthComponent.fullCombinedHealth/* / healthComponent.fullCombinedHealth*/;
 				enabled = true;
 			}
 

@@ -36,8 +36,10 @@ namespace BubbetsItems.Items.BarrierItems
 		{
 			base.MakeTokens();
 			AddToken("GEMCARAPACE_NAME", "Gem Carapace");
-			AddToken("GEMCARAPACE_DESC", "{1} seconds after getting hurt, gain a " + "{0:0%} temporary barrier".Style(StyleEnum.Heal) + ". Triggers up to {2} times.");
-			AddToken("GEMCARAPACE_DESC_SIMPLE", "Gain an " + "18% temporary barrier ".Style(StyleEnum.Heal) + "after 1 " + "(+0.75 per stack) ".Style(StyleEnum.Stack) + "seconds of taking damage. " + "Triggers up to 1 " + "(+1 per stack)".Style(StyleEnum.Stack) + " times.");
+			//AddToken("GEMCARAPACE_DESC", "{1} seconds after getting hurt, gain a " + "{0:0%} temporary barrier".Style(StyleEnum.Heal) + ". Triggers up to {2} times.");
+			//AddToken("/GEMCARAPACE_DESC_SIMPLE", "Gain an " + "10% temporary barrier ".Style(StyleEnum.Heal) + "after 1 " + "(+0.75 per stack) ".Style(StyleEnum.Stack) + "seconds of taking damage. " + "Triggers up to 1 " + "(+1 per stack)".Style(StyleEnum.Stack) + " times.");
+			AddToken("GEMCARAPACE_DESC", "Grants temporary barrier from all attacks. Recharges over time.");
+			AddToken("/GEMCARAPACE_DESC_SIMPLE", "Grants a " + "temporary barrier ".Style(StyleEnum.Heal) + "for " + " {0:0%}".Style(StyleEnum.Heal) + " (+10% hyperbolically per stack)".Style(StyleEnum.Stack) + " of " + "maximum health ".Style(StyleEnum.Heal) + "from " + "incoming damage".Style(StyleEnum.Damage) + ". Recharges every " + "{1} ".Style(StyleEnum.Utility) + "seconds.");
 			SimpleDescriptionToken = "GEMCARAPACE_DESC_SIMPLE";
 			AddToken("GEMCARAPACE_PICKUP", "Receive a delayed temporary barrier after taking damage.");
 			AddToken("GEMCARAPACE_LORE", "");
@@ -46,9 +48,9 @@ namespace BubbetsItems.Items.BarrierItems
 		protected override void MakeConfigs()
 		{
 			base.MakeConfigs();
-			AddScalingFunction("(0.075 * [b] + 0.1)  * [m]", "Barrier Add", desc: "[a] = item count; [b] = buff stacks; [m] = maximum barrier");
-			AddScalingFunction("1", "Refresh Duration");
-			AddScalingFunction("[a]", "Max Buff Stacks");
+			AddScalingFunction("(0.1[a] / (0.1[a] + 1))  * [m]", "Barrier Add", desc: "[a] = item count; [b] = buff stacks; [m] = maximum barrier", oldDefault: "(0.075 * [b] + 0.1) * [m]");
+			AddScalingFunction("2", "Refresh Duration", oldDefault: "1");
+			AddScalingFunction("1", "Max Buff Stacks", oldDefault: "[a]");
 		}
 
 		public override string GetFormattedDescription(Inventory? inventory, string? token = null, bool forceHideExtended = false)
