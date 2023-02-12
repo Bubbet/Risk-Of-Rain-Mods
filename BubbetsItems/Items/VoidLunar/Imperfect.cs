@@ -57,14 +57,11 @@ namespace BubbetsItems.Items.VoidLunar
 		{
 			base.MakeBehaviours();
 			RecalculateStatsAPI.GetStatCoefficients += RecalcStats;
-			RoR2Application.onLoad += () => On.RoR2.CharacterBody.RecalculateStats += UsedToBePatchIL; // if anyone hooks it THIS LATE i will kill you
 		}
 		protected override void DestroyBehaviours()
 		{
 			base.DestroyBehaviours();
 			RecalculateStatsAPI.GetStatCoefficients -= RecalcStats;
-			RoR2Application.onLoad -= () => On.RoR2.CharacterBody.RecalculateStats += UsedToBePatchIL;
-			On.RoR2.CharacterBody.RecalculateStats -= UsedToBePatchIL;
 		}
 
 		private void RecalcStats(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
@@ -98,14 +95,14 @@ namespace BubbetsItems.Items.VoidLunar
 		}
 		*/
 
-		public void UsedToBePatchIL(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
-        {
-			orig(self);
-			if (self?.inventory == null) return;
-			if (self.inventory.GetItemCount(ItemDef) > 0 && self.maxShield > 1)
+		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
+		public void UsedToBePatchIL(CharacterBody __instance)
+		{
+			var inv = __instance.inventory;
+			if (inv && inv.GetItemCount(ItemDef) > 0 && __instance.maxShield > 1)
 			{
-				self.maxHealth += self.maxShield - 1;
-				self.maxShield = 1;
+				__instance.maxHealth += __instance.maxShield - 1;
+				__instance.maxShield = 1;
             }
         }
 	}
