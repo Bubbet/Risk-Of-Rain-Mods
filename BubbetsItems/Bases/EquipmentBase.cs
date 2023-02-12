@@ -26,6 +26,12 @@ namespace BubbetsItems
             Cooldown.SettingChanged += CooldownChanged;
         }
 
+        [SystemInitializer(typeof(EquipmentCatalog))]
+        public static void ApplyPostEquipments()
+        {
+            foreach (var equip in Instances) if (equip != null && equip is EquipmentBase) (equip as EquipmentBase).PostEquipmentDef();
+        }
+
         private void CooldownChanged(object sender, EventArgs e)
         {
             EquipmentDef.cooldown = Cooldown.Value;
