@@ -74,6 +74,7 @@ namespace BubbetsItems.Items.BarrierItems
 			info.WorkingContext.h = hc.health;
 			info.WorkingContext.b = hc.fullBarrier;
 			info.WorkingContext.p = previous;
+			info.WorkingContext.c = hc.fullCombinedHealth;
 			return info.ScalingFunction(amount) * hc.fullCombinedHealth;
 		}
 		
