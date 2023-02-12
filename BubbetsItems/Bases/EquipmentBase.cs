@@ -29,7 +29,7 @@ namespace BubbetsItems
         [SystemInitializer(typeof(EquipmentCatalog))]
         public static void ApplyPostEquipments()
         {
-            foreach (var equip in Instances) if (equip != null && equip is EquipmentBase) (equip as EquipmentBase).PostEquipmentDef();
+            foreach (var equip in Equipments) equip.PostEquipmentDef();
         }
 
         private void CooldownChanged(object sender, EventArgs e)
@@ -62,7 +62,7 @@ namespace BubbetsItems
         
         public EquipmentDef EquipmentDef;
         
-        private static IEnumerable<EquipmentBase> _equipments;
+        private static IEnumerable<EquipmentBase>? _equipments;
         internal ConfigEntry<float> Cooldown;
         public static IEnumerable<EquipmentBase> Equipments => _equipments ??= Instances.OfType<EquipmentBase>();
 
