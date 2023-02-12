@@ -20,11 +20,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Reference Include="BetterUI, Version=2.5.12.0, Culture=neutral, PublicKeyToken=null">
-        <HintPath>..\Libs\BetterUI-nstrip.dll</HintPath>
-      </Reference>
       <Reference Include="BetterUI">
-        <HintPath>C:\Users\Joshu\Downloads\BetterUI-nstrip.dll</HintPath>
+        <HintPath>..\Libs\BetterUI-nstrip.dll</HintPath>
       </Reference>
     </ItemGroup>
 </Project>

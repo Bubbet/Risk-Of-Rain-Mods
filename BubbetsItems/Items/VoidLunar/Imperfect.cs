@@ -57,11 +57,14 @@ namespace BubbetsItems.Items.VoidLunar
 		{
 			base.MakeBehaviours();
 			RecalculateStatsAPI.GetStatCoefficients += RecalcStats;
+			RoR2Application.onLoad += () => On.RoR2.CharacterBody.RecalculateStats += UsedToBePatchIL; // if anyone hooks it THIS LATE i will kill you
 		}
 		protected override void DestroyBehaviours()
 		{
 			base.DestroyBehaviours();
 			RecalculateStatsAPI.GetStatCoefficients -= RecalcStats;
+			RoR2Application.onLoad -= () => On.RoR2.CharacterBody.RecalculateStats += UsedToBePatchIL;
+			On.RoR2.CharacterBody.RecalculateStats -= UsedToBePatchIL;
 		}
 
 		private void RecalcStats(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
@@ -75,6 +78,7 @@ namespace BubbetsItems.Items.VoidLunar
 			args.shieldMultAdd += inst.scalingInfos[0].ScalingFunction(amount);
 		}
 
+		/*
 		[HarmonyILManipulator, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
 		public static void PatchIl(ILContext il)
 		{
@@ -92,5 +96,17 @@ namespace BubbetsItems.Items.VoidLunar
 				cb.maxShield = 1;
 			});
 		}
+		*/
+
+		public void UsedToBePatchIL(On.RoR2.CharacterBody.orig_RecalculateStats orig, CharacterBody self)
+        {
+			orig(self);
+			if (self?.inventory == null) return;
+			if (self.inventory.GetItemCount(ItemDef) > 0 && self.maxShield > 1)
+			{
+				self.maxHealth += self.maxShield - 1;
+				self.maxShield = 1;
+            }
+        }
 	}
 }
