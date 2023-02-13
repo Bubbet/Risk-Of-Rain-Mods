@@ -26,6 +26,12 @@ namespace BubbetsItems
             Cooldown.SettingChanged += CooldownChanged;
         }
 
+        [SystemInitializer(typeof(EquipmentCatalog))]
+        public static void ApplyPostEquipments()
+        {
+            foreach (var equip in Equipments) equip.PostEquipmentDef();
+        }
+
         private void CooldownChanged(object sender, EventArgs e)
         {
             EquipmentDef.cooldown = Cooldown.Value;
@@ -56,7 +62,7 @@ namespace BubbetsItems
         
         public EquipmentDef EquipmentDef;
         
-        private static IEnumerable<EquipmentBase> _equipments;
+        private static IEnumerable<EquipmentBase>? _equipments;
         internal ConfigEntry<float> Cooldown;
         public static IEnumerable<EquipmentBase> Equipments => _equipments ??= Instances.OfType<EquipmentBase>();
 

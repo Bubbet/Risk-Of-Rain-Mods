@@ -75,6 +75,7 @@ namespace BubbetsItems.Items.VoidLunar
 			args.shieldMultAdd += inst.scalingInfos[0].ScalingFunction(amount);
 		}
 
+		/*
 		[HarmonyILManipulator, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
 		public static void PatchIl(ILContext il)
 		{
@@ -92,5 +93,17 @@ namespace BubbetsItems.Items.VoidLunar
 				cb.maxShield = 1;
 			});
 		}
+		*/
+
+		[HarmonyPostfix, HarmonyPatch(typeof(CharacterBody), nameof(CharacterBody.RecalculateStats))]
+		public static void UsedToBePatchIL(CharacterBody __instance)
+		{
+			var inv = __instance.inventory;
+			if (inv && inv.GetItemCount(GetInstance<Imperfect>().ItemDef) > 0 && __instance.maxShield > 1)
+			{
+				__instance.maxHealth += __instance.maxShield - 1;
+				__instance.maxShield = 1;
+            }
+        }
 	}
 }
