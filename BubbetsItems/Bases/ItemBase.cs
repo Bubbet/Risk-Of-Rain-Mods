@@ -68,7 +68,7 @@ namespace BubbetsItems
                     {
                         var str = Language.GetString(x.nameToken);
                         if (Language.currentLanguage == Language.english)
-                            str += "s";
+                            str = GetPlural(str);
                         return str;
                     })));
                     corruption = corruption.Style(ItemDef.tier == BubbetsItemsPlugin.VoidLunarTier.tier ? StyleEnum.VoidLunar : StyleEnum.Void);
@@ -483,6 +483,86 @@ namespace BubbetsItems
         public void AddVoidPairing(string defaultValue, string? oldDefault = null)
         {
             voidPairing = new VoidPairing(defaultValue, this, oldDefault);
+        }
+
+        private static List<string> alreadyPlural = new List<string>() // "rounds" and "-es" does not need to be registered here
+        {
+            "400 Tickets",
+            "Balls",
+            "Gummy Vitamins", 
+            // "Zoom Lenses", 
+            "Booster Boots", 
+            // "Jellied Soles", 
+            "Life Savings", 
+            // "Needles", 
+            "Predatory Instincts",
+            "Fueling Bellows",
+            "Sharpened Chopsticks",
+            "Hardlight Shields",
+            "Steroids",
+            // "Boxing Gloves",
+            // "Spafnar's Fries",
+            "Charging Nanobots",
+            "Experimental Jets",
+            "Prototype Jet Boots",
+            "Low Quality Speakers",
+            // "Purrfect Headphones",
+            // "Inoperative Nanomachines",
+            "Stargazer's Records",
+            // "Prison Shackles",
+            "Baby's Toys",
+            "Defensive Microbots",
+            "Death's Regards",
+            "Spare Drone Parts",
+            "Brainstalks",
+            // "Empathy Cores",
+            "Sorcerer's Pills",
+            "Shifted Quartz",
+            "Clasping Claws",
+            "Enhancement Vials",
+            "<style=cIsVoid>Corrupts all Shatterspleens.</style>",
+            // "Empyrean Braces",
+            "Orbs of Falsity",
+            "Visions of Heresy",
+            "Hooks of Heresy",
+            "Strides of Heresy",
+            "Essence of Heresy",
+            "Beads of Fealty",
+            "Prescriptions",
+            "Snake Eyes",
+            "Panic Mines",
+        };
+        // metarule: "(\\S+) of", "Pluralize($1) of $2s"
+        // metarule: "The (.+)", "Pluralize($1)"
+        // metarule: "Silence Between Two Strikes", "Silences Between Two Strikes"
+        private static Dictionary<string, string> rules = new Dictionary<string, string>() {
+            { "rounds$", "rounds" },
+            { "tooth$", "teeth" },
+            { "fungus$", "fungi" },
+            { "(a|e|i|o|u)o$", "$1os" },
+            { "o$", "oes" },
+            { "(a|e|i|o|u)y$", "$1ys" },
+            { "y$", "ies" },
+            { "ff$", "s" },
+            { "fe?$", "ves" },
+            { "es$", "es" },
+            { "(ch|sh|x|z|s)$", "$1es" },
+            { "s?$", "s" }
+        };
+        public static string GetPlural(string str)
+        {
+            if (alreadyPlural.Contains(str)) return str;
+            if (str == "Silence Between Two Strikes") return "Silences Between Two Strikes";
+            Match metarule = Regex.Match(str, "(.+) of (.+)", RegexOptions.IgnoreCase);
+            if (metarule.Success) return GetPlural(metarule.Groups[1].Value) + " of " + metarule.Groups[2].Value;
+            metarule = Regex.Match(str, "^the (.+)", RegexOptions.IgnoreCase);
+            if (metarule.Success) return GetPlural(metarule.Groups[1].Value);
+            foreach (var k in rules.Keys)
+            {
+                if (Regex.Match(str, k, RegexOptions.IgnoreCase).Success)
+                    return Regex.Replace(str, k, rules[k], RegexOptions.IgnoreCase);
+            }
+            return str;
         }
     }
 }
