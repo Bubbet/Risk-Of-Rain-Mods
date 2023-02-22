@@ -67,7 +67,8 @@ namespace BubbetsItems
                     corruption = Language.GetStringFormatted("BUB_DEFAULT_CONVERT", string.Join(", ", voidPairing.itemDefs.Select(x =>
                     {
                         var str = Language.GetString(x.nameToken);
-                        if (Language.currentLanguage == Language.english) str = GetPlural(str);
+                        if (Language.currentLanguage == Language.english) 
+                            str = GetPlural(str);
                         return str;
                     })));
                     corruption = corruption.Style(ItemDef.tier == BubbetsItemsPlugin.VoidLunarTier.tier ? StyleEnum.VoidLunar : StyleEnum.Void);
