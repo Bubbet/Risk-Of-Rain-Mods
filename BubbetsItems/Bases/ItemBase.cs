@@ -67,8 +67,7 @@ namespace BubbetsItems
                     corruption = Language.GetStringFormatted("BUB_DEFAULT_CONVERT", string.Join(", ", voidPairing.itemDefs.Select(x =>
                     {
                         var str = Language.GetString(x.nameToken);
-                        if (Language.currentLanguage == Language.english)
-                            str = GetPlural(str);
+                        if (Language.currentLanguage == Language.english) str = GetPlural(str);
                         return str;
                     })));
                     corruption = corruption.Style(ItemDef.tier == BubbetsItemsPlugin.VoidLunarTier.tier ? StyleEnum.VoidLunar : StyleEnum.Void);
@@ -529,8 +528,8 @@ namespace BubbetsItems
             "Essence of Heresy",
             "Beads of Fealty",
             "Prescriptions",
-            "Snake Eyes",
-            "Panic Mines",
+            // "Snake Eyes",
+            // "Panic Mines",
         };
         // metarule: "(\\S+) of", "Pluralize($1) of $2s"
         // metarule: "The (.+)", "Pluralize($1)"
