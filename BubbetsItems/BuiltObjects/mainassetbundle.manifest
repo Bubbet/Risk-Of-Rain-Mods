@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 4086029707
+CRC: 3850082844
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 7c9bca76b6eb6ea461c403f8dd9a30bd
+    Hash: 3ba92ac04f8ffe7971577b5aab73a268
   TypeTreeHash:
     serializedVersion: 2
-    Hash: a14157f4efa0141b7502383bf9b51cb5
+    Hash: 92878b88aaf94e9486dde049718c2ca4
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -539,6 +539,7 @@ Assets:
 - Assets/BubbetsItems/Assets/Items/VoidLunar/ClumpedSand/ClumpedSandPickup.prefab
 - Assets/BubbetsItems/Assets/Items/BarrierItems/Ceremonial Probe/ItemDefCeremonialProbe.asset
 - Assets/BubbetsItems/Assets/Items/Regularitems/Torturer/TorturerShader.shader
+- Assets/BubbetsItems/Assets/Items/BarrierItems/Bone Visor/boneShard.fbx
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/gemCaparace.fbx
 - Assets/BubbetsItems/Assets/Items/BarrierItems/GemCarapace/gemCarapaceRunicDiffuse.png
 - Assets/BubbetsItems/Assets/Items/Regularitems/JelliedSoles/jelliedSoles.prefab
