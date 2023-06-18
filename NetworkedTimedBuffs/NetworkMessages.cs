@@ -104,7 +104,10 @@ namespace NetworkedTimedBuffs
 		public void OnReceived()
 		{
 			if (NetworkServer.active) return;
-			var body = Util.FindNetworkObject(netID).GetComponent<CharacterBody>();
+			var obj = Util.FindNetworkObject(netID);
+			if (!obj) return;
+			var body = obj.GetComponent<CharacterBody>();
+			if (!body) return;
 			body.timedBuffs[index].timer = timer;
 		}
 	}

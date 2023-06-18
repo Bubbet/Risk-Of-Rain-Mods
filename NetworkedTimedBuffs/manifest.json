@@ -4,10 +4,10 @@
 	"website_url":"https://github.com/Bubbet",
 	"displayName":"Networked Timed Buffs",
 
-	"version_number": "1.0.2",
+	"version_number": "1.0.3",
 	"description": "Networks the timed buffs, so clients are aware of the timers.",
 	"dependencies": [
 		"bbepis-BepInExPack-5.4.1902",
-		"tristanmcpherson-R2API-4.3.21"
+		"RiskofThunder-R2API_Networking-1.0.2"
 	]
 }
