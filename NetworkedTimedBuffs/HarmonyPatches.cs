@@ -145,7 +145,8 @@ namespace NetworkedTimedBuffs
 		{
 			if (__instance.GetType() != typeof(List<CharacterBody.TimedBuff>)) return;
 			if (!NetworkServer.active) return;
-			var body = NetworkedTimedBuffsPlugin.timedBuffsMap[__instance];
+			NetworkedTimedBuffsPlugin.timedBuffsMap.TryGetValue(__instance, out var body);
+			if (body == null) return;
 			if (!body.isPlayerControlled && NetworkedTimedBuffsPlugin.onlySyncPlayers.Value) return;
 			new SyncTimedBuffAdd(body.networkIdentity.netId, item.buffIndex, item.timer).Send(NetworkDestination.Clients);
 		}
@@ -154,8 +155,9 @@ namespace NetworkedTimedBuffs
 		{
 			if (__instance.GetType() != typeof(List<CharacterBody.TimedBuff>)) return;
 			if (!NetworkServer.active) return;
-			var body = NetworkedTimedBuffsPlugin.timedBuffsMap[__instance];
-			if (!body.isPlayerControlled && NetworkedTimedBuffsPlugin.onlySyncPlayers.Value) return;
+            NetworkedTimedBuffsPlugin.timedBuffsMap.TryGetValue(__instance, out var body);
+            if (body == null) return;
+            if (!body.isPlayerControlled && NetworkedTimedBuffsPlugin.onlySyncPlayers.Value) return;
 			new SyncTimedBuffRemove(body.networkIdentity.netId, index).Send(NetworkDestination.Clients);
 		}
 	}
