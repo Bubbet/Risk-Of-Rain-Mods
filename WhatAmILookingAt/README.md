@@ -64,3 +64,6 @@
 
 1.6.1
 - Fix nre when a assembly has multiple plugins
+
+1.6.2
+- Update soft dep for r2api to use split assemblies.

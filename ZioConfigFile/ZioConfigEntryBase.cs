@@ -9,6 +9,11 @@ namespace ZioConfigFile
 	{
 		public bool DontSaveOnChange;
 
+		protected ConfigEntryBase configEntryFallback;
+		protected bool duckChanged;
+		protected bool duckFallbackChanged;
+		protected static ConfigFile fallbackConfigFile;
+
 		protected ZioConfigEntryBase(ConfigDefinition configDefinition, Type settingType, object defaultValue, ConfigDescription configDescription)
 		{
 			Definition = configDefinition ?? throw new ArgumentNullException(nameof(configDefinition));

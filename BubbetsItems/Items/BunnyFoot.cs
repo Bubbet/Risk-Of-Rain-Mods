@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using BepInEx.Configuration;
 using BubbetsItems.Helpers;
 using BubbetsItems.ItemBehaviors;
 using EntityStates;
@@ -8,6 +9,8 @@ using EntityStates.Merc;
 using HarmonyLib;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
+using RiskOfOptions;
+using RiskOfOptions.Options;
 using RoR2;
 using RoR2.Projectile;
 using UnityEngine;
@@ -16,6 +19,11 @@ namespace BubbetsItems.Items
 {
 	public class BunnyFoot : ItemBase
 	{
+		public static ConfigEntry<bool> addAirControl;
+		public static ConfigEntry<bool> isLunar;
+		private Sprite greenIcon;
+		private Sprite lunarIcon;
+
 		protected override void MakeTokens()
 		{
 			base.MakeTokens();
@@ -36,6 +44,30 @@ namespace BubbetsItems.Items
 			AddScalingFunction("[a] * 0.5", "Jump Control");
 			AddScalingFunction("3", "Auto Jump Requirement");
 			AddScalingFunction("0.25", "Merc Dash Exit Mult");
+			addAirControl = sharedInfo.ConfigFile.Bind("General", "Bunny Foot Add Air Control", false, "Add a bit of vanilla air control when at low speeds with bunny foot.");
+			isLunar = sharedInfo.ConfigFile.Bind("General", "Bunny Foot Is Lunar", false, "Makes bunny foot a lunar item.");
+			isLunar.SettingChanged += IsLunarOnSettingChanged;
+		}
+
+		private void IsLunarOnSettingChanged(object o, EventArgs e)
+		{
+			ItemDef.tier = isLunar.Value ? ItemTier.Lunar : ItemTier.Tier2;
+			ItemDef.pickupIconSprite = isLunar.Value ? lunarIcon : greenIcon;
+		}
+
+		protected override void FillDefsFromContentPack()
+		{
+			base.FillDefsFromContentPack();
+			greenIcon = ItemDef.pickupIconSprite;
+			lunarIcon = BubbetsItemsPlugin.AssetBundle.LoadAsset<Sprite>("BunnyFootLunar");
+			IsLunarOnSettingChanged(null, null);
+		}
+
+		public override void MakeRiskOfOptions()
+		{
+			base.MakeRiskOfOptions();
+			ModSettingsManager.AddOption(new CheckBoxOption(addAirControl));
+			ModSettingsManager.AddOption(new CheckBoxOption(isLunar));
 		}
 
 		[HarmonyILManipulator, HarmonyPatch(typeof(ProjectileGrappleController.GripState), nameof(ProjectileGrappleController.GripState.FixedUpdateBehavior))]
@@ -138,7 +170,7 @@ namespace BubbetsItems.Items
 
 			var addvel = Accelerate(velocity, wishDir, wishSpeed,
 				wishSpeed * bunnyFoot.scalingInfos[2].ScalingFunction(count),
-				bunnyFoot.scalingInfos[3].ScalingFunction(count), 1f);
+				bunnyFoot.scalingInfos[3].ScalingFunction(count), 1f, vector, wishSpeed);
 
 			addvel.y = vector.y;
 			
@@ -174,11 +206,11 @@ namespace BubbetsItems.Items
 			var wishDir = newTarget.normalized;
 			var wishSpeed = motor.walkSpeed * wishDir.magnitude;
 
-			return Accelerate(velocity, wishDir, wishSpeed, bunnyFoot.scalingInfos[0].ScalingFunction(count), motor.acceleration, deltaTime);
+			return Accelerate(velocity, wishDir, wishSpeed, bunnyFoot.scalingInfos[0].ScalingFunction(count), motor.acceleration, deltaTime, target, num);
 		}
 
 		//Ripped from sbox or gmod, i dont remember
-		public static Vector3 Accelerate(Vector3 velocity, Vector3 wishDir, float wishSpeed, float speedLimit, float acceleration, float deltaTime)
+		public static Vector3 Accelerate(Vector3 velocity, Vector3 wishDir, float wishSpeed, float speedLimit, float acceleration, float deltaTime, Vector3 target, float num)
 		{
 			if ( speedLimit > 0 && wishSpeed > speedLimit )
 				wishSpeed = speedLimit;
@@ -191,7 +223,10 @@ namespace BubbetsItems.Items
 
 			// If not going to add any speed, done.
 			if ( addspeed <= 0 )
-				return velocity;
+				if (!addAirControl.Value)
+					return velocity;
+				else
+					return target.sqrMagnitude < velocity.sqrMagnitude ? velocity : Vector3.MoveTowards(velocity, target, num * deltaTime); //return velocity;
 
 			// Determine amount of acceleration.
 			var accelspeed = acceleration * deltaTime * wishSpeed; // * SurfaceFriction;

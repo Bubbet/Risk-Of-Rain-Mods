@@ -1,6 +1,5 @@
-﻿using System;
-using BepInEx.Configuration;
-using UnityEngine;
+﻿using UnityEngine;
+using ZioConfigFile;
 
 namespace MaterialHud
 {
@@ -9,7 +8,7 @@ namespace MaterialHud
 		public string Category;
 		public string Key;
 		public string Description;
-		private ConfigEntry<float> _configValue;
+		private ZioConfigEntry<float> _configValue;
 
 		private void Awake()
 		{
@@ -19,7 +18,7 @@ namespace MaterialHud
 
 		private void OnEnable()
 		{
-			SettingChanged(null, null);
+			SettingChanged(null, null, false);
 		}
 
 		private void OnDestroy()
@@ -27,7 +26,7 @@ namespace MaterialHud
 			_configValue.SettingChanged -= SettingChanged;
 		}
 
-		private void SettingChanged(object sender, EventArgs e)
+		private void SettingChanged(ZioConfigEntryBase zioConfigEntryBase, object o, bool arg3)
 		{
 			var val = _configValue.Value / 100f;
 			var transformLocalScale = transform.localScale;

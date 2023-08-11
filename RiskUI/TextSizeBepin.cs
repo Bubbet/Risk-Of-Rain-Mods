@@ -1,28 +1,26 @@
 ﻿#nullable enable
-using System;
-using System.Reflection;
-using BepInEx.Configuration;
 using TMPro;
 using UnityEngine;
+using ZioConfigFile;
 
 namespace MaterialHud
 {
-	public class TextSizeBepin : MonoBehaviour
+	public class TextSizeBepin : MonoBehaviour, IConfigHandler
 	{
 		public string Key;
 		public string Description;
 		public TextMeshProUGUI Target;
-		private ConfigEntry<float> _configEntry;
+		private ZioConfigEntry<float> _configEntry;
 		public void Awake()
 		{
-			_configEntry = ConfigHelper.Bind("Rescaling", Key, Target.fontSize, Description, riskOfOptionsExtra: 100f);
+			Startup();
 			
 			_configEntry.SettingChanged += SettingChanged;
 		}
 
 		private void OnEnable()
 		{
-			SettingChanged(null, null);
+			SettingChanged(null, null, false);
 		}
 
 		private void OnDestroy()
@@ -30,9 +28,14 @@ namespace MaterialHud
 			_configEntry.SettingChanged -= SettingChanged;
 		}
 
-		private void SettingChanged(object sender, EventArgs e)
+		private void SettingChanged(ZioConfigEntryBase zioConfigEntryBase, object o, bool arg3)
 		{
 			Target.fontSize = _configEntry.Value;
+		}
+
+		public void Startup()
+		{
+			_configEntry = ConfigHelper.Bind("Rescaling", Key, Target.fontSize, Description, riskOfOptionsExtra: 100f);
 		}
 	}
 }

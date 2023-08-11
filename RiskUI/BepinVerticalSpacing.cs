@@ -1,13 +1,12 @@
-﻿using System;
-using BepInEx.Configuration;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
+using ZioConfigFile;
 
 namespace MaterialHud
 {
 	public class BepinVerticalSpacing : MonoBehaviour
 	{
-		private ConfigEntry<float> configEntry;
+		private ZioConfigEntry<float> configEntry;
 		public string desc;
 		public string key;
 		private GridLayoutGroup target;
@@ -32,7 +31,7 @@ namespace MaterialHud
 
 		private void OnEnable()
 		{
-			SettingChanged(null, null);
+			SettingChanged(null, null, false);
 		}
 
 		private void OnDestroy()
@@ -40,7 +39,7 @@ namespace MaterialHud
 			configEntry.SettingChanged -= SettingChanged;
 		}
 
-		private void SettingChanged(object sender, EventArgs e)
+		private void SettingChanged(ZioConfigEntryBase zioConfigEntryBase, object o, bool arg3)
 		{
 			Value = configEntry.Value;
 		}

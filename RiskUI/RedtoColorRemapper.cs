@@ -1,16 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using BepInEx.Configuration;
 using RoR2.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using ZioConfigFile;
 
 namespace MaterialHud
 {
-	public class HealthbarRecolor : MonoBehaviour
+	public class HealthbarRecolor : MonoBehaviour, IConfigHandler
 	{
 		public string whichBar = "Player HealthBar";
 		public HealthBar healthBar;
@@ -18,19 +17,7 @@ namespace MaterialHud
 		
 		public void Awake()
 		{
-			var style = healthBar.style;
-			SetupConfig("Trailing Under", "When hurt the bit that is slow to catch up.", style, "trailingUnderHealthBarStyle");
-			SetupConfig("Instant Health", "From medkits, etc.", style, "instantHealthBarStyle");
-			SetupConfig("Trailing Over", "The general color of the healthbar.", style, "trailingOverHealthBarStyle");
-			SetupConfig("Shield", "Shield", style, "shieldBarStyle");
-			SetupConfig("Curse", "Curse refers to having Shaped glass / anything that temporarily lowers max HP & normally leaves you w/ the white outlined section.", style, "curseBarStyle");
-			SetupConfig("Barrier", "Barrier", style, "barrierBarStyle");
-			SetupConfig("Flash", "?", style, "flashBarStyle");
-			SetupConfig("Cull", "Cull refers to things like guillotine / freeze, and is only seen when an allied minion (turret / zoea / drone, etc..) is hit by a Glacial Elite's death effect radius. Cull can't be applied to players however.", style, "cullBarStyle");
-			SetupConfig("Low Health Over", "Color for delicate watches and things like that.", style, "lowHealthOverStyle");
-			SetupConfig("Low Health Under", "?", style, "lowHealthUnderStyle");
-			SetupConfig("Magnetic", "A unused??? healthbar style.", style, "magneticStyle");
-			SetupConfig("OSP", "One shot protection color.", style, "ospStyle");
+			Startup(true);
 			OnEnable();
 		}
 
@@ -38,15 +25,15 @@ namespace MaterialHud
 		{
 			foreach (var entry in entries)
 			{
-				entry.Value.ConfigChanged(null, null);
+				entry.Value.ConfigChanged(null, null, false);
 			}
 		}
 
 		
-		private void SetupConfig(string key, string desc, HealthBarStyle style, string field)
+		private void SetupConfig(string key, string desc, HealthBarStyle style, string field, bool b)
 		{
 			var entryKey = "Recoloring " + whichBar + key;
-			var config = new HealthBarConfig("Recoloring " + whichBar, key, desc, field, style);
+			var config = new HealthBarConfig("Recoloring " + whichBar, key, desc, field, style, b);
 			entries[entryKey] = config;
 		}
 
@@ -72,7 +59,7 @@ namespace MaterialHud
 			private static readonly Type StyleType = typeof(HealthBarStyle);
 			public HealthBarStyle style;
 			private readonly FieldInfo _fieldInfo;
-			private ConfigEntry<Color> _configValue;
+			private ZioConfigEntry<Color> _configValue;
 			private bool rainbow;
 
 			public Color Color
@@ -86,12 +73,13 @@ namespace MaterialHud
 				}
 			}
 
-			public HealthBarConfig(string category, string key, string desc, string field, HealthBarStyle styleIn)
+			public HealthBarConfig(string category, string key, string desc, string field, HealthBarStyle styleIn, bool b)
 			{
 				style = styleIn;
 				_fieldInfo = StyleType.GetField(field, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 				_configValue = ConfigHelper.Bind(category, key, Color, desc);
-				_configValue.SettingChanged += ConfigChanged;
+				if (b)
+					_configValue.SettingChanged += ConfigChanged;
 			}
 
 			public void Destroy()
@@ -99,7 +87,7 @@ namespace MaterialHud
 				_configValue.SettingChanged -= ConfigChanged;
 			}
 
-			public void ConfigChanged(object sender, EventArgs e)
+			public void ConfigChanged(ZioConfigEntryBase zioConfigEntryBase, object o, bool arg3)
 			{
 				rainbow = _configValue.Value == Color.clear;
 				Color = _configValue.Value;
@@ -111,23 +99,47 @@ namespace MaterialHud
 					Color = color;
 			}
 		}
+
+		public void Startup(bool b)
+		{
+			var style = healthBar.style;
+			SetupConfig("Trailing Under", "When hurt the bit that is slow to catch up.", style, "trailingUnderHealthBarStyle", b);
+			SetupConfig("Instant Health", "From medkits, etc.", style, "instantHealthBarStyle", b);
+			SetupConfig("Trailing Over", "The general color of the healthbar.", style, "trailingOverHealthBarStyle", b);
+			SetupConfig("Shield", "Shield", style, "shieldBarStyle", b);
+			SetupConfig("Curse", "Curse refers to having Shaped glass / anything that temporarily lowers max HP & normally leaves you w/ the white outlined section.", style, "curseBarStyle", b);
+			SetupConfig("Barrier", "Barrier", style, "barrierBarStyle", b);
+			SetupConfig("Flash", "?", style, "flashBarStyle", b);
+			SetupConfig("Cull", "Cull refers to things like guillotine / freeze, and is only seen when an allied minion (turret / zoea / drone, etc..) is hit by a Glacial Elite's death effect radius. Cull can't be applied to players however.", style, "cullBarStyle", b);
+			SetupConfig("Low Health Over", "Color for delicate watches and things like that.", style, "lowHealthOverStyle", b);
+			SetupConfig("Low Health Under", "?", style, "lowHealthUnderStyle", b);
+			SetupConfig("Magnetic", "A unused??? healthbar style.", style, "magneticStyle", b);
+			SetupConfig("OSP", "One shot protection color.", style, "ospStyle", b);
+		}
+
+		public void Startup()
+		{
+			Startup(false);
+		}
 	}
 
-	public class RedToColorRemapperIndividual : MonoBehaviour
+	public class RedToColorRemapperIndividual : MonoBehaviour, IConfigHandler
 	{
 		public string configKey;
 		public string configDesc;
 		private Color defaultColor; // = new Color32(240, 91, 91, 255); //"#F05B5B";
-		private ConfigEntry<Color> _configEntry;
+		private ZioConfigEntry<Color> _configEntry;
 		public MonoBehaviour target;
 		private bool _rainbow;
 
-		public static Dictionary<string, ConfigEntry<string>> entries = new();
-
-		public void Awake()
+		public void Startup()
 		{
 			defaultColor = GetColor();
 			_configEntry = ConfigHelper.Bind("Recoloring", configKey, defaultColor, configDesc);
+		}
+		public void Awake()
+		{
+			Startup();
 			_configEntry.SettingChanged += UpdateColor;
 		}
 
@@ -141,7 +153,7 @@ namespace MaterialHud
 			_configEntry.SettingChanged -= UpdateColor;
 		}
 
-		private void UpdateColor(object sender, EventArgs e)
+		private void UpdateColor(ZioConfigEntryBase config, object oldValue, bool ignoreSave)
 		{
 			UpdateColor();
 		}

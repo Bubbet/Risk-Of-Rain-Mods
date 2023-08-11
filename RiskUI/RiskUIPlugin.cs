@@ -5,16 +5,20 @@ using System.Security;
 using System.Security.Permissions;
 using BepInEx;
 using BepInEx.Bootstrap;
-using BepInEx.Configuration;
 using BetterUI;
 using HarmonyLib;
 using RiskOfOptions;
 using RiskOfOptions.Options;
 using RoR2;
+using ScavengerBingo;
 using SimpleJSON;
 using UnityEngine;
+using UnityEngine.UI;
+using Zio;
+using ZioConfigFile;
 using Path = System.IO.Path;
 using SearchableAttribute = HG.Reflection.SearchableAttribute;
+
 [assembly: SearchableAttribute.OptIn]
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -25,8 +29,9 @@ using SearchableAttribute = HG.Reflection.SearchableAttribute;
 namespace MaterialHud
 {
 	[BepInDependency("com.rune580.riskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
-	[BepInPlugin("bubbet.riskui", "Risk UI", "1.3.1")]
-	[BepInDependency("com.Dragonyck.Synergies", BepInDependency.DependencyFlags.SoftDependency)]
+	[BepInDependency("bubbet.zioriskofoptions", BepInDependency.DependencyFlags.SoftDependency)]
+	[BepInPlugin("bubbet.riskui", "Risk UI", "1.4.0")]
+	//[BepInDependency("com.groovesalad.ScavengerBingo", BepInDependency.DependencyFlags.SoftDependency)]
 	public class RiskUIPlugin : BaseUnityPlugin
 	{
 		public AssetBundle assetBundle;
@@ -38,17 +43,19 @@ namespace MaterialHud
 		public static GameObject EnemyInfoPanel;
 
 		public static readonly Dictionary<string, Sprite> DifficultyIconMap = new();
-		public static ConfigEntry<Color> VoidColor;
-		public static ConfigEntry<Color> InfusionColor;
-		public static ConfigEntry<Color> VoidShieldColor;
-		public static ConfigFile ConfigFile;
+		public static ZioConfigEntry<Color> VoidColor;
+		public static ZioConfigEntry<Color> InfusionColor;
+		public static ZioConfigEntry<Color> VoidShieldColor;
+		public static ZioConfigFile.ZioConfigFile ConfigFile;
 		private string description;
 		private Sprite icon;
-		public static ConfigEntry<bool> Enabled;
+		public static ZioConfigEntry<bool> Enabled;
 		private Harmony harm;
 		private PatchClassProcessor patcher;
+		public static readonly List<ZioConfigFile.ZioConfigFile> ConfigFiles = new();
+		public static bool NeverBeforeInitialized;
 
-		public static bool RiskOfOptionsEnabled => Chainloader.PluginInfos.ContainsKey("com.rune580.riskofoptions");
+		public static bool RiskOfOptionsEnabled => Chainloader.PluginInfos.ContainsKey("bubbet.zioriskofoptions"); //"com.rune580.riskofoptions");
 		public void Awake()
 		{
 			var path = Path.GetDirectoryName(Info.Location);
@@ -69,21 +76,8 @@ namespace MaterialHud
 			harm = new Harmony(Info.Metadata.GUID);
 			patcher = new PatchClassProcessor(harm, typeof(HarmonyPatches));
 
-			ConfigFile = Config;
-			Enabled = ConfigHelper.Bind("General", "Enabled", true, "Should the hud be replaced. Only updates on hud awake, so stage change and starting new runs.");
-			Enabled.SettingChanged += EnabledChanged;
-			EnabledChanged();
-			
-			if (RiskOfOptionsEnabled)
-				MakeRiskofOptions();
+			RoR2Application.onLoad += onLoad;
 
-			if (Chainloader.PluginInfos.ContainsKey("com.Dragonyck.Synergies") && Chainloader.PluginInfos["com.Dragonyck.Synergies"].Metadata.Version <= new Version("2.0.3"))
-				DisableSynergies();
-			
-			VoidColor = ConfigHelper.Bind("Recoloring Player HealthBar", "Void Color", (Color) new Color32(181, 100, 189, 255), "Color of void, Void Fiends health bar.");
-			InfusionColor = ConfigHelper.Bind("Recoloring Player HealthBar", "Infusion Color", (Color) new Color32(221, 44, 38, 255), "Color of infusion.");
-			VoidShieldColor = ConfigHelper.Bind("Recoloring Player HealthBar", "Void Shield Color", (Color) new Color32(229, 127, 240, 255), "Color of void shield.");
-			
 			assetBundle = AssetBundle.LoadFromFile(Path.Combine(path, "riskui"));
 			_newHud = assetBundle.LoadAsset<GameObject>("RiskUI");
 			_newClassicRunHud = assetBundle.LoadAsset<GameObject>("MaterialClassicRunInfoHudPanel");
@@ -110,9 +104,52 @@ namespace MaterialHud
 			
 		}
 
+		private void FixScavBingo()
+		{
+			BingoUI.BingoAchievementDisplay.AddComponent<LayoutElement>().ignoreLayout = true;
+		}
+
+		private void onLoad()
+		{
+			ConfigFile = new ZioConfigFile.ZioConfigFile(RoR2Application.cloudStorage, "/RiskUI.cfg", true, this);
+			
+			foreach (var path in RoR2Application.cloudStorage.EnumeratePaths(new UPath("/RiskUI/")))
+			{
+				ConfigFiles.Add(new ZioConfigFile.ZioConfigFile(RoR2Application.cloudStorage, path, true, this));
+			}
+
+			if (ConfigFiles.Count < 1)
+			{
+				NeverBeforeInitialized = true;
+				ConfigFiles.Add(new ZioConfigFile.ZioConfigFile(RoR2Application.cloudStorage, $"/RiskUI/{new Guid()}",
+					true, this));
+			}
+
+			Enabled = ConfigHelper.Bind("General", "Enabled", true, "Should the hud be replaced. Only updates on hud awake, so stage change and starting new runs.");
+			Enabled.SettingChanged += EnabledChanged;
+			EnabledChanged();
+			
+			VoidColor = ConfigHelper.Bind("Recoloring Player HealthBar", "Void Color", (Color) new Color32(181, 100, 189, 255), "Color of void, Void Fiends health bar.");
+			InfusionColor = ConfigHelper.Bind("Recoloring Player HealthBar", "Infusion Color", (Color) new Color32(221, 44, 38, 255), "Color of infusion.");
+			VoidShieldColor = ConfigHelper.Bind("Recoloring Player HealthBar", "Void Shield Color", (Color) new Color32(229, 127, 240, 255), "Color of void shield.");
+			
+			if (RiskOfOptionsEnabled)
+				MakeRiskofOptions();
+			
+			if (Chainloader.PluginInfos.ContainsKey("com.Dragonyck.Synergies") && Chainloader.PluginInfos["com.Dragonyck.Synergies"].Metadata.Version <= new Version("2.0.3"))
+				DisableSynergies();
+			if (Chainloader.PluginInfos.ContainsKey("com.groovesalad.ScavengerBingo"))
+				FixScavBingo();
+			
+			foreach (var child in _newHud.GetComponentsInChildren<IConfigHandler>())
+			{
+				child.Startup();
+			}
+		}
+
 		private void DisableSynergies()
 		{
-			new PatchClassProcessor(harm, typeof(DisableSynergies)).Patch();
+			//new PatchClassProcessor(harm, typeof(DisableSynergies)).Patch();
 		}
 
 		private void EnabledChanged()
@@ -125,7 +162,7 @@ namespace MaterialHud
 			harm.UnpatchSelf();
 		}
 
-		private void EnabledChanged(object sender, EventArgs e)
+		private void EnabledChanged(ZioConfigEntryBase arg1, object arg2, bool arg3)
 		{
 			EnabledChanged();
 		}
@@ -180,5 +217,10 @@ namespace MaterialHud
 		{
 			return _allyCard;
 		}
+	}
+
+	public interface IConfigHandler
+	{
+		public void Startup();
 	}
 }

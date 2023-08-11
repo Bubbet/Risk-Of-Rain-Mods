@@ -33,6 +33,12 @@ The mod has risk of options support, you probably want to install it.
 - Enabled cursor for gamepad in scoreboard.
 - Added monster level text.
 
+1.4.0
+- Added zio risk of options dependency.
+- Forced all the config entries to be generated at game start, and not as the components awake.
+- Removed soft dependencies for synergies.
+- Probably more stuff i forgot about because i havent updated this mod in months.
+
 # Images:
 ![](https://cdn.discordapp.com/attachments/567852222419828736/972017499958829096/unknown.png)
 ![](https://cdn.discordapp.com/attachments/567832879879553037/972061840416849930/unknown.png)

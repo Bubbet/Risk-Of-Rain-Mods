@@ -99,10 +99,22 @@ namespace WhatAmILookingAt
 				textMesh.text = localizedName + "\n" + WhatAmILookingAtPlugin.GetModString(strp);
 				return;
 			}
-			
-			if (WailaInWorldChecks.BodyCheck(gObject, out var strb) || WailaInWorldChecks.InteractableCheck(gObject, out strb) || WailaInWorldChecks.SceneCheck(gObject, out strb) && shouldShowScene)
+
+			var bod = WailaInWorldChecks.BodyCheck(gObject, out var strb);
+			if (bod || WailaInWorldChecks.InteractableCheck(gObject, out strb) || WailaInWorldChecks.SceneCheck(gObject, out strb) && shouldShowScene)
 			{
 				textMesh.text = localizedName + "\n" + WhatAmILookingAtPlugin.GetModString(strb);
+				if (bod && WailaInWorldChecks.EliteCheck(gObject, out var n, out var i))
+				{
+					var mod = "(" + WhatAmILookingAtPlugin.GetModString(i) + ")";
+					textMesh.text += ": " + Language.GetStringFormatted(n, mod);
+				}
+				return;
+			}
+			
+			if (WailaInWorldChecks.InteractableCheck(gObject, out var stri))
+			{
+				textMesh.text = localizedName + "\n" + WhatAmILookingAtPlugin.GetModString(stri);
 				return;
 			}
 

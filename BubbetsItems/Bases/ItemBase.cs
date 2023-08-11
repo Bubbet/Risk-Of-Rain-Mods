@@ -40,7 +40,7 @@ namespace BubbetsItems
         private static IEnumerable<ItemBase>? _items;
         public static IEnumerable<ItemBase> Items => _items ??= Instances.OfType<ItemBase>();
 
-        public List<ScalingInfo> scalingInfos = new();
+        public ScalingInfoIndexer scalingInfos = new();
         public VoidPairing? voidPairing;
         protected string SimpleDescriptionToken;
 

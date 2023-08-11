@@ -1,13 +1,13 @@
 using System;
-using BepInEx.Configuration;
 using RoR2;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using ZioConfigFile;
 
 namespace MaterialHud
 {
-	public class DifficultyTextController : MonoBehaviour
+	public class DifficultyTextController : MonoBehaviour, IConfigHandler
 	{
 		public TextMeshProUGUI text;
 		public string[] segmentTokens;
@@ -21,12 +21,12 @@ namespace MaterialHud
 		public TextMeshProUGUI monsterLevel;
 		public float levelsPerSegment = 3;
 		private int _previousSegment = -1;
-		private ConfigEntry<bool> _textRecolor;
-		private ConfigEntry<bool> _ringLowerRecolor;
-		private ConfigEntry<bool> _ringRecolor;
-		private ConfigEntry<bool> _timerRecolor;
-		private ConfigEntry<bool> _timerCentiRecolor;
-		private ConfigEntry<bool> _monsterLevelEnabled;
+		private ZioConfigEntry<bool> _textRecolor;
+		private ZioConfigEntry<bool> _ringLowerRecolor;
+		private ZioConfigEntry<bool> _ringRecolor;
+		private ZioConfigEntry<bool> _timerRecolor;
+		private ZioConfigEntry<bool> _timerCentiRecolor;
+		private ZioConfigEntry<bool> _monsterLevelEnabled;
 
 		public static readonly Color[] DifficultyColors = {
 			new(73f / 255f, 242f / 255f, 217f / 255f), 	//Easy: 49F2D9
@@ -42,27 +42,22 @@ namespace MaterialHud
 
 		private void Awake()
 		{
-			_textRecolor = ConfigHelper.Bind("General", "Difficulty Text Colored Per Difficulty", false, "Should the difficulty text be recolored based on current difficulty.");
-			_ringLowerRecolor = ConfigHelper.Bind("General", "Difficulty Lower Ring Colored Per Difficulty", false, "Should the difficulty lower ring be recolored based on current difficulty.");
-			_ringRecolor = ConfigHelper.Bind("General", "Difficulty Upper Ring Colored Per Difficulty", false, "Should the difficulty upper ring be recolored based on current difficulty.");
-			_timerRecolor = ConfigHelper.Bind("General", "Timer Text Colored Per Difficulty", false, "Should the timer text be recolored based on current difficulty.");
-			_timerCentiRecolor = ConfigHelper.Bind("General", "Centisecond Timer Text Colored Per Difficulty", false, "Should the timer centisecond text be recolored based on current difficulty.");
-			_monsterLevelEnabled = ConfigHelper.Bind("General", "Monster Level Text Enable", false, "Should the monster level text be displayed.");
+			Startup();
 			_textRecolor.SettingChanged += TextColorerChanged;
 			_ringLowerRecolor.SettingChanged += RingLowerColorerChanged;
 			_ringRecolor.SettingChanged += RingColorerChanged;
 			_timerRecolor.SettingChanged += TimerColorerChanged;
 			_timerCentiRecolor.SettingChanged += CentiColorerChanged;
 			_monsterLevelEnabled.SettingChanged += MonsterLevelChanged;
-			TextColorerChanged(null, null);
-			RingLowerColorerChanged(null, null);
-			RingColorerChanged(null, null);
-			TimerColorerChanged(null, null);
-			CentiColorerChanged(null, null);
-			MonsterLevelChanged(null, null);
+			TextColorerChanged(null, null, false);
+			RingLowerColorerChanged(null, null, false);
+			RingColorerChanged(null, null, false);
+			TimerColorerChanged(null, null, false);
+			CentiColorerChanged(null, null, false);
+			MonsterLevelChanged(null, null, false);
 		}
 
-		private void MonsterLevelChanged(object sender, EventArgs e)
+		private void MonsterLevelChanged(ZioConfigEntryBase zioConfigEntryBase, object o, bool arg3)
 		{
 			monsterLevel.gameObject.SetActive(_monsterLevelEnabled.Value);
 		}
@@ -76,29 +71,29 @@ namespace MaterialHud
 			_timerCentiRecolor.SettingChanged -= CentiColorerChanged;
 		}
 
-		private void RingColorerChanged(object sender, EventArgs e)
+		private void RingColorerChanged(ZioConfigEntryBase zioConfigEntryBase, object o, bool arg3)
 		{
 			ringRecolorer.enabled = !_ringRecolor.Value;
 			UpdateColors();
 		}
-		private void RingLowerColorerChanged(object sender, EventArgs e)
+		private void RingLowerColorerChanged(ZioConfigEntryBase zioConfigEntryBase, object o, bool arg3)
 		{
 			ringBehindRecolorer.enabled = !_ringLowerRecolor.Value;
 			UpdateColors();
 		}
-		private void TextColorerChanged(object sender, EventArgs e)
+		private void TextColorerChanged(ZioConfigEntryBase zioConfigEntryBase, object o, bool arg3)
 		{
 			textRecolorer.enabled = !_textRecolor.Value;
 			UpdateColors();
 		}
 		
-		private void CentiColorerChanged(object sender, EventArgs e)
+		private void CentiColorerChanged(ZioConfigEntryBase zioConfigEntryBase, object o, bool arg3)
 		{
 			timerCentiTextRecolorer.enabled = !_timerCentiRecolor.Value;
 			UpdateColors();
 		}
 
-		private void TimerColorerChanged(object sender, EventArgs e)
+		private void TimerColorerChanged(ZioConfigEntryBase zioConfigEntryBase, object o, bool arg3)
 		{
 			timerTextRecolorer.enabled = !_timerRecolor.Value;
 			UpdateColors();
@@ -144,6 +139,16 @@ namespace MaterialHud
 				((TextMeshProUGUI) timerTextRecolorer.target).color = difficultyColor;
 			if (_timerCentiRecolor.Value)
 				((TextMeshProUGUI) timerCentiTextRecolorer.target).color = difficultyColor;
+		}
+
+		public void Startup()
+		{
+			_textRecolor = ConfigHelper.Bind("General", "Difficulty Text Colored Per Difficulty", false, "Should the difficulty text be recolored based on current difficulty.");
+			_ringLowerRecolor = ConfigHelper.Bind("General", "Difficulty Lower Ring Colored Per Difficulty", false, "Should the difficulty lower ring be recolored based on current difficulty.");
+			_ringRecolor = ConfigHelper.Bind("General", "Difficulty Upper Ring Colored Per Difficulty", false, "Should the difficulty upper ring be recolored based on current difficulty.");
+			_timerRecolor = ConfigHelper.Bind("General", "Timer Text Colored Per Difficulty", false, "Should the timer text be recolored based on current difficulty.");
+			_timerCentiRecolor = ConfigHelper.Bind("General", "Centisecond Timer Text Colored Per Difficulty", false, "Should the timer centisecond text be recolored based on current difficulty.");
+			_monsterLevelEnabled = ConfigHelper.Bind("General", "Monster Level Text Enable", false, "Should the monster level text be displayed.");
 		}
 	}
 }

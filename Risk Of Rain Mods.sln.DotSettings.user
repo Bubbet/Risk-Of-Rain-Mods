@@ -1,3 +1,54 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005Cyes_005CDev_005CProgramming_005CC_0023_005CRiskOfOptions_005Cbin_005CDebug_005Cnetstandard2_002E0_005CRiskOfOptions_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005Cyes_005CDev_005CProgramming_005CC_0023_005CRisk_0020Of_0020Rain_0020Mods_005CLibs_005CBepInEx_002Dnstrip_002Edll/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005Cyes_005CDev_005CProgramming_005CC_0023_005CRisk_0020Of_0020Rain_0020Mods_005CLibs_005CBetterUI_002Dnstrip_002Edll/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005Cyes_005CDev_005CProgramming_005CC_0023_005CRisk_0020Of_0020Rain_0020Mods_005CLibs_005CSimpleJSON_002Dnstrip_002Edll/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005Cyes_005CDev_005CProgramming_005CC_0023_005CRisk_0020Of_0020Rain_0020Mods_005CLibs_005CSimpleJSON_002Dnstrip_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=C_003A_005CUsers_005CBubbet_005CDesktop_005Cyes_005CDev_005CProgramming_005CC_0023_005CRisk_0020Of_0020Rain_0020Mods_005CLibs_005CSynergies_002Dnstrip_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=I_003A_005CSteam_005Csteamapps_005Ccommon_005CRisk_0020of_0020Rain_00202_005CBepInEx_005Cplugins_005CMMHOOK_005CMMHOOK_005FRoR2_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=I_003A_005CSteam_005Csteamapps_005Ccommon_005CRisk_0020of_0020Rain_00202_005CRisk_0020of_0020Rain_00202_005FData_005CManaged_005CRoR2_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=J_003A_005CUsers_005CBubbet_005CDesktop_005Cyes2_005CStripMyAss_005CBepInEx_002Dnstrip_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/AddReferences/RecentPaths/=J_003A_005CUsers_005CBubbet_005CDesktop_005Cyes2_005CStripMyAss_005CBepInEx_002Edll/@EntryIndexedValue">True</s:Boolean>
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="C:\Users\Bubbet\.nuget\packages\riskofrain2.gamelibs\1.2.3.1-r.0\lib\netstandard2.0\RoR2.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=06585c04_002D7850_002D46e2_002Db137_002D297836950141_0023SkipIntroCutscene/@EntryIndexedValue">True</s:Boolean>
+	
+	
+	
+	
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=683b4957_002De5f4_002D4bc7_002Da34d_002Ddea71e9a8a99_0023OnlyYourDamageNumbers/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=88670d89_002D5ef3_002D48b5_002Daece_002D710ba1a5e3a5_0023RiskUI/@EntryIndexedValue">True</s:Boolean>
+	
+	
+	
+	
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=926694e7_002Dd138_002D4399_002Da72f_002Ded183fc9eeb4_0023RampingEgo/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=94740100_002Dd84d_002D4e60_002Da896_002D8071c0dbfb12_0023PickupDiscoveryFix/@EntryIndexedValue">True</s:Boolean>
+	
+	
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=cf69baf9_002D8290_002D438a_002Da712_002D65b04d421bc6_0023NotEnoughFriends/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=e08e4b04_002D8f1f_002D4d3c_002Db3b9_002D8deffba5ff97_0023FullPrefabSkins/@EntryIndexedValue">True</s:Boolean>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	</wpf:ResourceDictionary>

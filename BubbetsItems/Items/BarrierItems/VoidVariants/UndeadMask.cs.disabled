@@ -1,0 +1,7 @@
+﻿namespace BubbetsItems.Items.BarrierItems.VoidVariants
+{
+	public class UndeadMask : ItemBase
+	{
+		
+	}
+}

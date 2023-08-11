@@ -171,6 +171,11 @@ namespace ZioConfigFile
 
 				try
 				{
+					if (FilePath.IsNull || FilePath.IsEmpty || FilePath == "/")
+					{
+						Logger.LogWarning("Tried to create a ZioConfigFile with a null, empty or root path, escaping.");
+						return;
+					}
 					FileSystem.CreateDirectory(FilePath.GetDirectory());
 				}
 				catch (UnauthorizedAccessException e)

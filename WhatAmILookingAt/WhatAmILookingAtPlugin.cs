@@ -11,6 +11,7 @@ using BepInEx.Bootstrap;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
+using R2API.ContentManagement;
 using RoR2;
 using RoR2.ContentManagement;
 using RoR2.UI;
@@ -78,7 +79,7 @@ namespace WhatAmILookingAt // TODO waila in world might fail to find r2api etc v
 			
 			BetterAPIEnabled = Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterAPI");
 			BetterUIEnabled = Chainloader.PluginInfos.ContainsKey("com.xoxfaby.BetterUI");
-			R2APIEnabled = Chainloader.PluginInfos.ContainsKey("com.bepis.r2api"); 
+			R2APIEnabled = Chainloader.PluginInfos.ContainsKey(R2APIContentManager.PluginGUID); 
 			/*TILER2Enabled = Chainloader.PluginInfos.ContainsKey("com.ThinkInvisible.TILER2");
 			
 			if (TILER2Enabled)
