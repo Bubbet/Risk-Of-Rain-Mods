@@ -1,0 +1,3 @@
+[submodule "BubbetsItems"]
+	path = BubbetsItems
+	url = https://github.com/Bubbet/BubbetsItems.git
